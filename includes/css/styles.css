@@ -1,0 +1,64 @@
+/*CUSTOM CSS STYLESHEET/////////////////////////////////////////////////*/
+/*AUTHOR : PRANSHU GUPTA////////////////////////////////////////////////*/
+
+/*NAVBAR STYLES/////////////////////////////////////////////////////////*/
+.navbar-brand {
+  padding: 10px 10px;
+}
+
+/*MAIN INTRODUCTION STYLES//////////////////////////////////////////////*/
+#welcome {
+  text-align: center;
+}
+#welcome p{
+  font-size: 18px;
+}
+/*PORTFOLIO STYLES//////////////////////////////////////////////////////*/
+
+
+/*FOOTER STYLES/////////////////////////////////////////////////////////*/
+footer{
+  color: #ffffff;
+  font-size: 11px;
+  padding-bottom: 1px;
+  background-color: rgb(42,51,84);
+  background-color: transparent;
+  background-image: -webkit-gradient(linear, 0 top, 100% top, from(rgb(42,51,84)), to(rgb(31,38,63)));
+  background-image: -webkit-linear-gradient(left, color-stop(rgb(42,51,84) 0), color-stop(rgb(31,38,63) 100%));
+  background-image: -moz-linear-gradient(left, rgb(42,51,84) 0, rgb(31,38,63) 100%);
+  background-image: linear-gradient(to right, rgb(42,51,84) 0, rgb(31,38,63) 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='rgb(42,51,84)', endColorstr='rgb(31,38,63)', GradientType=1);
+}
+footer a {
+  color: #ffffff;
+  text-align: center;
+}
+footer ul {
+    list-style-type: none;
+    margin: 0;
+    padding-bottom: 7px;
+    padding-top: 8px;
+}
+footer li {
+    display: inline;
+    font-size: 14px;
+    padding: 10px;
+}
+footer li:hover {
+  background-color: #222222;
+}
+#logo {
+  padding-left: 5px;
+}
+
+/*TYPOGRAPHY////////////////////////////////////////////////////////////*/
+body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    background-color: #ffffff;
+}
+a:hover, a:active, a:visited, a:link {
+  text-decoration: none;
+  color: #ffffff;
+}

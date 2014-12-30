@@ -1,0 +1,6 @@
+/*Custom Javascript File////////////////////////////////////////////////////////*/
+/*Author: Pranshu Gupta*/
+ 
+$(function() {
+	
+});

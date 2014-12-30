@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'TitilliumWebRegular';
+	src: url('./TitilliumWebRegular.eot');
+	src: local('TitilliumWebRegular'), url('./TitilliumWebRegular.woff') format('woff'), url('./TitilliumWebRegular.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_42944">Text with this font applied</p> */
+.fontsforweb_fontid_42944 {
+	font-family: 'TitilliumWebRegular' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */
