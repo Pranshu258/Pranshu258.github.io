@@ -53,11 +53,11 @@ footer li {
     font-size: 14px;
     padding: 10px;
 }
-#link1, #link2, #link3, #plus, #tweet, #fb, #in {
+#link1, #link2, #link3, #plus, #tweet, #fb, #in, #address {
   -webkit-transition: color 0.5s;
   transition: 0.5s;
 }
-#link1:hover, #plus:hover {
+#link1:hover, #plus:hover, #address:hover {
   background-color: #dd4b39;
 }
 #tweet:hover {
@@ -75,7 +75,13 @@ footer li {
 #logo {
   padding-left: 5px;
 }
-
+#address {
+  background-color: #007bb6;
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  padding: 5px;
+}
 /*TYPOGRAPHY////////////////////////////////////////////////////////////*/
 body {
     -webkit-font-smoothing: antialiased;
