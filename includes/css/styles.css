@@ -13,6 +13,14 @@
 #welcome p{
   font-size: 18px;
 }
+#me {
+  background-color: #ffffff;
+}
+#about {
+  color: #ffffff;
+  background-color: rgb(0,0,0);
+}
+
 /*PORTFOLIO STYLES//////////////////////////////////////////////////////*/
 
 
@@ -45,8 +53,24 @@ footer li {
     font-size: 14px;
     padding: 10px;
 }
-footer li:hover {
-  background-color: #222222;
+#link1, #link2, #link3, #plus, #tweet, #fb, #in {
+  -webkit-transition: color 0.5s;
+  transition: 0.5s;
+}
+#link1:hover, #plus:hover {
+  background-color: #dd4b39;
+}
+#tweet:hover {
+  background-color: #55acee;
+}
+#link3:hover {
+  background-color: rgb(10,99,50);
+}
+#fb:hover {
+  background-color: #3b5998;
+}
+#in:hover, #link2:hover {
+  background-color: #007bb6;
 }
 #logo {
   padding-left: 5px;

@@ -30,9 +30,9 @@
             <div class="navbar navbar-inverse navbar-fixed-top" id = "nav">
                 <div class = "container">
                     <button class="navbar-toggle" data-target = ".navbar-responsive-collapse" data-toggle="collapse" type = "button">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span class="icon-bar" id="bar"></span>
+                        <span class="icon-bar" id="bar"></span>
+                        <span class="icon-bar" id="bar"></span>
                     </button>
                     <a class = "navbar-brand" href = "index.html"><img src = "images/logo.png" alt = "HOME" style="height:30px"></a>
                     <div class = "nav-collapse collapse navbar-responsive-collapse">
@@ -57,36 +57,35 @@
             <p class="container fontsforweb_fontid_42944" >I am a Second Year Undergraduate Student. I am doing a major in the Department of Computer Science
              and Engineering at<br>Indian Institute of Technology - Kanpur.</p>
         </div> 
-
         <!--FOOTER BEGINS HERE-->
         <footer>
             <div class="container">
                 <div class="row">
                     <div class='col-sm-9'>
                         <ul id="navList">
-                            <li>
-                                <a href="index.html" id="link1"> HOME </a>
+                            <li id="link1">
+                                <a href="index.html"> HOME </a>
                             </li>
-                            <li>
-                                <a href="#explore" id="link2"> PORTFOLIO </a>
+                            <li id="link2">
+                                <a href="#explore"> PORTFOLIO </a>
                             </li>
-                            <li>
-                                <a href="mailto://pranshug258@outlook.com" id="link3"> CONTACT </a>
+                            <li id="link3">
+                                <a href="mailto://pranshug258@outlook.com"> CONTACT </a>
                             </li>
                         </ul>
                     </div>
                     <div class="col-sm-3">
                         <ul id="navList">
-                            <li>
+                            <li id="fb">
                                <a href = "https://www.facebook.com/pranshu.gupta.773776"><img src="images/facebook.png" class="img-responsive" id="logo"></a> 
                             </li>
-                            <li>
+                            <li id="tweet">
                                <a href = "https://twitter.com/Pranshu23805940"><img src="images/twitter.png" class="img-responsive" id="logo"></a> 
                             </li>
-                            <li>
+                            <li id ="plus">
                                 <a href="https://plus.google.com/u/0/111166907853507981207/posts/p/pub"><img src="images/plus.png" class="img-responsive" id="logo"></a>
                             </li>
-                            <li>
+                            <li id="in">
                                 <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile"><img src="images/in.png" class="img-responsive" id="logo"></a>
                             </li>
                         </ul>
@@ -97,7 +96,7 @@
         <!--FOOTER ENDS-->
 
         <!-- First try for the online version of jQuery-->
-        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <!-- If no online access, fallback to our hardcoded version of jQuery -->
         <script>window.jQuery || document.write('<script src="includes/js/jquery-1.11.0.min.js"><\/script>')</script>
         <!-- Bootstrap JS -->
