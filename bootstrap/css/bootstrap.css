@@ -4352,13 +4352,14 @@ a.list-group-item.active > .badge,
 }
 
 .jumbotron {
-  padding: 30px;
+  padding-left: 15px;
+  padding-right: 15px;
   margin-bottom: 30px;
   font-size: 21px;
   font-weight: 200;
   line-height: 2.1428571435;
   color: inherit;
-  background-color: #eeeeee;
+  background-color: #ffffff;
 }
 
 .jumbotron h1 {
@@ -4368,16 +4369,6 @@ a.list-group-item.active > .badge,
 
 .jumbotron p {
   line-height: 1.4;
-}
-
-@media screen and (min-width: 768px) {
-  .jumbotron {
-    padding: 50px 60px;
-    border-radius: 6px;
-  }
-  .jumbotron h1 {
-    font-size: 63px;
-  }
 }
 
 .clearfix:before,

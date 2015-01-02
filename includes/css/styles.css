@@ -13,14 +13,11 @@
 #welcome p{
   font-size: 18px;
 }
-#me {
-  background-color: #ffffff;
-}
 #about {
-  color: #ffffff;
-  background-color: rgb(0,0,0);
+  text-align: justify;
+  padding: 30px;
+  font-size: 15px;
 }
-
 /*PORTFOLIO STYLES//////////////////////////////////////////////////////*/
 
 
