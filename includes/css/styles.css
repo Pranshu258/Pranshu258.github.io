@@ -11,15 +11,29 @@
   text-align: center;
 }
 #welcome p{
-  font-size: 18px;
+  font-size: 20px;
 }
 #about {
+  color:rgb(0,0,0);
   text-align: justify;
   padding: 30px;
-  font-size: 15px;
+  font-size: 16px;
 }
 /*PORTFOLIO STYLES//////////////////////////////////////////////////////*/
-
+#bar {
+  background-color: rgba(10,99,50,1);
+  color: #ffffff;
+  height: 40px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  -webkit-transition: color 0.5s;
+  transition: 0.5s;
+}
+#bar:hover {
+  background-color: rgba(10,99,50,0.9);
+  height: 50px;
+}
 
 /*FOOTER STYLES/////////////////////////////////////////////////////////*/
 footer{
