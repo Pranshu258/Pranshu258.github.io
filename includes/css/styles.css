@@ -37,54 +37,7 @@
   background-color: rgb(0,138,23);
   height: 50px;
 }
-#renju {
-  padding: 5px;
-  background-color: rgb(60,148,139);
-  color: #ffffff;
-}
-#renjuInfo {
-  text-align: justify;
-  background-color: rgb(238,238,238);
-  padding: 5px;
-}
-#gallery {
-  background-color: rgb(238,238,238);
-}
-#artp {
-  height: 500px;
-  padding: 10px;
-  position: center;
-}
-#download {
-  background-color: rgb(0,87,151);
-  color: #ffffff;
-  border-style: solid;
-  border-color: rgb(0,114,198);
-  -webkit-transition: color 0.5s;
-  transition: 0.5s;
-}
-#download:hover {
-  background-color: rgb(0,114,198);
-  color: #ffffff;
-  border-color: #222222;
 
-}
-#tabs {
-  background-color: rgb(0,114,198);
-}
-#sect {
-  padding: 10px;
-  -webkit-transition: color 0.5s;
-  transition: 0.5s;
-  text-align: center;
-  color: #ffffff;
-}
-#sect:hover {
-  background-color: rgb(0,87,151);
-}
-#tabContent {
-  background-color: rgb(238,238,238);
-}
 /*FOOTER STYLES/////////////////////////////////////////////////////////*/
 footer{
   color: #ffffff;
@@ -114,7 +67,7 @@ footer li {
     font-size: 14px;
     padding: 10px;
 }
-#link1, #link2, #link3, #plus, #tweet, #fb, #in {
+#link1, #link2, #link3, #plus, #tweet, #fb, #in, #tumblr {
   -webkit-transition: color 0.5s;
   transition: 0.5s;
 }
@@ -133,11 +86,14 @@ footer li {
 #in:hover, #link2:hover {
   background-color: #007bb6;
 }
+#tumblr:hover{
+  background-color: #37465D;
+} 
 #logo {
   padding-left: 5px;
 }
 #address {
-  background-color: #007bb6;
+  background-color: #222222;
   color: #ffffff;
   text-align: center;
   font-size: 12px;
