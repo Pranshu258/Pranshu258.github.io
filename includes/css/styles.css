@@ -23,7 +23,7 @@
   font-size: 16px;
 }
 /*PORTFOLIO STYLES//////////////////////////////////////////////////////*/
-#bar {
+#portfolio {
   background-color: rgb(0,105,17);
   color: #ffffff;
   height: 40px;
@@ -33,11 +33,20 @@
   -webkit-transition: color 0.5s;
   transition: 0.5s;
 }
-#bar:hover {
+#portfolio:hover {
   background-color: rgb(0,138,23);
   height: 50px;
 }
-
+#projects {
+    padding:10px;
+    min-height: 360px;
+}
+#renju:hover {
+   
+}
+#art {
+  background-color: #37465D;
+}
 /*FOOTER STYLES/////////////////////////////////////////////////////////*/
 footer{
   color: #ffffff;
