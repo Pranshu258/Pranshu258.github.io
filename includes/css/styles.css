@@ -41,8 +41,10 @@
     padding:10px;
     min-height: 360px;
 }
-#renju:hover {
-   
+#renjuInfo {
+   background-color:rgb(238,238,238);
+   padding: 5px;
+   margin:3px;
 }
 #art {
   background-color: #37465D;
@@ -119,4 +121,18 @@ body {
 a:hover, a:active, a:visited, a:link {
   text-decoration: none;
   color: #ffffff;
+}
+
+
+
+/*CUSTOM CLASSES///////////////////////////////////////////////////////*/
+.fade {
+   opacity: 1;
+   transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+}
+
+.fade:hover {
+   opacity: 0.9;
 }
