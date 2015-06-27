@@ -3,7 +3,7 @@
     
     <head>
     	<!-- WEBSITE TITLE AND DESCRIPTION-->
-		<title>Pranshu Gupta | Home</title>
+		<title>Pranshu Gupta</title>
 		
 		<meta name="description" content="Home Page">
 		<meta name="keywords" content="">
@@ -19,6 +19,9 @@
 		<link rel="stylesheet" href="includes/fonts/font.css">
 		<!-- Include Modernizr in the head, before any other Javascript -->
         <script src="includes/js/modernizr-2.6.2.min.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+
 	</head>
 	<body class="menu">
 		<!--THE MAIN MENU AND THE NAVIGATION BAR-->
@@ -45,8 +48,8 @@
     	<div class="row" id="submenu1">
     		<div class="container">
                 <ul class="pull-right">
-                	<li class="muli">//portfolio//</li>
                 	<a href="#projects"><li class="muli">projects</li></a>
+                	<a href="#projects"><li class="muli">resume</li></a>
                 	<a href="#artworks" ><li  class="muli">artworks</li></a>
                 </ul>
             </div>	        	
@@ -54,10 +57,9 @@
     	<div class="row" id="submenu2">
     		<div class="container">
                 <ul class="pull-right">
-                	<li class="muli">//contact//</li>
-                	<a href="mailto:pranshug258@outlook.com"><li class="muli">mail</li></a>
-                	<a href="https://www.facebook.com/pranshu.gupta.773776" ><li class="muli">facebook</li></a>
-                	<a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile"><li class="muli">linkedin</li></a>
+                	<a target = "_blank" href="mailto:pranshug258@outlook.com"><li class="muli">mail</li></a>
+                	<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" ><li class="muli">facebook</li></a>
+                	<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile"><li class="muli">linkedin</li></a>
                 </ul>
             </div>
         </div>
@@ -69,11 +71,60 @@
 						I am a Third Year Undergraduate Student. I am doing a major in the Department of Computer Science and Engineering at 
 						Indian Institute of Technology - Kanpur.
 					</p>
+					<p class="muli" style="padding:5px">
+						I love developing for web, data analytics and fine arts.
+					</p>
+					<br><br>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-
+    	<div class="row" id="submenu2">
+    		<div>
+                <ul><li class="josephin">PORTFOLIO</li></ul>
+            </div>
+        </div>
+		<div class="row" id="projects">
+			<div class="container">
+				<div class="col-sm-8">
+					<br><h1 class="josephin" style="font-size: 300%">PROJECTS</h1>
+					<br><hr>
+					<h4 class="josephin">CUSTOMER SUPPORT WEBSITE</h4>
+					<p class="muli">
+						For Greendzine Technologies: A product development company, India<br>
+						Technologies used: PHP, HTML/CSS, GIT 
+					</p>
+					<a href="http://www.greendzine.in"><button class="btn btn-default">VISIT SITE</button></a>
+					<hr>
+					<h4 class="josephin">WAREHOUSE DATA ANALYTICS</h4>
+					<p class="muli">
+						For Greendzine Technologies: A product development company, India<br>
+						Technologies used: HTML5/CSS3, JS, GIT
+					</p>
+					<a href="http://www.greendzine.in/analytics.php"><button class="btn btn-default">VISIT SITE</button></a>
+					<hr>
+					<h4 class="josephin">PYGAME APP</h4>
+					<p class="muli">
+						An app to play Renju, a board game for two players<br>
+						Technologies used: PYTHON/PYGAME, GIT
+					</p>
+					<a href="renju.zip"><button class="btn btn-default">DOWNLOAD</button></a>
+					<hr>
+					<br><br><br><br>
+				</div>
+				<div class="col-sm-4"></div>
+			</div>
+		</div>
+		<br>
+		<div class="container" id="artworks">
+			<div class="row">
+				<div class="col-sm-9">
+					<h1 class="josephin big">ARTWORKS</h1>
+					<p class="muli"></p>
+				</div>
+				<div class="col-sm-3"></div>
+			</div>
+		</div>
 
 
         <!-- First try for the online version of jQuery-->
