@@ -3,9 +3,23 @@
 	src: url('./TitilliumWebRegular.eot');
 	src: local('TitilliumWebRegular'), url('./TitilliumWebRegular.woff') format('woff'), url('./TitilliumWebRegular.ttf') format('truetype');
 }
-/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_42944">Text with this font applied</p> */
+@font-face {
+	font-family: 'Aroly';
+	src: local('Aroly'), url('./aroly.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Oswald';
+	src: local('Oswald'), url('./Oswald-Light.ttf') format('truetype');
+}
 .fontsforweb_fontid_42944 {
 	font-family: 'TitilliumWebRegular' !important;
 }
-
-/* Font downloaded from FontsForWeb.com */
+.oswald {
+	font-family: 'Oswald', sans-serif;
+}
+.muli {
+	font-family: 'Muli', sans-serif;
+}
+.aroly {
+	font-family: 'Aroly' !important;
+}

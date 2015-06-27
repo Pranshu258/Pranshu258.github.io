@@ -2,148 +2,87 @@
 <html lang="en">
     
     <head>
-        <!-- WEBSITE TITLE AND DESCRIPTION-->
-        
-        <title>Pranshu Gupta | Home</title>
-        <meta name="description" content="Home Page">
-        <meta name="keywords" content="Pranshu, Gupta, IITK, iit">
-        <meta name="author" content="Pranshu gupta">
-        <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-        <!-- MOBILE VIEWPORT OPTIMIZED -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        
-        <!-- Bootstrap CSS -->
-        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="includes/css/bootstrap-glyphicons.css" rel="stylesheet">
-        
-        <!-- Custom CSS -->
-        <link rel="stylesheet" href="includes/css/styles.css">
-        <link rel="stylesheet" href="includes/fonts/font.css">
-        <!-- Include Modernizr in the head, before any other Javascript -->
+    	<!-- WEBSITE TITLE AND DESCRIPTION-->
+		<title>Pranshu Gupta | Home</title>
+		
+		<meta name="description" content="Home Page">
+		<meta name="keywords" content="">
+		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<!-- MOBILE VIEWPORT OPTIMIZED -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<!-- Bootstrap CSS -->
+		<link href="includes/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="includes/css/styles.css">
+		<link rel="stylesheet" href="includes/fonts/font.css">
+		<!-- Include Modernizr in the head, before any other Javascript -->
         <script src="includes/js/modernizr-2.6.2.min.js"></script>
-
-    </head>
-
-    <!--MAIN CONTENT BODY BEGINS-->
-    <body>
-        <!--navicon transformicon-->
-        <!--MAIN INTRODUCTION-->
-        <div class="container" id="welcome">
-            <h1 class="container fontsforweb_fontid_42944" >Hi, I AM PRANSHU GUPTA</h1><hr>
-            <p class="container fontsforweb_fontid_42944" >I am a Second Year Undergraduate Student. I am doing a major in the Department of Computer Science
-             and Engineering at<br>Indian Institute of Technology - Kanpur.</p>
+	</head>
+	<body class="menu">
+		<!--THE MAIN MENU AND THE NAVIGATION BAR-->
+		<div class="row-fluid" id = "br3"><br></div>
+		<nav class="menu-side">
+			<div>
+				<a href="#" class="menu-toggle"><img src="images/menu2.png" id="menu2" align="right"></a><br><br>
+			</div>
+		</nav>
+		<!--NAVBAR-->
+		<header id="nav" style="background-color:rgb(0,100,250)">
+			<div class="container">
+		        <div class="row">
+		        	<a href="index.php"><img src="images/logo.png" id="logo"></a>
+	                <ul id="navList" class="pull-right">
+	                	<a href=""><li class="muli">HOME</li></a>
+	                	<a href="#" ><li id="submenu1_toggle" class="muli">PORTFOLIO</li></a>
+	                	<a href="#"><li id="submenu2_toggle"class="muli">CONTACT</li></a>
+	                </ul>
+					<a href="#" class="menu-toggle"><img src="images/menu2.png" id="menu" align="right"></a>	               
+		        </div>
+		    </div>		
+		</header>
+    	<div class="row" id="submenu1">
+    		<div class="container">
+                <ul class="pull-right">
+                	<li class="muli">//portfolio//</li>
+                	<a href=""><li class="muli">projects</li></a>
+                	<a href="#" ><li  class="muli">artworks</li></a>
+                </ul>
+            </div>	        	
         </div>
-        <div class="jumbotron fontsforweb_fontid_42944" id="jumbo">
-            <div class="row">
-                <div class="col-sm-8" id="about">
-                    <h4 id="story" class="fontsforweb_fontid_42944">ABOUT ME</h4>
-                    <p>
-                        I love Web/UI designing and Machine Learning. My interest in Web Design comes from my love of Arts, it feels great to have
-                        technology backed up with artistic features. I spend my free time doing pen & pencil sketching and poster color painting.<br>
-                        Machine learning is another thing which interests me a lot. Learning together wih your computer is awesome and the results you get afterwards are often of great importance.
-                    </p>
-                    <h4 id="story" class="fontsforweb_fontid_42944">MY STORY</h4>
-                    <p>
-                        I grew up in Uttar Pradesh, India and completed my Secondary Education from Government Jubilee Inter. College in Gorakhpur. 
-                        After that, I moved to Kanpur to do a B.Tech in Computer Science and Engineering at INDIAN INSTITUTE OF TECHNOLOGY. 
-                        At IITK, you can find me in Room-A206 in the Second Hall of Residence.
-                    </p>
-                </div>
-                <div class="col-sm-4"></div>
+    	<div class="row" id="submenu2">
+    		<div class="container">
+                <ul class="pull-right">
+                	<li class="muli">//contact//</li>
+                	<a href=""><li class="muli">mail</li></a>
+                	<a href="#" ><li class="muli">facebook</li></a>
+                	<a href="#"><li class="muli">linkedin</li></a>
+                </ul>
             </div>
         </div>
-        <div id="portfolio">
-            <div><h1 class="fontsforweb_fontid_42944">PORTFOLIO</h1></div>  
-        </div>
-        <div class="container">
-            <div class="row" style="padding-top:10px">
-                <div class="col-sm-4" id="code">
-                    <img src="images/git.png" class="img-responsive fade" />
-                </div>
-                <div class="col-sm-8 fontsforweb_fontid_42944" id="projects">
-                    <h4>1. APPLICATION DEVELOPMENT WITH PYGAME</h4>
-                    <p style="text-align:justify">
-                        Developed a python based app for a board game called RENJU. Implemented the MINIMAX search
-                        algorithm to design the AI for computer player and used PYGAME library for designing the game UI. You can download the source code from here.
-                    </p>
-                    <a href="Renju_2.3.zip"><button class="btn" id="download">DOWNLOAD</button></a>
-                    <a href="https://github.com/Pranshu258/Renju"><img src="images/github.png" class="img-circle img-responsive" /></a>
-                    <img src="images/more.png" class="img-circle img-responsive" id="renju" />
-                    <p id="renjuInfo" style="text-align:justify">
-                        RENJU is a professional variant of GOMOKU, a strategy board game originating in Japan. It is a two player game,
-                        the players take turns, placing moves on the board. A player wins the game when he/she gets 5 of his/her own stones in a row
-                        (the row can be in any direction).
-                    </p>
-                    <hr>
-                </div>
-            </div><hr />
-            <div class="row" style="padding-top:10px">
-                <div class="col-sm-8 fontsforweb_fontid_42944" id="projects">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-8"><br>
+					<h1 class="muli big">Pranshu Gupta</h1>
+					<p class="muli" style="padding:5px">
+						I am a Second Year Undergraduate Student. I am doing a major in the Department of Computer Science and Engineering at 
+						Indian Institute of Technology - Kanpur.
+					</p>
+				</div>
+				<div class="col-sm-4"></div>
+			</div>
+		</div>
 
-                </div>
-                <div class="col-sm-4" id="art">
-                    <img src="images/art.png" class="img-responsive" />
-                </div>
-            </div>
-        </div>
-        <!--FOOTER BEGINS HERE-->
-        <br>
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class='col-sm-7'>
-                        <ul id="navList">
-                            <li id="link1">
-                                <a href="index.html"> HOME </a>
-                            </li>
-                            <li id="link2">
-                                <a href="#portfolio"> PORTFOLIO </a>
-                            </li>
-                            <li id="link3">
-                                <a href="mailto://pranshug258@outlook.com"> CONTACT </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-5">
-                        <ul id="navList">
-                            <li id="fb">
-                               <a href = "https://www.facebook.com/pranshu.gupta.773776">
-                               <img src="images/facebook.png" class="img-responsive" id="logo" alt="facebook"></a> 
-                            </li>
-                            <li id="tumblr">
-                                <a href="http://pranshug258.tumblr.com/">
-                                <img src="images/tumblr.png" class="img-responsive" id="logo" alt="tumblr"></a>
-                            </li>
-                            <li id="tweet">
-                               <a href = "https://twitter.com/Pranshu23805940">
-                               <img src="images/twitter.png" class="img-responsive" id="logo" alt="twitter"></a> 
-                            </li>
-                            <li id ="plus">
-                                <a href="https://plus.google.com/u/0/111166907853507981207/posts/p/pub">
-                                <img src="images/plus.png" class="img-responsive" id="logo" alt="google+"></a>
-                            </li>
-                            <li id="in">
-                                <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile">
-                                <img src="images/in.png" class="img-responsive" id="logo" alt="linkedin"></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!--FOOTER ENDS-->
-        <div id="address">
-            <div>
-                By Pranshu Gupta, A206/2, IIT Kanpur, India
-            </div>  
-        </div>
+
+
         <!-- First try for the online version of jQuery-->
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <!-- If no online access, fallback to our hardcoded version of jQuery -->
         <script>window.jQuery || document.write('<script src="includes/js/jquery-1.11.0.min.js"><\/script>')</script>
         <!-- Bootstrap JS -->
-        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="includes/bootstrap/js/bootstrap.min.js"></script>
         <!-- Custom JS -->
         <script src="includes/js/script.js"></script>   
-    </body>
+	</body>
 </html>

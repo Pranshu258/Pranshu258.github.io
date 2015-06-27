@@ -1,138 +1,187 @@
-/*CUSTOM CSS STYLESHEET/////////////////////////////////////////////////*/
-/*AUTHOR : PRANSHU GUPTA////////////////////////////////////////////////*/
-
-/*NAVBAR STYLES/////////////////////////////////////////////////////////*/
-.navbar-brand {
-  padding: 10px 10px;
+#br3 {
+  background-color: rgb(0,50,200);
+  font-size: 3px;
+}
+#br1_white {
+  background-color: #FFF;
+  font-size: 1px;
 }
 
-/*MAIN INTRODUCTION STYLES//////////////////////////////////////////////*/
-#welcome {
-  text-align: center;
+#br1 {
+  background-color: rgb(0,0,40);
+  font-size: 1px;
 }
-#welcome p{
-  font-size: 20px;
+.row,
+.row-fluid {
+  margin-right: 0px;
+  margin-left: 0px;
 }
-#jumbo {
-  background-color: rgb(238,238,238);
+.big {
+  font-size: 500%;
 }
-#about {
-  color:rgb(0,0,0);
-  text-align: justify;
-  padding: 30px;
-  font-size: 16px;
+.small {
+  font-size: 10px;
 }
-/*PORTFOLIO STYLES//////////////////////////////////////////////////////*/
-#portfolio {
-  background-color: rgb(0,105,17);
+.border-left {
+  border-left: solid;
+  border-radius: 0px;
+  border-width: 1px;
+  border-color: rgb(230,230,230);
+}
+.border-right {
+  border-right: solid;
+  border-radius: 0px;
+  border-width: 1px;
+  border-color: rgb(230,230,230);
+}
+/*SIDE MENU////////////////////////////////////////////////////*/
+.menu-side {
+  background-color: rgb(0,50,200);
+  border-left: 1px solid #006633;
   color: #ffffff;
-  height: 40px;
-  text-align: center;
-  padding-left: 5px;
-  padding-right: 5px;
-  -webkit-transition: color 0.5s;
-  transition: 0.5s;
+  position: fixed;
+  top: 0;
+  right: -255px;
+  height: 100%;
+  width: 255px;
+  margin: 0px;
 }
-#portfolio:hover {
-  background-color: rgb(0,138,23);
+
+.menu {
+  overflow-x:hidden;
+  position:relative;
+  left:0;
+}
+.menu-open {
+  left:-255px;
+}
+.menu-open .menu-side {
+  right:0;
+}
+.menu-side {
+  -webkit-transition: right 0.2s ease;
+  -moz-transition: right 0.2s ease;
+  transition: right 0.2s ease;
+}
+.menu {
+  -webkit-transition: left 0.2s ease;
+  -moz-transition: left 0.2s ease;
+  transition: left 0.2s ease;
+}
+#menuLogo {
+  padding: 40px;
+}
+@media (min-width: 320px) {
+  #close {
+    display: none;
+  }
+}
+/*NAVIGATION BAR STYLES////////////////////////////////////////////////////*/
+#logo {
   height: 50px;
+  padding: 5px;
 }
-#projects {
-    padding:10px;
-    min-height: 360px;
-}
-#renjuInfo {
-   background-color:rgb(238,238,238);
-   padding: 5px;
-   margin:3px;
-}
-#art {
-  background-color: #37465D;
-}
-/*FOOTER STYLES/////////////////////////////////////////////////////////*/
-footer{
-  color: #ffffff;
-  font-size: 11px;
-  padding-bottom: 1px;
-  background-color: rgb(42,51,84);
-  background-color: transparent;
-  background-image: -webkit-gradient(linear, 0 top, 100% top, from(rgb(42,51,84)), to(rgb(31,38,63)));
-  background-image: -webkit-linear-gradient(left, color-stop(rgb(42,51,84) 0), color-stop(rgb(31,38,63) 100%));
-  background-image: -moz-linear-gradient(left, rgb(42,51,84) 0, rgb(31,38,63) 100%);
-  background-image: linear-gradient(to right, rgb(42,51,84) 0, rgb(31,38,63) 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='rgb(42,51,84)', endColorstr='rgb(31,38,63)', GradientType=1);
-}
-footer a {
-  color: #ffffff;
+#nav a {
+  vertical-align: center;
   text-align: center;
+  color: #006633;
+  font-size: 27px;
 }
-footer ul {
+
+#nav ul {
     list-style-type: none;
     margin: 0;
-    padding-bottom: 7px;
-    padding-top: 8px;
 }
-footer li {
+#nav li {
     display: inline;
     font-size: 14px;
-    padding: 10px;
+    color: #ffffff; 
+    padding: 18px;
+    -webkit-transition: color 0.5s;
+    transition: 0.5s;   
 }
-#link1, #link2, #link3, #plus, #tweet, #fb, #in, #tumblr {
-  -webkit-transition: color 0.5s;
-  transition: 0.5s;
+#nav li:hover {
+  background-color: rgb(0,50,200);
 }
-#link1:hover, #plus:hover, #address:hover {
-  background-color: #dd4b39;
+/*////////////////////////////////////////////////////*/
+#submenu1, #submenu2 {
+  background-color: rgb(0,50,200);
+  padding: 2px;
 }
-#tweet:hover {
-  background-color: #55acee;
+#submenu1 ul, #submenu2 ul {
+    list-style-type: none;
+    margin: 0;
 }
-#link3:hover {
-  background-color: rgb(10,99,50);
-}
-#fb:hover {
-  background-color: #3b5998;
-}
-#in:hover, #link2:hover {
-  background-color: #007bb6;
-}
-#tumblr:hover{
-  background-color: #37465D;
-} 
-#logo {
-  padding-left: 5px;
-}
-#address {
-  background-color: #222222;
-  color: #ffffff;
-  text-align: center;
+#submenu1 li, #submenu2 li {
+  padding: 10px;
+  display: inline;
   font-size: 12px;
-  padding: 5px;
-  -webkit-transition: color 0.7s;
-  transition: 0.7s;
+  color: #ffffff;
 }
+#submenu1 li:hover, #submenu2 li:hover {
+  background-color: none;
+}
+@media (max-width: 768px) {
+  #navList {
+    display: none;
+  }
+  #submenu1 {
+    display: none;
+  }
+  #submenu2 {
+    display: none;
+  }
+  .menu-open #menu {
+    display: none;
+  }
+}
+#menu{
+  height: 50px;
+  padding: 5px;
+}
+#menu2{
+  height: 50px;
+  padding: 10px;
+}
+
+@media (min-width: 769px) {
+  #menu {
+    display: none;
+  }
+  .menu-open .menu-side {
+    right:-255px;
+  }
+  .menu {
+    left:0px;
+  }
 /*TYPOGRAPHY////////////////////////////////////////////////////////////*/
 body {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizelegibility;
-    background-color: #ffffff;
+}
+header {
+  background-color: #ffffff;
 }
 a:hover, a:active, a:visited, a:link {
   text-decoration: none;
+}
+footer a:hover, a:active, a:visited, a:link {
   color: #ffffff;
 }
-
-
-
+p {
+  text-align: justify;
+}
+.bg-danger {
+  padding: 8px;
+}
 /*CUSTOM CLASSES///////////////////////////////////////////////////////*/
 .fade {
-   opacity: 1;
+   opacity: 0.9;
    transition: opacity .25s ease-in-out;
    -moz-transition: opacity .25s ease-in-out;
    -webkit-transition: opacity .25s ease-in-out;
 }
 
 .fade:hover {
-   opacity: 0.9;
+   opacity: 1;
 }
