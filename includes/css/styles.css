@@ -111,6 +111,9 @@
   background-color: rgb(0,50,200);
   padding: 2px;
 }
+#submenu1_toggle, #submenu2_toggle, .menu-toggle {
+  cursor: pointer;
+}
 #submenu ul, #submenu1 ul, #submenu2 ul {
     list-style-type: none;
     margin: 0;
@@ -128,6 +131,9 @@
   #navList {
     display: none;
   }
+  #art {
+    display: none;
+  }
   .menu-open #menu {
     display: none;
   }
@@ -140,9 +146,16 @@
   height: 50px;
   padding: 10px;
 }
-
+#a2 {
+  color: #ffffff;
+  margin: 30px;
+  padding-bottom: 30px;
+}
 @media (min-width: 769px) {
   #menu {
+    display: none;
+  }
+  #art1 {
     display: none;
   }
   .menu-open .menu-side {
@@ -155,6 +168,14 @@
 #projects {
 	background-color: rgb(0,100,250);
 	color: #ffffff;
+}
+#heart {
+  -webkit-transition: font-size 0.2s ease;
+  -moz-transition: font-size 0.2s ease;
+  transition: font-size 0.2s ease;  
+}
+#heart:hover {
+  font-size: 120%;
 }
 /*TYPOGRAPHY////////////////////////////////////////////////////////////*/
 body {
@@ -186,4 +207,17 @@ p {
 
 .fade:hover {
    opacity: 1;
+}
+/*/////////////////////////////////////////////////////////////////////*/
+.carousel-control {
+  position: absolute;
+  color: #fff;
+  filter: alpha(opacity=80);
+  opacity: .8;
+}
+.carousel-control.left {
+  background: none;
+}
+.carousel-control.right {
+  background: none; 
 }

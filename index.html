@@ -27,8 +27,14 @@
 		<!--THE MAIN MENU AND THE NAVIGATION BAR-->
 		<div class="row-fluid" id = "br3"><br></div>
 		<nav class="menu-side">
-			<div>
-				<a href="#" class="menu-toggle"><img src="images/menu2.png" id="menu2" align="right"></a><br><br>
+			<div class="muli" style="color:#ffffff">
+				<img src="images/menu2.png" class="menu-toggle" id="menu2" align="right"><br><br>
+            	<a href="#projects" class="menu-toggle" id="a2">projects</a><br><br>
+            	<a href="#artworks" class="menu-toggle" id="a2" >artworks</a><br><br>
+            	<a href="#life" class="menu-toggle" id="a2">life</a><br><br>
+            	<a target = "_blank" class="menu-toggle" id="a2" href="mailto:pranshug258@outlook.com">mail</a><br><br>
+            	<a target = "_blank" class="menu-toggle" id="a2" href="https://www.facebook.com/pranshu.gupta.773776" >facebook</a><br><br>
+            	<a target = "_blank" class="menu-toggle" id="a2" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile">linkedin</a><br><br>
 			</div>
 		</nav>
 		<!--NAVBAR-->
@@ -38,10 +44,10 @@
 		        	<a href="index.php"><img src="images/logo.png" id="logo"></a>
 	                <ul id="navList" class="pull-right">
 	                	<a href=""><li class="muli">HOME</li></a>
-	                	<a href="#" ><li id="submenu1_toggle" class="muli">PORTFOLIO</li></a>
-	                	<a href="#"><li id="submenu2_toggle"class="muli">CONTACT</li></a>
+	                	<li id="submenu1_toggle" class="muli">PORTFOLIO</li>
+	                	<li id="submenu2_toggle"class="muli">CONTACT</li>
 	                </ul>
-					<a href="#" class="menu-toggle"><img src="images/menu2.png" id="menu" align="right"></a>	               
+					<img src="images/menu2.png" class="menu-toggle" id="menu" align="right">	               
 		        </div>
 		    </div>		
 		</header>
@@ -49,8 +55,8 @@
     		<div class="container">
                 <ul class="pull-right">
                 	<a href="#projects"><li class="muli">projects</li></a>
-                	<a href="#projects"><li class="muli">resume</li></a>
                 	<a href="#artworks" ><li  class="muli">artworks</li></a>
+                	<a href="#life"><li class="muli">life</li></a>
                 </ul>
             </div>	        	
         </div>
@@ -72,7 +78,7 @@
 						Indian Institute of Technology - Kanpur.
 					</p>
 					<p class="muli" style="padding:5px">
-						I love developing for web, data analytics and fine arts.
+						I love data analytics, developing for web and fine arts.
 					</p>
 					<br><br><br>
 				</div>
@@ -89,19 +95,19 @@
 				<div class="col-sm-8">
 					<br><h1 class="josephin" style="font-size: 300%">PROJECTS</h1>
 					<br><hr>
+					<h4 class="josephin">WAREHOUSE DATA ANALYTICS &amp OPTIMIZATION</h4>
+					<p class="muli">
+						For Greendzine Technologies: A product development company, India<br>
+						Technologies used: HTML5/CSS3, JS, PHP, GIT, jQuery
+					</p>
+					<a href="http://www.greendzine.in/analytics.php"><button class="btn btn-default">VISIT SITE</button></a>
+					<hr>
 					<h4 class="josephin">CUSTOMER SUPPORT WEBSITE</h4>
 					<p class="muli">
 						For Greendzine Technologies: A product development company, India<br>
-						Technologies used: PHP, HTML/CSS, GIT 
+						Technologies used: PHP, HTML/CSS, GIT, jQuery
 					</p>
 					<a href="http://www.greendzine.in"><button class="btn btn-default">VISIT SITE</button></a>
-					<hr>
-					<h4 class="josephin">WAREHOUSE DATA ANALYTICS</h4>
-					<p class="muli">
-						For Greendzine Technologies: A product development company, India<br>
-						Technologies used: HTML5/CSS3, JS, GIT
-					</p>
-					<a href="http://www.greendzine.in/analytics.php"><button class="btn btn-default">VISIT SITE</button></a>
 					<hr>
 					<h4 class="josephin">PYGAME APP</h4>
 					<p class="muli">
@@ -118,14 +124,101 @@
 		<br>
 		<div class="container" id="artworks">
 			<div class="row">
-				<div class="col-sm-9">
-					<h1 class="josephin big">ARTWORKS</h1>
-					<p class="muli"></p>
+				<div class="col-sm-4">
+					<h1 class="josephin" align="center" id="art1" style="font-size: 800%;color:rgb(0,114,117)">ART</h1>
+					<br>
+					<div id="myCarousel2" class="carousel slide" data-ride="carousel">
+					  <!-- Indicators -->
+					  <ol class="carousel-indicators">
+					    <li data-target="#myCarousel2" data-slide-to="0" class="active"></li>
+					    <li data-target="#myCarousel2" data-slide-to="1"></li>
+					    <li data-target="#myCarousel2" data-slide-to="2"></li>
+					    <li data-target="#myCarousel2" data-slide-to="3"></li>
+					  </ol>
+					  <!-- Wrapper for slides -->
+					  <div class="carousel-inner" role="listbox">
+					    <div class="item active" align="center">
+					      <img src="images/img1.jpg" class="img-responsive" alt="">
+					    </div>
+
+					    <div class="item" align="center">
+					      <img src="images/img2.jpg" class="img-responsive" alt="">
+					    </div>
+
+					    <div class="item" align="center">
+					      <img src="images/img3.jpg" class="img-responsive" alt="">
+					    </div>
+					    <div class="item" align="center">
+					      <img src="images/img4.jpg" class="img-responsive" alt="">
+					    </div>
+					  </div>
+
+					  <!-- Left and right controls -->
+					  <a class="left carousel-control" href="#myCarousel2" role="button" data-slide="prev">
+					    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					    <span class="sr-only">Previous</span>
+					  </a>
+					  <a class="right carousel-control" href="#myCarousel2" role="button" data-slide="next">
+					    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					    <span class="sr-only">Next</span>
+					  </a>
+					</div>
+					<br>
 				</div>
-				<div class="col-sm-3"></div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-7">
+					<h1 class="josephin" align="center" id="art" style="font-size: 2000%;color:rgb(0,114,117)">ART</h1>
+					<h1 align="center" style="font-size: 600%;color:rgb(0,114,117)"><span id="heart" class="glyphicon glyphicon-heart"></span></h1>
+				</div>
+			</div><br>
+		</div>
+		<div id="life" class="row" style="background-color:rgb(0,100,250);color:#ffffff">
+			<div class="container">
+				<br>
+				<div class="row">
+					<div class="col-sm-5">
+						<h1 class="josephin" style="font-size: 300%">LIFE</h1><br><br>
+						<table class="table muli">
+							<tr><td>Born</td><td>25 August 1995, India</td></tr>
+							<tr><td>Secondary Education</td><td>Govt. Jubilee Inter College, Gorakhpur</td></tr>
+							<tr><td>Major</td><td>Indian Institute of Technology, Kanpur<br><small>Computer Science &amp Engineering </small></td></tr>
+							<tr><td> </td><td> </td></tr>
+						</table>
+					</div>
+					<div class="col-sm-1"></div>
+					<div class="col-sm-6" style="height:320px;background-color:rgb(0,50,200)">
+						<div id="myCarousel2" class="carousel slide" data-ride="carousel" style="padding:15px">
+						  <!-- Wrapper for slides -->
+						  <div class="carousel-inner" role="listbox">
+						    <div class="item active" align="center">
+						    	<br><br>
+						    	<h2 class="josephin">let your heart guide you, it whispers, so listen closely</h2>
+						    	<small class="muli">- the land before time -</small>
+						    </div>
+						    <div class="item" align="center">
+						      	<br><br>
+						      	<h2 class="josephin">the only way to know how strong you are is to keep testing your limits</h2>
+						      	<small class="muli">- man of steel -</small>
+						    </div>
+						  </div>
+						</div>
+					</div>
+				</div><br>
 			</div>
 		</div>
-
+		<br><br><br>
+		<div class="container">
+			<div class="row" align="center">
+            	<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" ><img src="images/facebook.png" class="img-circle" style="margin:5px"></a>
+            	<a target = "_blank" href="mailto:pranshug258@outlook.com"><img src="images/mail.png" class="img-circle" style="margin:5px"></a>
+            	<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile"><img src="images/linkedin.png" class="img-circle" style="margin:5px"></a>
+			</div>
+			<h3 class="josephin" align="center">get in touch</h3>
+			<br>
+			<div class="row" align="center"><img src="images/me.png" class="img-circle" style="margin:5px"></div>
+			<br>
+			<h1 align="center" class="muli small">&copy copyright 2015, pranshu gupta</h1>
+		</div>
 
         <!-- First try for the online version of jQuery-->
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
