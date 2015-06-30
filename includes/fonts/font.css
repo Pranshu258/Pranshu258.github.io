@@ -1,27 +1,5 @@
-@font-face {
-	font-family: 'TitilliumWebRegular';
-	src: url('./TitilliumWebRegular.eot');
-	src: local('TitilliumWebRegular'), url('./TitilliumWebRegular.woff') format('woff'), url('./TitilliumWebRegular.ttf') format('truetype');
-}
-@font-face {
-	font-family: 'Aroly';
-	src: local('Aroly'), url('./aroly.ttf') format('truetype');
-}
-@font-face {
-	font-family: 'Oswald';
-	src: local('Oswald'), url('./Oswald-Light.ttf') format('truetype');
-}
-.fontsforweb_fontid_42944 {
-	font-family: 'TitilliumWebRegular' !important;
-}
-.oswald {
-	font-family: 'Oswald', sans-serif;
-}
 .muli {
 	font-family: 'Muli', sans-serif;
-}
-.aroly {
-	font-family: 'Aroly' !important;
 }
 .josephin {
 	font-family: 'Josefin Sans', sans-serif;
