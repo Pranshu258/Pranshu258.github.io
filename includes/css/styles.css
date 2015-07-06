@@ -1,5 +1,5 @@
 #br3 {
-  background-color: rgb(0,50,200);
+  background-color: rgb(38,80,176);
   font-size: 3px;
 }
 #br1_white {
@@ -8,7 +8,7 @@
 }
 
 #br1 {
-  background-color: rgb(0,100,250);
+  background-color: rgb(23,35,67);
   font-size: 1px;
 }
 .row,
@@ -37,10 +37,20 @@
 .btn {
   border-radius: 0;
 }
+.btn-primary {
+  background-color: rgb(38,80,176);
+  border-width: 2px;
+  border-color: rgb(38,80,176);
+    -webkit-transition: color 0.5s;
+    transition: 0.5s; 
+}
+.btn-primary:hover {
+  border-color: #ffffff;
+  background-color: rgb(38,80,176);
+}
 /*SIDE MENU////////////////////////////////////////////////////*/
 .menu-side {
-  background-color: rgb(0,50,200);
-  border-left: 1px solid #006633;
+  background-color: rgb(38,80,176);
   color: #ffffff;
   position: fixed;
   top: 0;
@@ -104,11 +114,11 @@
     transition: 0.5s;   
 }
 #nav li:hover {
-  background-color: rgb(0,50,200);
+  background-color: rgb(38,80,176);
 }
 /*////////////////////////////////////////////////////*/
 #submenu, #submenu1, #submenu2 {
-  background-color: rgb(0,50,200);
+  background-color: rgb(38,80,176);
   padding: 2px;
 }
 #submenu1_toggle, #submenu2_toggle, .menu-toggle {
@@ -166,7 +176,7 @@
   }
 /*PROJECTS//////////////////////////////////////////////////////////////*/
 #projects {
-	background-color: rgb(0,100,250);
+	background-color: rgb(23,35,67);
 	color: #ffffff;
 }
 #heart {
