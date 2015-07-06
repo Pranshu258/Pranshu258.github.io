@@ -174,10 +174,15 @@
   .menu {
     left:0px;
   }
+}
+
 /*PROJECTS//////////////////////////////////////////////////////////////*/
 #projects {
-	background-color: rgb(23,35,67);
+	background-color: rgb(38,80,176);
 	color: #ffffff;
+}
+#artworks, #footer {
+  background-image: url("../../images/bg.png");
 }
 #heart {
   -webkit-transition: font-size 0.2s ease;
