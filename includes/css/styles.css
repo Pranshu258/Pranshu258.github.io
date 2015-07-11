@@ -1,5 +1,5 @@
 #br3 {
-  background-color: rgb(38,80,176);
+  background-color: rgb(38,80,200);
   font-size: 3px;
 }
 #br1_white {
@@ -38,19 +38,19 @@
   border-radius: 0;
 }
 .btn-primary {
-  background-color: rgb(38,80,176);
+  background-color: rgb(38,80,200);
   border-width: 2px;
-  border-color: rgb(38,80,176);
+  border-color: rgb(38,80,200);
     -webkit-transition: color 0.5s;
     transition: 0.5s; 
 }
 .btn-primary:hover {
   border-color: #ffffff;
-  background-color: rgb(38,80,176);
+  background-color: rgb(38,80,200);
 }
 /*SIDE MENU////////////////////////////////////////////////////*/
 .menu-side {
-  background-color: rgb(38,80,176);
+  background-color: rgb(38,80,200);
   color: #ffffff;
   position: fixed;
   top: 0;
@@ -114,11 +114,11 @@
     transition: 0.5s;   
 }
 #nav li:hover {
-  background-color: rgb(38,80,176);
+  background-color: rgb(38,80,250);
 }
 /*////////////////////////////////////////////////////*/
 #submenu, #submenu1, #submenu2 {
-  background-color: rgb(38,80,176);
+  background-color: rgb(38,80,200);
   padding: 2px;
 }
 #submenu1_toggle, #submenu2_toggle, .menu-toggle {
@@ -178,12 +178,12 @@
 
 /*PROJECTS//////////////////////////////////////////////////////////////*/
 #projects {
-	background-color: rgb(38,80,176);
+	background-color: rgb(38,80,200);
 	color: #ffffff;
 }
-#artworks, #footer {
-  background-image: url("../../images/bg.png");
-}
+/*#artworks, #footer {
+  background-image: url("../../images/bg_light.png");
+}*/
 #heart {
   -webkit-transition: font-size 0.2s ease;
   -moz-transition: font-size 0.2s ease;
