@@ -1,3 +1,15 @@
+@font-face {
+	font-family: 'Muli';
+	src: url('Muli.ttf');
+}
+@font-face {
+	font-family: 'Josefin Sans';
+	src: url('JosefinSans.ttf');
+}
+@font-face {
+	font-family: 'Calligraffitti';
+	src: url('Calligraffiti.ttf');
+}
 .muli {
 	font-family: 'Muli', sans-serif;
 }

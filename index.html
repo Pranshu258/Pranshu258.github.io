@@ -19,116 +19,123 @@
 		<link rel="stylesheet" href="includes/fonts/font.css">
 		<!-- Include Modernizr in the head, before any other Javascript -->
         <script src="includes/js/modernizr-2.6.2.min.js"></script>
-        <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet' type='text/css'>
 
 	</head>
-	<body class="menu">
-		<!--THE MAIN MENU AND THE NAVIGATION BAR-->
-		<div class="row-fluid" id = "br3"><br></div>
-		<nav class="menu-side">
-			<div class="muli" style="color:#ffffff">
-				<img src="images/menu2.png" class="menu-toggle" id="menu2" align="right"><br><br>
-            	<a href="#projects" class="menu-toggle" id="a2">projects</a><br><br>
-            	<a href="#artworks" class="menu-toggle" id="a2" >artworks</a><br><br>
-            	<a href="#life" class="menu-toggle" id="a2">life</a><br><br>
-            	<a target = "_blank" class="menu-toggle" id="a2" href="mailto:pranshug258@outlook.com">mail</a><br><br>
-            	<a target = "_blank" class="menu-toggle" id="a2" href="https://www.facebook.com/pranshu.gupta.773776" >facebook</a><br><br>
-            	<a target = "_blank" class="menu-toggle" id="a2" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile">linkedin</a><br><br>
-			</div>
-		</nav>
-		<!--NAVBAR-->
-		<header id="nav" style="background-color:rgb(0,50,150)">
+	<body>
+		<!--Navigation Bar Header Begins-->
+		<header class="row-fluid" id="nav">
 			<div class="container">
-		        <div class="row">
-		        	<a href=""><img src="images/logo.png" id="logo"></a>
-	                <ul id="navList" class="pull-right">
-	                	<a href=""><li class="muli">HOME</li></a>
-	                	<li id="submenu1_toggle" class="muli">PORTFOLIO</li>
-	                	<li id="submenu2_toggle"class="muli">CONTACT</li>
-	                </ul>
-					<img src="images/menu2.png" class="menu-toggle" id="menu" align="right">	               
-		        </div>
-		    </div>		
+				<div class="row">
+					<ul class="pull-right" id="main_menu">
+						<li class="muli"><a href="#top" class="smoothScroll">Home</a></li>
+						<li class="muli"><a href="#projects" class="smoothScroll">Projects</a></li>
+						<li class="muli"><a href="#artworks" class="smoothScroll">Artworks</a></li>
+						<li class="muli"><a href="#education" class="smoothScroll">Education</a></li>
+						<li class="muli"><a href="#contact" class="smoothScroll">Contact</a></li>
+					</ul>
+				</div>
+			</div>
 		</header>
+		<!--Navigation Bar Header Ends-->
 
-    	<div class="row" id="submenu1">
-    		<div class="container">
-                <ul class="pull-right">
-                	<a href="#projects"><li class="muli">projects</li></a>
-                	<a href="#artworks" ><li  class="muli">artworks</li></a>
-                	<a href="#life"><li class="muli">life</li></a>
-                </ul>
-            </div>	        	
-        </div>
-    	<div class="row" id="submenu2">
-    		<div class="container">
-                <ul class="pull-right">
-                	<a target = "_blank" href="mailto:pranshug258@outlook.com"><li class="muli">mail</li></a>
-                	<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" ><li class="muli">facebook</li></a>
-                	<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile"><li class="muli">linkedin</li></a>
-                </ul>
-            </div>
-        </div>
-        <div class="row-fluid" id = "br1"><br></div>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-8"><br><br>
-					<h1 class="muli big">Pranshu Gupta</h1>
-					<p class="muli" style="padding:5px">
-						I am a Third Year Undergraduate Student. I am pursuing a b.tech in the Department of Computer Science and Engineering at 
-						Indian Institute of Technology - Kanpur.
-					</p>
-					<p class="muli" style="padding:5px">
-						I love data analytics, developing for web and fine arts.
-					</p>
-					<br><br><br><br>
-				</div>
-				<div class="col-sm-4"></div>
-			</div>
-		</div>
-    	<div class="row" id="submenu2" style="background-color:rgb(38,80,176);color:#ffffff">
-    		<div>
-                <ul><li class="josephin">PORTFOLIO</li></ul>
-            </div>
-        </div>
-		<div class="row" id="projects" style="background-color:rgb(0,50,150);color:#ffffff">
+		<!--About Me Section Begins-->
+		<div class="row" id="top" style="background-color:rgb(250,250,250)">
 			<div class="container">
-				<div class="col-sm-8">
-					<br><h1 class="josephin" style="font-size: 300%">PROJECTS</h1>
-					<br><hr>
-					<h4 class="josephin">WAREHOUSE ORDER PICKING DATA ANALYTICS &amp OPTIMIZATION</h4>
-					<p class="muli">
-						For Greendzine Technologies: A product development company, India<br>
-						Technologies used: HTML5/CSS3, JS, PHP, GIT, jQuery
-					</p>
-					<a target = "_blank" href="http://www.greendzine.in/analytics.php"><button class="btn btn-primary">VISIT SITE</button></a>
-					<hr>
-					<h4 class="josephin">CUSTOMER SUPPORT WEBSITE</h4>
-					<p class="muli">
-						For Greendzine Technologies: A product development company, India<br>
-						Technologies used: PHP/MySQL, HTML/CSS, GIT, jQuery
-					</p>
-					<a target = "_blank" href="http://www.greendzine.in"><button class="btn btn-primary">VISIT SITE</button></a>
-					<hr>
-					<h4 class="josephin">PYGAME APP</h4>
-					<p class="muli">
-						An app to play Renju, a board game for two players<br>
-						Technologies used: PYTHON/PYGAME, GIT
-					</p>
-					<a href="renju.zip"><button class="btn btn-primary">DOWNLOAD</button></a>
-					<hr>
-					<br><br><br><br>
+				<div class="col-sm-12" style="background-color:rgb(253,253,253);padding-top:95px">
+					<div class="col-sm-8">
+						<h1 class="muli big">Pranshu Gupta</h1>
+						<p class="muli" style="padding:5px">
+							I am a Third Year Undergraduate Student. I am pursuing a bachelors degree in the Department of Computer Science and Engineering at 
+							Indian Institute of Technology - Kanpur.
+						</p>
+						<p class="muli" style="padding:5px">
+							<a href="PranshuGupta.pdf">Resume</a>
+						</p>
+						<br><br><br>
+					</div>
+					<div class="col-sm-4"></div>
 				</div>
-				<div class="col-sm-4"></div>
 			</div>
 		</div>
-	
-		<div class="row" id="artworks"><br>
+		<!--About Me Section Ends-->
+
+
+		<!--Projects Section Begins-->
+		<div class="row" id="projects" style="background-color:rgb(250,250,250)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(210,210,210)">
+					<div class="col-sm-12">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>PROJECTS</b></h1>
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="container">
+				<!--Add Projects Here-->
+				<div class="row" style="padding:15px;text-align:center;background-color:rgb(238,238,238)">
+					<div class="col-sm-4">
+						<br>
+						<h4 class="josephin"><b>GREENDZINE TECHNOLOGIES<br>(website)</b></h4>
+						<p class="muli">
+							Greendzine Technologies is a company developing affordable Green Technology Solutions and Products.
+						</p>
+						<br><a target = "_blank" href="http://www.greendzine.in"><button class="btn btn-primary">VISIT SITE</button></a><br>
+						<br>
+						<a href="">View Details</a><br><br>
+					</div>
+					<div class="col-sm-4  border-left  border-right" >
+						<br>
+						<h4 class="josephin"><b>WAREHOUSE ORDER PICKING<br>(data analysis &amp optimization)</b></h4>
+						<p class="muli">
+							Developed an algorithm to optimize order picking in rectangular warehouses with a given layout and analyse the results
+						</p>
+						<br><a target = "_blank" href="http://www.greendzine.in/analytics.php"><button class="btn btn-primary">VISIT SITE</button></a><br>
+						<br>
+						<a href="">View Details</a><br><br>
+					</div>
+					<div class="col-sm-4">
+						<br>
+						<h4 class="josephin"><b>RENJU GAME<br>(python/pygame application)</b></h4>
+						<p class="muli">
+							Developed a python based application for a board game called RENJU, implementing MINIMAX algorithm for the AI.
+						</p>
+						<br><a href="renju.zip"><button class="btn btn-primary">DOWNLOAD</button></a><br>
+						<br>
+						<a href="">View Details</a><br><br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="background-color:rgb(245,245,245)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(210,210,210)">
+					<div class="col-sm-12">
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Projects Section Ends-->
+
+		<!--Artworks Section Begins-->
+		<div class="row" id="artworks" style="background-color:rgb(245,245,245)">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>ARTWORKS</b></h1>
+						<br>
+					</div>
+				</div>
+			</div>
+		</div><br>
+		<div class="row">
 			<div class="container">
 				<div class="col-sm-4">
-					<h1 class="josephin" align="center" id="art1" style="font-size: 800%;color:rgb(0,50,150)">ART</h1>
+					<h1 class="josephin" align="center" id="art1" style="font-size: 350%;color:rgb(0,50,150)">FAVORITES</h1>
 					<br>
 					<div id="myCarousel2" class="carousel slide" data-ride="carousel">
 					  <!-- Indicators -->
@@ -169,59 +176,97 @@
 					<br>
 				</div>
 				<div class="col-sm-1"></div>
-				<div class="col-sm-7">
-					<h1 class="josephin" align="center" id="art" style="font-size: 2000%;color:rgb(0,50,150)">ART</h1>
-					<h1 align="center" style="font-size: 600%;color:rgb(0,50,150)"><span id="heart" class="glyphicon glyphicon-heart"></span></h1>
+				<div class="col-sm-7"><br>
+					<div class="row-fluid">
+						<h1 class="josephin" align="center" id="art" style="font-size: 800%">FAVORITES</h1>
+						<h1 align="center" style="font-size: 600%"><span id="heart" class="glyphicon glyphicon-heart"></span></h1><br>
+					</div>
+					<div class="row-fluid">
+						<h2 class="calligraffitti" align="center">let your heart guide you, it whispers, so listen closely</h2>
+						<p style="text-align:center" class="muli">- the land before time -</p>
+					</div>
 				</div>
 			</div><br>
 		</div>
-		<div id="life" class="row" style="background-color:rgb(0,50,150);color:#ffffff">
+		<!--Artworks Section Ends-->
+
+		<!--Education Section Begins-->
+		<div class="row" id="education" style="background-color:rgb(250,250,250)"><br>
 			<div class="container">
-				<br>
-				<div class="row">
-					<div class="col-sm-5">
-						<h1 class="josephin" style="font-size: 300%">LIFE</h1><br><br>
-						<table class="table muli">
-							<tr><td>Born</td><td>25 August 1995, India</td></tr>
-							<tr><td>Secondary Education</td><td>Govt. Jubilee Inter College, Gorakhpur</td></tr>
-							<tr><td>B.Tech</td><td>Indian Institute of Technology, Kanpur<br><small>Computer Science &amp Engineering </small></td></tr>
-							<tr><td> </td><td> </td></tr>
-						</table>
+				<div class="row" style="background-color:rgb(210,210,210)">
+					<div class="col-sm-12">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>EDUCATION</b></h1>
+						<br>
 					</div>
-					<div class="col-sm-1"></div>
-					<div class="col-sm-6" style="height:320px;background-color:rgb(38,80,176)">
-						<div id="myCarousel2" class="carousel slide" data-ride="carousel" style="padding:15px">
-						  <!-- Wrapper for slides -->
-						  <div class="carousel-inner" role="listbox">
-						    <div class="item active" align="center">
-						    	<br><br>
-						    	<h2 class="calligraffitti">let your heart guide you, it whispers, so listen closely</h2>
-						    	<small class="muli">- the land before time -</small>
-						    </div>
-						    <div class="item" align="center">
-						      	<br><br>
-						      	<h2 class="calligraffitti">the only way to know how strong you are is to keep testing your limits</h2>
-						      	<small class="muli">- man of steel -</small>
-						    </div>
-						  </div>
-						</div>
-					</div>
-				</div><br>
+				</div>
 			</div>
 		</div>
-		
-		<div class="row" id="footer">
-			<br><br><br>
-			<div class="container" align="center">
-            	<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" ><img src="images/facebook.png" class="img-circle" style="margin:5px"></a>
-            	<a target = "_blank" href="mailto:pranshug258@outlook.com"><img src="images/mail.png" class="img-circle" style="margin:5px"></a>
-            	<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile"><img src="images/linkedin.png" class="img-circle" style="margin:5px"></a>
+		<div class="row">
+			<div class="container">
+				<div class="row" style="padding:15px;background-color:rgb(238,238,238)"><br>
+					<div class="row">
+						<div class="col-sm-3" id="edu1">
+							<h3 class="josephin" align="center">COMPUTER SCIENCE</h3>
+							<h1 class="josephin" align="center" style="font-size: 800%">IIT</h1>
+							<h3 class="muli" align="center">KANPUR</h3>
+						</div>
+						<div class="col-sm-6  border-left border-right" id="edu2">
+							<h3 class="josephin" align="center">GOVT. JUBILEE INTER COLLEGE</h3>
+							<h1 class="josephin" align="center" style="font-size: 800%">X , XII</h1>
+							<h3 class="muli" align="center">GORAKHPUR</h3>
+						</div>
+						<div class="col-sm-3" id="edu3">
+							<h3 class="josephin" align="center">BORN</h3>
+							<h1 class="josephin" align="center" style="font-size: 800%">25</h1>
+							<h3 class="muli" align="center">AUGUST 1995</h3>
+						</div>
+					</div><br>
+				</div>
 			</div>
-			<h3 class="josephin" align="center">get in touch</h3>
-			<br>
-			<div class="row" align="center"><img src="images/me.png" class="img-circle" style="margin:5px"></div>
-			<br>
-			<h1 align="center" class="muli small">&copy copyright 2015, pranshu gupta</h1>
+		</div>
+		<div class="row" style="background-color:rgb(245,245,245)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(210,210,210)">
+					<div class="col-sm-12">
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Education Section Ends-->
+
+		<!--Social Networking-->
+		<div class="row" id="contact" style="background-color:rgb(245,245,245)">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12" style="background-color:rgb(250,250,250)">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>CONTACT</b></h1>
+						<br>
+					</div>
+				</div>
+				<div class="row" style="background-color:rgb(250,250,250)">
+					<div class="col-sm-6">
+						<h4 class="josephin" style="padding-left:12px">ADDRESS</h4>
+						<p class="muli" style="padding-left:12px">
+							Pranshu Gupta<br>
+							Room No: D-341, 
+							Second Hall of Residence, <br>
+							Indian Institute of Technology - Kanpur, <br>
+							Kanpur, Uttar Pradesh <br>
+							PIN: 208016<br><br><br>
+						</p>
+					</div>
+					<div class="col-sm-6" align="center" style="padding-right:40px">
+						<hr>
+						<a href="mailto:pranshug258@outlook.com"><img src="images/mail.png" style="margin:10px"></a>
+						<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776"><img style="margin:10px" src="images/fb.png"></a>
+						<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile"><img style="margin:10px" src="images/in.png"></a>
+						<hr>
+					</div>
+				</div>
+			</div>
 		</div>
 
         <!-- First try for the online version of jQuery-->
