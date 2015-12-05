@@ -1,12 +1,13 @@
 /*Navigation Bar styles/////////////////////////////////////////////////////////////////////////*/
 #nav {
-  background-color: rgb(0,99,177);
-  padding: 10px;
+  background-color: rgba(0,99,177, 0.9);
+  padding: 15px;
   position: fixed;
   right: 0;
   left: 0;
-  z-index: 5000;
-
+  z-index: 2000;
+    -webkit-transition: color 0.5s;
+    transition: 0.5s;   
 }
 #nav a {
   vertical-align: center;
@@ -80,6 +81,10 @@
   background-color: rgb(38,80,200);
 }
 
+/*Projects/////////////////////////////////////////////////////////*/
+#proj1close:hover, #proj2close:hover, #proj3close:hover {
+  cursor: pointer;
+}
 /*Artworks Section Styles//////////////////////////////////////////*/
 #heart {
   -webkit-transition: font-size 0.2s ease;
