@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
     <head>
     	<!-- WEBSITE TITLE AND DESCRIPTION-->
 		<title>Unsupervised Learning of Manifolds</title>
-		
+
 		<meta name="description" content="Doctor Emacs">
 		<meta name="keywords" content="Pranshu, Gupta, IITK, iit, Emacs, Doctor">
 		<meta name="author" content="Pranshu gupta">
@@ -30,7 +30,7 @@
 						<p class="muli" style="padding:5px;text-align:justify">
 							Learning the structure of space for a mobile robot, based on observations (i.e. images from the robot's camera) and nothing else with the help of the ISOMAP algorithm.
 							<br><br>
-							For this experiment, a point robot in a square shaped arena with walls having a color gradient has been used. The field of view of the robot's camera is 120 degrees. The robot can move anywhere in 'x' and 'y' directions within the arena and rotate about its own axis. The size of the robot itself has been accounted for (by keeping sufficient distance from the walls of the arena). 
+							For this experiment, a point robot in a square shaped arena with walls having a color gradient has been used. The field of view of the robot's camera is 120 degrees. The robot can move anywhere in 'x' and 'y' directions within the arena and rotate about its own axis. The size of the robot itself has been accounted for (by keeping sufficient distance from the walls of the arena).
 						</p>
 						<br>
 					</div>
@@ -91,7 +91,7 @@
 								<br>
 								In this part we make the robot move around a randomized trajectory of large length and collect about 10000 images. Then we learn the embedded manifold with the help of the Isomap Algorithm.
 								<br><br>
-								We have conducted this experiment on 3 trajectories: 
+								We have conducted this experiment on 3 trajectories:
 								<ul class="muli">
 									<li>Completely Random Points [x, y, Theta]</li>
 									<li>Motion along the Diagonal with continuous rotation about the robot's own axis</li>
@@ -135,7 +135,7 @@
 			</div>
 		</div>
 		<br>
-		
+
 		<div class="row">
 			<div class="container">
 				<div class="col-sm-8">
@@ -146,7 +146,7 @@
 						We use the isomap algorithm to learn the embedded manifold in the dataset. Now, for each image in the test set we have its position in the 3D manifold. But, for the train set images we also have the positions from where they were captured. So, we now find out means of the nearest neighbors of test images in the train set and assign the corresponding capturing positions to the test images.
 						<br><br>
 						<b>We now have all our images labelled with their respective capturing positions (x, y, theta).</b><br>
-						<small><i>**this was done for random position and the circular trajectories</i></small><br>			
+						<small><i>**this was done for random position and the circular trajectories</i></small><br>
 						<small class="muli"><i>**localization errors are the average euclidean displacement from the actual positions to the estimated positions</i></small>
 					</p>
 				</div>
@@ -160,7 +160,7 @@
 			</div>
 			<br><br>
 		</div>
-						
+
 		<div class="row" style="background-color:rgb(245,245,245)">
 			<div class="container" style="text-align:center">
 				<div class="row" style="background-color:rgb(200,200,200)">
@@ -178,14 +178,14 @@
 						<h4 class="josephin"><b>PART I</b></h4>
 						<img src="plots/Reconstruction_Error_1.png" class="img-responsive">
 						<p class="muli">
-							plot of reconstruction error vs. number of components in the reduced dimension for rotation of the robot about its own axis at three different points. 
+							plot of reconstruction error vs. number of components in the reduced dimension for rotation of the robot about its own axis at three different points.
 						</p>
 					</div>
 					<div class="col-sm-6">
 						<h4 class="josephin"><b>PART II</b></h4>
 						<img src="plots/Reconstruction_Error_2.png" class="img-responsive">
 						<p class="muli">
-							plot of reconstruction error vs. number of components in the reduced dimension for random positions of the robot. 							
+							plot of reconstruction error vs. number of components in the reduced dimension for random positions of the robot.
 						</p>
 					</div>
 				</div>
@@ -232,6 +232,6 @@
         <!-- Bootstrap JS -->
         <script src=" includes/bootstrap/js/bootstrap.min.js"></script>
         <!-- Custom JS -->
-        <script src=" includes/js/script.js"></script>   
+        <script src=" includes/js/script.js"></script>
 	</body>
 </html>
