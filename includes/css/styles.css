@@ -1,6 +1,6 @@
 /*Navigation Bar styles/////////////////////////////////////////////////////////////////////////*/
 #nav {
-  background-color: rgba(0,99,177, 0.9);
+  background-color: rgba(0,7,13, 0.9);
   padding: 15px;
   position: fixed;
   right: 0;
@@ -12,7 +12,10 @@
 #nav a {
   vertical-align: center;
   text-align: center;
-  color: #ffffff;
+  color: rgb(85,172,238);
+}
+#nav a:hover {
+  color: #fff;
 }
 #nav ul {
     list-style-type: none;
