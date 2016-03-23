@@ -88,6 +88,15 @@
 #proj1close:hover, #proj2close:hover, #proj3close:hover {
   cursor: pointer;
 }
+
+#project1:hover, #project2:hover, 
+#project3:hover, #project4:hover,
+#project5:hover, #project6:hover,
+#project7:hover, #project8:hover,
+#project9:hover, #project10:hover {
+  background-color: rgb(230,230,230);
+}
+
 /*Artworks Section Styles//////////////////////////////////////////*/
 #heart {
   -webkit-transition: font-size 0.2s ease;
