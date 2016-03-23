@@ -2,7 +2,7 @@
 #nav {
   background-color: rgba(0,7,13, 0.9);
   padding: 15px;
-  position: fixed;
+  position: absolute;
   right: 0;
   left: 0;
   z-index: 2000;
@@ -85,6 +85,12 @@
 }
 
 /*Projects/////////////////////////////////////////////////////////*/
+#projlist {
+  height: 700px;
+  overflow-y: auto;
+  overflow-x:hidden;
+}
+
 #proj1close:hover, #proj2close:hover, #proj3close:hover {
   cursor: pointer;
 }
