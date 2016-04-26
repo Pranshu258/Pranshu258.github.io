@@ -8,6 +8,7 @@
 		<meta name="description" content="Doctor Emacs">
 		<meta name="keywords" content="Pranshu, Gupta, IITK, iit, Emacs, Doctor">
 		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href=" images/favicon.ico" type="image/x-icon" />
 		<!-- MOBILE VIEWPORT OPTIMIZED -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<!-- Bootstrap CSS -->
@@ -22,23 +23,37 @@
 	</head>
 
 	<body>
-		<div class="row" style="background-color:rgb(250,250,250)">
+		<!--Navigation Bar Header Begins-->
+		<header class="row-fluid" id="nav">
 			<div class="container">
-				<div class="col-sm-12" style="background-color:rgb(210,210,210);padding-top:30px">
-					<div class="col-sm-11">
-						<h1 class="josephin big"><b>Unsupervised Learning of Manifolds</b></h1>
-						<p class="muli" style="padding:5px;text-align:justify">
-							Learning the structure of space for a mobile robot, based on observations (i.e. images from the robot's camera) and nothing else with the help of the ISOMAP algorithm.
-							<br><br>
-							For this experiment, a point robot in a square shaped arena with walls having a color gradient has been used. The field of view of the robot's camera is 120 degrees. The robot can move anywhere in 'x' and 'y' directions within the arena and rotate about its own axis. The size of the robot itself has been accounted for (by keeping sufficient distance from the walls of the arena).
-						</p>
-						<br>
-					</div>
-					<div class="col-sm-1"></div>
+				<div class="row">
+					<ul class="pull-right" id="main_menu">
+						<li class="muli"><a href="http://pranshu258.github.io" class="smoothScroll">Home</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#projects" class="smoothScroll">Projects</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#artworks" class="smoothScroll">Artworks</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#education" class="smoothScroll">Education</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#contact" class="smoothScroll">Contact</a></li>
+					</ul>
 				</div>
 			</div>
+		</header>
+		<!--Navigation Bar Header Ends-->
+
+		<!--About Me Section Begins-->
+		<div class="row" id="top" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<div class="col-sm-12" style="background-color:rgb(3,29,52);padding-top:95px;color:#fff">				
+					<h1 class="muli big">Learning Manifolds in Motion</h1>
+					<p class="muli" style="padding:5px;text-align:justify">
+						Learning the structure of space for a mobile robot, based on observations (i.e. images from the robot's camera) and nothing else with the help of the ISOMAP algorithm.
+						<br><br>
+						For this experiment, a point robot in a square shaped arena with walls having a color gradient has been used. The field of view of the robot's camera is 120 degrees. The robot can move anywhere in 'x' and 'y' directions within the arena and rotate about its own axis. The size of the robot itself has been accounted for (by keeping sufficient distance from the walls of the arena).
+					</p>
+				</div>
+			</div>
+			<br><br><br>
 		</div>
-		<br>
+		<br><br>
 		<div class="row">
 			<div class="container">
 				<div class="col-sm-5">
@@ -191,47 +206,60 @@
 				</div>
 			</div>
 		</div>
-		<br><hr>
-		<div class="row">
+		<br><br><br>
+		<!--Social Networking-->
+		<div class="row" id="contact" style="background-color:rgb(3,29,52)">
 			<div class="container">
-				<div class="col-sm-6">
-					<h4 class="josephin"><b>
-					Is it necessary to have gradient or texture on the walls? What would happen if we don't?</b></h4>
-					<p class="muli">
-						The estimation for robots position is better if we use textured walls because then it can differentiate between different points better.
-					</p>
-					<h4 class="josephin">
-						<b>What would be the manifold generated if instead of theta as the third variable, we had z-coordinate as the third degree of freedom in a 3-d space?</b>
-					</h4>
-					<p class="muli">
-						It won't matter if the images don't show any changes (in color/texture) in z direction (as in our arena). However, if we use the z co-ordinate in an arena where the walls vary in color/texture in that dimension too, we would get similar results as we got for (x,y,theta)
-					</p>
-					<h4 class="josephin"><b>What might be the limitations of such an approach in space discovery?</b></h4>
-					<p class="muli">
-						The arena might be dynamic unlike what we used in this experiment, in that case we might not be able estimate the position of the robot within the error range that we have here. (Using this technique)
-					</p>
-				</div>
-				<div class="col-sm-6">
-				</div>
-			</div>
-		</div>
-		<br>
-		<div class="row" style="background-color:rgb(245,245,245)">
-			<div class="container">
-				<div class="row" style="background-color:rgb(210,210,210)">
-					<div class="col-sm-12 muli" align="right">
-						<b>By Pranshu Gupta, 2016</b>
+				<div class="row" style="background-color:rgb(3,29,52);color:#fff">
+					<div class="col-sm-6">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>CONTACT</b></h1>
+						<br>
+						<h4 class="josephin" style="padding-left:12px;color:rgb(34,156,223)">ADDRESS</h4>
+						<p class="muli" style="padding-left:12px">
+							Pranshu Gupta<br>
+							Room No: D-341, 
+							Second Hall of Residence, <br>
+							Indian Institute of Technology - Kanpur, <br>
+							Kanpur, Uttar Pradesh, India <br>
+							PIN: 208016<br><br><br>
+						</p>
 					</div>
+					<div class="col-sm-6">
+						<br>
+						<div style="margin:80px" align="center">
+						<a href="https://github.com/Pranshu258" style="margin:10px"><img src="images/git.png"></a>
+						<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" style="margin:10px"><img style="height:32px" src="images/fb.png"></a>
+						<a href="mailto:pranshug258@outlook.com" style="margin:10px"><img src="images/mail.png"></a>
+						<a href="https://plus.google.com/u/0/116090635937013451273" style="margin:10px"><img src="images/google.png" style="height:34px"></a>
+						<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" style="margin:10px"><img style="height:32px" src="images/in.png"></a>
+						<a href="https://twitter.com/Pranshu23805940" style="margin:10px"><img src="images/twitter.png" style="height:32px"></a>
+						</div>
+						<br>
+					</div>
+
 				</div>
 			</div>
 		</div>
+
+		<div class="row" style="background-color:rgb(0,7,13)">
+			<div class="container">
+				<br>
+				<div class="row" style="text-align:center;background-color:rgb(0,7,13);color:#fff">
+					<b class="muli">&copy Copyright 2016, Pranshu Gupta</b><br>
+					<small class="muli" style="color:rgb(100,100,100)">(all logos belong to their respective owners)</small>
+				</div>
+				<br>
+			</div>
+		</div>
+
         <!-- First try for the online version of jQuery-->
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <!-- If no online access, fallback to our hardcoded version of jQuery -->
-        <script>window.jQuery || document.write('<script src=" includes/js/jquery-1.11.0.min.js"><\/script>')</script>
+        <script>window.jQuery || document.write('<script src="includes/js/jquery-1.11.0.min.js"><\/script>')</script>
         <!-- Bootstrap JS -->
-        <script src=" includes/bootstrap/js/bootstrap.min.js"></script>
+        <script src="includes/bootstrap/js/bootstrap.min.js"></script>
         <!-- Custom JS -->
-        <script src=" includes/js/script.js"></script>
+        <script src="includes/js/script.js"></script>   
 	</body>
 </html>
