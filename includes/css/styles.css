@@ -85,11 +85,11 @@
 }
 
 /*Projects/////////////////////////////////////////////////////////*/
-#projlist {
+/*#projlist {
   height: 700px;
   overflow-y: auto;
   overflow-x:hidden;
-}
+}*/
 
 #proj1close:hover, #proj2close:hover, #proj3close:hover {
   cursor: pointer;
@@ -101,6 +101,17 @@
 #project7:hover, #project8:hover,
 #project9:hover, #project10:hover {
   background-color: rgb(230,230,230);
+}
+
+#project1, #project2, 
+#project3, #project4,
+#project5, #project6,
+#project7, #project8,
+#project9, #project10 {
+  border-left: solid;
+  border-radius: 0px;
+  border-width: 3px;
+  border-color: rgb(0,0,0); 
 }
 
 /*Artworks Section Styles//////////////////////////////////////////*/
