@@ -1,0 +1,28 @@
+<div class="row-fluid">
+	<!-- <span style="color: blue" class="mega-octicon octicon-code"><b class="josefin" style="color:black"> Projects </b></span> -->
+	<div class="row-fluid" style="background-color: green;padding: 2%">
+		<h1 class="josefin" style="color: #fff; margin-left: 1%"><b>PROJECTS</b></h1>
+	</div>
+	<br>
+	<div class="row-fluid">
+		<div class="col-sm-1">
+			<a href="#Home"><span style="color: blue; margin-left: 33%" class="mega-octicon octicon-chevron-left"></a><br><br>
+		</div>
+		<div class="col-sm-11">
+			<div class="row-fluid" ng-repeat="project in projects">
+				<div class="row">
+					<div class="col-sm-8" id="project">
+						<h3 class="josefin"><b>{{project.title}}</b></h3>
+						<h6 class="muli"><b>{{project.category}}</b></h6><br>
+						<p class="muli" style="text-align: justify">{{project.details}}</p>					
+					</div>
+					<div class="col-sm-4">
+						<a target="_blank" href="{{project.url}}"><button class="btn btn-primary">More</button></a>
+					</div>
+				</div>
+				<br>
+			</div>
+			<br><br>
+		</div>
+	</div>
+</div>

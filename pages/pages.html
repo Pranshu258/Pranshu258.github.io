@@ -1,0 +1,27 @@
+<div class="row-fluid">
+	<!-- <span style="color: blue" class="mega-octicon octicon-code"><b class="josefin" style="color:black"> Projects </b></span> -->
+	<div class="row-fluid" style="background-color: purple;padding: 2%">
+		<h1 class="josefin" style="color: #fff; margin-left: 1%"><b>MY PAGES</b></h1>
+	</div>
+	<br>
+	<div class="row-fluid">
+		<div class="col-sm-1">
+			<a href="#Home"><span style="color: blue; margin-left: 33%" class="mega-octicon octicon-chevron-left"></a><br><br>
+		</div>
+		<div class="col-sm-11">
+			<div class="row-fluid" ng-repeat="page in pages">
+				<div class="row">
+					<div class="col-sm-8" id="page">
+						<h3 class="josefin"><b>{{page.title}}</b></h3>
+						<h6 class="muli"><b>{{page.category}}</b></h6>
+						<p class="muli" style="text-align: justify">{{page.details}}</p>					
+					</div>
+					<div class="col-sm-4">
+						<a target="_blank" href="{{page.url}}"><button class="btn btn-primary">Visit</button></a>
+					</div>
+				</div>
+				<br>
+			</div>			
+		</div>
+	</div>
+</div>

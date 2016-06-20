@@ -1,0 +1,10 @@
+#project {
+	background-color: rgb(240,240,240);
+	padding: 2%;
+	border: solid;
+	border-width: 3px;
+	border-color: rgb(240,240,240);
+}
+#project:hover {
+	border-color: rgb(200,200,200)
+}

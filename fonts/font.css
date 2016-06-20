@@ -1,0 +1,22 @@
+﻿@font-face {
+	font-family: 'Muli';
+	src: url('Muli.ttf');
+}
+@font-face {
+	font-family: 'Josefin Sans';
+	src: url('JosefinSans.ttf');
+}
+@font-face {
+	font-family: 'TitilliumWebRegular';
+	src: url('./TitilliumWebRegular.eot');
+	src: local('TitilliumWebRegular'), url('./TitilliumWebRegular.woff') format('woff'), url('./TitilliumWebRegular.ttf') format('truetype');
+}
+.titillium {
+	font-family: 'TitilliumWebRegular' !important;
+}
+.muli {
+	font-family: 'Muli', sans-serif;
+}
+.josefin {
+	font-family: 'Josefin Sans', sans-serif;
+}

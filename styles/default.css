@@ -1,0 +1,105 @@
+body {
+		
+}
+
+.form-control {
+	border-radius: 0px;
+}
+
+/*Custom Font Sizes*/
+.big {
+	font-size: 400%;
+}
+.small {
+	font-size: 10px;
+}
+
+/*Custom Border Styles*/
+.border-left {
+	border-left: solid;
+	border-radius: 0px;
+	border-width: 1px;
+	border-color: rgb(220,220,220);
+}
+.border-right {
+	border-right: solid;
+	border-radius: 0px;
+	border-width: 1px;
+	border-color: rgb(220,220,220);
+}
+.border {
+	border: solid;
+	border-radius: 0px;
+	border-width: 1px;
+	border-color: rgb(220,220,220);
+}
+
+/*Custom Button Styles*/
+.btn {
+	border-radius: 0;
+}
+.btn .btn-primary {
+	border-radius: 0;
+}
+.well {
+	border-radius: 0;
+	border: none;
+}
+
+#br1 {
+	background-color: rgb(220,220,220);
+	font-size: 1px;
+}
+
+@keyframes scaleUp {
+    from    { opacity: 0.3; -webkit-transform: scale(0.95); }
+}
+.ng-enter {
+    animation: scaleUp 0.2s both ease-in;
+}
+.ng-hide-remove {
+    animation: scaleUp 0.2s both ease-in;
+}
+
+#nav ul {
+    list-style-type: none;
+    margin: 0;
+}
+#nav li {
+    display: inline;
+    padding: 10px;
+    -webkit-transition: color 0.5s;
+    transition: 0.5s;   
+}
+#nav a {
+	text-decoration: none;
+}
+
+#b1, #b2, #b3, #b4, #b5 {
+	margin: 1%;
+	padding: 1%;
+	padding-top: 0.7%;
+	border-top: solid;
+	border-color: #fff;
+	border-width: 5px;
+}
+
+#b1:hover {
+	border-color: blue;
+}
+
+#b2:hover {
+	border-color: green;
+}
+
+#b3:hover {
+	border-color: maroon;
+}
+
+#b4:hover {
+	border-color: purple;	
+}
+
+#b5:hover {
+	border-color: turquoise;
+}
