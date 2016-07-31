@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+    	<!-- WEBSITE TITLE AND DESCRIPTION-->
+		<title>Unsupervised Learning of Manifolds</title>
+
+		<meta name="description" content="Doctor Emacs">
+		<meta name="keywords" content="Pranshu, Gupta, IITK, iit, Emacs, Doctor">
+		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href=" images/favicon.ico" type="image/x-icon" />
+		<!-- MOBILE VIEWPORT OPTIMIZED -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<!-- Bootstrap CSS -->
+		<link href=" includes/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href=" includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href=" includes/css/styles.css">
+		<link rel="stylesheet" href=" includes/fonts/font.css">
+		<!-- Include Modernizr in the head, before any other Javascript -->
+        <script src=" includes/js/modernizr-2.6.2.min.js"></script>
+
+	</head>
+
+	<body>
+		<!--Navigation Bar Header Begins-->
+		<header class="row-fluid" id="nav">
+			<div class="container">
+				<div class="row">
+					<ul class="pull-right" id="main_menu">
+						<li class="muli"><a href="http://pranshu258.github.io" class="smoothScroll">Home</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#projects" class="smoothScroll">Projects</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#artworks" class="smoothScroll">Artworks</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#education" class="smoothScroll">Education</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#contact" class="smoothScroll">Contact</a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<!--Navigation Bar Header Ends-->
+
+		<!--About Me Section Begins-->
+		<div class="row" id="top" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<div class="col-sm-12" style="background-color:rgb(3,29,52);padding-top:95px;color:#fff">				
+					<h1 class="muli big">Learning Manifolds in Motion</h1>
+					<p class="muli" style="padding:5px;text-align:justify">
+						Learning the structure of space for a mobile robot, based on observations (i.e. images from the robot's camera) and nothing else with the help of the ISOMAP algorithm.
+						<br><br>
+						For this experiment, a point robot in a square shaped arena with walls having a color gradient has been used. The field of view of the robot's camera is 120 degrees. The robot can move anywhere in 'x' and 'y' directions within the arena and rotate about its own axis. The size of the robot itself has been accounted for (by keeping sufficient distance from the walls of the arena).
+					</p>
+				</div>
+			</div>
+			<br><br><br>
+		</div>
+		<br><br>
+		<div class="row">
+			<div class="container">
+				<div class="col-sm-5">
+					<h3 class="josephin"><b>ROTATING ABOUT FIXED POINT(S)</b></h3>
+					<p class="muli" style="text-align:justify">
+						We make the robot rotate about its own axis at three different points in the arena and collect images of the arena as seen by the robot.<br><br>
+						With configuration given above, the images we get are 600 x 1 pixels in size in the RGB color sapce. So, the data we get has entries of '<b>600 x 1 x 3</b>'' dimensions. We capture 1000 images for each of the three points, i.e. 3000 in total.
+						<small>We have observed similar results on a bigger image set also.</small><br>
+						We then find out the hidden manifold in this data with the help of the Isomap Algorithm. The algorithm takes two parameters, the number of neighbors to consider in the geodesic mapping of the manifold and the final output dimension that we want. We have provided them as '10' and '3' respectively.<br>
+					</p>
+				</div>
+				<div class="col-sm-7">
+					<h6 class="muli" style="text-align:center">a few sample images (600x1) pixels</h6>
+					<img src="img/1.png"><br>
+					<img src="img/2.png"><br>
+					<img src="img/3.png"><br><br>
+					<div class="row">
+						<div class="col-sm-4">
+							<h6 class="muli" style="text-align:center">3D Manifold for rotation about a single point</h6>
+							<img src="plots/One_Point_Rotation.png" class="img-responsive">
+						</div>
+						<div class="col-sm-4">
+							<h6 class="muli" style="text-align:center">3D Manifold for rotation about two points</h6>
+							<img src="plots/Two_Point_Rotation.png" class="img-responsive">
+						</div>
+						<div class="col-sm-4">
+							<h6 class="muli" style="text-align:center">3D Manifold for rotation about three points</h6>
+							<img src="plots/Three_Point_Rotation.png" class="img-responsive">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br><br>
+		<div class="row" style="background-color:rgb(250,250,250)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(210,210,210)">
+					<div class="col-sm-12">
+						<h3 class="josephin"><b>DISCOVERING X-Y MOTION WITH ROTATION</b></h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="container">
+				<div class="row">
+					<div class="row" style="background-color:rgb(238,238,238);text-align:justify">
+						<div class="col-sm-7">
+							<p class="muli">
+								<br>
+								In this part we make the robot move around a randomized trajectory of large length and collect about 10000 images. Then we learn the embedded manifold with the help of the Isomap Algorithm.
+								<br><br>
+								We have conducted this experiment on 3 trajectories:
+								<ul class="muli">
+									<li>Completely Random Points [x, y, Theta]</li>
+									<li>Motion along the Diagonal with continuous rotation about the robot's own axis</li>
+									<li>Circular with view in Radial direction</li>
+								</ul>
+								<br>
+							</p>
+						</div>
+						<div class="col-sm-5">
+
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-sm-4">
+							<h6 class="muli" style="text-align:center">3D Manifold for Random Trajectory</h6>
+							<img src="plots/Manifold_Trajectory_1.png" class="img-responsive">
+						</div>
+						<div class="col-sm-4">
+							<h6 class="muli" style="text-align:center">3D Manifold Motion along the Diagonal of the Arena</h6>
+							<img src="plots/Manifold_Trajectory_2.png" class="img-responsive">
+						</div>
+						<div class="col-sm-4">
+							<h6 class="muli" style="text-align:center">3D Manifold for Circular Motion with Radial View</h6>
+							<img src="plots/Manifold_Trajectory_3.png" class="img-responsive">
+						</div>
+					</div>
+					<br>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="background-color:rgb(245,245,245)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(200,200,200)">
+					<div class="col-sm-12">
+						<br>
+						<a href="hw1.tar.gz">DOWNLOAD THE PROJECT FILES</a>
+						<br><br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+
+		<div class="row">
+			<div class="container">
+				<div class="col-sm-8">
+					<h3 class="josephin"><b>ESTIMATING THE POSITION OF THE ROBOT FROM TEST IMAGES</b></h3>
+					<p class="muli" style="text-align:justify">
+						In this part, we take a set of 11000 images in which for 10000, we know exactly from what position they were captured (train set). However, we don't have this information for the rest of the images (test set).
+						<br><br>
+						We use the isomap algorithm to learn the embedded manifold in the dataset. Now, for each image in the test set we have its position in the 3D manifold. But, for the train set images we also have the positions from where they were captured. So, we now find out means of the nearest neighbors of test images in the train set and assign the corresponding capturing positions to the test images.
+						<br><br>
+						<b>We now have all our images labelled with their respective capturing positions (x, y, theta).</b><br>
+						<small><i>**this was done for random position and the circular trajectories</i></small><br>
+						<small class="muli"><i>**localization errors are the average euclidean displacement from the actual positions to the estimated positions</i></small>
+					</p>
+				</div>
+				<div class="col-sm-4" style="text-align:center">
+					<br>
+					<h1 class="josephin big"><b>17.31</b></h1>
+					<h6 class="josephin"><b>LOCALIZATION ERROR: CIRCULAR TRAJECTORY</b></h6>
+					<h1 class="josephin big"><b>18.21</b></h1>
+					<h6 class="josephin"><b>LOCALIZATION ERROR: RANDOM TRAJECTORY</b></h6>
+				</div>
+			</div>
+			<br><br>
+		</div>
+
+		<div class="row" style="background-color:rgb(245,245,245)">
+			<div class="container" style="text-align:center">
+				<div class="row" style="background-color:rgb(200,200,200)">
+					<div class="col-sm-12">
+						<h3 class="josephin"><b>PLOTS OF RECONSTRUCTION ERROR vs. NUMBER OF COMPONENTS IN REDUCED DIMENSION</b></h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="container">
+				<div class="row" style="text-align:center">
+					<div class="col-sm-6">
+						<h4 class="josephin"><b>PART I</b></h4>
+						<img src="plots/Reconstruction_Error_1.png" class="img-responsive">
+						<p class="muli">
+							plot of reconstruction error vs. number of components in the reduced dimension for rotation of the robot about its own axis at three different points.
+						</p>
+					</div>
+					<div class="col-sm-6">
+						<h4 class="josephin"><b>PART II</b></h4>
+						<img src="plots/Reconstruction_Error_2.png" class="img-responsive">
+						<p class="muli">
+							plot of reconstruction error vs. number of components in the reduced dimension for random positions of the robot.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br><br>
+		<!--Social Networking-->
+		<div class="row" id="contact" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(3,29,52);color:#fff">
+					<div class="col-sm-6">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>CONTACT</b></h1>
+						<br>
+						<h4 class="josephin" style="padding-left:12px;color:rgb(34,156,223)">ADDRESS</h4>
+						<p class="muli" style="padding-left:12px">
+							Pranshu Gupta<br>
+							Room No: D-341, 
+							Second Hall of Residence, <br>
+							Indian Institute of Technology - Kanpur, <br>
+							Kanpur, Uttar Pradesh, India <br>
+							PIN: 208016<br><br><br>
+						</p>
+					</div>
+					<div class="col-sm-6">
+						<br>
+						<div style="margin:80px" align="center">
+						<a href="https://github.com/Pranshu258" style="margin:10px"><img src="images/git.png"></a>
+						<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" style="margin:10px"><img style="height:32px" src="images/fb.png"></a>
+						<a href="mailto:pranshug258@outlook.com" style="margin:10px"><img src="images/mail.png"></a>
+						<a href="https://plus.google.com/u/0/116090635937013451273" style="margin:10px"><img src="images/google.png" style="height:34px"></a>
+						<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" style="margin:10px"><img style="height:32px" src="images/in.png"></a>
+						<a href="https://twitter.com/Pranshu23805940" style="margin:10px"><img src="images/twitter.png" style="height:32px"></a>
+						</div>
+						<br>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="background-color:rgb(0,7,13)">
+			<div class="container">
+				<br>
+				<div class="row" style="text-align:center;background-color:rgb(0,7,13);color:#fff">
+					<b class="muli">&copy Copyright 2016, Pranshu Gupta</b><br>
+					<small class="muli" style="color:rgb(100,100,100)">(all logos belong to their respective owners)</small>
+				</div>
+				<br>
+			</div>
+		</div>
+
+        <!-- First try for the online version of jQuery-->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- If no online access, fallback to our hardcoded version of jQuery -->
+        <script>window.jQuery || document.write('<script src="includes/js/jquery-1.11.0.min.js"><\/script>')</script>
+        <!-- Bootstrap JS -->
+        <script src="includes/bootstrap/js/bootstrap.min.js"></script>
+        <!-- Custom JS -->
+        <script src="includes/js/script.js"></script>   
+	</body>
+</html>

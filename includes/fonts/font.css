@@ -1,0 +1,36 @@
+@font-face {
+	font-family: 'TitilliumWebRegular';
+	src: url('./TitilliumWebRegular.eot');
+	src: local('TitilliumWebRegular'), url('./TitilliumWebRegular.woff') format('woff'), url('./TitilliumWebRegular.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Oswald';
+	src: local('Oswald'), url('./Oswald-Light.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Muli';
+	src: url('Muli.ttf');
+}
+@font-face {
+	font-family: 'Josefin Sans';
+	src: url('JosefinSans.ttf');
+}
+@font-face {
+	font-family: 'Calligraffitti';
+	src: url('Calligraffiti.ttf');
+}
+.oswald {
+	font-family: 'Oswald', sans-serif;
+}
+.titillium {
+	font-family: 'TitilliumWebRegular' !important;
+}
+.muli {
+	font-family: 'Muli', sans-serif;
+}
+.josephin {
+	font-family: 'Josefin Sans', sans-serif;
+}
+.calligraffitti {
+	font-family: 'Calligraffitti', cursive;
+}

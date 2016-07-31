@@ -1,53 +1,345 @@
 <!DOCTYPE html>
-<html ng-app="portfolio">
+<html lang="en">
+    
+    <head>
+    	<!-- WEBSITE TITLE AND DESCRIPTION-->
+		<title>Pranshu Gupta</title>
+		
+		<meta name="description" content="Home Page">
+		<meta name="keywords" content="Pranshu, Gupta, IITK, iit">
+		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<!-- MOBILE VIEWPORT OPTIMIZED -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<!-- Bootstrap CSS -->
+		<link href="includes/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="includes/css/styles.css">
+		<link rel="stylesheet" href="includes/fonts/font.css">
+		<!-- Include Modernizr in the head, before any other Javascript -->
+        <script src="includes/js/modernizr-2.6.2.min.js"></script>
 
-<head>
-	<!-- WEBSITE TITLE AND DESCRIPTION-->
-	<title>Pranshu Gupta</title>
-	<meta name="description" content="Home Page">
-	<meta name="keywords" content="Pranshu, Gupta, IITK, iit">
-	<meta name="author" content="Pranshu gupta">
-	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-	<!-- MOBILE VIEWPORT OPTIMIZED -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<!-- BOOTSTRAP -->
-	<link href="packages/bootstrap/content/bootstrap.css" rel="stylesheet" />
-	<!-- CUSTOM STYLESHEETS -->
-	<link href="styles/default.css" rel="stylesheet" />
-	<link href="fonts/font.css" rel="stylesheet" />
-	<link href="fonts/octicons/octicons.css" rel="stylesheet" />
-	<link href="styles/home.css" rel="stylesheet" />
-	<link href="styles/projects.css" rel="stylesheet" />
-	<link href="styles/mypages.css" rel="stylesheet" />
-	<link href="styles/contact.css" rel="stylesheet" />
-	<!-- ANGULARJS -->
-	<script src="packages/angularjs/core/angular.js"></script>
-    <script src="packages/angularjs/route/angular-route.js"></script>
-    <script src="packages/angularjs/animate/angular-animate.js"></script>
-    <!-- CONTROLLERS -->
-    <script src="scripts/portfolio.js"></script>
-    <script src="scripts/controllers/mainController.js"></script>
-    <script src="scripts/controllers/homeController.js"></script>
-    <script src="scripts/controllers/projectsController.js"></script>
-    <script src="scripts/controllers/creativeController.js"></script>
-    <script src="scripts/controllers/mypagesController.js"></script>
-    <script src="scripts/controllers/contactController.js"></script>
-</head>
+	</head>
+	<body>
+		<!--Navigation Bar Header Begins-->
+		<header class="row-fluid" id="nav">
+			<div class="container">
+				<div class="row">
+					<ul class="pull-right" id="main_menu">
+						<li class="muli"><a href="#top" class="smoothScroll">Home</a></li>
+						<li class="muli"><a href="#projects" class="smoothScroll">Projects</a></li>
+						<li class="muli"><a href="#artworks" class="smoothScroll">Artworks</a></li>
+						<li class="muli"><a href="#education" class="smoothScroll">Education</a></li>
+						<li class="muli"><a href="#contact" class="smoothScroll">Contact</a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<!--Navigation Bar Header Ends-->
 
-<body ng-controller="mainController" style="height: 100vh" >
-	<header style="background-color: #fff;padding: 1%" id="nav" align="center">
-		<!-- <span ng-click="showNav()" style="color: blue" class="mega-octicon octicon-three-bars"></span> -->
-		<span id="b1" class="titillium"><a href="#Home"><b>HOME</b></a></span>
-		<span id="b2" class="titillium"><a href="#Projects"><b>PROJECTS</b></a></span>
-		<span id="b3" class="titillium"><a href="#Creative"><b>CREATIVE</b></a></span>
-		<span id="b4" class="titillium"><a href="#Pages"><b>PAGES</b></a></span>
-		<span id="b5" class="titillium"><a href="#Contact"><b>CONNECT</b></a></span>
-	</header>
-	<div class="row-fluid">
-		<div class="col-md-12" style="padding: 0; margin: 0">
-			<div ng-view></div>
+		<!--About Me Section Begins-->
+		<div class="row" id="top" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<br>
+				<div class="col-sm-12" style="background-color:rgb(3,29,52);padding-top:95px;color:#fff">
+					<div class="col-sm-8">
+						<h1 class="muli big">Pranshu Gupta</h1>
+						<p class="muli" style="padding:5px">
+							I am a Final Year Undergraduate Student. I am pursuing a bachelors degree in the Department of Computer Science and Engineering at 
+							Indian Institute of Technology - Kanpur.
+						</p>
+						<p class="muli" style="padding:5px">
+							I love Web Designing, learning more about Computers and Painting.
+							<!--<a href="PranshuGupta.pdf">Resume</a>--><br>
+							<br><br><br>
+							<img src="images/logos/microsoft.png" ><br><br>
+							Summer Intern 2016 @ Microsoft, India
+						</p>
+						<br><br>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+			</div>
+			<br><br><br>
 		</div>
-	</div>
-</body>
+		<!--About Me Section Ends-->
 
+		<!--Projects Section Begins-->
+		<div class="row" id="projects" style="background-color:rgb(25,172,238)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(25,172,238);color:#fff">
+					<div class="col-sm-12">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>PROJECTS</b></h1>
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="background-color:rgb(240,240,240)">
+<!-- 			<div class="col-sm-4" style="height:700px;background-color:rgb(3,29,52)" align="center">
+			</div> -->
+			<div class="container"  id="projlist">
+				<br><br>
+				<div class="row" id="project1" style="padding:20px">
+					<h3 class="josephin"><b>CROWD BEHAVIOR ANALYSIS BASED ON TRAJECTORIES</b></h3>
+					<h5 class="muli"><b>Artificial Intelligence and Data Mining</b></h5>
+					<p class="muli" style="text-align:justify">
+						Crowd behavior analysis is an important field of research in modern world. It has wide applications in surveillance and public safety which are one of the prime social concerns. One way to analyze crowd behavior is obtain crowd movement data and then find out outliers in the individual trajectories to infer any abnormal behavior in the crowd.<br><br>
+						Implemented a system that takes a set of trajectories obtained from crowd data and detects the outliers in that set. A trajectory is a sequence of points (x,y,t), where x, y are the ground co-ordinates of the person at time t.						
+					</p>
+					<br>
+					<a target = "_blank" href="https://github.com/Pranshu258/cba"><button class="btn btn-primary">VIEW DETAILS</button></a>
+					<b class="muli pull-right">Python 3.4, GIT</b>
+					<br>						
+				</div>
+				<br><br>
+				<div class="row" id="project1" style="padding:20px">
+					<h3 class="josephin"><b>PyCS: A COMPILER FOR C# IN PYTHON</b></h3>
+					<h5 class="muli"><b>Compiler Design</b></h5>
+					<p class="muli" style="text-align:justify">
+						An end to end compiler for C# implemented in Python3 using the PLY module. It takes a C# source file as input and compiles it to x86(IA32) code which can be run on a linux machine using the gnu assembler.
+					</p>
+					<br>
+					<a target = "_blank" href="https://github.com/divush/csharp-compiler"><button class="btn btn-primary">VIEW DETAILS</button></a>
+					<b class="muli pull-right">Python 3.4, x86-IA32, GIT</b>
+					<br>						
+				</div>
+				<br><br>
+				<div class="row" id="project1" style="padding:20px">
+					<h3 class="josephin"><b>GREENDZINE TECHNOLOGIES WEBSITE</b></h3>
+					<h5 class="muli"><b>Web Design and Development</b></h5>
+					<p class="muli" style="text-align:justify">
+						Greendzine Technologies is a company striving to develop products that are based on green technology 
+						at affordable prices for the community as well as businesses. A pioneer in electric mobility solutions in India, 
+						the company aims to bring a greener future in India.<br><br>
+						Built a digital platform which beautifully reflects the brand and provides information about the products and services 
+						provided by the company. Focussing on customer satisfaction and quality of service, customer/product registration 
+						complaint management systems were also developed as integral parts of the website.
+					</p>
+					<br>
+					<a target = "_blank" href="http://www.greendzine.in"><button class="btn btn-primary">VISIT SITE</button></a>
+					<b class="muli pull-right">HTML5/CSS3, JS, PHP, GIT, jQuery</b>
+					<br>						
+				</div>
+				<br><br>
+				<div class="row" id="project1" style="padding:20px">
+					<h3 class="josephin"><b>WAREHOUSE ORDER PICKING</b></h3>
+					<h5 class="muli"><b>Algorithms and Data Analysis</b></h5>
+					<p class="muli" style="text-align:justify">
+						The order picking process is the process of retrieving products from specified storage locations
+						on the basis of customer orders. It is in general one of the most time consuming processes in warehouses and contributes for a large extent to warehousing costs. We can reduce this cost by determining optimal order picking routes. This consists of finding a sequence in which products have to be retrieved from storage such that travel distances are as short as possible.<br><br>
+						Designed and implemented a heuristic algorithm for finding warehouse order picking paths. 
+						Also implemented a simulator that can be used to test, analyse and improve any order picking algorithm meant to be used for rectangular warehouses with similar constraints. 
+					</p>
+					<br>
+					<a target = "_blank" href="http://www.greendzine.in/analytics.php"><button class="btn btn-primary">VISIT SITE</button></a>
+					<b class="muli pull-right">HTML5 Canvas, Javascript, GIT</b>
+					<br>						
+				</div>
+				<br><br>
+				<div class="row" id="project1" style="padding:20px">
+					<h3 class="josephin"><b>RENJU GAME</b></h3>
+					<h5 class="muli"><b>Python Application Development with Pygame</b></h5>
+					<p class="muli" style="text-align:justify">
+						RENJU is a strategy board game played by two people. One of them takes the black stone and the other one white. They place their stones by turns on the board. The player who first makes five stones (of his/her colour) in a line wins the game. The line can be in any direction, horizontal, vertical or any of  the two diagonals.<br><br>	
+						Developed an application that allows the user to play RENJU against the computer. Used MINIMAX and ALPHA-BETA PRUNING algorithms to implement the computer player.
+					</p>
+					<br>
+					<a target = "_blank" href="https://github.com/Pranshu258/Renju"><button class="btn btn-primary">VIEW DETAILS</button></a>
+					<b class="muli pull-right">Python, Pygame, GIT</b>
+					<br>						
+				</div>
+				<br><br>
+				<div class="row" id="project1" style="padding:20px">
+					<h3 class="josephin"><b>IMAGE COMPLETION WITH STATISTICS OF PATCH OFFSETS</b></h3>
+					<h5 class="muli"><b>Computer Vision and Image Processing</b></h5>
+					<p class="muli">	
+					</p>
+					<br>
+					<a target = "_blank" href="https://github.com/Pranshu258/image_completion"><button class="btn btn-primary">VIEW DETAILS</button></a>
+					<b class="muli pull-right">Python 3.4, OpenCV 3.1, GIT</b>
+					<br>						
+				</div>
+				<br><br>
+			</div>
+		</div>
+		
+
+		<!--Projects Section Ends-->
+		<!--Artworks Section Begins-->
+		<div class="row" id="artworks" style="background-color:rgb(25,172,238)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(25,172,238);color:#fff">
+					<div class="col-sm-12">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>ARTWORKS</b></h1>
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="container"><br>
+				<div class="col-sm-4">
+					<h1 class="josephin" align="center" id="art1" style="font-size: 350%;color:rgb(0,50,150)">FAVORITES</h1>
+					<br>
+					<div id="myCarousel2" class="carousel slide" data-ride="carousel">
+					  <!-- Indicators -->
+					  <ol class="carousel-indicators">
+					    <li data-target="#myCarousel2" data-slide-to="0" class="active"></li>
+					    <li data-target="#myCarousel2" data-slide-to="1"></li>
+					    <li data-target="#myCarousel2" data-slide-to="2"></li>
+					    <li data-target="#myCarousel2" data-slide-to="3"></li>
+					    <li data-target="#myCarousel2" data-slide-to="4"></li>
+					    <li data-target="#myCarousel2" data-slide-to="5"></li>
+					    <li data-target="#myCarousel2" data-slide-to="6"></li>
+					  </ol>
+					  <!-- Wrapper for slides -->
+					  <div class="carousel-inner" role="listbox">
+					    <div class="item active" align="center">
+					      <img src="images/img1.jpg" class="img-responsive" alt="">
+					    </div>
+
+					    <div class="item" align="center">
+					      <img src="images/img2.jpg" class="img-responsive" alt="">
+					    </div>
+
+					    <div class="item" align="center">
+					      <img src="images/img3.jpg" class="img-responsive" alt="">
+					    </div>
+					    <div class="item" align="center">
+					      <img src="images/img4.jpg" class="img-responsive" alt="">
+					    </div>
+					    <div class="item" align="center">
+					      <img src="images/img5.jpg" class="img-responsive" alt="">
+					    </div>
+					    <div class="item" align="center">
+					      <img src="images/img6.jpg" class="img-responsive" alt="">
+					    </div>
+					    <div class="item" align="center">
+					      <img src="images/img7.jpg" class="img-responsive" alt="">
+					    </div>					   					  
+					  </div>
+
+					  <!-- Left and right controls -->
+					  <a class="left carousel-control" href="#myCarousel2" role="button" data-slide="prev">
+					    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					    <span class="sr-only">Previous</span>
+					  </a>
+					  <a class="right carousel-control" href="#myCarousel2" role="button" data-slide="next">
+					    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					    <span class="sr-only">Next</span>
+					  </a>
+					</div>
+					<br>
+				</div>
+				<div class="col-sm-8"><br>
+					<div class="row-fluid" id="art" style="height:270px;">
+						<h1 class="josephin" align="center"  style="font-size: 800%">FAVORITES</h1>
+						<h1 align="center" style="font-size: 600%"><span id="heart" class="glyphicon glyphicon-heart"></span></h1><br>
+					</div>
+					<div class="row-fluid">
+						<h2 class="calligraffitti" align="center">let your heart guide you, it whispers, so listen closely</h2>
+						<p style="text-align:center" class="muli">- the land before time -</p>
+					</div>
+				</div>
+			</div><br>
+		</div>
+		<!--Artworks Section Ends-->
+
+		<!--Education Section Begins-->
+		<div class="row" id="education" style="background-color:rgb(25,172,238)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(25,172,238);color:#fff">
+					<div class="col-sm-12">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>EDUCATION</b></h1>
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="background-color:rgb(238,238,238)">
+			<div class="container">
+				<div class="row" style="padding:15px;background-color:rgb(238,238,238)"><br>
+					<div class="row">
+						<div class="col-sm-3" id="edu1">
+							<h3 class="josephin" align="center">COMPUTER SCIENCE</h3>
+							<h1 class="josephin" align="center" style="font-size: 800%">IIT</h1>
+							<h3 class="muli" align="center">KANPUR</h3>
+						</div>
+						<div class="col-sm-6  border-left border-right" id="edu2">
+							<h3 class="josephin" align="center">GOVT. JUBILEE INTER COLLEGE</h3>
+							<h1 class="josephin" align="center" style="font-size: 800%">X , XII</h1>
+							<h3 class="muli" align="center">GORAKHPUR</h3>
+						</div>
+						<div class="col-sm-3" id="edu3">
+							<h3 class="josephin" align="center">BORN</h3>
+							<h1 class="josephin" align="center" style="font-size: 800%">25</h1>
+							<h3 class="muli" align="center">AUGUST 1995</h3>
+						</div>
+					</div><br>
+				</div>
+			</div>
+		</div>
+
+		<!--Education Section Ends-->
+		<!--Social Networking-->
+		<div class="row" id="contact" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(3,29,52);color:#fff">
+					<div class="col-sm-6">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>CONTACT</b></h1>
+						<br>
+						<h4 class="josephin" style="padding-left:12px;color:rgb(34,156,223)">ADDRESS</h4>
+						<p class="muli" style="padding-left:12px">
+							Pranshu Gupta<br>
+							Room No: D-341, 
+							Second Hall of Residence, <br>
+							Indian Institute of Technology - Kanpur, <br>
+							Kanpur, Uttar Pradesh, India <br>
+							PIN: 208016<br><br><br>
+						</p>
+					</div>
+					<div class="col-sm-6">
+						<br>
+						<div style="margin:80px" align="center">
+						<a href="https://github.com/Pranshu258" style="margin:10px"><img src="images/git.png"></a>
+						<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" style="margin:10px"><img style="height:32px" src="images/fb.png"></a>
+						<a href="mailto:pranshug258@outlook.com" style="margin:10px"><img src="images/mail.png"></a>
+						<a href="https://plus.google.com/u/0/116090635937013451273" style="margin:10px"><img src="images/google.png" style="height:34px"></a>
+						<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" style="margin:10px"><img style="height:32px" src="images/in.png"></a>
+						<a href="https://twitter.com/Pranshu23805940" style="margin:10px"><img src="images/twitter.png" style="height:32px"></a>
+						</div>
+						<br>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="background-color:rgb(0,7,13)">
+			<div class="container">
+				<br>
+				<div class="row" style="text-align:center;background-color:rgb(0,7,13);color:#fff">
+					<b class="muli">&copy Copyright 2016, Pranshu Gupta</b><br>
+					<small class="muli" style="color:rgb(100,100,100)">(all logos belong to their respective owners)</small>
+				</div>
+				<br>
+			</div>
+		</div>
+
+        <!-- First try for the online version of jQuery-->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- If no online access, fallback to our hardcoded version of jQuery -->
+        <script>window.jQuery || document.write('<script src="includes/js/jquery-1.11.0.min.js"><\/script>')</script>
+        <!-- Bootstrap JS -->
+        <script src="includes/bootstrap/js/bootstrap.min.js"></script>
+        <!-- Custom JS -->
+        <script src="includes/js/script.js"></script>   
+	</body>
 </html>

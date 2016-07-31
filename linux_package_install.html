@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+    	<!-- WEBSITE TITLE AND DESCRIPTION-->
+		<title>Installing Linux Packages</title>
+		
+		<meta name="description" content="All in One script to install Linux Packages">
+		<meta name="keywords" content="Ubuntu, Linux, Install, Packages, Script, 16.04, LTS. Ubuntu 16.04 LTS, post installation">
+		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<!-- MOBILE VIEWPORT OPTIMIZED -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<!-- Bootstrap CSS -->
+		<link href="includes/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="includes/css/styles.css">
+		<link rel="stylesheet" href="includes/fonts/font.css">
+		<!-- Include Modernizr in the head, before any other Javascript -->
+        <script src="includes/js/modernizr-2.6.2.min.js"></script>
+	</head>
+	<body>
+		<!--Navigation Bar Header Begins-->
+		<header class="row-fluid" id="nav">
+			<div class="container">
+				<div class="row">
+					<ul class="pull-right" id="main_menu">
+						<li class="muli"><a href="http://pranshu258.github.io" class="smoothScroll">Home</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#projects" class="smoothScroll">Projects</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#artworks" class="smoothScroll">Artworks</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#education" class="smoothScroll">Education</a></li>
+						<li class="muli"><a href="http://pranshu258.github.io#contact" class="smoothScroll">Contact</a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<!--Navigation Bar Header Ends-->
+
+		<!--About Me Section Begins-->
+		<div class="row" id="top" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<div class="col-sm-12" style="background-color:rgb(3,29,52);padding-top:95px;color:#fff">
+					<div class="col-sm-2">
+						<img src="images/logos/ubuntu.png" class="img-responsive">
+					</div>					
+					<div class="col-sm-10">
+						<h1 class="muli big">Installing Linux Packages</h1>
+						<p class="muli" style="padding:5px">
+							Get the all in one shell script <a href="install.sh" download>here</a>, tested on Ubuntu 16.04 LTS :)
+						</p>
+					</div>
+				</div>
+			</div>
+			<br><br><br>
+		</div>
+		<!--About Me Section Ends-->
+		<br><br><br>
+		<div class='row'>
+			<div class='container'>
+				<div class='row muli'>
+					<b style='color:rgb(200,20,20)'># Git</b>
+					<br>
+					sudo apt install git
+					<br>
+					git config --global user.name "Pranshu Gupta"
+					<br>
+					git config --global user.email "pranshug258@outlook.com"
+					<br>
+					<b style='color:rgb(200,20,20)'># Themes</b>
+					<br>
+					sudo apt install unity-tweak-tool
+					<br>
+					sudo apt install gtk-theme-config
+					<br>
+					sudo add-apt-repository ppa:numix/ppa
+					<br>
+					sudo apt update
+					<br>
+					sudo apt install numix-gtk-theme numix-icon-theme-circle
+					<br>
+					sudo apt install numix-wallpaper-*
+					<br>
+					<b style='color:rgb(200,20,20)'># zsh</b>
+					<br>
+					sudo apt install zsh
+					<br>
+					sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+					<br>
+					<b style='color:rgb(200,20,20)'># vlc</b>
+					<br>
+					sudo apt install vlc
+					<br>
+					<b style='color:rgb(200,20,20)'># sublime text</b>
+					<br>
+					sudo add-apt-repository ppa:webupd8team/sublime-text-2
+					<br>
+					sudo apt update
+					<br>
+					sudo apt install sublime-text
+					<br>
+					<b style='color:rgb(200,20,20)'># deluge torrent client</b>
+					<br>
+					sudo apt install deluge
+					<br>
+					<b style='color:rgb(200,20,20)'># gnuplot</b>
+					<br>
+					sudo apt install gnuplot
+					<br>
+					sudo apt install gnuplot-x11
+					<br>
+					sudo apt update
+					<br>
+					<b style='color:rgb(200,20,20)'># gimp image editor</b>
+					<br>
+					sudo apt install gimp
+					<br>
+					<b style='color:rgb(200,20,20)'># xclip</b>
+					<br>
+					sudo apt install xclip
+					<br>
+					<b style='color:rgb(200,20,20)'># chrome</b>
+					<br>
+					wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+					<br>
+					sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+					<br>
+					sudo apt update 
+					<br>
+					sudo apt install google-chrome-stable
+					<br>
+					<b style='color:rgb(200,20,20)'># lamp stack</b>
+					<br>
+					sudo apt install lamp-server^
+					<br>
+					<b style='color:rgb(200,20,20)'># haskell</b>
+					<br>
+					sudo apt install ghc
+					<br>
+					<b style='color:rgb(200,20,20)'># spotify</b>
+					<br>
+					sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
+					<br>
+					echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+					<br>
+					sudo apt update &amp&amp sudo apt install spotify-client
+					<br>
+					<b style='color:rgb(200,20,20)'># tlp energy manager</b>
+					<br>
+					sudo apt install tlp tlp-rdw
+					<br>
+					sudo tlp start
+					<br>
+					<b style='color:rgb(200,20,20)'># oracle java</b>
+					<br>
+					sudo apt install python-software-properties
+					<br>
+					sudo add-apt-repository ppa:webupd8team/java
+					<br>
+					sudo apt update
+					<br>
+					sudo apt install oracle-java8-installer
+					<br>
+					sudo update-alternatives --config java
+					<br>
+					<b style='color:rgb(200,20,20)'># vim</b>
+					<br>
+					sudo apt install vim
+					<br>
+					<b style='color:rgb(200,20,20)'># julia lang</b>
+					<br>
+					sudo apt install julia
+					<br>
+					<b style='color:rgb(200,20,20)'># python3 modules</b>
+					<br>
+					sudo apt install python3-numpy
+					<br>
+					sudo apt install python3-dev
+					<br>
+					sudo apt install cython
+					<br>
+					sudo apt install python3-scipy
+					<br>
+					sudo apt install python3-pip
+					<br>
+					pip3 install -U scikit-learn
+					<br>
+					pip3 install Theano
+					<br>
+					pip3 install ply
+					<br>
+					sudo apt update
+					<br>
+					<b style='color:rgb(200,20,20)'># octave</b>
+					<br>
+					sudo apt install octave
+					<br>
+					<b style='color:rgb(200,20,20)'># opencv</b>
+					<br>
+					sudo apt install build-essential
+					<br>
+					sudo apt install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+					<br>
+					sudo apt install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+					<br>
+					sudo apt install libatlas-base-dev gfortran 
+					<br>
+					git clone https://github.com/Itseez/opencv.git
+					<br>
+					cd opencv
+					<br>
+					git checkout 3.1.0
+					<br>
+					git clone https://github.com/Itseez/opencv_contrib.git
+					<br>
+					cd opencv_contrib
+					<br>
+					git checkout 3.1.0
+					<br>
+					cd ~/opencv
+					<br>
+					mkdir release
+					<br>
+					cd release
+					<br>
+					cmake \ <br>
+						-D CMAKE_BUILD_TYPE=RELEASE \<br>
+						-D CMAKE_INSTALL_PREFIX=/usr/local \<br>
+						-D INSTALL_C_EXAMPLES=OFF \<br>
+						-D INSTALL_PYTHON_EXAMPLES=ON \<br>
+						-D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \<br>
+						-D BUILD_EXAMPLES=ON ..
+					<br>
+					make -j4
+					<br>
+					sudo make install
+				<br><br><br>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="background-color:rgb(240,240,240);padding:10px">
+			<div class="container"> 
+				<b class="muli">
+					more in future ... :)
+				</b>
+			</div>
+		</div>
+		<!--Education Section Ends-->
+		<!--Social Networking-->
+		<div class="row" id="contact" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<div class="row" style="background-color:rgb(3,29,52);color:#fff">
+					<div class="col-sm-6">
+						<br>
+						<h1 class="josephin" style="font-size: 300%; padding-left:12px"><b>CONTACT</b></h1>
+						<br>
+						<h4 class="josephin" style="padding-left:12px;color:rgb(34,156,223)">ADDRESS</h4>
+						<p class="muli" style="padding-left:12px">
+							Pranshu Gupta<br>
+							Room No: D-341, 
+							Second Hall of Residence, <br>
+							Indian Institute of Technology - Kanpur, <br>
+							Kanpur, Uttar Pradesh, India <br>
+							PIN: 208016<br><br><br>
+						</p>
+					</div>
+					<div class="col-sm-6">
+						<br>
+						<div style="margin:80px" align="center">
+						<a href="https://github.com/Pranshu258" style="margin:10px"><img src="images/git.png"></a>
+						<a target = "_blank" href="https://www.facebook.com/pranshu.gupta.773776" style="margin:10px"><img style="height:32px" src="images/fb.png"></a>
+						<a href="mailto:pranshug258@outlook.com" style="margin:10px"><img src="images/mail.png"></a>
+						<a href="https://plus.google.com/u/0/116090635937013451273" style="margin:10px"><img src="images/google.png" style="height:34px"></a>
+						<a target = "_blank" href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" style="margin:10px"><img style="height:32px" src="images/in.png"></a>
+						<a href="https://twitter.com/Pranshu23805940" style="margin:10px"><img src="images/twitter.png" style="height:32px"></a>
+						</div>
+						<br>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="background-color:rgb(0,7,13)">
+			<div class="container">
+				<br>
+				<div class="row" style="text-align:center;background-color:rgb(0,7,13);color:#fff">
+					<b class="muli">&copy Copyright 2016, Pranshu Gupta</b><br>
+					<small class="muli" style="color:rgb(100,100,100)">(all logos belong to their respective owners)</small>
+				</div>
+				<br>
+			</div>
+		</div>
+
+        <!-- First try for the online version of jQuery-->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- If no online access, fallback to our hardcoded version of jQuery -->
+        <script>window.jQuery || document.write('<script src="includes/js/jquery-1.11.0.min.js"><\/script>')</script>
+        <!-- Bootstrap JS -->
+        <script src="includes/bootstrap/js/bootstrap.min.js"></script>
+        <!-- Custom JS -->
+        <script src="includes/js/script.js"></script>   
+	</body>
+</html>
