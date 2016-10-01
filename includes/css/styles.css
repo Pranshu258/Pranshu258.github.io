@@ -1,4 +1,8 @@
 /*Navigation Bar styles/////////////////////////////////////////////////////////////////////////*/
+body {
+  overflow-x: hidden;
+}
+
 #nav {
   background-color: rgba(0,7,13, 0.9);
   padding: 15px;
@@ -28,6 +32,23 @@
     transition: 0.5s;   
 }
 /*//////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#artimg {
+  white-space: nowrap;
+  list-style: none;
+  padding: 2%;
+  max-width: 1366px;
+}
+
+#artimg li {
+  list-style: none;
+  display: inline;
+  padding: 1%;
+}
+
+#artpane {
+  overflow-x: auto;
+}
 
 /*General row styles*/
 .row,
