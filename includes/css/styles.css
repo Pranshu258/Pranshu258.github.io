@@ -6,9 +6,10 @@ body {
 #nav {
   background-color: rgba(0,7,13, 0.9);
   padding: 15px;
-  position: absolute;
+  position: fixed;
   right: 0;
   left: 0;
+  top: 0;
   z-index: 2000;
     -webkit-transition: color 0.5s;
     transition: 0.5s;   
