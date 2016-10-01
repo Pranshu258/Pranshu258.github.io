@@ -5,11 +5,12 @@ body {
 
 #nav {
   background-color: rgba(0,7,13, 0.9);
-  padding: 15px;
+  padding: 10px;
   position: fixed;
   right: 0;
   left: 0;
   top: 0;
+  min-height: 0;
   z-index: 2000;
     -webkit-transition: color 0.5s;
     transition: 0.5s;   
@@ -147,14 +148,9 @@ body {
   font-size: 120%;
 }
 
-/*Education Section Styles/////////////////////////////////////////*/
-#edu1, #edu2, #edu3 {
-    padding: 10px;
-    -webkit-transition: color 0.5s;
-    transition: 0.5s;
-}
-#edu1:hover, #edu2:hover, #edu3:hover {
-  background-color: rgb(230,230,230);
+/*Blog Section Styles/////////////////////////////////////////*/
+#bloglist a:hover {
+  text-decoration: none;
 }
 
 /*Media Queries////////////////////////////////////////////////////*/
