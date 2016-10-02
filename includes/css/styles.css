@@ -13,7 +13,8 @@ body {
   min-height: 0;
   z-index: 2000;
     -webkit-transition: color 0.5s;
-    transition: 0.5s;   
+    transition: 0.5s;  
+   
 }
 #nav a {
   vertical-align: center;
@@ -46,6 +47,10 @@ body {
   list-style: none;
   display: inline;
   padding: 1%;
+}
+
+#artimg img {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 #artpane {
@@ -118,23 +123,9 @@ body {
   cursor: pointer;
 }
 
-#project1:hover, #project2:hover, 
-#project3:hover, #project4:hover,
-#project5:hover, #project6:hover,
-#project7:hover, #project8:hover,
-#project9:hover, #project10:hover {
-  background-color: rgb(230,230,230);
-}
-
-#project1, #project2, 
-#project3, #project4,
-#project5, #project6,
-#project7, #project8,
-#project9, #project10 {
-  border-left: solid;
-  border-radius: 0px;
-  border-width: 3px;
-  border-color: rgb(0,0,0); 
+#project1 {
+  background-color: #fff;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 /*Artworks Section Styles//////////////////////////////////////////*/
