@@ -5,7 +5,7 @@ body {
 
 #nav {
   background-color: rgba(0,7,13, 0.9);
-  padding: 10px;
+  padding: 15px;
   position: fixed;
   right: 0;
   left: 0;
@@ -149,7 +149,7 @@ body {
 }
 
 /*Blog Section Styles/////////////////////////////////////////*/
-#bloglist a:hover {
+#blogpane a:hover {
   text-decoration: none;
 }
 
@@ -163,4 +163,10 @@ body {
   #art1 {
     display: none;
   }
+}
+
+#logo {
+  padding: 2%;
+  margin: 2%;
+  
 }

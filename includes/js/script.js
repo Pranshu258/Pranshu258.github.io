@@ -31,7 +31,7 @@ $(window).scroll(function(event){
        	navbar.css('padding', '4px');
    } else {
    		//Scroll up
-      	navbar.css('padding', '8px');
+      	navbar.css('padding', '15px');
    }
    lastScrollTop = st;
 });
