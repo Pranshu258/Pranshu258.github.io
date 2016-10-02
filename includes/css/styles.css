@@ -4,7 +4,7 @@ body {
 }
 
 #nav {
-  background-color: rgba(0,7,13, 0.9);
+  background-color: #fff;
   padding: 15px;
   position: fixed;
   right: 0;
@@ -14,7 +14,7 @@ body {
   z-index: 2000;
     -webkit-transition: color 0.5s;
     transition: 0.5s;  
-   
+   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 #nav a {
   vertical-align: center;
@@ -22,7 +22,7 @@ body {
   color: rgb(85,172,238);
 }
 #nav a:hover {
-  color: #fff;
+  color: rgba(0,7,13, 0.9);
 }
 #nav ul {
     list-style-type: none;
