@@ -156,8 +156,17 @@ body {
   }
 }
 
-#logo {
+
+#logolist {
+  white-space: nowrap;
+  list-style: none;
   padding: 2%;
+  text-align: center;
+  margin-top:80px;
+}
+
+#logolist li {
+  list-style: none;
+  display: inline;
   margin: 2%;
-  
 }
