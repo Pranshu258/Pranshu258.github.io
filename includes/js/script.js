@@ -21,19 +21,8 @@ $(function() {
 
 });
 
-//The navigation bar animation on scroll
-// var lastScrollTop = 0;
-// var navbar = $('#nav');
-// $(window).scroll(function(event){
-//    var st = $(this).scrollTop();
-//    if (st > lastScrollTop){
-//    		//Scroll down
-//        	navbar.css('padding', '15px');
-//    } else {
-//    		//Scroll up
-//       	navbar.css('padding', '15px');
-//    }
-//    lastScrollTop = st;
-// });
-
-//This function will add smoothScroll to the projects section
+$('#hiddenProj').slideUp();
+function hiddenProjToggle() {
+  $('#hiddenProj').slideDown();
+  $('#hiddenProjToggle').slideUp();
+}
