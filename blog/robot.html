@@ -17,6 +17,7 @@
 		<!-- Custom CSS -->
 		<link rel="stylesheet" href=" ../includes/css/styles.css">
 		<link rel="stylesheet" href=" ../includes/fonts/font.css">
+		<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
 		<!-- Include Modernizr in the head, before any other Javascript -->
         <script src=" includes/js/modernizr-2.6.2.min.js"></script>
 
@@ -58,7 +59,7 @@
 		<div class="row" id="top" style="background-color:rgb(3,29,52)">
 			<div class="container">
 				<div class="col-sm-12" style="background-color:rgb(3,29,52);padding-top:95px;color:#fff">				
-					<h1 class="muli big">Learning Manifolds in Motion</h1>
+					<h1 class="roboto big">Learning Manifolds in Motion</h1>
 					<p class="muli" style="padding:5px;text-align:justify">
 						Learning the structure of space for a mobile robot, based on observations (i.e. images from the robot's camera) and nothing else with the help of the ISOMAP algorithm.
 						<br><br>
@@ -72,7 +73,7 @@
 		<div class="row">
 			<div class="container">
 				<div class="col-sm-5">
-					<h3 class="josephin"><b>ROTATING ABOUT FIXED POINT(S)</b></h3>
+					<h3 class="roboto"><b>ROTATING ABOUT FIXED POINT(S)</b></h3>
 					<p class="muli" style="text-align:justify">
 						We make the robot rotate about its own axis at three different points in the arena and collect images of the arena as seen by the robot.<br><br>
 						With configuration given above, the images we get are 600 x 1 pixels in size in the RGB color sapce. So, the data we get has entries of '<b>600 x 1 x 3</b>'' dimensions. We capture 1000 images for each of the three points, i.e. 3000 in total.
@@ -107,7 +108,7 @@
 			<div class="container">
 				<div class="row" style="background-color:rgb(210,210,210)">
 					<div class="col-sm-12">
-						<h3 class="josephin"><b>DISCOVERING X-Y MOTION WITH ROTATION</b></h3>
+						<h3 class="roboto"><b>DISCOVERING X-Y MOTION WITH ROTATION</b></h3>
 					</div>
 				</div>
 			</div>
@@ -169,7 +170,7 @@
 		<div class="row">
 			<div class="container">
 				<div class="col-sm-8">
-					<h3 class="josephin"><b>ESTIMATING THE POSITION OF THE ROBOT FROM TEST IMAGES</b></h3>
+					<h3 class="roboto"><b>ESTIMATING THE POSITION OF THE ROBOT FROM TEST IMAGES</b></h3>
 					<p class="muli" style="text-align:justify">
 						In this part, we take a set of 11000 images in which for 10000, we know exactly from what position they were captured (train set). However, we don't have this information for the rest of the images (test set).
 						<br><br>
@@ -182,10 +183,10 @@
 				</div>
 				<div class="col-sm-4" style="text-align:center">
 					<br>
-					<h1 class="josephin big"><b>17.31</b></h1>
-					<h6 class="josephin"><b>LOCALIZATION ERROR: CIRCULAR TRAJECTORY</b></h6>
-					<h1 class="josephin big"><b>18.21</b></h1>
-					<h6 class="josephin"><b>LOCALIZATION ERROR: RANDOM TRAJECTORY</b></h6>
+					<h1 class="roboto big"><b>17.31</b></h1>
+					<h6 class="roboto"><b>LOCALIZATION ERROR: CIRCULAR TRAJECTORY</b></h6>
+					<h1 class="roboto big"><b>18.21</b></h1>
+					<h6 class="roboto"><b>LOCALIZATION ERROR: RANDOM TRAJECTORY</b></h6>
 				</div>
 			</div>
 			<br><br>
@@ -195,7 +196,7 @@
 			<div class="container" style="text-align:center">
 				<div class="row" style="background-color:rgb(200,200,200)">
 					<div class="col-sm-12">
-						<h3 class="josephin"><b>PLOTS OF RECONSTRUCTION ERROR vs. NUMBER OF COMPONENTS IN REDUCED DIMENSION</b></h3>
+						<h3 class="roboto"><b>PLOTS OF RECONSTRUCTION ERROR vs. NUMBER OF COMPONENTS IN REDUCED DIMENSION</b></h3>
 					</div>
 				</div>
 			</div>
@@ -205,14 +206,14 @@
 			<div class="container">
 				<div class="row" style="text-align:center">
 					<div class="col-sm-6">
-						<h4 class="josephin"><b>PART I</b></h4>
+						<h4 class="roboto"><b>PART I</b></h4>
 						<img src="plots/Reconstruction_Error_1.png" class="img-responsive">
 						<p class="muli">
 							plot of reconstruction error vs. number of components in the reduced dimension for rotation of the robot about its own axis at three different points.
 						</p>
 					</div>
 					<div class="col-sm-6">
-						<h4 class="josephin"><b>PART II</b></h4>
+						<h4 class="roboto"><b>PART II</b></h4>
 						<img src="plots/Reconstruction_Error_2.png" class="img-responsive">
 						<p class="muli">
 							plot of reconstruction error vs. number of components in the reduced dimension for random positions of the robot.
