@@ -194,3 +194,11 @@ body {
   display: inline;
   margin: 2%;
 }
+
+.mycode {
+  padding: 2%;
+  background-color: rgb(249,242,244);
+  font-family: monospace;
+  color: maroon;
+  margin-bottom: 2%;
+}

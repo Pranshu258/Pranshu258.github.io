@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+    	<!-- WEBSITE TITLE AND DESCRIPTION-->
+		<title>JavaScript</title>
+		
+		<meta name="description" content="All in One script to install Linux Packages">
+		<meta name="keywords" content="Ubuntu, Linux, Install, Packages, Script, 16.04, LTS. Ubuntu 16.04 LTS, post installation">
+		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
+		<!-- MOBILE VIEWPORT OPTIMIZED -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<!-- Bootstrap CSS -->
+		<link href="../includes/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="../includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="../includes/css/styles.css">
+		<link rel="stylesheet" href="../includes/fonts/font.css">
+		<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
+		<!-- Include Modernizr in the head, before any other Javascript -->
+        <script src="../includes/js/modernizr-2.6.2.min.js"></script>
+	</head>
+	<body>
+
+		<header class="row-fluid" id="mobnav">
+			<div class="container muli">
+				<div class="dropdown">
+					<div class="dropdown-toggle" id="menu-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
+					<ul class="dropdown-menu">
+						<li><a href="https://pranshu258.github.io#top" class="smoothScroll">Home</a></li>
+						<li><a href="https://pranshu258.github.io#projects" class="smoothScroll">Projects</a></li>
+						<li><a href="https://pranshu258.github.io#artworks" class="smoothScroll">Artworks</a></li>
+						<li><a href="https://pranshu258.github.io#contact" class="smoothScroll">Contact</a></li>									
+					</ul>
+				</div>
+			</div>
+		</header>
+
+		<!--Navigation Bar Header Begins-->
+		<header class="row-fluid" id="nav">
+			<div class="container">
+				<div class="row">
+					<ul class="pull-right" id="main_menu">
+						<li class="muli"><a href="https://pranshu258.github.io" class="smoothScroll">Home</a></li>
+						<li class="muli"><a href="https://pranshu258.github.io#projects" class="smoothScroll">Projects</a></li>
+						<li class="muli"><a href="https://pranshu258.github.io#artworks" class="smoothScroll">Artworks</a></li>
+		
+						<li class="muli"><a href="https://pranshu258.github.io#contact" class="smoothScroll">Contact</a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<!--Navigation Bar Header Ends-->
+
+		<!--About Me Section Begins-->
+		<div class="row" id="top" style="background-color:rgb(3,29,52)">
+			<div class="container">
+				<div class="col-sm-12" style="background-color:rgb(3,29,52);padding-top:95px;color:#fff">
+					<div class="row">				
+						<h1 class="roboto big">Do You Really Know JavaScript?</h1>
+						<p class="muli" style="padding:5px">
+							Pranshu Gupta - 27 May 2017
+						</p>
+					</div>
+				</div>
+			</div>
+			<br><br><br>
+		</div>
+
+        <div class="container" style="text-align:justify;padding:3%">
+            <div class="row">
+                <div class="col-sm-8 muli">
+                	<h3 class="roboto"><b>IS JAVASCRIPT MATH BROKEN?</b></h3>
+                	<p class="muli">
+                		All the numbers is JavaScript (and other languages) are represented on the hardware using the IEEE 754 Standard for Floating Point Arithmetic. Javascript uses the 64 bit representation. Now, when representing decimal numbers in binary, any fraction whose denominator is not a power of two can not be represented exactly in binary. This forces the language to make approximations. Consider the expression <code>0.2 + 0.1 == 0.3</code>, ideally it should evaluate to <code>true</code>. However, because the binary representations of 0.1 and 0.2 are slightly larger than the true value and on the other hand the binary represenation of 0.3 is smaller than the true value, we get <code>false</code> as the output.
+                		The number closest to 0.1 if we use double precision floating point representation is:
+                	</p>
+                	<div class="mycode" style="text-align: center;">0.1000000000000000055511151231257827021181583404541015625</div>
+                	<div class="mycode">
+	                	0.2 + 0.1<br>
+	                	0.30000000000000004<br>
+	                	0.2 + 0.1 == 0.3<br>
+	                	false<br>                		
+                	</div>
+                	<p>Therefore, this is not a problem with the language, but an inadequacy of the representation in hardware</p>
+                	<h3 class="roboto"><b>CONCATENATING STRINGS</b></h3>
+                </div>
+                <div class="col-sm-1 muli" style="text-align:center"></div>
+                <div class="col-sm-3 muli" style="text-align:center">
+                	<br><br>
+                	<img src="../images/logos/js.png" class="img-responsive">
+				</div>
+            </div>
+        </div>
+
+
+        <!-- First try for the online version of jQuery-->
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- If no online access, fallback to our hardcoded version of jQuery -->
+        <script>window.jQuery || document.write('<script src="../includes/js/jquery-1.11.0.min.js"><\/script>')</script>
+        <!-- Bootstrap JS -->
+        <script src="../includes/bootstrap/js/bootstrap.min.js"></script>
+        <!-- Custom JS -->
+        <script src="../includes/js/script.js"></script>   
+	</body>
+</html>
