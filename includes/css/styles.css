@@ -201,4 +201,6 @@ body {
   font-family: monospace;
   color: maroon;
   margin-bottom: 2%;
+  border-left: 3px solid;
+  overflow-x: auto;
 }
