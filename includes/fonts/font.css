@@ -2,6 +2,10 @@
 	font-family: 'Muli';
 	src: url('Muli.ttf');
 }
+@font-face {
+	font-family: 'Roboto';
+	src: url('Roboto-Thin.ttf');
+}
 .muli {
 	font-family: 'Muli', sans-serif;
 }
