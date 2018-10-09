@@ -26,3 +26,9 @@ function hiddenProjToggle() {
   $('#hiddenProj').slideDown();
   $('#hiddenProjToggle').slideUp();
 }
+
+$('#hiddenArt').slideUp();
+function hiddenArtToggle() {
+  $('#hiddenArt').slideDown();
+  $('#hiddenArtToggle').slideUp();
+}
