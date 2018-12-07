@@ -21,14 +21,15 @@
         <script src="includes/js/modernizr-2.6.2.min.js"></script>
         <meta name="p:domain_verify" content="a474cff5b8db44918e86cf0f1884c353"/>
 	</head>
-	<body>
+	<body style="background-color:#141526;color:#fff">
 		<header class="row-fluid" id="mobnav">
 			<div class="container muli">
 				<div class="dropdown">
 					<div class="dropdown-toggle" id="menu-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
 					<ul class="dropdown-menu">
 						<li><a href="#top" class="smoothScroll">Home</a></li>
-						<li><a href="#projects" class="smoothScroll">Projects</a></li>
+                        <li><a href="#projects" class="smoothScroll">Projects</a></li>
+                        <li><a href="#blog" class="smoothScroll">Blog</a></li>
 						<li><a href="#artworks" class="smoothScroll">Artworks</a></li>
 						<li><a href="#contact" class="smoothScroll">Contact</a></li>
 					</ul>
@@ -42,7 +43,8 @@
 				<div class="row">
 					<ul class="pull-right" id="main_menu">
 						<li class="muli"><a href="#top" class="smoothScroll">Home</a></li>
-						<li class="muli"><a href="#projects" class="smoothScroll">Projects</a></li>
+                        <li class="muli"><a href="#projects" class="smoothScroll">Projects</a></li>
+                        <li class="muli"><a href="#blog" class="smoothScroll">Blog</a></li>
 						<li class="muli"><a href="#artworks" class="smoothScroll">Artworks</a></li>
 						<!-- <li class="muli"><a href="#education" class="smoothScroll">Education</a></li> -->
 						<li class="muli"><a href="#contact" class="smoothScroll">Contact</a></li>
@@ -91,9 +93,9 @@
 		<!--About Me Section Ends-->
 
 		<!--Projects Section Begins-->
-		<div class="row" id="projects" style="background-color:rgb(25,172,238)">
+		<div class="row bigHeader" id="projects">
 			<div class="container">
-				<div class="row" style="background-color:rgb(25,172,238);color:#fff">
+				<div class="row">
 					<div class="col-sm-12">
 						<br>
 						<h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>PROJECTS</b></h1>
@@ -101,222 +103,176 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="row" style="background-color:#141526;color:#fff">
-			<div class="col-sm-8" id="projectpane" style="background-color:rgb(240,240,240);color:#000">
-				<div class="row"  id="projlist">
-                    <br>
-					<div class="row" id="project1" style="padding:20px">
-						<h3 class="roboto"><b>PyCS: A COMPILER FOR C# IN PYTHON</b></h3>
-						<h5 class="muli"><b>Compiler Design</b></h5>
-						<p class="muli" style="text-align:justify">
-							An end to end compiler for C# implemented in Python3 using the PLY module. It takes a C# source file as input and compiles it to x86(IA32) code which can be run on a linux machine using the gnu assembler.
-						</p>
-						<br>
-						<a target = "_blank" href="https://github.com/divush/csharp-compiler"><button class="btn btn-primary">VIEW DETAILS</button></a>
-						<b class="muli pull-right">Python, x86-IA32</b>
-						<br>
-					</div>
-					<br>
-					<div class="row" id="project1" style="padding:20px">
-						<h3 class="roboto"><b>IMAGE COMPLETION WITH STATISTICS OF PATCH OFFSETS</b></h3>
-						<h5 class="muli"><b>Computer Vision and Image Processing</b></h5>
-						<p class="muli">
-							Image Completion is the task of filling missing parts of a given image with the help of information from the known parts of the image.
-							Implemented an application that takes an image with a missing part as input and gives a completed image as the result.
-						</p>
-						<br>
-						<a target = "_blank" href="https://github.com/Pranshu258/image_completion"><button class="btn btn-primary">VIEW DETAILS</button></a>
-						<b class="muli pull-right">Python, OpenCV</b>
-						<br>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row project">
+                            <h3 class="roboto"><b>IMAGE COMPLETION WITH STATISTICS OF PATCH OFFSETS</b></h3>
+                            <h5 class="muli"><b>Computer Vision and Image Processing</b></h5>
+                            <p class="muli">
+                                Image Completion is the task of filling missing parts of a given image with the help of information from the known parts of the image.
+                                Implemented an application that takes an image with a missing part as input and gives a completed image as the result.
+                            </p>
+                            <br>
+                            <a target = "_blank" href="https://github.com/Pranshu258/image_completion"><button class="btn btn-primary">VIEW DETAILS</button></a>
+                            <b class="muli pull-right">Python, OpenCV</b>
+                            <br>
+                        </div>
+                        <br>
+                        <div class="row project">
+                            <h3 class="roboto"><b>PyCS: A COMPILER FOR C# IN PYTHON</b></h3>
+                            <h5 class="muli"><b>Compiler Design</b></h5>
+                            <p class="muli" style="text-align:justify">
+                                An end to end compiler for C# implemented in Python3 using the PLY module. It takes a C# source file as input and compiles it to x86(IA32) code which can be run on a linux machine using the gnu assembler.
+                            </p>
+                            <br>
+                            <a target = "_blank" href="https://github.com/divush/csharp-compiler"><button class="btn btn-primary">VIEW DETAILS</button></a>
+                            <b class="muli pull-right">Python, x86-IA32</b>
+                            <br>
+                        </div>
                     </div>
-					<br>
-					<div class="row" id="project1" style="padding:20px">
-						<h3 class="roboto"><b>CROWD BEHAVIOR ANALYSIS BASED ON TRAJECTORIES</b></h3>
-						<h5 class="muli"><b>Artificial Intelligence and Data Mining</b></h5>
-						<p class="muli" style="text-align:justify">
-							Crowd behavior analysis has wide applications in surveillance and public safety. We can obtain crowd movement data and then find out outliers in the individual trajectories to infer any abnormal behavior in the crowd.
-							Implemented a system that takes a set of trajectories obtained from crowd data and detects the outliers in that set.
-						</p>
-						<br>
-						<a target = "_blank" href="https://github.com/Pranshu258/cba"><button class="btn btn-primary">VIEW DETAILS</button></a>
-						<b class="muli pull-right">Python</b>
-						<br>
+                    <div class="col-md-6">
+                        <div class="row" style="border-bottom: rgb(85,172,238) solid 1px;border-top: rgb(85,172,238) solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://github.com/Pranshu258/cba">
+                                <h4 class="roboto"><b>Crowd Behavior Analysis based on Trajectories</b></h4>
+                            </a>
+                        </div>
+                        <div class="row" style="border-bottom: rgb(85,172,238) solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://github.com/Pranshu258/RSNC">
+                                <h4 class="roboto"><b>Skylines for MultiCriteria Data Analysis</b></h4>
+                            </a>
+                        </div>
+                        <div class="row" style="border-bottom: rgb(85,172,238) solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://github.com/prshntk/OSMS">
+                                <h4 class="roboto"><b>Online School Management System</b></h4>
+                            </a>
+                        </div>
+                        <div class="row" style="border-bottom: rgb(85,172,238) solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://github.com/Pranshu258/DataCloud_Analytics">
+                                <h4 class="roboto"><b>Telemetry and Analytics</b></h4>
+                            </a>
+                        </div>
+                        <div class="row" style="border-bottom: rgb(85,172,238) solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://github.com/Pranshu258/Renju">
+                                <h4 class="roboto"><b>Renju: A Board Game in Python</b></h4>
+                            </a>
+                        </div>
                     </div>
-                    <br>
-					<div class="row" id="project1" style="padding:20px">
-						<h3 class="roboto"><b>REPRESENTATIVE SKYLINES WITH NOISY COMPARISONS</b></h3>
-						<h5 class="muli"><b>Skyline Queries on Databases</b></h5>
-						<p class="muli" style="text-align:justify">
-							Given a set of data items, the skyline is the subset of items that are not "dominated". An item is dominated if there is another item that is superior for every criterion. Representative Skyline is set of items that best represent the skyline set itself. Now, in a dataset with noisy comparisons, the criterion values are not known. However, we have an oracle who can tell us which item is superior for a given criterion. 
-							Implemented an application that can compute Representative Skylines in a dataset with Noisy Comparisons.
-						</p>
-
-						<br>
-						<a target = "_blank" href="https://github.com/Pranshu258/RSNC"><button class="btn btn-primary">VIEW DETAILS</button></a>
-						<b class="muli pull-right">C++</b>
-						<br>
-					</div>
-                    <br>
-					<div class="row" id="project1" style="padding:20px">
-						<h3 class="roboto"><b>ONLINE SCHOOL MANAGEMENT SYSTEM</b></h3>
-						<h5 class="muli"><b>Web Development</b></h5>
-						<p class="muli" style="text-align:justify">
-							Developed a web based application that allows the school management to maintain admissions, courses, grades and other student related information, along with providing analytical data visualizations. Our aim is to help schools become truly paperless, not only in teaching but in management as well.
-						</p>
-						<br>
-						<a target = "_blank" href="https://github.com/prshntk/OSMS"><button class="btn btn-primary">VIEW DETAILS</button></a>
-						<b class="muli pull-right">Django, MySQL</b>
-						<br>
-					</div>
-					<br>
-					<div class="row" id="project1" style="padding:20px">
-						<h3 class="roboto"><b>DATA ANALYTICS AS A SERVICE</b></h3>
-						<h5 class="muli"><b>Software Engineering</b></h5>
-						<p class="muli" style="text-align:justify">
-							Analytics as a Service (AaaS) refers to the provision of analytics software and operations through Web-delivered technologies, e.g. Google Analytics.
-							Implemented a web app (AaaS) that can be used by businesses to visualize their consumer and product usage data to inform and measure their marketing.
-						</p>
-						<br>
-						<a target = "_blank" href="https://github.com/Pranshu258/DataCloud_Analytics"><button class="btn btn-primary">VIEW DETAILS</button></a>
-						<b class="muli pull-right">Django, D3.JS</b>
-						<br>
-					</div>
-					<br>
-					<div id="hiddenProj" style="display: none;">
-						<div class="row" id="project1" style="padding:20px">
-							<h3 class="roboto"><b>RENJU GAME</b></h3>
-							<h5 class="muli"><b>Python Application Development with Pygame</b></h5>
-							<p class="muli" style="text-align:justify">
-								RENJU is a strategy board game played by two people. 
-								Developed an application that allows the user to play RENJU against the computer. Used MINIMAX and ALPHA-BETA PRUNING algorithms to implement the computer player.
-							</p>
-							<br>
-							<a target = "_blank" href="https://github.com/Pranshu258/Renju"><button class="btn btn-primary">VIEW DETAILS</button></a>
-							<b class="muli pull-right">Python, Pygame</b>
-							<br>
-						</div>
-						<br>
-						<div class="row" id="project1" style="padding:20px">
-							<h3 class="roboto"><b>GREENDZINE TECHNOLOGIES WEBSITE</b></h3>
-							<h5 class="muli"><b>Web Design and Development</b></h5>
-							<p class="muli" style="text-align:justify">
-								Greendzine Technologies is a company striving to develop products that are based on green technology
-								at affordable prices for the community as well as businesses. A pioneer in electric mobility solutions, 
-								the company aims to bring a greener future in India.<br>
-								Built a digital platform which beautifully reflects the brand and provides information about the products and services
-								provided by the company. Focusing on customer satisfaction and quality of service, customer/product registration
-								complaint management systems were also developed as integral parts of the website.
-							</p>
-							<br>
-							<a target = "_blank" href="https://www.greendzine.in"><button class="btn btn-primary">VISIT SITE</button></a>
-							<b class="muli pull-right">HTML5/CSS3, JS, PHP</b>
-							<br>
-						</div>
-						<br>
-						<div class="row" id="project1" style="padding:20px">
-							<h3 class="roboto"><b>WAREHOUSE ORDER PICKING</b></h3>
-							<h5 class="muli"><b>Algorithms and Data Analysis</b></h5>
-							<p class="muli" style="text-align:justify">
-								The order picking process is the process of retrieving products from specified storage locations in a warehouse
-								on the basis of customer orders. It is in general one of the most time consuming processes in warehouses and contributes for a large extent to warehousing costs. We can reduce this cost by determining optimal order picking routes.<br><br>
-								Designed and implemented a heuristic for finding good warehouse order picking paths.
-								Also implemented a simulator that can be used to test, analyse and improve any order picking algorithm meant to be used for rectangular warehouses with similar constraints.
-							</p>
-							<br>
-							<a target = "_blank" href="https://www.greendzine.in/analytics.php"><button class="btn btn-primary">VISIT SITE</button></a>
-							<b class="muli pull-right">HTML5/CSS3, Javascript</b>
-							<br>
-						</div>
-						<br>
-					</div>
-					<p class="roboto" id="hiddenProjToggle" style="cursor: pointer;text-align: center;" onclick="hiddenProjToggle()"><b>SHOW MORE</b></p>
-				</div>
-			</div>
-			<div class="col-sm-4 muli">
-				<br>
-				<h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>TUTORIALS</b></h1>
-				<div class="row" style="padding:3%">
-					<h4 class="roboto"><b>Introduction to Web Development</b></h4>
-					 <a target = "_blank" href="WebDev/">Start Learning...</a> 					
-				</div>
-				<br>
-				<h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>BLOG</b></h1>
-				<div class="row" style="padding:3%">
-					<h6>JUNE 5, 2017 / Programming Languages</h6>
-					<h4 class="roboto"><b>Quirks of JavaScript</b></h4>
-					<a target = "_blank" href="blog/ydkjs.html">Read more</a>
-					<br><br>
-					<h6>MAY 5, 2017 / Data Anaytics</h6>
-					<h4 class="roboto"><b>Decoding My Digital Footprint</b></h4>
-					<a target = "_blank" href="blog/digitalfootprint.html">Read more</a>
-					<br><br>
-					<h6>APRIL 24, 2017 / Search and Optimization</h6>
-					<h4 class="roboto"><b>A Survey of Algorithms Inspired by Nature</b></h4>
-					<a target = "_blank" href="blog/naturealgosurvey.pdf">Read more</a>
-					<br><br>
-					<h6>JANUARY 26, 2017 / Natural Language</h6>
-					<h4 class="roboto"><b>Evolution of Human Languages</b></h4>
-					<a target = "_blank" href="blog/evollang.pdf">Read more</a>
-					<br><br>
-					<h6>APRIL 26, 2016 / Linux OS</h6>
-					<h4 class="roboto"><b>A Post Installation Script for Ubuntu 16.04</b></h4>
-					<a target = "_blank" href="blog/linux.html">Read more</a>
-					<br><br>
-					<h6>FEBRUARY 6, 2016 / Machine Learning</h6>
-					<h4 class="roboto"><b>Space Structure Learning with ISOMAP</b></h4>
-					<a target = "_blank" href="blog/robot.html">Read more</a>
-					<br><br>
-					<h6>JANUARY 10, 2016 / Artificial Intelligence</h6>
-					<h4 class="roboto"><b>Improving the ELIZA Chatbot in EMACS</b></h4>
-					<a target = "_blank" href="blog/doctor.html">Read more</a>
-					<br><br>
-				</div>
-			</div>
-		</div>
-
-
-		<!--Projects Section Ends-->
-		<!--Artworks Section Begins-->
-		<div class="row" id="artworks" style="background-color:rgb(25,172,238)">
+                </div>
+            </div>          
+        </div>
+        <br><br>
+        <div class="row blogbigHeader" id="blog">
 			<div class="container">
-				<div class="row" style="background-color:rgb(25,172,238);color:#fff">
+				<div class="row">
 					<div class="col-sm-12">
 						<br>
-						<h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>ARTWORKS</b></h1>
+						<h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>BLOG</b></h1>
 						<br>
 					</div>
 				</div>
 			</div>
-		</div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row blog">
+                            <h3 class="roboto"><b>INTRODUCTION TO WEB DEVELOPMENT</b></h3>
+                            <h5 class="muli"><b>Software Development</b></h5>
+                            <p class="muli" style="text-align:justify">
+                                A light-hearted tutorial on developing simple web applications using HTML, CSS and JavaScript
+                            </p>
+                            <br>
+                            <a target = "_blank" href="https://pranshu258.github.io/WebDev/"><button class="btn btn-primary">START</button></a>
+                            <b class="muli pull-right">May, 2017</b>
+                            <br>
+                        </div>
+                        <br>
+                        <div class="row blog">
+                            <h3 class="roboto"><b>ALGORITHMS INSPIRED BY NATURE</b></h3>
+                            <h5 class="muli"><b>Artificial Intelligence</b></h5>
+                            <p class="muli">
+                                Nature is known to be the best optimizer. Natural processes more often than not reach an optimal equilibrium. Scientists have always strived to understand and model such processes.
+                                Thus, many algorithms exist today that are inspired by nature                            
+                            </p>
+                            <br>
+                            <a target = "_blank" href="https://pranshu258.github.io/blog/naturealgosurvey.pdf"><button class="btn btn-primary">VIEW DETAILS</button></a>
+                            <b class="muli pull-right">April, 2017</b>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row" style="border-bottom: red solid 1px;border-top: red  solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://pranshu258.github.io/blog/ydkjs.html">
+                                <h4 class="roboto"><b>Quirks of JavaScript: The Language of the Web</b></h4>
+                            </a>
+                            <p class="muli">Programming Languages</p>
+                        </div>
+                        <div class="row" style="border-bottom: red solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://pranshu258.github.io/blog/digitalfootprint.html">
+                                <h4 class="roboto"><b>Decoding My Digital Footprint: What does Google know about Me?</b></h4>
+                            </a>
+                            <p class="muli">Privacy and Data Analysis</p>
+                        </div>
+                        <div class="row" style="border-bottom: red solid 1px">
+                            <a target = "_blank" style="color:white;text-decoration:none" href="https://pranshu258.github.io/blog/evollang.pdf">
+                                <h4 class="roboto"><b>Evolution of Human Languages</b></h4>
+                            </a>
+                            <p class="muli">Psychology of Language</p>
+                        </div>
+                    </div>
+                </div>
+            </div>          
+        </div>
+        <br><br>
 
-		<div class="row" id="artpane">
-			<br>
-			<div class="row">
-				<div class="col-sm-4"><img class="img-responsive" style="margin-bottom:2%" src="images/img12.jpg"></div>
-				<div class="col-sm-4"><img class="img-responsive" style="margin-bottom:2%" src="images/img13.jpg"></div>
-				<div class="col-sm-4"><img class="img-responsive" style="margin-bottom:2%" src="images/img2.jpg"></div>
-            </div><br>
-			<div id="hiddenArt" class="row">
-				<div class="col-sm-4"><img class="img-responsive" style="margin-bottom:2%" src="images/img14.jpg"></div>
-				<div class="col-sm-4"><img class="img-responsive" style="margin-bottom:2%" src="images/img4.jpg"></div>
-				<div class="col-sm-4"><img class="img-responsive" style="margin-bottom:2%" src="images/img11.jpg"></div>
-            </div>  
-			<p class="roboto" id="hiddenArtToggle" style="cursor: pointer;text-align: center;" onclick="hiddenArtToggle()"><b>SHOW MORE</b></p>
-			<br>
-		</div>
-		<!--Artworks Section Ends-->
+        <div class="row artbigHeader" id="artworks">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <br>
+                        <h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>ARTWORKS</b></h1>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3"><img class="img-responsive art" style="margin-bottom:2%" src="images/img14.jpg"></div>
+                    <div class="col-md-3"><img class="img-responsive art" style="margin-bottom:2%" src="images/img12.jpg"></div>
+                    <div class="col-md-3"><img class="img-responsive art" style="margin-bottom:2%" src="images/img13.jpg"></div>
+                    <div class="col-md-3"><img class="img-responsive art" style="margin-bottom:2%" src="images/img2.jpg"></div>
+                </div>
+            </div>
+        </div>                   
+        <br><br>
 
+        <div class="row contactbigHeader" id="contact">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <br>
+                        <h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>CONTACT</b></h1>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<!--Social Networking-->
-		<div class="row" id="contact" style="background-color:#141526">
+		<div class="row" style="background-color:black">
 			<div class="container">
-				<br><br>
-				<div class="row" style="background-color:#141526;color:#fff">
+				<div class="row" style="background-color:black;color:#fff">
 					<div class="col-sm-6">
-						<br>
-						<h1 class="roboto" style="font-size: 300%; padding-left:12px"><b>CONTACT</b></h1>
-						<br>
+                            <br>
 						<h4 class="roboto" style="padding-left:12px;color:rgb(34,156,223)">ADDRESS</h4>
 						<p class="muli" style="padding-left:12px">
 							Pranshu Gupta<br>
@@ -328,7 +284,6 @@
 							Email: <a href="mailto:pranshug258@outlook.com">pranshug258@outlook.com</a>
 							<br><br>
 						</p>
-
 					</div>
 					<div class="col-sm-6">
 						<br>
@@ -345,11 +300,11 @@
 			</div>
 		</div>
 
-		<div class="row" style="background-color:#000">
+		<div class="row" style="background-color:rgb(10,20,10)">
 			<div class="container">
 				<br>
-				<div class="row" style="text-align:center;background-color:rgb(0,7,13);color:#fff">
-					<b class="muli">&copy Copyright 2017, Pranshu Gupta</b><br>
+				<div class="row" style="text-align:center;color:#fff">
+					<b class="muli">&copy Copyright 2019, Pranshu Gupta</b><br>
 					<!--<small class="muli" style="color:rgb(100,100,100)">(all logos belong to their respective owners)</small>-->
 				</div>
 				<br>

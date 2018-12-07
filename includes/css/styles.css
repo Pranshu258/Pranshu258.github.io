@@ -4,7 +4,7 @@ body {
 }
 
 #nav {
-  background-color: #fff;
+  background-color: #141526;
   padding: 15px;
   position: fixed;
   right: 0;
@@ -22,7 +22,8 @@ body {
   color: rgb(85,172,238);
 }
 #nav a:hover {
-  color: rgba(0,7,13, 0.9);
+  color: #fff;
+  text-decoration: none;
 }
 #nav ul {
     list-style-type: none;
@@ -37,7 +38,7 @@ body {
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////*/
 #mobnav {
-  background-color: #fff;
+  background-color: #141526;
   padding: 15px;
   position: fixed;
   right: 0;
@@ -121,15 +122,15 @@ body {
   border-radius: 0;
 }
 .btn-primary {
-  background-color: rgb(38,80,200);
+  background-color: black;
   border-width: 2px;
-  border-color: rgb(38,80,200);
+  border-color: rgb(85,172,238);
     -webkit-transition: color 0.5s;
     transition: 0.5s; 
 }
 .btn-primary:hover {
-  border-color: #000000;
-  background-color: rgb(38,80,200);
+  border-color: white;
+  background-color: black;
 }
 
 /*Projects/////////////////////////////////////////////////////////*/
@@ -143,25 +144,50 @@ body {
   cursor: pointer;
 }
 
-#project1 {
-  background-color: #fff;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+.project {
+    padding:20px;
+    border: rgb(85,172,238) solid 2px;
+}
+.project:hover {
+    box-shadow: 0 0 50px rgb(85, 172, 238, 0.35);
+    background-color: black;
 }
 
-/*Artworks Section Styles//////////////////////////////////////////*/
-#heart {
-  -webkit-transition: font-size 0.2s ease;
-  -moz-transition: font-size 0.2s ease;
-  transition: font-size 0.2s ease;
-  color:rgb(0,99,177)  
+.blog {
+    padding:20px;
+    border: rgb(214, 14, 14) solid 2px;
 }
-#heart:hover {
-  font-size: 120%;
+.blog:hover {
+    box-shadow: 0 0 50px rgb(214, 14, 14, 0.6);
+    background-color: black;
 }
 
-/*Blog Section Styles/////////////////////////////////////////*/
-#blogpane a:hover {
-  text-decoration: none;
+.art:hover {
+    box-shadow: 0 0 30px rgb(255,215,0, 0.6);
+}
+
+.bigHeader {
+    background-color:black;
+    color: rgb(85,172,238);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.blogbigHeader {
+    background-color:black;
+    color: red;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.artbigHeader {
+    background-color:black;
+    color: gold;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.contactbigHeader {
+    background-color:black;
+    color: green;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 /*Media Queries////////////////////////////////////////////////////*/
