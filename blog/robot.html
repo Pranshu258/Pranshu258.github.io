@@ -4,7 +4,6 @@
     <head>
     	<!-- WEBSITE TITLE AND DESCRIPTION-->
 		<title>Unsupervised Learning of Manifolds</title>
-
 		<meta name="description" content="Doctor Emacs">
 		<meta name="keywords" content="Pranshu, Gupta, IITK, iit, Emacs, Doctor">
 		<meta name="author" content="Pranshu gupta">
@@ -24,55 +23,31 @@
 	</head>
 
 	<body>
-
-		<header class="row-fluid" id="mobnav">
-			<div class="container muli">
-				<div class="dropdown">
-					<div class="dropdown-toggle" id="menu-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
-					<ul class="dropdown-menu">
-						<li><a href="https://pranshu258.github.io#top" class="smoothScroll">Home</a></li>
-						<li><a href="https://pranshu258.github.io#projects" class="smoothScroll">Projects</a></li>
-						<li><a href="https://pranshu258.github.io#artworks" class="smoothScroll">Artworks</a></li>
-						<li><a href="https://pranshu258.github.io#contact" class="smoothScroll">Contact</a></li>									
-					</ul>
-				</div>
-			</div>
-		</header>
-
-		<!--Navigation Bar Header Begins-->
-		<header class="row-fluid" id="nav">
+		<div class="row blogbigHeader" id="projects">
 			<div class="container">
 				<div class="row">
-					<ul class="pull-right" id="main_menu">
-						<li class="muli"><a href="https://pranshu258.github.io" class="smoothScroll">Home</a></li>
-						<li class="muli"><a href="https://pranshu258.github.io#projects" class="smoothScroll">Projects</a></li>
-						<li class="muli"><a href="https://pranshu258.github.io#artworks" class="smoothScroll">Artworks</a></li>
-		
-						<li class="muli"><a href="https://pranshu258.github.io#contact" class="smoothScroll">Contact</a></li>
-					</ul>
+					<div class="col-sm-8" style="padding:40px">
+						<br>
+                        <h1 class="roboto" style="font-size: 400%"><b>Thinking Through</b></h1>
+                        <p class="muli">
+                            <a href="../index.html" style="color: #fff;text-decoration:none">&larr;&nbsp; Pranshu Gupta</a>
+                        </p>
+						<br>
+                    </div>
+                    <div class="col-sm-4"></div>
 				</div>
 			</div>
-		</header>
-		<!--Navigation Bar Header Ends-->
-
-		<!--About Me Section Begins-->
-		<div class="row" id="top" style="background-color:rgb(3,29,52)">
-			<div class="container">
-				<div class="col-sm-12" style="background-color:rgb(3,29,52);padding-top:95px;color:#fff">				
-					<h1 class="roboto big">Space Structure Learning with ISOMAP</h1>
-					<p class="muli" style="padding:5px;text-align:justify">
-						Learning the structure of space for a mobile robot, based on observations (i.e. images from the robot's camera) and nothing else with the help of the ISOMAP algorithm.
-						<br><br>
-						For this experiment, a point robot in a square shaped arena with walls having a color gradient has been used. The field of view of the robot's camera is 120 degrees. The robot can move anywhere in 'x' and 'y' directions within the arena and rotate about its own axis. The size of the robot itself has been accounted for (by keeping sufficient distance from the walls of the arena).
-					</p>
-				</div>
-			</div>
-			<br><br><br>
-		</div>
-		<br><br>
-		<div class="row">
-			<div class="container">
-				<div class="col-sm-5">
+        </div>
+        <div class="container" style="text-align:justify;padding:3%">
+            <div class="row">
+                <div class="col-sm-8 muli">
+                    <h1 class="roboto"><b>Space Structure Learning with ISOMAP</b></h1>
+                    <p>December 25, 2016</p>
+                    <hr>
+                    <p>
+                        Learning the structure of space for a mobile robot, based on observations (i.e. images from the robot's camera) and nothing else with the help of the ISOMAP algorithm. <br>
+                        For this experiment, a point robot in a square shaped arena with walls having a color gradient has been used. The field of view of the robot's camera is 120 degrees. The robot can move anywhere in 'x' and 'y' directions within the arena and rotate about its own axis. The size of the robot itself has been accounted for (by keeping sufficient distance from the walls of the arena).
+                    </p>
 					<h3 class="roboto"><b>ROTATING ABOUT FIXED POINT(S)</b></h3>
 					<p class="muli" style="text-align:justify">
 						We make the robot rotate about its own axis at three different points in the arena and collect images of the arena as seen by the robot.<br><br>
@@ -80,12 +55,12 @@
 						<small>We have observed similar results on a bigger image set also.</small><br>
 						We then find out the hidden manifold in this data with the help of the Isomap Algorithm. The algorithm takes two parameters, the number of neighbors to consider in the geodesic mapping of the manifold and the final output dimension that we want. We have provided them as '10' and '3' respectively.<br>
 					</p>
-				</div>
-				<div class="col-sm-7">
 					<h6 class="muli" style="text-align:center">a few sample images (600x1) pixels</h6>
-					<img src="img/1.png"><br>
-					<img src="img/2.png"><br>
-					<img src="img/3.png"><br><br>
+                    <div style="text-align:center">
+                        <img src="img/1.png"><br>
+                        <img src="img/2.png"><br>
+                        <img src="img/3.png"><br><br>
+                    </div>
 					<div class="row">
 						<div class="col-sm-4">
 							<h6 class="muli" style="text-align:center">3D Manifold for rotation about a single point</h6>
@@ -99,42 +74,18 @@
 							<h6 class="muli" style="text-align:center">3D Manifold for rotation about three points</h6>
 							<img src="plots/Three_Point_Rotation.png" class="img-responsive">
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br><br><br>
-		<div class="row" style="background-color:rgb(250,250,250)">
-			<div class="container">
-				<div class="row" style="background-color:rgb(210,210,210)">
-					<div class="col-sm-12">
-						<h3 class="roboto"><b>DISCOVERING X-Y MOTION WITH ROTATION</b></h3>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="container">
-				<div class="row">
-					<div class="row" style="background-color:rgb(238,238,238);text-align:justify">
-						<div class="col-sm-7">
-							<p class="muli">
-								<br>
-								In this part we make the robot move around a randomized trajectory of large length and collect about 10000 images. Then we learn the embedded manifold with the help of the Isomap Algorithm.
-								<br><br>
-								We have conducted this experiment on 3 trajectories:
-								<ul class="muli">
-									<li>Completely Random Points [x, y, Theta]</li>
-									<li>Motion along the Diagonal with continuous rotation about the robot's own axis</li>
-									<li>Circular with view in Radial direction</li>
-								</ul>
-								<br>
-							</p>
-						</div>
-						<div class="col-sm-5">
-
-						</div>
-					</div>
+                    </div>
+                    <h3 class="roboto"><b>DISCOVERING X-Y MOTION WITH ROTATION</b></h3>
+                    <p class="muli">
+                        In this part we make the robot move around a randomized trajectory of large length and collect about 10000 images. Then we learn the embedded manifold with the help of the Isomap Algorithm.
+                        <br>
+                        We have conducted this experiment on 3 trajectories:
+                        <ul class="muli">
+                            <li>Completely Random Points [x, y, Theta]</li>
+                            <li>Motion along the Diagonal with continuous rotation about the robot's own axis</li>
+                            <li>Circular with view in Radial direction</li>
+                        </ul>
+                    </p>
 					<br>
 					<div class="row">
 						<div class="col-sm-4">
@@ -150,81 +101,32 @@
 							<img src="plots/Manifold_Trajectory_3.png" class="img-responsive">
 						</div>
 					</div>
-					<br>
-				</div>
-			</div>
-		</div>
-		<div class="row" style="background-color:rgb(245,245,245)">
-			<div class="container">
-				<div class="row" style="background-color:rgb(200,200,200)">
-					<div class="col-sm-12">
-						<br>
-						<a href="hw1.tar.gz">DOWNLOAD THE PROJECT FILES</a>
-						<br><br>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br>
-
-		<div class="row">
-			<div class="container">
-				<div class="col-sm-8">
-					<h3 class="roboto"><b>ESTIMATING THE POSITION OF THE ROBOT FROM TEST IMAGES</b></h3>
-					<p class="muli" style="text-align:justify">
-						In this part, we take a set of 11000 images in which for 10000, we know exactly from what position they were captured (train set). However, we don't have this information for the rest of the images (test set).
-						<br><br>
-						We use the isomap algorithm to learn the embedded manifold in the dataset. Now, for each image in the test set we have its position in the 3D manifold. But, for the train set images we also have the positions from where they were captured. So, we now find out means of the nearest neighbors of test images in the train set and assign the corresponding capturing positions to the test images.
-						<br><br>
-						<b>We now have all our images labelled with their respective capturing positions (x, y, theta).</b><br>
-						<small><i>**this was done for random position and the circular trajectories</i></small><br>
-						<small class="muli"><i>**localization errors are the average euclidean displacement from the actual positions to the estimated positions</i></small>
-					</p>
-				</div>
-				<div class="col-sm-4" style="text-align:center">
-					<br>
-					<h1 class="roboto big"><b>17.31</b></h1>
-					<h6 class="roboto"><b>LOCALIZATION ERROR: CIRCULAR TRAJECTORY</b></h6>
-					<h1 class="roboto big"><b>18.21</b></h1>
-					<h6 class="roboto"><b>LOCALIZATION ERROR: RANDOM TRAJECTORY</b></h6>
-				</div>
-			</div>
-			<br><br>
-		</div>
-
-		<div class="row" style="background-color:rgb(245,245,245)">
-			<div class="container" style="text-align:center">
-				<div class="row" style="background-color:rgb(200,200,200)">
-					<div class="col-sm-12">
-						<h3 class="roboto"><b>PLOTS OF RECONSTRUCTION ERROR vs. NUMBER OF COMPONENTS IN REDUCED DIMENSION</b></h3>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br>
-		<div class="row">
-			<div class="container">
-				<div class="row" style="text-align:center">
-					<div class="col-sm-6">
-						<h4 class="roboto"><b>PART I</b></h4>
-						<img src="plots/Reconstruction_Error_1.png" class="img-responsive">
-						<p class="muli">
-							plot of reconstruction error vs. number of components in the reduced dimension for rotation of the robot about its own axis at three different points.
-						</p>
-					</div>
-					<div class="col-sm-6">
-						<h4 class="roboto"><b>PART II</b></h4>
-						<img src="plots/Reconstruction_Error_2.png" class="img-responsive">
-						<p class="muli">
-							plot of reconstruction error vs. number of components in the reduced dimension for random positions of the robot.
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br><br><br>
-
-
+					<br><br>
+                    <h3 class="roboto"><b>Source Code</b></h3>
+                    <p>Download the code or fork the repository on GitHub</p>
+                    <a class="github-button" href="https://github.com/Pranshu258/Robot_Motion_Planning/fork" data-icon="octicon-repo-forked" data-size="large" aria-label="Fork Pranshu258/Robot_Motion_Planning on GitHub">Fork</a>
+                    <!-- Place this tag where you want the button to render. -->
+                    <a class="github-button" href="https://github.com/Pranshu258/Robot_Motion_Planning/archive/master.zip" data-icon="octicon-cloud-download" data-size="large" aria-label="Download Pranshu258/Robot_Motion_Planning on GitHub">Download</a>
+                    <!-- Place this tag where you want the button to render. -->
+                    <a class="github-button" href="https://github.com/pranshu258" data-size="large" aria-label="Follow @pranshu258 on GitHub">Follow me on GitHub</a>
+                    <br> <br><hr><br>
+                    <br>
+                </div>
+                <div class="col-sm-1 muli" style="text-align:center"></div>
+                <div class="col-sm-3 muli" style="text-align:center">
+                    <br>
+                    <h3 class="roboto"><b>Source Code</b></h3>
+                    <p>Download the code or fork the repository on GitHub</p><br>
+                    <a class="github-button" href="https://github.com/Pranshu258/Robot_Motion_Planning/fork" data-icon="octicon-repo-forked" data-size="large" aria-label="Fork Pranshu258/Robot_Motion_Planning on GitHub">Fork</a>
+                    <!-- Place this tag where you want the button to render. -->
+                    <a class="github-button" href="https://github.com/Pranshu258/Robot_Motion_Planning/archive/master.zip" data-icon="octicon-cloud-download" data-size="large" aria-label="Download Pranshu258/Robot_Motion_Planning on GitHub">Download</a><br>
+                    <br><img src="../images/Octocat/Octocat.jpg" class="img-responsive"><br>
+                    <!-- Place this tag where you want the button to render. -->
+                    <a class="github-button" href="https://github.com/pranshu258" data-size="large" aria-label="Follow @pranshu258 on GitHub">Follow me on GitHub</a>
+                    <br> <br><hr><br>
+                </div>
+            </div>
+        </div>
         <!-- First try for the online version of jQuery-->
         <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
         <!-- If no online access, fallback to our hardcoded version of jQuery -->
@@ -233,5 +135,6 @@
         <script src="../includes/bootstrap/js/bootstrap.min.js"></script>
         <!-- Custom JS -->
         <script src="../includes/js/script.js"></script>   
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
 	</body>
 </html>
