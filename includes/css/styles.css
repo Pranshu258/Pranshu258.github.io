@@ -184,6 +184,12 @@ body {
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
+.photobigHeader {
+    background-color:black;
+    color:greenyellow;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
 .contactbigHeader {
     background-color:black;
     color: green;
@@ -208,7 +214,6 @@ body {
   list-style: none;
   padding: 2%;
   text-align: center;
-  margin-top:100px;
 }
 
 #logolist li {
