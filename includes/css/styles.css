@@ -117,20 +117,28 @@ body {
   border-color: rgb(220,220,220);
 }
 
+
 /*Custom Button Styles*/
 .btn {
-  border-radius: 0;
+    border-radius: 0;
+}
+.btn-project {
+    border-color: rgb(85,172,238);
+}
+.btn-blog {
+    border-color: rgb(214, 14, 14);
 }
 .btn-primary {
+    color: white;
   background-color: black;
   border-width: 2px;
-  border-color: rgb(85,172,238);
     -webkit-transition: color 0.5s;
     transition: 0.5s; 
 }
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
   border-color: white;
   background-color: black;
+  color: white;
 }
 
 /*Projects/////////////////////////////////////////////////////////*/
@@ -166,7 +174,7 @@ body {
     box-shadow: 0 0 30px rgb(255,215,0, 0.6);
 }
 
-.bigHeader {
+.projectbigHeader {
     background-color:black;
     color: rgb(85,172,238);
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);

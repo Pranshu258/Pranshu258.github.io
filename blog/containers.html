@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+    	<!-- WEBSITE TITLE AND DESCRIPTION-->
+		<title>Azure Containers</title>
+		<meta name="description" content="Azure Containers">
+		<meta name="keywords" content="Pranshu, Gupta, IITK, iit, container, azure, microsoft, kubernetes, docker, cloud">
+		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
+		<!-- MOBILE VIEWPORT OPTIMIZED -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<!-- Bootstrap CSS -->
+		<link href="../includes/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="../includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="../includes/css/styles.css">
+		<link rel="stylesheet" href="../includes/fonts/font.css">
+		<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
+		<!-- Include Modernizr in the head, before any other Javascript -->
+        <script src="../includes/js/modernizr-2.6.2.min.js"></script>
+        <meta name="p:domain_verify" content="a474cff5b8db44918e86cf0f1884c353"/>
+    </head>
+    <body>
+		<div class="row blogbigHeader" id="projects">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8" style="padding-left:40px">
+						<br>
+                        <h1 class="roboto" style="font-size: 400%"><b>Thinking Through</b></h1>
+                        <p class="muli">
+                            <a href="../index.html" style="color: #fff;text-decoration:none">&larr;&nbsp; back</a>
+                        </p>
+						<br>
+                    </div>
+                    <div class="col-sm-4"></div>
+				</div>
+			</div>
+        </div>
+        <div class="container" style="text-align:justify;padding:3%">
+            <div class="row">
+                <div class="col-sm-8 muli">
+                    <h1 class="roboto"><b>Containers: An Introduction</b></h1>
+                    <p>Pranshu Gupta, Feb 10, 2019</p>
+                    <hr>
+                    <h3 class="roboto"><b>Virtualization</b></h3>
+                    <p>
+                        Virtualization is a mechanism to share hardware resources amongst multiple operating system instances on the same machine. These operating system instances are called Virtual Machines and are isolated from one another. This reduces the investment required in hardware resources, as the same hardware can now be shared by multiple VMs allowing high density deployments on a single server.
+                        Virtualization is made possible by a thin layer of software called a Hypervisor that decouples the virtual machines from the host and dynamically allocates computing resources to each virtual machine as needed.
+                    </p>  
+                    <p>
+                        The only responsibility of the host operating system is to run the Hypervisor itself, no app deployments are usually done on the host OS. However, each of the OS instances incur licensing and maintenance costs. All the system calls and resources access requests by the VMs first go through the Hypervisor and the host OS, resulting in some overhead. VMWare came up with bare metal hypervisor which runs directly on the hardware, without any host OS, eliminating this overhead.
+                    </p>
+                    <p>
+                        <b><i>VMware ESXi is a purpose-built bare-metal hypervisor that installs directly onto a physical server. With direct access to and control of underlying resources, ESXi is more efficient than hosted architectures and can effectively partition hardware to increase consolidation ratios and cut costs for our customers. - VMWare</i></b>
+                    </p>
+                    <h3 class="roboto"><b>Types of Virtualization</b></h3>
+                    <p>
+                        There are four types of virtualization – Paravirtualization, Hardware Assisted Virtualization, Full Virtualization and Hybrid Virtualization.
+                    </p>
+                    <p>
+                        Paravirtualization is virtualization in which the guest operating system (the one being virtualized) is aware that it is a guest and accordingly has drivers that, instead of issuing hardware commands, simply issue commands directly to the host operating system. This also includes memory and thread management as well, which usually require unavailable privileged instructions in the processor.
+                    </p>
+                    <p>
+                        Full Virtualization is virtualization in which the guest operating system is not aware that it is running on virtual hardware and issues hardware commands directly which are handled by the underlying hypervisor software running on the host operating system.
+                    </p>
+                    <p>
+                        Hardware Assisted Virtualization is virtualization in which the microprocessor architecture supports special instructions to facilitate virtualization. These instructions might allow a virtual context to be setup so that the guest can execute privileged instructions directly on the processor without affecting the host.
+                    </p>
+                    <p>
+                        Hybrid Virtualization is a mix of Paravirtualization and full virtualization where for privileged kernel commands, full virtualization is used, and for other tasks like IO, the guest OS directly issues commands to the host OS using the special drivers. Hybrid VMs often perform better than fully virtualized VMs.
+                    </p>
+                    <h3 class="roboto"><b>Open Virtualization Format</b></h3>
+                    <p>
+                        Open Virtualization Format is a standard that allows compliant virtual machine images to be interoperable and migratable across different vendors such as Azure, AWS, VMWare and VirtualBox.
+                    </p>
+                    <p>
+                        OVF is a packaging format for virtual appliances. Once installed, an OVF package adds to the user’s infrastructure a self-contained, self-consistent, software application that provides a particular service or services. For example, an OVF package might contain a fully functional and tested web-server, database, and OS combination, such as a LAMP stack (Linux + Apache + MySQL + PHP), or it may contain a virus checker, including its update software, spyware detector, etc.
+                    </p>
+                    <p>
+                        The OVF specification describes a hypervisor-neutral, efficient, extensible, and open format for the packaging and distribution of virtual appliances composed of one or more virtual systems. The OVF specification promotes customer confidence through the collaborative development of common standards for portability and interchange of virtual systems between different vendors’ virtualization platforms.
+                    </p>
+                    <p>
+                        For more information on OVF, see the white paper: <br>
+                        <a href="https://www.dmtf.org/sites/default/files/standards/documents/DSP2017_2.0.0.pdf">https://www.dmtf.org/sites/default/files/standards/documents/DSP2017_2.0.0.pdf</a>
+                    </p>
+                    <h3 class="roboto"><b>Limitations of Virtualization</b></h3>
+                    <p>
+                        Virtualization has its advantages but there are limitations too, some of them are as follows:
+                    </p>
+                    <ol>
+                        <li> No concept incremental versioning or layers in virtualization, that means if there is a patch or update, the full VM image needs be downloaded and deployed again</li>
+                        <li> No centralized repository for VM images, reuse opportunities are minimal</li>
+                        <li> Not suitable for modern DevOps workflow</li>
+                        <li> Hypervisor server does not support clusters by itself<li> An external load balancer is needed</li>
+                        <li> Deploying web/micro services on VMs is costly because of low density deployments<li> One way is to deploy multiple services on the same host, but this is bad practice, because it makes maintenance and failure detection difficult</li>
+                        <li> Provisioning and bootstrapping VMs is time consuming so it is not suitable for real time workloads<li> For example, dynamic scaling in real time will be very difficult because creating and deploying new VMs takes time</li>
+                        <li> Vendor specific toolset is required for administration of virtual environments</li>
+                        <li> VMs are costly because of OS licensing and low-density utilization of underlying hardware</li>
+                        <li> VMs are difficult to migrate unless they were created using OVF</li>
+                    </ol>
+                    <h2 class="roboto"><b>Docker Containers</b></h2>
+                    <p>
+                        Containers are isolated execution environments which shared the operating system resources. Virtualization at the operating system level can be regarded as containerization. The operating system takes care of providing the virtual environments where the applications run with isolation as if each application was running on a separate OS instance.
+                    </p>
+                    <p style="text-align:center">
+                            <img src="../images/vmvsdocker.png" class="img-responsive" >
+                            Image Source: <a href="https://www.docker.com/resources/what-container">https://www.docker.com/resources/what-container</a>
+                    </p>
+                    <p>
+                        Docker is a software that is used to containerize applications. It uses features like Namespace, CGroup, Union File System and NetLink, all available on Linux. Windows does not have these features yet, so Docker for Windows needs Hyper-V to work, so that it can access these features from a Linux VM. Native Docker Engine for Windows is under development.
+                    </p>
+                    <p>
+                        Namespace is a feature of Linux kernel which partitions kernel resources such that one set of processes can see one set of resources while another set of processes can see a different set of resources. Control Groups is a feature of Linux kernel that is used to limit, manage and monitor the usage of the resources by a process or a set of process. These features are very important for containerization because it allows Docker to create isolated execution contexts for different apps.
+                    </p>
+                    <p>
+                        Union file system is filesystem service for Linux which allows different filesystems to be transparently overlaid and mounted as a single union filesystem. Contents of directories which have the same path within the merged branches will be seen together in a single merged directory, within the new, virtual filesystem.
+                    </p>
+                    <p>
+                            UFS helps avoid duplicating a complete set of files each time you run a container image because it creates a virtual file system from different sources, so that the container is oblivious to the underlying filesystem and can run in a decoupled way.
+                    </p>
+                    <p>
+                            NetLink is another Linux kernel feature that helps user space processes communicate with kernel space processes (Inter Process Communication). This feature is used by Docker engine to create container which have their own network, without exposing the underlying network of the host OS. This is done with the help of port forwarding. For example, two container apps can expose their port as 8080, while one of them forwards the network to the host’s port 8088 and the other to 8090 behind the scenes.
+                    </p>
+                    <p>
+                            All these features are used to implement the LibContainer library which powers the Docker Engine. This library is implemented in Go language.
+                    </p>
+                </div>
+                <div class="col-sm-1 muli" style="text-align:center"></div>
+                <div class="col-sm-3 muli" style="text-align:center">
+                </div>
+            </div>
+        </div>
+
+        <!-- First try for the online version of jQuery-->
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- If no online access, fallback to our hardcoded version of jQuery -->
+        <script>window.jQuery || document.write('<script src="../includes/js/jquery-1.11.0.min.js"><\/script>')</script>
+        <!-- Bootstrap JS -->
+        <script src="../includes/bootstrap/js/bootstrap.min.js"></script>
+        <!-- Custom JS -->
+        <script src="../includes/js/script.js"></script>   
+        <!-- Place this tag in your head or just before your close body tag. -->
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+	</body>
+</html>
