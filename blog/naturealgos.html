@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+    	<!-- WEBSITE TITLE AND DESCRIPTION-->
+		<title>Algorithms Inspired by Nature</title>
+		<meta name="description" content="Algorithms Inspired by Nature">
+		<meta name="keywords" content="Pranshu, Gupta, IITK, iit, nature, algorithms, multi agent systems">
+		<meta name="author" content="Pranshu gupta">
+		<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
+		<!-- MOBILE VIEWPORT OPTIMIZED -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<!-- Bootstrap CSS -->
+		<link href="../includes/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="../includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="../includes/css/styles.css">
+		<link rel="stylesheet" href="../includes/fonts/font.css">
+		<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
+		<!-- Include Modernizr in the head, before any other Javascript -->
+        <script src="../includes/js/modernizr-2.6.2.min.js"></script>
+        <meta name="p:domain_verify" content="a474cff5b8db44918e86cf0f1884c353"/>
+    </head>
+    <body>
+		<div class="row blogbigHeader" id="projects">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8" style="padding-left:40px">
+						<br>
+                        <h1 class="roboto" style="font-size: 400%"><b>Thinking Through</b></h1>
+                        <p class="muli">
+                            <a href="../index.html" style="color: #fff;text-decoration:none">&larr;&nbsp; back</a>
+                        </p>
+						<br>
+                    </div>
+                    <div class="col-sm-4"></div>
+				</div>
+			</div>
+        </div>
+        <div class="container" style="text-align:justify;padding:3%">
+            <div class="row">
+                <div class="col-sm-8 muli">
+                    <h1 class="roboto"><b>Algorithms Inspired by Nature: A Survey</b></h1>
+                    <p>Pranshu Gupta, April 10, 2017</p>
+                    <hr>
+                    <p>
+                        Nature is known to be the best optimizer. Natural processes most often than not reach an
+                        optimal equilibrium. Scientists have always strived to understand and model such processes.
+                        Thus, many algorithms exist today that are inspired by nature. Many of these algorithms
+                        and heuristics can be used to solve problems for which no polynomial time algorithms exist,
+                        such as Job Shop Scheduling and many other Combinatorial Optimization problems. We will
+                        discuss some of these algorithms and heuristics and how they help us solve complex problems
+                        of practical importance. We will focus mainly on Ant Colony Optimization, Particle Swarm
+                        Optimization, Simulated Annealing and Evolutionary Algorithms.
+                    </p>
+                    <p>
+                        <i><b>
+                            A heuristic can be thought of as a rule of thumb that will hopefully nd a good solution for a given problem. These techniques are mainly applied to complex convex multivariate
+                            constrained combinatorial optimization problems which are usually NP complete or harder.
+                        </b></i>
+                    </p>
+                    <p>
+                        <i><b>
+                            A metaheuristic is a higher-level procedure or heuristic designed to nd, generate,
+                            or select a heuristic that may provide a succiently good solution to an optimization problem,
+                            especially with incomplete or imperfect information or limited computation capacity." [Bianchi
+                            et al. (2009)]
+                        </b></i>
+                    </p>
+                    <p>
+                        Ant Colony Optimization utilizes a family of heuristics inspired by the foraging behavior of
+                        Ants. Ants are highly co-operative social insects, they search for food in huge groups and com-
+                        municate indirectly using a chemical called pheromone. These heuristics model individual ants
+                        as independent solution nders roaming in the solution space of a problem and communicating
+                        via a shared variable(s) i.e. the pheromone.
+                    </p>
+                    <p>
+                        When a liquid is cooled slowly, its particles arrange themselves in some conguration that
+                        allows minimum energy state - this process is called annealing. Simulated Annealing tries to
+                        model this phenomenon by drawing an analogy between between the behavior of multi-body
+                        systems (e.g. liquids) in thermal equilibrium at a nite temperature and the behaviour of the
+                        objective function of a combinatorial optimization problem at different values of the variables
+                        involved. [Kirkpatrick et al. (1983)]
+                    </p>
+                    <p>
+                        Particle Swarm Optimization is a another optimization heuristic. It relies on a swarm of
+                        particles that are initialized with some conguration in the solution space of a given prob-
+                        lem. These particles then explore the solution space individually while communicating with
+                        other particles around them to nd the best solution. After some iterations these particles
+                        are expected to make swarms around optimal solution(s). PSO relies on randomization in the
+                        movement of particles to avoid getting stuck in local optima.
+                    </p>
+                    <p>
+                        Evolutionary Algorithms are a family of algorithms inspired from Neo-Darwinism paradigm
+                        of biological evolution.
+                    </p>
+                    <p style="text-align:center;border: solid black; padding: 10px;">
+                        Neo-Darwininsm = Darwinism + Selectionism + Mendelian Genetics
+                    </p>
+                    <p>
+                        These algorithms model solutions as individual species with their genetic code representing
+                        the solution itself. These individuals later reproduce to create new individuals with different
+                        genetic code. Reproduction involves choosing healthy parents and then crossing over their genes
+                        to create an offspring. The optimality of the solution instance represented by the genetic code
+                        of the offspring determines its tness. Then the notion of "survival of the ttest" comes into
+                        play. The best individuals survive and then they reproduce for the next generational cycle.
+                        Thus, this model utilizes both exploration and exploitation of the solution space.
+                        Genetic Algorithms, Evolutionary Strategies, Differential Evolution etc., are a few variants
+                        of EAs.
+                    </p>
+                    <h3 class="roboto"><b>Ant Colony Optimization</b></h3>
+                    <p>
+                        Ant Algorithms are a family of algorithms inspired by the behavior of real ant colonies. Ants
+                        are social insects and they always work together to ensure the survival of the colony as a whole.
+                        When in search of food, ants deposit a chemical substance called pheromone on their path. If
+                        they succeed in nding a food source they again deposit pheromone on their path back to the
+                        colony. The amount of pheromone they deposit on the path often is determined by the quality
+                        and quantity of the food source that the path leads to. Also, if the multiple ants nd the same
+                        food source, the one which followed the shorter path will deposit the pheromone rst. When
+                        looking for food the ants also consider the pheromone deposited by other ants to aid their own
+                        search. Thus, the shorter paths and the paths which lead to better food sources will be followed
+                        by more and more ants and the pheromone on them will be further enriched (positive feedback
+                        in search). Also, because pheromone evaporates in atmosphere with the passage of time, paths
+                        which are no longer useful or followed will lose the pheromone deposited on them. However,
+                        ants are always free to choose their own paths ensuring the explore for new food sources as well
+                        instead of just clinging upon only one.
+                    </p>
+                    <p>
+                        This behavior of ants can be utilized to design algorithms to solve search and optimization
+                        problems. [Dorigo et al. (1999)] were the first to model foraging behavior of ant colonies and
+                        design a metaheuristic that can be used to solve problems of practical importance.
+                    </p>
+                    <hr>
+
+                    <div id="disqus_thread"></div>
+                    <script>
+                    
+                    /**
+                    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+                    
+                    var disqus_config = function () {
+                        this.page.url = "https://pranshu258.github.io/blog/naturealgos.html";  // Replace PAGE_URL with your page's canonical URL variable
+                        this.page.identifier = "e5e1747b-86b2-4796-a2f6-3428a0508c16"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                    };
+                    
+                    (function() { // DON'T EDIT BELOW THIS LINE
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://pranshu258.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                    })();
+                    </script>
+                    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                     
+                </div>
+                <div class="col-sm-1 muli" style="text-align:center"></div>
+                <div class="col-sm-3 muli" style="text-align:center">
+                </div>
+            </div>
+        </div>
+
+        <!-- First try for the online version of jQuery-->
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <!-- If no online access, fallback to our hardcoded version of jQuery -->
+        <script>window.jQuery || document.write('<script src="../includes/js/jquery-1.11.0.min.js"><\/script>')</script>
+        <!-- Bootstrap JS -->
+        <script src="../includes/bootstrap/js/bootstrap.min.js"></script>
+        <!-- Custom JS -->
+        <script src="../includes/js/script.js"></script>   
+        <!-- Place this tag in your head or just before your close body tag. -->
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+	</body>
+</html>
