@@ -3,7 +3,7 @@
 
     <head>
     	<!-- WEBSITE TITLE AND DESCRIPTION-->
-		<title>Azure Containers</title>
+		<title>On Virtualization and Containers</title>
 		<meta name="description" content="Azure Containers">
 		<meta name="keywords" content="Pranshu, Gupta, IITK, iit, container, azure, microsoft, kubernetes, docker, cloud">
 		<meta name="author" content="Pranshu gupta">
@@ -40,8 +40,8 @@
         <div class="container" style="text-align:justify;padding:3%">
             <div class="row">
                 <div class="col-sm-8 muli">
-                    <h1 class="roboto"><b>Containers: An Introduction</b></h1>
-                    <p>Pranshu Gupta, Feb 10, 2019</p>
+                    <h1 class="roboto"><b>On Virtualization and Containers</b></h1>
+                    <p>Pranshu Gupta, Feb 20, 2019</p>
                     <hr>
                     <h3 class="roboto"><b>Virtualization</b></h3>
                     <p>
@@ -101,14 +101,16 @@
                     </ol>
                     <h2 class="roboto"><b>Docker Containers</b></h2>
                     <p>
-                        Containers are isolated execution environments which shared the operating system resources. Virtualization at the operating system level can be regarded as containerization. The operating system takes care of providing the virtual environments where the applications run with isolation as if each application was running on a separate OS instance.
+                        Containers are isolated execution environments which share the operating system resources. Virtualization at the operating system level can be regarded as containerization. The operating system takes care of providing the virtual environments where the applications run with isolation as if each application was running on a separate OS instance.
                     </p>
                     <p style="text-align:center">
                             <img src="../images/vmvsdocker.png" class="img-responsive" >
                             Image Source: <a href="https://www.docker.com/resources/what-container">https://www.docker.com/resources/what-container</a>
                     </p>
+                    <h3 class="roboto"><b>Building Blocks of Docker</b></h3>
                     <p>
-                        Docker is a software that is used to containerize applications. It uses features like Namespace, CGroup, Union File System and NetLink, all available on Linux. Windows does not have these features yet, so Docker for Windows needs Hyper-V to work, so that it can access these features from a Linux VM. Native Docker Engine for Windows is under development.
+                        Docker is a software that is used to containerize applications. It uses features like Namespace, CGroup, Union File System and NetLink, all available on Linux. We also have native docker containers on Windows server. <br>
+                        <a href="https://www.docker.com/products/windows-containers">https://www.docker.com/products/windows-containers</a>
                     </p>
                     <p>
                         Namespace is a feature of Linux kernel which partitions kernel resources such that one set of processes can see one set of resources while another set of processes can see a different set of resources. Control Groups is a feature of Linux kernel that is used to limit, manage and monitor the usage of the resources by a process or a set of process. These features are very important for containerization because it allows Docker to create isolated execution contexts for different apps.
@@ -126,6 +128,40 @@
                             All these features are used to implement the LibContainer library which powers the Docker Engine. This library is implemented in Go language.
                     </p>
 
+                    <h3 class="roboto"><b>Docker Container Image</b></h3>
+                    <p>
+                        An image is a read-only template with instructions for creating a Docker container. You might create your own images or you might only use those created by others and published in a registry. To build your own image, you create a Dockerfile with a simple syntax for defining the steps needed to create the image and run it. Each instruction in a Dockerfile creates a layer in the image. When you change the Dockerfile and rebuild the image, only those layers which have changed are rebuilt. This is part of what makes images so lightweight, small, and fast, when compared to other virtualization technologies.
+                    </p>
+
+                    <h3 class="roboto"><b>Docker Engine</b></h3>
+                    <p>
+                        Docker Engine is a software that provides the runtime for container images. It is implemented on top the LibContainer library. It is also termed as Docker Host or Docker Runtime.
+                    </p>
+                    <p style="text-align:center">
+                            <img src="../images/dockerArch.png" class="img-responsive">
+                            Image Source: <a href=https://docs.docker.com/engine/docker-overview/#docker-architecture>https://docs.docker.com/engine/docker-overview/#docker-architecture</a>
+                    </p>
+                    
+                    <h3 class="roboto"><b>Docker Hub</b></h3>
+                    <p>
+                            Docker Hub is a public repository where you can share container images that you create as well as utilize those shared by others.
+                    </p>
+
+                    <h3 class="roboto"><b>Docker Compose</b></h3>
+                    <p>
+                            Docker build is the utility to build container images. It uses a Dockerfile which defines the build configuration parameters and a “context” – which can be the files that you want to package as a container image.
+                    </p>
+
+                    <h3 class="roboto"><b>Docker Swarm</b></h3>
+                    <p>
+                            Docker Swarm brings cluster management features to Docker Engine. Using docker swarm you can deploy and maintain a multitude of containers.
+                    </p>
+
+                    <hr>
+
+                    To learn more about Docker, head over to: <a href="https://docs.docker.com/engine/docker-overview/">https://docs.docker.com/engine/docker-overview/</a>
+
+                    <hr>
                     <div id="disqus_thread"></div>
                     <script>
                     
