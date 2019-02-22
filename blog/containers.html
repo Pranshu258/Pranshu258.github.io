@@ -27,7 +27,7 @@
 				<div class="row">
 					<div class="col-sm-8" style="padding-left:40px">
 						<br>
-                        <h1 class="roboto" style="font-size: 400%"><b>Thinking Through</b></h1>
+                        <h1 class="roboto" style="font-size: 400%">Thinking Through</h1>
                         <p class="muli">
                             <a href="../index.html" style="color: #fff;text-decoration:none">&larr;&nbsp; back</a>
                         </p>
@@ -40,10 +40,10 @@
         <div class="container" style="text-align:justify;padding:3%">
             <div class="row">
                 <div class="col-sm-8 muli">
-                    <h1 class="roboto"><b>On Virtualization and Containers</b></h1>
+                    <h1 class="roboto">On Virtualization and Containers</h1>
                     <p>Pranshu Gupta, Feb 20, 2019</p>
                     <hr>
-                    <h3 class="roboto"><b>Virtualization</b></h3>
+                    <h3 class="roboto">Virtualization</h3>
                     <p>
                         Virtualization is a mechanism to share hardware resources amongst multiple operating system instances on the same machine. These operating system instances are called Virtual Machines and are isolated from one another. This reduces the investment required in hardware resources, as the same hardware can now be shared by multiple VMs allowing high density deployments on a single server.
                         Virtualization is made possible by a thin layer of software called a Hypervisor that decouples the virtual machines from the host and dynamically allocates computing resources to each virtual machine as needed.
@@ -54,7 +54,7 @@
                     <p>
                         <b><i>VMware ESXi is a purpose-built bare-metal hypervisor that installs directly onto a physical server. With direct access to and control of underlying resources, ESXi is more efficient than hosted architectures and can effectively partition hardware to increase consolidation ratios and cut costs for our customers. - VMWare</i></b>
                     </p>
-                    <h3 class="roboto"><b>Types of Virtualization</b></h3>
+                    <h3 class="roboto">Types of Virtualization</h3>
                     <p>
                         There are four types of virtualization – Paravirtualization, Hardware Assisted Virtualization, Full Virtualization and Hybrid Virtualization.
                     </p>
@@ -70,7 +70,7 @@
                     <p>
                         Hybrid Virtualization is a mix of Paravirtualization and full virtualization where for privileged kernel commands, full virtualization is used, and for other tasks like IO, the guest OS directly issues commands to the host OS using the special drivers. Hybrid VMs often perform better than fully virtualized VMs.
                     </p>
-                    <h3 class="roboto"><b>Open Virtualization Format</b></h3>
+                    <h3 class="roboto">Open Virtualization Format</h3>
                     <p>
                         Open Virtualization Format is a standard that allows compliant virtual machine images to be interoperable and migratable across different vendors such as Azure, AWS, VMWare and VirtualBox.
                     </p>
@@ -84,7 +84,7 @@
                         For more information on OVF, see the white paper: <br>
                         <a href="https://www.dmtf.org/sites/default/files/standards/documents/DSP2017_2.0.0.pdf">https://www.dmtf.org/sites/default/files/standards/documents/DSP2017_2.0.0.pdf</a>
                     </p>
-                    <h3 class="roboto"><b>Limitations of Virtualization</b></h3>
+                    <h3 class="roboto">Limitations of Virtualization</h3>
                     <p>
                         Virtualization has its advantages but there are limitations too, some of them are as follows:
                     </p>
@@ -99,7 +99,7 @@
                         <li> VMs are costly because of OS licensing and low-density utilization of underlying hardware</li>
                         <li> VMs are difficult to migrate unless they were created using OVF</li>
                     </ol>
-                    <h2 class="roboto"><b>Docker Containers</b></h2>
+                    <h2 class="roboto">Docker Containers</h2>
                     <p>
                         Containers are isolated execution environments which share the operating system resources. Virtualization at the operating system level can be regarded as containerization. The operating system takes care of providing the virtual environments where the applications run with isolation as if each application was running on a separate OS instance.
                     </p>
@@ -107,7 +107,7 @@
                             <img src="../images/vmvsdocker.png" class="img-responsive" >
                             Image Source: <a href="https://www.docker.com/resources/what-container">https://www.docker.com/resources/what-container</a>
                     </p>
-                    <h3 class="roboto"><b>Building Blocks of Docker</b></h3>
+                    <h3 class="roboto">Building Blocks of Docker</h3>
                     <p>
                         Docker is a software that is used to containerize applications. It uses features like Namespace, CGroup, Union File System and NetLink, all available on Linux. We also have native docker containers on Windows server. <br>
                         <a href="https://www.docker.com/products/windows-containers">https://www.docker.com/products/windows-containers</a>
@@ -128,12 +128,12 @@
                             All these features are used to implement the LibContainer library which powers the Docker Engine. This library is implemented in Go language.
                     </p>
 
-                    <h3 class="roboto"><b>Docker Container Image</b></h3>
+                    <h3 class="roboto">Docker Container Image</h3>
                     <p>
                         An image is a read-only template with instructions for creating a Docker container. You might create your own images or you might only use those created by others and published in a registry. To build your own image, you create a Dockerfile with a simple syntax for defining the steps needed to create the image and run it. Each instruction in a Dockerfile creates a layer in the image. When you change the Dockerfile and rebuild the image, only those layers which have changed are rebuilt. This is part of what makes images so lightweight, small, and fast, when compared to other virtualization technologies.
                     </p>
 
-                    <h3 class="roboto"><b>Docker Engine</b></h3>
+                    <h3 class="roboto">Docker Engine</h3>
                     <p>
                         Docker Engine is a software that provides the runtime for container images. It is implemented on top the LibContainer library. It is also termed as Docker Host or Docker Runtime.
                     </p>
@@ -142,17 +142,17 @@
                             Image Source: <a href=https://docs.docker.com/engine/docker-overview/#docker-architecture>https://docs.docker.com/engine/docker-overview/#docker-architecture</a>
                     </p>
                     
-                    <h3 class="roboto"><b>Docker Hub</b></h3>
+                    <h3 class="roboto">Docker Hub</h3>
                     <p>
                             Docker Hub is a public repository where you can share container images that you create as well as utilize those shared by others.
                     </p>
 
-                    <h3 class="roboto"><b>Docker Compose</b></h3>
+                    <h3 class="roboto">Docker Compose</h3>
                     <p>
                             Docker build is the utility to build container images. It uses a Dockerfile which defines the build configuration parameters and a “context” – which can be the files that you want to package as a container image.
                     </p>
 
-                    <h3 class="roboto"><b>Docker Swarm</b></h3>
+                    <h3 class="roboto">Docker Swarm</h3>
                     <p>
                             Docker Swarm brings cluster management features to Docker Engine. Using docker swarm you can deploy and maintain a multitude of containers.
                     </p>
