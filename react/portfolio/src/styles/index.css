@@ -7,4 +7,28 @@
 .content {
     display: flex;
     flex: 1;
+    padding: 20px;
+}
+
+img {
+    border-radius: 5px;
+}
+
+
+.social {
+    white-space: nowrap;
+    list-style: none;
+    padding: 2%;
+    text-align: left;
+    margin-top: 8px;
+}
+  
+.social li {
+    list-style: none;
+    display: inline;
+    margin-right: 8%;
+}
+
+.social img {
+    height: 32px;
 }

@@ -1,30 +1,31 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import './styles/nav.css';
 
 export default class Nav extends React.Component {
     render() {
         return (
             <header>
-                <nav class="navbar navbar-expand-lg navbar-default">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                <nav className="navbar navbar-expand-lg navbar-default">
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
+                    <div className="collapse navbar-collapse" id="navbarNav">  
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
-                                <a className="nav-link" href="#">Home</a>
+                                <Link className="nav-link" to="/">Home</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#">Blog</a>
+                                <Link className="nav-link" to="/blog/">Blog</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#">Projects</a>
+                                <Link className="nav-link" to="/projects/">Projects</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#">Artworks</a>
+                                <Link className="nav-link" to="/artworks/">Artworks</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#">Photography</a>
+                                <Link className="nav-link" to="/photography/">Photography</Link>
                             </li>
                         </ul>
                     </div>
