@@ -1,21 +1,53 @@
 import React from 'react';
+import { Link } from "react-router-dom";
+
+import './styles/blogs.css';
+
+import blogData from './data/blogs';
+import blogBanner from './images/featured.png';
+
+var headerStyle = {
+    backgroundImage: "linear-gradient(-45deg, rgba(255,0,0,0.5), rgba(255,0,0,1), maroon)",
+    padding: "30px 20px 20px 20px",
+    color: "white",
+    borderRadius: "5px"
+}
 
 export default class Blog extends React.Component {
     render() {
         return (
             <div>
                 <br></br>
-                <div className="row">
-                    <h1 className="bangers">BLOG</h1>
+                <div className="row" style={headerStyle}>
+                    <h1 className="bangers">THINKING THROUGH</h1>
                 </div>
                 <br></br>
                 <div className="row">
-                    <p className="muli">
-                        I am a masters student in Computer Science at Georgia Institute of Technology, Atlanta. I graduated from from Indian Institute of Technology Kanpur in 2017 and worked as a Software Engineer at Microsoft India Development Center for two years (2017-19).
+                    <div className="row-fluid">
+                        <img alt="" src={blogBanner} className="img-fluid"></img>
                         <br></br><br></br>
-                        I Love building Software, learning more about Computer Science and Painting.
-                        <br></br><br></br>
+                    </div>
+                    <h2 className="roboto"><b>{blogData.featured.name}</b></h2>
+                    <p className="muli">{blogData.featured.description}</p>
+                    <p className="roboto">
+                        <Link to={blogData.featured.link}>Read Article &nbsp;&nbsp;&rarr;</Link>
                     </p>
+                </div>
+                <div className="container-fluid allBlogs">
+                    <h1 className="bangers">All Stories</h1>
+                    <div className="row-fluid topBorder">
+                        {
+                            blogData.blogList.map((entry) => {
+                                return <Link to={entry.link}>
+                                    <div className="row-fluid blogItem">
+                                        <h6 className="muli">{entry.category + " / " + entry.date}</h6>
+                                        <h4 className="roboto">{entry.name}</h4>
+                                        <p className="muli">{entry.description}</p>
+                                    </div>
+                                </Link>
+                            })
+                        }
+                    </div>
                 </div>
                 <br></br><br></br>
             </div>

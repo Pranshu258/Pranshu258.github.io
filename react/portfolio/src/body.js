@@ -39,18 +39,18 @@ export default class Body extends React.Component {
 						<ul className="social">
                             <li>
                                 <a rel="noopener noreferrer" target = "_blank" href="https://www.linkedin.com/in/pranshug258">
-                                <img src={linkedinLogo} ></img></a></li>
+                                <img alt=""src={linkedinLogo} ></img></a></li>
 							<li>
                                 <a rel="noopener noreferrer" target = "_blank" href="https://github.com/Pranshu258">
-                                <img src={githubLogo} ></img></a>
+                                <img alt=""src={githubLogo} ></img></a>
                             </li>
                             <li>
                                 <a rel="noopener noreferrer" target = "_blank" href="https://www.instagram.com/pranshug258/">
-                                <img src={instaLogo} ></img></a>
+                                <img alt=""src={instaLogo} ></img></a>
                             </li>
 							<li>
                                 <a rel="noopener noreferrer" target = "_blank" href="https://www.facebook.com/pranshug258">
-                                <img src={fbLogo} ></img></a>
+                                <img alt=""src={fbLogo} ></img></a>
                             </li>
 						</ul>
                     </div>

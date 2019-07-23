@@ -6,7 +6,7 @@ export default class Nav extends React.Component {
     render() {
         return (
             <header>
-                <nav className="navbar navbar-expand-lg navbar-default">
+                <nav className="navbar fixed-top navbar-expand-lg navbar-default">
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>

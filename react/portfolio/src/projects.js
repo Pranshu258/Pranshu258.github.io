@@ -1,11 +1,19 @@
 import React from 'react';
 
-export default class Projects extends React.Component {
+var headerStyle = {
+    backgroundImage: "linear-gradient(-45deg, rgb(85, 172, 238, 1), rgb(20, 21, 38))",
+    padding: "30px 20px 20px 20px",
+    color: "white",
+    borderRadius: "5px"
+}
+
+export default class Blog extends React.Component {
     render() {
         return (
             <div>
-                <div className="row">
-                    <img src="../images/Tech.png" className="img-fluid"></img>
+                <br></br>
+                <div className="row" style={headerStyle}>
+                    <h1 className="bangers">PROJECTS</h1>
                 </div>
                 <br></br>
                 <div className="row">
@@ -15,8 +23,6 @@ export default class Projects extends React.Component {
                         I Love building Software, learning more about Computer Science and Painting.
                         <br></br><br></br>
                     </p>
-                    <a rel="noopener noreferrer" target="_blank" href="https://pranshu258.github.io/PranshuGuptaResume.pdf"><button class="muli btn btn-primary">RÉSUME</button></a> &nbsp;
-                    <a rel="noopener noreferrer" target="_blank" href="https://pranshu258.github.io/PranshuGuptaCV.pdf"><button class="muli btn btn-danger">CV</button></a>
                 </div>
                 <br></br><br></br>
             </div>
