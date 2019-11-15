@@ -170,6 +170,10 @@ body {
     background-color: black;
 }
 
+.blogCategory {
+  color: rgb(214, 14, 14);
+}
+
 .art:hover {
     box-shadow: 0 0 30px rgb(255,215,0, 0.6);
 }
