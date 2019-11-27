@@ -4,7 +4,7 @@ body {
 }
 
 #nav {
-  background-color: #141526;
+  background-color: black;
   padding: 15px;
   position: fixed;
   right: 0;
@@ -38,7 +38,7 @@ body {
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////*/
 #mobnav {
-  background-color: #141526;
+  background-color: black;
   padding: 15px;
   position: fixed;
   right: 0;
