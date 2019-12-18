@@ -19,7 +19,7 @@ body {
 #nav a {
   vertical-align: center;
   text-align: center;
-  color: rgb(85,172,238);
+  color: white;
 }
 #nav a:hover {
   color: #fff;
@@ -126,7 +126,7 @@ body {
     border-color: rgb(85,172,238);
 }
 .btn-blog {
-    border-color: rgb(214, 14, 14);
+    border-color: #dd1c77;
 }
 .btn-primary {
     color: white;
@@ -163,15 +163,15 @@ body {
 
 .blog {
     padding:20px;
-    border: rgb(214, 14, 14) solid 2px;
+    border: #dd1c77 solid 2px;
 }
 .blog:hover {
-    box-shadow: 0 0 50px rgb(214, 14, 14, 0.6);
+    box-shadow: 0 0 20px #dd1c77;
     background-color: black;
 }
 
 .blogCategory {
-  color: rgb(214, 14, 14);
+  color: #dd1c77;
 }
 
 .art:hover {
@@ -179,31 +179,31 @@ body {
 }
 
 .projectbigHeader {
-    background-color:black;
+    background-color:#101010;
     color: rgb(85,172,238);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    /* box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 }
 
 .blogbigHeader {
-    background-color:black;
-    color: red;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    background-color:#101010;
+    color: #dd1c77;
+    /* box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 }
 
 .artbigHeader {
-    background-color:black;
-    color: gold;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    background-color:#101010;
+    color: #ff6347;
+    /* box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 }
 
 .photobigHeader {
-    background-color:black;
-    color:greenyellow;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    background-color:#101010;
+    color:#31a354;
+    /* box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); */
 }
 
 .contactbigHeader {
-    background-color:black;
+    background-color:#101010;
     color: green;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
