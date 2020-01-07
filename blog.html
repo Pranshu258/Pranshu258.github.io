@@ -42,14 +42,50 @@
 </head>
 
 <body>
+    <header class="row-fluid" id="mobnav">
+        <div class="container muli">
+            <div class="dropdown">
+                <div class="dropdown-toggle" style="color: white;" id="menu-toggle" data-toggle="dropdown"><span
+                        class="glyphicon glyphicon-menu-hamburger"></span></div>
+                <ul class="dropdown-menu">
+                    <li><a href="index.html#top" class="smoothScroll">Home</a></li>
+                    <li><a href="index.html#blog" class="smoothScroll">Blog</a></li>
+                    <li><a href="index.html#projects" class="smoothScroll">Projects</a></li>
+                    <li><a href="index.html#artworks" class="smoothScroll">Artworks</a></li>
+                    <li><a href="index.html#photography" class="smoothScroll">Photography</a></li>
+                    <li class="muli"><a href="PranshuGuptaResume.pdf" class="smoothScroll">Resume</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!--Navigation Bar Header Begins-->
+    <header class="row-fluid" id="nav">
+        <div class="container">
+            <div class="row muli" style="color: white;">
+                Pranshu Gupta
+                <ul class="pull-right" id="main_menu">
+                    <li class="muli"><a href="index.html#top" class="smoothScroll">Home</a></li>
+                    <li class="muli"><a href="index.html#blog" class="smoothScroll" style="color: #dd1c77 ;">Blog</a></li>
+                    <li class="muli"><a href="index.html#projects" class="smoothScroll">Projects</a></li>
+                    <li class="muli"><a href="index.html#artworks" class="smoothScroll">Artworks</a></li>
+                    <li class="muli"><a href="index.html#photography" class="smoothScroll">Photography</a></li>
+                    <li class="muli"><a href="PranshuGuptaResume.pdf" class="smoothScroll">Resume</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <!--Navigation Bar Header Ends-->
+    
     <div class="row blogbigHeader" id="projects">
+        <br><br>
         <div class="container">
             <div class="row">
                 <div class="col-sm-8" style="padding-left:40px">
                     <br>
                     <h1 class="roboto" style="font-size: 400%">Thinking Through</h1>
                     <p class="muli">
-                        <a href="index.html" style="color: #fff;text-decoration:none">&larr;&nbsp; About</a>
+                        <a href="index.html" style="color: #fff;text-decoration:none">&larr;&nbsp; Home</a>
                     </p>
                     <br>
                 </div>
@@ -61,10 +97,11 @@
         <div class="row">
             <div class="col-sm-9 muli">
                 <div class="row">
-                    <h5 class="muli blogCategory">Machine Learning</h5>
                     <a style="color:black;text-decoration:none" href="./blog/euterpe.html">
                         <h1 class="roboto">A voyage across the Ocean of Music</h1>
                     </a>
+                    <h5 class="muli blogCategory">Machine Learning</h5>
+                    <img class="img-responsive" src="images/music.png"/>
                     <h5 class="muli">Nov 18, 2019</h5>
                     <p class="muli">An in-depth exploration of the metrolyrics and million song dataset</p>
                 </div>
@@ -94,16 +131,6 @@
                     </a>
                     <h5 class="muli">Jun 5, 2017</h5>
                     <p class="muli">Exploring some quirky aspects of JavaScript: The language of the web</p>
-                </div>
-                <hr>
-                <div class="row">
-                    <h5 class="muli blogCategory">Software Development</h5>
-                    <a style="color:black;text-decoration:none" href="https://pranshu258.github.io/WebDev/">
-                        <h1 class="roboto">Introduction to Web Development</h1>
-                    </a>
-                    <h5 class="muli">May 25, 2017</h5>
-                    <p class="muli">A light-hearted tutorial on developing simple web applications using HTML, CSS and
-                        JavaScript</p>
                 </div>
                 <hr>
                 <div class="row">
@@ -140,6 +167,40 @@
         </div>
     </div>
     <br><br><br><br><br>
+        <!--Social Networking-->
+        <div class="row" style="background-color:#111111">
+            <div class="container">
+                <div class="row" style="background-color:#111111;color:#fff;text-align: center">
+                    <div class="col-sm-12">
+                        <br><br>
+                        <h3 class="roboto">CONNECT</h3>
+                        <ul id="logolist">
+                            <li><a target="_blank" href="https://github.com/Pranshu258"><img src="images/git.png"
+                                        style="height:32px"></a></li>
+                            <li><a target="_blank" href="https://www.facebook.com/pranshug258"><img src="images/fb.png"
+                                        style="height:32px"></a></li>
+                            <li><a target="_blank" href="https://www.instagram.com/pranshug258/"><img src="images/insta.png"
+                                        style="height:32px"></a></li>
+                            <li><a target="_blank" href="https://www.linkedin.com/in/pranshug258"><img src="images/in.png"
+                                        style="height:32px"></a></li>
+                        </ul>
+                        <br>
+                    </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+    
+        <div class="row" style="background-color:black">
+            <div class="container">
+                <br>
+                <div class="row" style="text-align:center;color:#fff">
+                    <b class="muli">&copy Copyright 2019, Pranshu Gupta</b><br>
+                    <!--<small class="muli" style="color:rgb(100,100,100)">(all logos belong to their respective owners)</small>-->
+                </div>
+                <br>
+            </div>
+        </div>
     <!-- First try for the online version of jQuery-->
     <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
     <!-- If no online access, fallback to our hardcoded version of jQuery -->
