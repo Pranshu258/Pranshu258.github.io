@@ -1,0 +1,43 @@
+.featuredText {
+    padding: 0px 0 8px 0;
+}
+
+.blogpill {
+    border-radius: 25px;
+    margin: 2px;
+    border-color: transparent;
+    padding: 6px 12px 10px 12px;
+    background-color: #dd1c77;
+    border: 1px;
+}
+
+.blogpill:hover {
+    box-shadow: 0 0 10px #dd1c77;
+}
+
+.projectpill {
+    border-radius: 25px;
+    margin: 2px;
+    border-color: transparent;
+    padding: 6px 12px 10px 12px;
+    background-color: #007bff;
+    border: 1px;
+}
+
+.projectpill:hover {
+    box-shadow: 0 0 10px #007bff;
+}
+
+.body {
+    background-image: linear-gradient(to right, #111111, #222222);
+    color: white;
+}
+
+hr {
+    background-color: #333333;
+}
+
+.blogLink, .blogLink:hover {
+    text-decoration: none;
+    color: white;
+}

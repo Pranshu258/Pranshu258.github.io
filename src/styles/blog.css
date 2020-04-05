@@ -1,0 +1,14 @@
+.introduction {
+    font-style: italic;
+    border-bottom: tomato;
+    border-width: 10px;
+}
+
+.title {
+    font-size: 400%;
+    font-family: 'Playfair Display', serif;
+}
+
+.headings {
+    font-family: 'Roboto', sans-serif;
+}

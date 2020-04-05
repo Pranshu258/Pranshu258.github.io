@@ -1,0 +1,27 @@
+.roboto {
+    font-family: 'Roboto', sans-serif;
+}
+
+.playfair {
+    font-family: 'Playfair Display', serif;
+}
+
+.muli {
+    font-family: 'Muli', sans-serif;
+}
+
+/* .roboto {
+    font-family: 'roboto Display';
+} */
+
+.big {
+    font-size: 400%;
+}
+
+.bigger {
+    font-size: 600%;
+}
+
+.biggest {
+    font-size: 800%;
+}
