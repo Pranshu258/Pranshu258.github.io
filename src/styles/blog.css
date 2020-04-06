@@ -12,3 +12,7 @@
 .headings {
     font-family: 'Roboto', sans-serif;
 }
+
+figcaption {
+    text-align: center;
+}
