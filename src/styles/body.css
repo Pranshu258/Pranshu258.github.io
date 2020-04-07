@@ -9,6 +9,7 @@
     padding: 6px 12px 10px 12px;
     background-color: #dd1c77;
     border: 1px;
+    white-space: nowrap;
 }
 
 .blogpill:hover {
@@ -22,6 +23,7 @@
     padding: 6px 12px 10px 12px;
     background-color: #007bff;
     border: 1px;
+    white-space: nowrap;
 }
 
 .projectpill:hover {
