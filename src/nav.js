@@ -50,7 +50,9 @@ export default class Nav extends Component {
                                 </Link>
                             </li>
                             <li>
-                                <button className="btn btn-default" style={{color: "white"}}>Resume</button>
+                                <a href="/PranshuGuptaResume.pdf">
+                                    <button className="btn btn-default" style={{color: "white"}}>Resume</button>
+                                </a>
                             </li>
                         </ul>
                     </div>
