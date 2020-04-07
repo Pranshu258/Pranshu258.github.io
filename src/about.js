@@ -12,7 +12,7 @@ export default class About extends React.Component {
             margin: "20px 0 20px 0",
         }
         return (
-            <div className="row">
+            <div className="row" id="about">
                 <div className="col-md-3">
                     <br></br><br></br>
                     <img alt="" src={me} className="img-fluid" style={bannerStyle}></img>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Link } from "react-router-dom";
 
 import { blogList } from './data/blogs'
+import { projectList } from './data/projects'
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -23,13 +24,12 @@ export default class Body extends React.Component {
         var bannerStyle = {
             margin: "20px 0 20px 0",
         }
-        console.log(blogList.length);
         return (
             <div className="body content">
                 <div className="container">
                     <About />
                     <hr></hr>
-                    <div className="row">
+                    <div className="row" id="blog">
                         <div className="col-md-4">
                             <br></br><br></br>
                             <h1 className="roboto">
@@ -58,7 +58,7 @@ export default class Body extends React.Component {
                         </div>
                     </div>
                     <hr></hr>
-                    <div className="row">
+                    <div className="row" id="projects">
                         <div className="col-md-4">
                             <br></br><br></br>
                             <h1 className="roboto">
@@ -68,40 +68,26 @@ export default class Body extends React.Component {
                         <div className="col-md-8">
                             <br></br><br></br>
                             <div style={{ paddingLeft: "5px" }}>
-                                <div className="featuredText">
-                                    <h3 className="roboto">Deep Image Captioning</h3>
-                                    <p>Image Captioning is the task of assigning a short textual description to an image. New techniques have emerged recently in which reinforcement learning is employed on top of state of the art models to achieve better results. This project is an attempt to reproduce "Deep reinforcement learning-based captioning with embedding reward" by Ren et. al.</p>
-                                    <span className="projectpill">Reinforcement Learning</span>
-                                    <span className="projectpill">Deep Learning</span>
-                                    <span className="projectpill">Pytorch</span>
-                                </div>
-                                <hr></hr>
-                                <div className="featuredText">
-                                    <h3 className="roboto">Image Completion with Statistics of Patch Offsets</h3>
-                                    <p>Image Completion is the task of filling missing parts of a given image with the help of information from the known parts of the image. Implemented an application that takes an image with a missing part as input and gives a completed image as the result.</p>
-                                    <span className="projectpill">Computer Vision</span>
-                                    <span className="projectpill">Image Processing</span>
-                                    <span className="projectpill">OpenCV</span>
-                                </div>
-                                <hr></hr>
-                                <div className="featuredText">
-                                    <h3 className="roboto">PyCS: A Compiler for C# in Python</h3>
-                                    <p>A simple compiler for C# built using PLY (Python Lex-Yacc) and implements integers, loops, arrays, selection, functions, variable scopes and standard input and a few other semantics of the language</p>
-                                    <span className="projectpill">Compiler Design</span>
-                                    <span className="projectpill">Lex Yacc</span>
-                                </div>
-                                <hr></hr>
-                                <div className="featuredText">
-                                    <h3 className="roboto">Crowd Behavior Analysis based on Trajectories</h3>
-                                    <p>Crowd behavior analysis is an important field of research in modern world. It has wide applications in surveillance and public safety. Implemented a system that takes a set of individual trajectories obtained from crowd data and detects the outliers to infer any abnormal behavior in the crowd.</p>
-                                    <span className="projectpill">Artificial Intelligence</span>
-                                </div>
+                                {
+                                    projectList.map((object, i) => 
+                                        <div>
+                                            <div className="featuredText">
+                                                <a target="_blank" className="blogLink" href={object.link}>
+                                                    <h3 className="roboto">{object.name}</h3>
+                                                </a>
+                                                <p>{object.description}</p>
+                                                {object.tags.map((tag, j) => <span className="projectpill">{tag}</span>)}
+                                            </div>
+                                            {i < projectList.length-1 ? <hr></hr> : null}
+                                        </div>
+                                    )
+                                }
                             </div>
                             <br></br><br></br>
                         </div>
                     </div>
                     <hr></hr>
-                    <div className="row">
+                    <div className="row" id="artworks">
                         <div className="col-md-4">
                             <br></br><br></br>
                             <h1 className="roboto">
@@ -125,6 +111,37 @@ export default class Body extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <img alt="" src={art3} className="img-fluid" style={bannerStyle}></img>
+                                    </div>
+                                </div>
+                            </div>
+                            <br></br>
+                            <br></br>
+                        </div>
+                    </div>
+                    <div className="row" id="photography">
+                        <div className="col-md-4">
+                            <br></br><br></br>
+                            <h1 className="roboto">
+                                PHOTOGRAPHY
+                        </h1>
+                        </div>
+                        <div className="col-md-8">
+                            <br></br><br></br>
+                            <div style={{ paddingLeft: "5px" }}>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <img alt="" src={photo1} className="img-fluid" style={bannerStyle}></img>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <img alt="" src={photo2} className="img-fluid" style={bannerStyle}></img>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <img alt="" src={photo3} className="img-fluid" style={bannerStyle}></img>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <img alt="" src={photo4} className="img-fluid" style={bannerStyle}></img>
                                     </div>
                                 </div>
                             </div>
