@@ -30,26 +30,26 @@ export default class Body extends React.Component {
                     <About />
                     <hr></hr>
                     <div className="row" id="blog">
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                             <br></br><br></br>
                             <h1 className="roboto">
                                 BLOG
                             </h1>
                         </div>
-                        <div className="col-md-8">
+                        <div className="col-md-9">
                             <br></br><br></br>
                             <div style={{ paddingLeft: "5px" }}>
                                 {
-                                    blogList.map((object, i) => 
+                                    blogList.map((object, i) =>
                                         <div>
                                             <div className="featuredText">
-                                                <Link className="blogLink" to={"blog/"+object.name.replace(/\s+/g, '-').toLowerCase()}>
+                                                <Link className="blogLink" to={"blog/" + object.name.replace(/\s+/g, '-').toLowerCase()}>
                                                     <h3 className="roboto">{object.name}</h3>
                                                 </Link>
                                                 <p>{object.description}</p>
                                                 {object.tags.map((tag, j) => <span className="blogpill">{tag}</span>)}
                                             </div>
-                                            {i < blogList.length-1 ? <hr></hr> : null}
+                                            {i < blogList.length - 1 ? <hr></hr> : null}
                                         </div>
                                     )
                                 }
@@ -59,17 +59,17 @@ export default class Body extends React.Component {
                     </div>
                     <hr></hr>
                     <div className="row" id="projects">
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                             <br></br><br></br>
                             <h1 className="roboto">
                                 PROJECTS
                             </h1>
                         </div>
-                        <div className="col-md-8">
+                        <div className="col-md-9">
                             <br></br><br></br>
                             <div style={{ paddingLeft: "5px" }}>
                                 {
-                                    projectList.map((object, i) => 
+                                    projectList.map((object, i) =>
                                         <div>
                                             <div className="featuredText">
                                                 <a target="_blank" className="blogLink" href={object.link}>
@@ -78,7 +78,7 @@ export default class Body extends React.Component {
                                                 <p>{object.description}</p>
                                                 {object.tags.map((tag, j) => <span className="projectpill">{tag}</span>)}
                                             </div>
-                                            {i < projectList.length-1 ? <hr></hr> : null}
+                                            {i < projectList.length - 1 ? <hr></hr> : null}
                                         </div>
                                     )
                                 }
@@ -88,61 +88,56 @@ export default class Body extends React.Component {
                     </div>
                     <hr></hr>
                     <div className="row" id="artworks">
-                        <div className="col-md-4">
+                        <div className="col-sm-12">
                             <br></br><br></br>
                             <h1 className="roboto">
                                 ARTWORKS
-                        </h1>
+                            </h1>
                         </div>
-                        <div className="col-md-8">
-                            <br></br><br></br>
-                            <div style={{ paddingLeft: "5px" }}>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <img alt="" src={art4} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <img alt="" src={art5} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <div className="row">
+                                <div className="col-sm-3">
+                                    <img alt="" src={art4} className="img-fluid" style={bannerStyle}></img>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <img alt="" src={art2} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <img alt="" src={art3} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
+                                <div className="col-sm-3">
+                                    <img alt="" src={art5} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-3">
+                                    <img alt="" src={art2} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-3">
+                                    <img alt="" src={art3} className="img-fluid" style={bannerStyle}></img>
                                 </div>
                             </div>
                             <br></br>
                             <br></br>
                         </div>
                     </div>
+                    <hr></hr>
                     <div className="row" id="photography">
-                        <div className="col-md-4">
+                        <div className="col-sm-12">
                             <br></br><br></br>
                             <h1 className="roboto">
                                 PHOTOGRAPHY
-                        </h1>
+                            </h1>
                         </div>
-                        <div className="col-md-8">
-                            <br></br><br></br>
-                            <div style={{ paddingLeft: "5px" }}>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <img alt="" src={photo1} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <img alt="" src={photo2} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <div className="row">
+                                <div className="col-sm-3">
+                                    <img alt="" src={photo1} className="img-fluid" style={bannerStyle}></img>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <img alt="" src={photo3} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <img alt="" src={photo4} className="img-fluid" style={bannerStyle}></img>
-                                    </div>
+                                <div className="col-sm-3">
+                                    <img alt="" src={photo2} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-3">
+                                    <img alt="" src={photo3} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-3">
+                                    <img alt="" src={photo4} className="img-fluid" style={bannerStyle}></img>
                                 </div>
                             </div>
                             <br></br>
