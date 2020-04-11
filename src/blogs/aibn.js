@@ -27,7 +27,9 @@ export default class Aibn extends React.Component {
                     such as Job Shop Scheduling and many other Combinatorial Optimization problems. We will
                     discuss some of these algorithms and heuristics and how they help us solve complex problems
                     of practical importance.
-                    </p>
+                </p>
+                <a href="https://arxiv.org/pdf/1903.01893.pdf"><button className="btn btn-danger">Full PDF Article</button></a>
+                <br></br><br></br>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">Heuristics and Metaheuristics</h3>
                 <p>
