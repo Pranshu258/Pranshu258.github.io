@@ -45,11 +45,6 @@ export default class Nav extends Component {
                                 </Link>
                             </li>
                             <li>
-                                <Link activeClass="active" to="photography" spy={true} smooth={true} offset={-70} duration= {500}>
-                                    <button onClick={() => this.handleCrossPageNav("photography")} className="btn btn-default" style={{color: "white"}}>Photography</button>
-                                </Link>
-                            </li>
-                            <li>
                                 <a href="/PranshuGuptaResume.pdf">
                                     <button className="btn btn-default" style={{color: "white"}}>Resume</button>
                                 </a>
