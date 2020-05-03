@@ -6,12 +6,15 @@ import Ovac from './blogs/ovac';
 import Aibn from './blogs/aibn';
 import Qoj from './blogs/qoj';
 import Eohl from './blogs/eohl';
+import Gitviz from './blogs/gitviz';
+import Applemusic from './blogs/applemusic';
 
 import './styles/fonts.css';
 import './styles/body.css';
 import './styles/blog.css';
 
 import banner from './images/banner.png';
+import blogPoster from './images/pablo-page-is-under-construction.png';
 
 export default class Blog extends React.Component {
     render() {
@@ -35,6 +38,12 @@ export default class Blog extends React.Component {
                                 <Route path="/blog/algorithms-inspired-by-nature" component={Aibn} />
                                 <Route path="/blog/quirks-of-javascript" component={Qoj} />
                                 <Route path="/blog/evolution-of-human-languages" component={Eohl} />
+                                <Route path="/blog/exploring-github-repositories" component={Gitviz} />
+                                <Route path="/blog/analysing-apple-music-activity" component={Applemusic} />
+                                <br></br><br></br>
+                                <br></br><br></br>
+                                <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
+                                <h4 className="playfair">Blog by Pranshu Gupta</h4>
                             </div>
                             <div className="col-lg-3">
                                 <br></br><br></br>
