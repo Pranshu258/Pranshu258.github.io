@@ -7,13 +7,13 @@
     margin: 2px;
     border-color: transparent;
     padding: 6px 12px 10px 12px;
-    background-color: #dd1c77;
+    background-color: #f200b1;
     border: 1px;
     white-space: nowrap;
 }
 
 .blogpill:hover {
-    box-shadow: 0 0 10px #dd1c77;
+    box-shadow: 0 0 10px #f200b1;
 }
 
 .projectpill {
@@ -21,13 +21,13 @@
     margin: 2px;
     border-color: transparent;
     padding: 6px 12px 10px 12px;
-    background-color: #007bff;
+    background-color: #0075ff;
     border: 1px;
     white-space: nowrap;
 }
 
 .projectpill:hover {
-    box-shadow: 0 0 10px #007bff;
+    box-shadow: 0 0 10px #0075ff;
 }
 
 .body {
