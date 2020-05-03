@@ -1,5 +1,13 @@
 export let blogList = [
     {
+        name: "Analysing Apple Music Activity",
+        description: "Exploring apple music data of a user collected over a duration of two years. We will try to infer listening habits and other music specific traits of user from the data.",
+        tags: [
+            "Data Visualization",
+            "Python"
+        ]
+    },
+    {
         name: "A voyage across the Ocean of Music",
         description: "Analysing song lyrics to find patterns that can be used to create new lyrics with the help of unsupervised and supervised machine learning techniques.",
         tags: [

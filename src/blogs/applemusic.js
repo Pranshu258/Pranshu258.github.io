@@ -1,5 +1,8 @@
 import React from 'react';
 import { Route } from "react-router-dom";
+import Prism from "prismjs";
+
+import "../styles/prism.css";
 
 import '../styles/fonts.css';
 import '../styles/blog.css';
@@ -17,6 +20,7 @@ import plot9 from '../images/hourly_play_durations.png';
 export default class Applemusic extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
+        Prism.highlightAll();
     }
     render() {
         var bannerStyle = {
