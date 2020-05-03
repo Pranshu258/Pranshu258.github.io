@@ -21,6 +21,7 @@ export default class Footer extends React.Component {
                             <a target="_blank" style={{color:"white"}} href="https://www.instagram.com/pranshug258/"><i className="fab fa-instagram socialIcon"></i></a>
                         </ul>
                         <small className="muli">© Copyright 2020, Pranshu Gupta</small><br></br>
+                        <small>digital illustrations by Ouch.pics https://icons8.com</small>
                     </div>
                     <div className="col-sm-2"></div>
                 </div>
