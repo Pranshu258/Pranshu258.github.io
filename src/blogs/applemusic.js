@@ -139,11 +139,11 @@ UTC Offset In Seconds`
                 </p>
                 <figure>
                     <img className="img-fluid" src={plot5} />
-                    <figcaption>Percentage share in play duration for top 3 Genre</figcaption>
+                    <figcaption>Track play frequency for top 30 artists</figcaption>
                 </figure>
                 <figure>
                     <img className="img-fluid" src={plot6} />
-                    <figcaption>Percentage share in play duration for top 3 Genre</figcaption>
+                    <figcaption>Percentage share in play duration for top 2 artists</figcaption>
                 </figure>
                 <p>
                     All of the code to generate plots for this post are available as a python jupyter notebook on google colaboratory. If you are an apple music ubscriber, you can download your own dataset and understand your listening habits better than ever before. 
