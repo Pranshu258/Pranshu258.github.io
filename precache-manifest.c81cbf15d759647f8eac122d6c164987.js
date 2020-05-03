@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7933f30d44a223cd88843bc022f4d677",
+    "revision": "8a1a31e7f0ccc056a1df6c85594bbfee",
     "url": "/index.html"
   },
   {
-    "revision": "ba68a911e60576047634",
-    "url": "/static/css/main.1a6083fc.chunk.css"
+    "revision": "fd416c93024981d6e245",
+    "url": "/static/css/main.43f23b82.chunk.css"
   },
   {
-    "revision": "ea47ec4fefaec1e590cf",
-    "url": "/static/js/2.b63ecc6c.chunk.js"
+    "revision": "64abd5692e97166ebb25",
+    "url": "/static/js/2.07497265.chunk.js"
   },
   {
     "revision": "928d7b5eb39d16fe9a880722c974b51e",
-    "url": "/static/js/2.b63ecc6c.chunk.js.LICENSE.txt"
+    "url": "/static/js/2.07497265.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "ba68a911e60576047634",
-    "url": "/static/js/main.9ee1f810.chunk.js"
+    "revision": "fd416c93024981d6e245",
+    "url": "/static/js/main.79711740.chunk.js"
   },
   {
     "revision": "39d3f163f7afac69813c",
@@ -108,6 +108,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/genre_distribution.88060345.png"
   },
   {
+    "revision": "7a00bc18d31ca28593b236c9b4e7f055",
+    "url": "/static/media/hourly_play_durations.7a00bc18.png"
+  },
+  {
+    "revision": "e815ba947246c9f40637183c0553f4b3",
+    "url": "/static/media/img1.e815ba94.jpg"
+  },
+  {
     "revision": "4d9f0fd642a29260532c8d8f9511df6f",
     "url": "/static/media/img12.4d9f0fd6.jpg"
   },
@@ -118,10 +126,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "263325bbb2d326cef2b3bf865254f88d",
     "url": "/static/media/img14.263325bb.jpg"
-  },
-  {
-    "revision": "40ba1d853183bf3a4f0157fbea25710f",
-    "url": "/static/media/img2.40ba1d85.jpg"
   },
   {
     "revision": "f9bd17177368e5a485ad9d0e23550951",
@@ -144,28 +148,48 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/me.1aab0171.jpg"
   },
   {
+    "revision": "f32175dad08d3faa54f3f8a34d49c763",
+    "url": "/static/media/monthly_track_durations.f32175da.png"
+  },
+  {
+    "revision": "33fd678cab37b761b1ef6be18effac52",
+    "url": "/static/media/monthly_track_frequencies.33fd678c.png"
+  },
+  {
+    "revision": "e0de452b829406f73482d504afa018b2",
+    "url": "/static/media/pablo-page-is-under-construction.e0de452b.png"
+  },
+  {
     "revision": "71c3508410ed43ef585a720f63627a0e",
     "url": "/static/media/pca_doc2vec.71c35084.png"
   },
   {
-    "revision": "4c516e85cff00037828105631d0dcfb0",
-    "url": "/static/media/photo1.4c516e85.jpg"
-  },
-  {
-    "revision": "21accf29a68e9c0567c9eec1153611d2",
-    "url": "/static/media/photo2.21accf29.jpg"
-  },
-  {
-    "revision": "a3943baebedf01cde9ba11e907b212d1",
-    "url": "/static/media/photo3.a3943bae.jpg"
-  },
-  {
-    "revision": "b247b577c075c87d066747e7c1e8c05a",
-    "url": "/static/media/photo4.b247b577.jpg"
+    "revision": "fa797cbe4a0b0970729fbc49aca84ade",
+    "url": "/static/media/play_end_type_freq.fa797cbe.png"
   },
   {
     "revision": "de2edc1945d2e6de099ceaa35129fc13",
     "url": "/static/media/regression.de2edc19.png"
+  },
+  {
+    "revision": "e4046fd5688f0cc4b98e22edd4e2a5d3",
+    "url": "/static/media/top_three_genre_duration.e4046fd5.png"
+  },
+  {
+    "revision": "8378c8aec6fe5d0961f71782bac3d708",
+    "url": "/static/media/track_play_duration_per_artist.8378c8ae.png"
+  },
+  {
+    "revision": "e6fd2be466a0304a693f2a9cef15206e",
+    "url": "/static/media/track_play_duration_per_genre.e6fd2be4.png"
+  },
+  {
+    "revision": "18bd8cf767c5706975511504e23fbf4d",
+    "url": "/static/media/track_play_frequency_per_artist.18bd8cf7.png"
+  },
+  {
+    "revision": "db9a4cd3da5f6b5f90249fda8040f66d",
+    "url": "/static/media/track_play_frequency_per_genre.db9a4cd3.png"
   },
   {
     "revision": "d0c67d912c0302bfbf85253198c4e2ff",
