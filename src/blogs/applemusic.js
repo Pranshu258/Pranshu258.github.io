@@ -42,7 +42,7 @@ export default class Applemusic extends React.Component {
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">Exploring the Dataset</h3>
                 <p>
-                    Apple music dataset consists of multiple files, out of which we are only concerned about <b>Apple Music Play Activity.csv</b> in the <b>Apple Music Activity</b> activity folder. This file contains details about the playback history of the user across all of thier devices on which apple music app is being used.
+                    Apple music dataset consists of multiple files, out of which we are only concerned about <b>Apple Music Play Activity.csv</b> in the <b>Apple Music Activity</b> activity folder. This file contains details about the playback history of the user across all of their devices on which apple music app is being used.
                 </p>
                 <p>
                     Following are the attributes that apple records for each track that is played by the user on a device:
@@ -111,8 +111,7 @@ UTC Offset In Seconds`
                 <h3 className="headings">Genre Statistics</h3>
                 <p>
                 A genre can be described as a collection of patterns. Songs that share these patterns can be
-                    considered
-                    as belonging to the same genre. These pattern mainly depend on the rhythm, speed, key,
+                    considered as belonging to the same genre. These patterns mainly depend on the rhythm, speed, key,
                     instrumentation and other musical dynamics.
                 </p>
                 <figure>
@@ -127,7 +126,7 @@ UTC Offset In Seconds`
                     <figcaption>Play Duration per Genre</figcaption>
                 </figure>
                 <p>
-                    We can dive deeper and look at the top three genre in the dataset and see how their respective play durations have changed over the years. We can see that "Bollywood" has a significant share of paly duration up until mid 2019, after which pop and sountrack are becoming equally significant in the user's listening habits.
+                    We can dive deeper and look at the top three genre in the dataset and see how their respective play durations have changed over the years. We can see that "Bollywood" has a significant share of play duration up until mid 2019, after which pop and sountrack are becoming equally significant in the user's listening habits.
                 </p>
                 <figure>
                     <img className="img-fluid" src={plot4} />
@@ -146,7 +145,7 @@ UTC Offset In Seconds`
                     <figcaption>Percentage share in play duration for top 2 artists</figcaption>
                 </figure>
                 <p>
-                    All of the code to generate plots for this post are available as a python jupyter notebook on google colaboratory. If you are an apple music ubscriber, you can download your own dataset and understand your listening habits better than ever before. 
+                    All of the code to generate plots for this post are available as a python jupyter notebook on google colaboratory. If you are an apple music subscriber, you can download your own dataset and understand your listening habits better than ever before. 
                 </p>
                 <br></br>
                 <button className="btn btn-warning"><a target="_blank" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></a></button>
