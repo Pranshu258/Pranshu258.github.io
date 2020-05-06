@@ -1,10 +1,8 @@
 import React from 'react';
-import { Route } from "react-router-dom";
+import Sharer from '../sharer';
 
 import '../styles/fonts.css';
 import '../styles/blog.css';
-
-import banner from '../images/banner.png';
 
 export default class Aibn extends React.Component {
     componentDidMount() {
@@ -18,6 +16,7 @@ export default class Aibn extends React.Component {
             <div>
                 <h1 className="title">Algorithms Inspired by Nature</h1>
                 <p>Pranshu Gupta, Feb 22, 2019</p>
+                <Sharer link={window.location.href}></Sharer>
                 <br></br>
                 <p className="introduction">
                     Nature is known to be the best optimizer. Natural processes most often than not reach an

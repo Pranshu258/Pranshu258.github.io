@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route } from "react-router-dom";
+import Sharer from "../sharer";
 
 import Prism from "prismjs";
 
@@ -22,6 +23,8 @@ export default class Qoj extends React.Component {
             <div className="language-javascript">
                 <h1 className="title">Quirks of JavaScript - <br></br>The Language of the Web</h1>
                 <p>Pranshu Gupta, June 5, 2017</p>
+                <Sharer link={window.location.href}></Sharer>
+                <br></br>
                 <p className="introduction">
                     JavaScript is one of the most widely used programing languages in the world. It is the langauge that drives almost all the client side code on the internet. However, it has become a language which most people use but don't love. One of the main reasons behind this is that most people don't know the language well enough to appreciate its edge cases. In this article we will discuss some of these edge cases and try to understand why things are the way they are!
                     </p>

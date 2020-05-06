@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route } from "react-router-dom";
+import Sharer from "../sharer";
 
 import '../styles/fonts.css';
 import '../styles/blog.css';
@@ -20,6 +21,7 @@ export default class Ovac extends React.Component {
             <div>
                 <h1 className="title">On Virtualization and Containers</h1>
                 <p>Pranshu Gupta, Feb 20, 2019</p>
+                <Sharer link={window.location.href}></Sharer>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="roboto">Virtualization</h3>
                 <p>

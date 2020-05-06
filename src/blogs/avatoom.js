@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route } from "react-router-dom";
+import Sharer from "../sharer";
 
 import '../styles/fonts.css';
 import '../styles/blog.css';
@@ -61,6 +62,8 @@ export default class Avatoom extends React.Component {
                     <br></br>
                     November 18, 2019
                 </p>
+                <Sharer link={window.location.href}></Sharer>
+                <br></br>
                 <p className="introduction">
                     In the world today, there is more music than ever before. This abundance of musical data provides
                     opportunities for us to take advantage of it. One of the facets of the music industry right now is
