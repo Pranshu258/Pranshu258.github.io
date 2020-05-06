@@ -41,9 +41,8 @@ export default class Blog extends React.Component {
                                 <Route path="/blog/exploring-github-repositories" component={Gitviz} />
                                 <Route path="/blog/analysing-apple-music-activity" component={Applemusic} />
                                 <br></br><br></br>
-                                <br></br><br></br>
                                 <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
-                                <h4 className="playfair">Blog by Pranshu Gupta</h4>
+                                <h4 className="playfair">blog by Pranshu Gupta</h4>
                             </div>
                             <div className="col-lg-3">
                                 <br></br><br></br>
