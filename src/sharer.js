@@ -12,7 +12,7 @@ export default class Sharer extends React.Component {
                     </a>
                 </li>
                 <li>
-                    <a  style={{color:"black"}} href={"https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(this.props.link)}>
+                    <a  style={{color:"black"}} href={"https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(this.props.link).replace("blog", "%3Fp%3Dblog")}>
                         <i className="fab fa-linkedin"></i>
                     </a>
                 </li>
