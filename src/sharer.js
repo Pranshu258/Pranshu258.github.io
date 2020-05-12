@@ -17,7 +17,7 @@ export default class Sharer extends React.Component {
                     </a>
                 </li>
                 <li>
-                    <a target="_blank" rel="noopener noreferrer" style={{color:"black"}} href={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(this.props.link).replace("blog", "%3Fp%3Dblog")}>
+                    <a target="_blank" rel="noopener noreferrer" style={{color:"black"}} href={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(this.props.link)}>
                         <i className="fab fa-facebook"></i>
                     </a>
                 </li>
