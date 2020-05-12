@@ -1,5 +1,13 @@
 export let blogList = [
     {
+        name: "Exploring GitHub Repositories",
+        description: "Exploring two repositories which have become the flag-bearers of web development, Angular and React, and trying to understand their journey on GitHub over the past few years.",
+        tags: [
+            "Data Visualization",
+            "Python"
+        ]
+    },
+    {
         name: "Analysing Apple Music Activity",
         description: "Exploring apple music data of a user collected over a duration of two years. We will try to infer listening habits and other music specific traits of user from the data.",
         tags: [
