@@ -1,5 +1,4 @@
 import React from 'react';
-import { Route } from "react-router-dom";
 import Sharer from "../sharer";
 
 import Prism from "prismjs";
@@ -7,8 +6,6 @@ import Prism from "prismjs";
 import "../styles/prism.css";
 import '../styles/fonts.css';
 import '../styles/blog.css';
-
-import banner from '../images/banner.png';
 
 export default class Qoj extends React.Component {
     componentDidMount() {

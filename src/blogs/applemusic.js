@@ -38,7 +38,7 @@ export default class Applemusic extends React.Component {
                 </p>
                 <p>
                     The code for this post is available as a jupyter notebook on Google Colab.<br></br><br></br>
-                    <button className="btn btn-warning"><a target="_blank" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></a></button>
+                    <button className="btn btn-warning"><a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></a></button>
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
@@ -150,7 +150,7 @@ UTC Offset In Seconds`
                     All of the code to generate plots for this post are available as a python jupyter notebook on google colaboratory. If you are an apple music subscriber, you can download your own dataset and understand your listening habits better than ever before. 
                 </p>
                 <br></br>
-                <button className="btn btn-warning"><a target="_blank" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></a></button>
+                <button className="btn btn-warning"><a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></a></button>
             </div>
         )
     }

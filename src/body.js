@@ -67,7 +67,7 @@ export default class Body extends React.Component {
                                     projectList.map((object, i) =>
                                         <div>
                                             <div className="featuredText">
-                                                <a target="_blank" className="blogLink" href={object.link}>
+                                                <a target="_blank" rel="noopener noreferrer" className="blogLink" href={object.link}>
                                                     <h3 className="roboto">{object.name}</h3>
                                                 </a>
                                                 <p>{object.description}</p>
