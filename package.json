@@ -6,6 +6,7 @@
   "dependencies": {
     "@nivo/bar": "^0.61.1",
     "@nivo/calendar": "^0.61.1",
+    "@nivo/line": "^0.61.1",
     "@nivo/network": "^0.61.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
@@ -17,7 +18,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-scroll": "^1.7.16",
-    "styled-components": "^5.1.0"
+    "styled-components": "^5.1.0",
+    "super-react-gist": "^1.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
