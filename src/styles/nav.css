@@ -45,3 +45,7 @@
 .navbar-nav {
     margin-right: 140px;
 }
+
+ul li a {
+    text-align: left;
+}
