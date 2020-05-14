@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { blogList } from './data/blogs'
 import { projectList } from './data/projects'
 

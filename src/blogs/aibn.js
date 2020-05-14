@@ -9,9 +9,6 @@ export default class Aibn extends React.Component {
         window.scrollTo(0, 0)
     }
     render() {
-        var bannerStyle = {
-            margin: "20px 0 20px 0",
-        }
         return (
             <div>
                 <h1 className="title">Algorithms Inspired by Nature</h1>

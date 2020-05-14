@@ -1,5 +1,4 @@
 import React from 'react';
-import { Route } from "react-router-dom";
 import Sharer from "../sharer";
 
 import '../styles/fonts.css';
@@ -47,9 +46,6 @@ export default class Avatoom extends React.Component {
         window.scrollTo(0, 0)
     }
     render() {
-        var bannerStyle = {
-            margin: "20px 0 20px 0",
-        }
         return (
             <div>
                 <h1 className="title">A voyage across the Ocean of Music</h1>
@@ -79,13 +75,13 @@ export default class Avatoom extends React.Component {
                 <div className="row">
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={Countrycloudblack}/>
+                            <img alt="" className="img-fluid" src={Countrycloudblack}/>
                             <figcaption>Country</figcaption>
                         </figure>
                     </div>
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={Folkcloudblack}/>
+                            <img alt="" className="img-fluid" src={Folkcloudblack}/>
                             <figcaption>Folk</figcaption>
                         </figure>
                     </div>
@@ -93,13 +89,13 @@ export default class Avatoom extends React.Component {
                 <div className="row">
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={Indiecloudblack}/>
+                            <img alt="" className="img-fluid" src={Indiecloudblack}/>
                             <figcaption>Indie</figcaption>
                         </figure>
                     </div>
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={Jazzcloudblack}/>
+                            <img alt="" className="img-fluid" src={Jazzcloudblack}/>
                             <figcaption>Jazz</figcaption>
                         </figure>
                     </div>
@@ -107,13 +103,13 @@ export default class Avatoom extends React.Component {
                 <div className="row">
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={Popcloudblack}/>
+                            <img alt="" className="img-fluid" src={Popcloudblack}/>
                             <figcaption>Pop</figcaption>
                         </figure>
                     </div>
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={Rockcloudblack}/>
+                            <img alt="" className="img-fluid" src={Rockcloudblack}/>
                             <figcaption>Rock</figcaption>
                         </figure>
                     </div>
@@ -168,19 +164,19 @@ export default class Avatoom extends React.Component {
                 <div className="row">
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={genre}/>
+                            <img alt="" className="img-fluid" src={genre}/>
                             <figcaption >Genre Distribution before clean up</figcaption>
                         </figure>
                     </div>
                     <div className="col-sm-6">
                         <figure>
-                            <img className="img-fluid" src={genre_distribution}/>
+                            <img alt="" className="img-fluid" src={genre_distribution}/>
                             <figcaption >Genre Distribution after clean up</figcaption>
                         </figure>
                     </div>
                 </div>
                 <figure>
-                    <img className="img-fluid" src={lang_dist}/>
+                    <img alt="" className="img-fluid" src={lang_dist}/>
                     <figcaption >The MetroLyrics Dataset: Distribution of Languages</figcaption>
                 </figure>
                 <p>
@@ -226,7 +222,7 @@ export default class Avatoom extends React.Component {
                     dataset is shown below:
                 </p>
                 <figure>
-                    <img className="img-fluid" src={data_presence}/>
+                    <img alt="" className="img-fluid" src={data_presence}/>
                     <figcaption>The MSD Dataset: Presence of Values</figcaption>
                 </figure>
             </div>
@@ -238,7 +234,7 @@ export default class Avatoom extends React.Component {
                 "duration", "key", "tempo", "loudness", "mode" and time_signature".
             </p>
             <figure>
-                <img className="img-fluid" src={data_distribution}/>
+                <img alt="" className="img-fluid" src={data_distribution}/>
                 <figcaption >The MSD Dataset: Distribution of Values</figcaption>
             </figure>
             <p>
@@ -248,7 +244,7 @@ export default class Avatoom extends React.Component {
                 significantly correlated and both of them are again correlated to "song_hotttness".
             </p>
             <figure>
-                <img className="img-fluid" src={correlation_matrix}/>
+                <img alt="" className="img-fluid" src={correlation_matrix}/>
                 <figcaption >The MSD Dataset: Correlation Matrix</figcaption>
             </figure>
             <h4 className="headings">MSD Attributes</h4>
@@ -293,7 +289,7 @@ export default class Avatoom extends React.Component {
                 across the vector.
             </p>
             <figure>
-                <img className="img-fluid" src={pca_doc2vec}/>
+                <img alt="" className="img-fluid" src={pca_doc2vec}/>
                 <figcaption >Cumulative Variance vs Number of Components</figcaption>
             </figure>
             <p>
@@ -309,13 +305,13 @@ export default class Avatoom extends React.Component {
             <div className="row">
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={_2comp_genre_scatter}/>
+                        <img alt="" className="img-fluid" src={_2comp_genre_scatter}/>
                         <figcaption >First 2 Principal Components</figcaption>
                     </figure>
                 </div>
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={_3comp_genre_scatter}/>
+                        <img alt="" className="img-fluid" src={_3comp_genre_scatter}/>
                         <figcaption >First 3 Principal Components</figcaption>
                     </figure>
                 </div>
@@ -324,14 +320,14 @@ export default class Avatoom extends React.Component {
                 <div className="col-sm-3"></div>
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={tsne_genre}/>
+                        <img alt="" className="img-fluid" src={tsne_genre}/>
                         <figcaption >TNSE Graph by Genre</figcaption>
                     </figure>
                 </div>
                 <div className="col-sm-3"></div>
             </div>
             <figure>
-                <img className="img-fluid" src={color_bar_genre}/>
+                <img alt="" className="img-fluid" src={color_bar_genre}/>
                 <figcaption >Genre Color Map</figcaption>
             </figure>
             <h4 className="headings">K Means Clustering</h4>
@@ -344,7 +340,7 @@ export default class Avatoom extends React.Component {
                 squared distances.
             </p>
             <figure>
-                <img className="img-fluid" src={kmean_elbow}/>
+                <img alt="" className="img-fluid" src={kmean_elbow}/>
                 <figcaption >Kmeans Elbow Plot</figcaption>
             </figure>
             <p>
@@ -361,13 +357,13 @@ export default class Avatoom extends React.Component {
             <div className="row">
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={kmean_20cluster_2d}/>
+                        <img alt="" className="img-fluid" src={kmean_20cluster_2d}/>
                         <figcaption >Kmeans 2D Cluster</figcaption>
                     </figure>
                 </div>
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={kmean_20cluster_3d}/>
+                        <img alt="" className="img-fluid" src={kmean_20cluster_3d}/>
                         <figcaption >Kmeans 3D Cluster</figcaption>
                     </figure>
                 </div>
@@ -376,14 +372,14 @@ export default class Avatoom extends React.Component {
                 <div className="col-sm-3"></div>
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={tsne_cluster}/>
+                        <img alt="" className="img-fluid" src={tsne_cluster}/>
                         <figcaption >TNSE Graph by Clusters</figcaption>
                     </figure>
                 </div>
                 <div className="col-sm-3"></div>
             </div>
             <figure>
-                <img className="img-fluid" src={cluster_color_bar}/>
+                <img alt="" className="img-fluid" src={cluster_color_bar}/>
                 <figcaption >Cluster Color Map</figcaption>
             </figure>
             <h4 className="headings">TSNE</h4>
@@ -400,20 +396,20 @@ export default class Avatoom extends React.Component {
             <div className="row">
                 <div className="col">
                 <figure>
-                <img className="img-fluid" src={cluster2}/>
+                <img alt="" className="img-fluid" src={cluster2}/>
                 <figcaption >Cluster 2</figcaption>
             </figure>
                 </div>
                 <div className="col">
                 <figure>
-                <img className="img-fluid" src={cluster11}/>
+                <img alt="" className="img-fluid" src={cluster11}/>
                 <figcaption >Cluster 11</figcaption>
             </figure>                    
                 </div>
                 <div className="col">
 
                 <figure>
-                <img className="img-fluid" src={cluster16}/>
+                <img alt="" className="img-fluid" src={cluster16}/>
                 <figcaption >Cluster 16</figcaption>
             </figure>                
                 </div>
@@ -422,20 +418,20 @@ export default class Avatoom extends React.Component {
             <div className="row">
                 <div className="col">
                 <figure>
-                <img className="img-fluid" src={cluster2wc}/>
+                <img alt="" className="img-fluid" src={cluster2wc}/>
                 <figcaption >Cluster 2</figcaption>
             </figure>
                 </div>
                 <div className="col">
                 <figure>
-                <img className="img-fluid" src={cluster11wc}/>
+                <img alt="" className="img-fluid" src={cluster11wc}/>
                 <figcaption >Cluster 11</figcaption>
             </figure>                    
                 </div>
                 <div className="col">
 
                 <figure>
-                <img className="img-fluid" src={cluster16wc}/>
+                <img alt="" className="img-fluid" src={cluster16wc}/>
                 <figcaption >Cluster 16</figcaption>
             </figure>                
                 </div>
@@ -528,7 +524,7 @@ export default class Avatoom extends React.Component {
                 them.
             </p>
             <figure>
-                <img className="img-fluid" src={regression}/>
+                <img alt="" className="img-fluid" src={regression}/>
                 <figcaption >Feature Importances for Song Popularity</figcaption>
             </figure>
             <p >
@@ -606,25 +602,25 @@ export default class Avatoom extends React.Component {
                 </tr>
             </table>
             <figure>
-                <img className="img-fluid" src={classification_graphs}/>
+                <img alt="" className="img-fluid" src={classification_graphs}/>
                 <figcaption>Classifiers Graphed</figcaption>
             </figure>
             <div className="row" >
                 <div className="col-sm-4">
                     <figure>
-                        <img className="img-fluid" src={cm_qda}/>
+                        <img alt="" className="img-fluid" src={cm_qda}/>
                         <figcaption>Quadratic Discr. Analysis</figcaption>
                     </figure>
                 </div>
                 <div className="col-sm-4">
                     <figure>
-                        <img className="img-fluid" src={cm_grad_boost}/>
+                        <img alt="" className="img-fluid" src={cm_grad_boost}/>
                         <figcaption>Gradient Boost </figcaption>
                     </figure>
                 </div>
                 <div className="col-sm-4">
                     <figure>
-                        <img className="img-fluid" src={cm_mlp_classifier}/>
+                        <img alt="" className="img-fluid" src={cm_mlp_classifier}/>
                         <figcaption>Multi Layer Perceptron</figcaption>
                     </figure>
                 </div>
@@ -656,13 +652,13 @@ export default class Avatoom extends React.Component {
             <div className="row">
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={cm_mlp_undersample}/>
+                        <img alt="" className="img-fluid" src={cm_mlp_undersample}/>
                         <figcaption>Multi Layer Perceptron: Undersampling</figcaption>
                     </figure>
                 </div>
                 <div className="col-sm-6">
                     <figure>
-                        <img className="img-fluid" src={cm_mlp_oversample}/>
+                        <img alt="" className="img-fluid" src={cm_mlp_oversample}/>
                         <figcaption>Multi Layer Perceptron: Oversampling</figcaption>
                     </figure>
                 </div>
@@ -683,7 +679,7 @@ export default class Avatoom extends React.Component {
                 generation, we unleash the power of Recurrent Neural Networks to generate novel song lyrics.
             </p>
             <figure>
-                <img className="img-fluid" src={default_model}/>
+                <img alt="" className="img-fluid" src={default_model}/>
                 <figcaption >TextGenRNN Neural Network Architecture (source: <a
                     href="https://github.com/minimaxir/textgenrnn">TextGenRNN</a>)</figcaption>
             </figure>

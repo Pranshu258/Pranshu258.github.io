@@ -181,7 +181,7 @@ export default class Gitviz extends React.Component {
                     Wouldn't it be great if GitHub showed all of these insights out of the box? Until then, if you are interested, feel free to look at the jupyter notebook on Google Colab and you will be able to do all of the above analysis by yourself.
                 </p>
                 <p>
-                    Thank You 😀❤
+                    Thank You <span role="img" aria-label="similing and heart emoji">😀❤</span>
                 </p>
             </div>
         )

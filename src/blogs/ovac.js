@@ -1,5 +1,4 @@
 import React from 'react';
-import { Route } from "react-router-dom";
 import Sharer from "../sharer";
 
 import '../styles/fonts.css';
@@ -7,16 +6,12 @@ import '../styles/blog.css';
 
 import dockerArch from "../images/dockerArch.png";
 import vmsdocker from "../images/vmvsdocker.png";
-import banner from '../images/banner.png';
 
 export default class Ovac extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0)
     }
     render() {
-        var bannerStyle = {
-            margin: "20px 0 20px 0",
-        }
         return (
             <div>
                 <h1 className="title">On Virtualization and Containers</h1>
@@ -84,7 +79,7 @@ export default class Ovac extends React.Component {
                     Containers are isolated execution environments which share the operating system resources. Virtualization at the operating system level can be regarded as containerization. The operating system takes care of providing the virtual environments where the applications run with isolation as if each application was running on a separate OS instance.
                     </p>
                 <p style={{ textAlign: "center" }}>
-                    <img src={vmsdocker} className="img-fluid" ></img>
+                    <img alt="" src={vmsdocker} className="img-fluid" ></img>
                             Image Source: <a href="https://www.docker.com/resources/what-container">https://www.docker.com/resources/what-container</a>
                 </p>
                 <h3 className="roboto">Building Blocks of Docker</h3>
@@ -118,7 +113,7 @@ export default class Ovac extends React.Component {
                     Docker Engine is a software that provides the runtime for container images. It is implemented on top the LibContainer library. It is also termed as Docker Host or Docker Runtime.
                     </p>
                 <p style={{ textAlign: "center" }}>
-                    <img src={dockerArch} className="img-fluid"></img>
+                    <img alt="" src={dockerArch} className="img-fluid"></img>
                             Image Source: <a href="https://docs.docker.com/engine/docker-overview/#docker-architecture">https://docs.docker.com/engine/docker-overview/#docker-architecture </a>
                 </p>
 

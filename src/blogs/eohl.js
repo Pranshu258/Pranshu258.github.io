@@ -1,10 +1,7 @@
 import React from 'react';
-import { Route } from "react-router-dom";
 import Sharer from "../sharer";
 import '../styles/fonts.css';
 import '../styles/blog.css';
-
-import banner from '../images/banner.png';
 
 export default class Eohl extends React.Component {
     componentDidMount() {

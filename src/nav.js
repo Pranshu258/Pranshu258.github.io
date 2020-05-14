@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-// import { Link } from "react-router-dom";
 import './styles/nav.css';
 
-import { Link, animateScroll as scroll } from "react-scroll";
+import { Link } from "react-scroll";
 
 export default class Nav extends Component {
     handleCrossPageNav(section) {
@@ -11,11 +10,6 @@ export default class Nav extends Component {
         }
     }
     render() {
-        var brandStyle = {
-            height: "32px",
-            marginLeft: "100px",
-            marginRight: "32px"
-        };
         return (
             <header>
                 <nav className="navbar fixed-top navbar-expand-lg navbar-default">

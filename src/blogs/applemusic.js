@@ -1,5 +1,4 @@
 import React from 'react';
-import { Route } from "react-router-dom";
 import Prism from "prismjs";
 import Sharer from "../sharer";
 
@@ -24,9 +23,6 @@ export default class Applemusic extends React.Component {
         Prism.highlightAll();
     }
     render() {
-        var bannerStyle = {
-            margin: "20px 0 20px 0",
-        }
         return (
             <div className="language-python">
                 <h1 className="title">Analysing Apple Music Activity</h1>
@@ -92,22 +88,22 @@ UTC Offset In Seconds`
                 To start with, we can look the listening habits of the user, such as, the number tracks played, the total play duration for each month in the dataset, helping us understand how the user's affinity towards music has changed over the years. We can look at the play duration by each hour of the day, to see when the user likes to listen to music every day. 
                 </p>
                 <figure>
-                    <img className="img-fluid" src={plot7} />
+                    <img alt="" className="img-fluid" src={plot7} />
                     <figcaption>Number of Tracks played per Month</figcaption>
                 </figure>
                 <figure>
-                    <img className="img-fluid" src={plot8} />
+                    <img alt="" className="img-fluid" src={plot8} />
                     <figcaption>Play Duration (hours) per Month</figcaption>
                 </figure>
                 <figure>
-                    <img className="img-fluid" src={plot9} />
+                    <img alt="" className="img-fluid" src={plot9} />
                     <figcaption>Total Play duration by Hour of the Day</figcaption>
                 </figure>
                 <p>
                     Often, when we are on music app, we skip a song to get to the next one, or skip ahead whithin the song. This reduced the play duration of that particular track. Apple music records these events whenever they happen. In the plot below, we can see that a large number of tracks are skipped ahead before completion. However, naturally ending tracks are close second, as one would expect. 
                 </p>
                 <figure>
-                    <img className="img-fluid" src={plot2} />
+                    <img alt="" className="img-fluid" src={plot2} />
                     <figcaption>Play End Reason</figcaption>
                 </figure>
                 <h3 className="headings">Genre Statistics</h3>
@@ -117,21 +113,21 @@ UTC Offset In Seconds`
                     instrumentation and other musical dynamics.
                 </p>
                 <figure>
-                    <img className="img-fluid" src={plot1} />
+                    <img alt="" className="img-fluid" src={plot1} />
                     <figcaption>Play Frequency per Genre</figcaption>
                 </figure>
                 <p>
                     The plot above shows the number of times any title belonging to a particular genre was played over the period of two years. However, an average user often skips a track before it completes playing. Therefore, we should also look at the cumulative play durations for each genre, rather than just the number of tracks in order to get a better picture. 
                 </p>
                 <figure>
-                    <img className="img-fluid" src={plot3} />
+                    <img alt="" className="img-fluid" src={plot3} />
                     <figcaption>Play Duration per Genre</figcaption>
                 </figure>
                 <p>
                     We can dive deeper and look at the top three genre in the dataset and see how their respective play durations have changed over the years. We can see that "Bollywood" has a significant share of play duration up until mid 2019, after which pop and sountrack are becoming equally significant in the user's listening habits.
                 </p>
                 <figure>
-                    <img className="img-fluid" src={plot4} />
+                    <img alt="" className="img-fluid" src={plot4} />
                     <figcaption>Percentage share in play duration for top 3 Genre</figcaption>
                 </figure>
                 <h3 className="headings">Artist Statistics</h3>
@@ -139,11 +135,11 @@ UTC Offset In Seconds`
                     Similar to the way we looked at the top genres, we can look at top artists. Note that many tracks are made as a result of collaboration among multiple artists, we count the track for each of them for the following plots. 
                 </p>
                 <figure>
-                    <img className="img-fluid" src={plot5} />
+                    <img alt="" className="img-fluid" src={plot5} />
                     <figcaption>Track play frequency for top 30 artists</figcaption>
                 </figure>
                 <figure>
-                    <img className="img-fluid" src={plot6} />
+                    <img alt="" className="img-fluid" src={plot6} />
                     <figcaption>Percentage share in play duration for top 2 artists</figcaption>
                 </figure>
                 <p>

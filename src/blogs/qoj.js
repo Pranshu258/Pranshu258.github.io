@@ -13,9 +13,6 @@ export default class Qoj extends React.Component {
         Prism.highlightAll();
     }
     render() {
-        var bannerStyle = {
-            margin: "20px 0 20px 0",
-        }
         return (
             <div className="language-javascript">
                 <h1 className="title">Quirks of JavaScript - <br></br>The Language of the Web</h1>
@@ -71,7 +68,7 @@ true`
                     Here, the comparison is not happening between two objects. The RHS is first typecasted to a boolean i.e. <code>false</code>. Then it is typecasted to a number i.e. 0. On the other hand, the LHS is typecasted to a number i.e. 0. Hence,the result is <code>true</code>
                 </p>
                 <p className="muli">
-                    Read more about The Abstract Equality Comparison Algorithm <a href="https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3" target="_blank">here</a>.
+                    Read more about The Abstract Equality Comparison Algorithm <a href="https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3" target="_blank" rel="noopener noreferrer">here</a>.
                     </p>
                 <h3 className="headings">Floating Point Math</h3>
                 <p className="muli">
