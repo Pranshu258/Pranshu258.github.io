@@ -26,10 +26,12 @@ export default class Body extends React.Component {
                     <hr></hr>
                     <div className="row" id="blog">
                         <div className="col-md-3">
+                            <br></br><br></br><br></br>
+                            <i className="fas fa-blog big" style={{ color: "#f200b1" }}></i>
                             <br></br><br></br>
-                            <h1 className="roboto">
+                            <h2 className="roboto">
                                 BLOG
-                            </h1>
+                            </h2>
                         </div>
                         <div className="col-md-9">
                             <br></br><br></br>
@@ -42,7 +44,7 @@ export default class Body extends React.Component {
                                                     <h3 className="roboto">{object.name}</h3>
                                                 </Link>
                                                 <p>{object.description}</p>
-                                                {object.tags.map((tag, j) => <span className="blogpill">{tag}</span>)}
+                                                <div>{object.tags.map((tag, j) => <span className="btn blogpill">{tag}</span>)}</div>
                                             </div>
                                             {i < blogList.length - 1 ? <hr></hr> : null}
                                         </div>
@@ -55,10 +57,12 @@ export default class Body extends React.Component {
                     <hr></hr>
                     <div className="row" id="projects">
                         <div className="col-md-3">
+                            <br></br><br></br><br></br>
+                            <i className="fas fa-code big" style={{ color: "#0075ff" }}></i>
                             <br></br><br></br>
-                            <h1 className="roboto">
+                            <h2 className="roboto">
                                 PROJECTS
-                            </h1>
+                            </h2>
                         </div>
                         <div className="col-md-9">
                             <br></br><br></br>
@@ -71,7 +75,7 @@ export default class Body extends React.Component {
                                                     <h3 className="roboto">{object.name}</h3>
                                                 </a>
                                                 <p>{object.description}</p>
-                                                {object.tags.map((tag, j) => <span className="projectpill">{tag}</span>)}
+                                                <div>{object.tags.map((tag, j) => <span className="btn projectpill">{tag}</span>)}</div>
                                             </div>
                                             {i < projectList.length - 1 ? <hr></hr> : null}
                                         </div>
@@ -84,10 +88,12 @@ export default class Body extends React.Component {
                     <hr></hr>
                     <div className="row" id="artworks">
                         <div className="col-sm-12">
+                            <br></br><br></br><br></br>
+                            <i className="fas fa-palette big" style={{ color: "goldenrod" }}></i>
                             <br></br><br></br>
-                            <h1 className="roboto">
+                            <h2 className="roboto">
                                 ARTWORKS
-                            </h1>
+                            </h2>
                         </div>
                     </div>
                     <div className="row">
@@ -110,7 +116,7 @@ export default class Body extends React.Component {
                             <br></br>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         );
