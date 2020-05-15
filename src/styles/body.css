@@ -63,7 +63,7 @@ hr {
 }
 
 .gt3 {
-    background: -webkit-linear-gradient(#AA771C, #BF953F);
+    background: -webkit-linear-gradient(#AA771C, #ffc107);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
