@@ -10,8 +10,8 @@ export default class Eohl extends React.Component {
     render() {
         return (
             <div>
-                <div className="row">
-                    <h2 className="bigger playfair bhead"><i class="fas fa-language"></i></h2>
+                <div className="row bhead">
+                    <i className="fas fa-language bigger gt1"></i>
                 </div>
                 <h1 className="title">Evolution of Human Languages</h1>
                 <p>Pranshu Gupta, May 5, 2017</p>

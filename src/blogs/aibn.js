@@ -11,8 +11,8 @@ export default class Aibn extends React.Component {
     render() {
         return (
             <div>
-                <div className="row">
-                    <h2 className="bigger playfair bhead"><i class="fab fa-canadian-maple-leaf"></i></h2>
+                <div className="row bhead">
+                    <i className="fab fa-canadian-maple-leaf bigger gt1"></i>
                 </div>
                 <h1 className="title">Algorithms Inspired by Nature</h1>
                 <p>Pranshu Gupta, Feb 22, 2019</p>

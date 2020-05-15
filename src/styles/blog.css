@@ -19,10 +19,6 @@ figcaption {
 
 .bhead {
     padding: 10px 10px 0 0px; 
-    margin: 52px 0 0 14px;
+    margin: 52px 0 0 0px;
     text-align:left;
-    background: -webkit-linear-gradient(#e0003d, #a100b7);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
 }

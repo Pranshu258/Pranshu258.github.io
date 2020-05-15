@@ -19,8 +19,8 @@ export default class Gitviz extends React.Component {
     render() {
         return (
             <div className="language-python">
-                <div className="row">
-                    <h2 className="bigger playfair bhead"><i class="fab fa-github"></i></h2>
+                <div className="row bhead">
+                    <i className="fab fa-github bigger gt1"></i>
                 </div>
                 <h1 className="title">Exploring GitHub Repositories</h1>
                 <p>Pranshu Gupta, May 12, 2020</p>

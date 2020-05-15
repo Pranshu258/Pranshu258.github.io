@@ -48,8 +48,8 @@ export default class Avatoom extends React.Component {
     render() {
         return (
             <div>
-                <div className="row">
-                    <h2 className="bigger playfair bhead"><i class="fas fa-play-circle"></i></h2>
+                <div className="row bhead">
+                    <i className="fas fa-play-circle bigger gt1"></i>
                 </div>
                 <h1 className="title">A voyage across the Ocean of Music</h1>
                 <p>
