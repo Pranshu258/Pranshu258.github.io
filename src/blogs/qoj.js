@@ -15,6 +15,9 @@ export default class Qoj extends React.Component {
     render() {
         return (
             <div className="language-javascript">
+                <div className="row">
+                    <h2 className="bigger playfair bhead"><i class="fab fa-js-square"></i></h2>
+                </div>
                 <h1 className="title">Quirks of JavaScript - <br></br>The Language of the Web</h1>
                 <p>Pranshu Gupta, June 5, 2017</p>
                 <Sharer link={window.location.href}></Sharer>

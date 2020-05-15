@@ -47,3 +47,24 @@ hr {
     text-decoration: none;
     color: white;
 }
+
+.gt1 {
+  background: -webkit-linear-gradient(#e0003d, #a100b7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gt2 {
+    background: -webkit-linear-gradient(#2a36da, #0075ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gt3 {
+    background: -webkit-linear-gradient(#AA771C, #BF953F);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

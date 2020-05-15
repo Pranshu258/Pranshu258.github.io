@@ -48,6 +48,9 @@ export default class Avatoom extends React.Component {
     render() {
         return (
             <div>
+                <div className="row">
+                    <h2 className="bigger playfair bhead"><i class="fas fa-play-circle"></i></h2>
+                </div>
                 <h1 className="title">A voyage across the Ocean of Music</h1>
                 <p>
                     <a style={{ textDecoration: "none" }} href="https://www.linkedin.com/in/jonathanlafiandra/">Jonathan Lafiandra</a>,

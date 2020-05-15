@@ -27,9 +27,6 @@ export default class Blog extends React.Component {
         return (
             <div className="content">
                 <div className="container">
-                    <div className="row" style={globalStyle}>
-                        <h2 className="bigger playfair" style={{backgroundColor:"#dd1c77", padding:"10px 10px 20px 10px", color:"white", textAlign:"left"}}>Blog</h2>
-                    </div>
                     <div className="row-fluid" style={globalStyle}>
                         <div className="row-fluid">
                             <div className="col-lg-9">

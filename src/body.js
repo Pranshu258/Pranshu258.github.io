@@ -27,7 +27,7 @@ export default class Body extends React.Component {
                     <div className="row" id="blog">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <i className="fas fa-blog big" style={{ color: "#f200b1" }}></i>
+                            <i className="fas fa-blog big gt1"></i>
                             <br></br><br></br>
                             <h2 className="roboto">
                                 BLOG
@@ -58,7 +58,7 @@ export default class Body extends React.Component {
                     <div className="row" id="projects">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <i className="fas fa-code big" style={{ color: "#0075ff" }}></i>
+                            <i className="fas fa-code big gt2" style={{ color: "#0075ff" }}></i>
                             <br></br><br></br>
                             <h2 className="roboto">
                                 PROJECTS
@@ -89,7 +89,7 @@ export default class Body extends React.Component {
                     <div className="row" id="artworks">
                         <div className="col-sm-12">
                             <br></br><br></br><br></br>
-                            <i className="fas fa-palette big" style={{ color: "goldenrod" }}></i>
+                            <i className="fas fa-palette big gt3"></i>
                             <br></br><br></br>
                             <h2 className="roboto">
                                 ARTWORKS

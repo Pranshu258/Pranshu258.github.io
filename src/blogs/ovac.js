@@ -14,6 +14,9 @@ export default class Ovac extends React.Component {
     render() {
         return (
             <div>
+                <div className="row">
+                    <h2 className="bigger playfair bhead"><i class="fas fa-server"></i></h2>
+                </div>
                 <h1 className="title">On Virtualization and Containers</h1>
                 <p>Pranshu Gupta, Feb 20, 2019</p>
                 <Sharer link={window.location.href}></Sharer>
