@@ -7,7 +7,7 @@
     margin: 2px;
     border-color: transparent;
     padding: 6px 12px 6px 12px;
-    background-color: #f200b1;
+    background-image: linear-gradient(to right, #e0003d, #a100b7);
     border: 1px;
     white-space: nowrap;
     color: white;
@@ -23,7 +23,7 @@
     margin: 2px;
     border-color: transparent;
     padding: 6px 12px 6px 12px;
-    background-color: #0075ff;
+    background-image: linear-gradient(to right, #2a36da, #0075ff);
     border: 1px;
     white-space: nowrap;
     color: white;
