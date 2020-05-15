@@ -118,7 +118,7 @@ export default class Body extends React.Component {
                                     FOLLOW ON INSTAGRAM
                                 </button>
                             </a>
-                            <br></br>
+                            <br></br><br></br><br></br>
                         </div>
                     </div>
                 </div>
