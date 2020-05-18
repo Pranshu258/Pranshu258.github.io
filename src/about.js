@@ -21,16 +21,15 @@ export default class About extends React.Component {
                     <br></br><br></br><br></br>
                     <h1 className="muli big">
                         Pranshu Gupta
-                </h1>
-                    {/* <br></br> */}
+                    </h1>
                     <div style={{ paddingLeft: "5px" }}>
                         <p>
                             I am a graduate student in College of Computing at Georgia Institute of Technology, specializing in machine learning, currently involved in research with the Social Dynamics and Wellbeing Lab at Georgia Tech.
                             Before Georgia Tech, I worked at Microsoft for two years, where I built intelligent applications on cloud.
-                    </p>
+                        </p>
                         <p>
                             I am interested in computer vision, graphics, machine learning and developing applications powered by artificial intelligence. I love building Software, learning more about Computer Science and Painting.
-                    </p>
+                        </p>
                         <p>
                             <svg width="280px" height="40%" class="img-responsive" data-slug-id="msazure-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 506 72">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M20.244 8.014L13.857 26.209H26.811L20.455 8.014H20.244ZM24.702 0L40.97 43.201H32.716L28.89 32.476H11.869L8.194 43.201H0L16.267 0H24.702Z" transform="translate(350.999 14.3985)" fill="white"></path>
@@ -47,7 +46,7 @@ export default class About extends React.Component {
                         </p>
                         <p>
                             Incoming Software Engineer II at Azure Compute, Summer 2020
-                    </p>
+                        </p>
                     </div>
                     <br></br><br></br>
                 </div>
