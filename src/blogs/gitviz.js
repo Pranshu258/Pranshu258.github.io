@@ -24,7 +24,7 @@ export default class Gitviz extends React.Component {
                 </div>
                 <h1 className="title">Exploring GitHub Repositories</h1>
                 <p>Pranshu Gupta, May 12, 2020</p>
-                <Sharer link={window.location.href}></Sharer>
+                <Sharer link={window.location.href} title={"Exploring GitHub Repositories"}></Sharer>
                 <br></br>
                 <p className="introduction">
                     Since its inception in 2007, GitHub has made huge progress in its adoption by the open-source community. Today, GitHub proudly hosts more than 100 million repositories created by coders all over the world. With more than 50 million users, it is true that "GitHub is how people build software". With so much public activity on the platform, it is a goldmine of data, which is made accessible to developers via the GitHub API.

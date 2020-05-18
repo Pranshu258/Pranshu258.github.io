@@ -16,7 +16,7 @@ export default class Aibn extends React.Component {
                 </div>
                 <h1 className="title">Algorithms Inspired by Nature</h1>
                 <p>Pranshu Gupta, Feb 22, 2019</p>
-                <Sharer link={window.location.href}></Sharer>
+                <Sharer link={window.location.href} title={"Algorithms Inspired by Nature"}></Sharer>
                 <br></br>
                 <p className="introduction">
                     Nature is known to be the best optimizer. Natural processes most often than not reach an

@@ -19,7 +19,7 @@ export default class Ovac extends React.Component {
                 </div>
                 <h1 className="title">On Virtualization and Containers</h1>
                 <p>Pranshu Gupta, Feb 20, 2019</p>
-                <Sharer link={window.location.href}></Sharer>
+                <Sharer link={window.location.href} title={"On Virtualization and Containers"}></Sharer>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="roboto">Virtualization</h3>
                 <p>

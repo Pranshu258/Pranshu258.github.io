@@ -61,7 +61,7 @@ export default class Avatoom extends React.Component {
                     <br></br>
                     November 18, 2019
                 </p>
-                <Sharer link={window.location.href}></Sharer>
+                <Sharer link={window.location.href} title={"A voyage across the Ocean of Music"}></Sharer>
                 <br></br>
                 <p className="introduction">
                     In the world today, there is more music than ever before. This abundance of musical data provides

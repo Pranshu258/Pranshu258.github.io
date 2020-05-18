@@ -30,7 +30,7 @@ export default class Applemusic extends React.Component {
                 </div>
                 <h1 className="title">Analysing Apple Music Activity</h1>
                 <p>Pranshu Gupta, May 2, 2020</p>
-                <Sharer link={window.location.href}></Sharer>
+                <Sharer link={window.location.href} title={"Analysing Apple Music Activity"}></Sharer>
                 <br></br>
                 <p className="introduction">
                     In this post we will explore apple music data of a user collected over a duration of two years. We will try to infer listening habits and other music specific traits of user from the data. You can perform a similar analysis of your own apple music data, which can be obtained by submitting a request at <a href="https://privacy.apple.com/">https://privacy.apple.com/</a> under the Apple Media Services information category.
