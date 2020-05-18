@@ -21,6 +21,11 @@ export default class Sharer extends React.Component {
                         <i className="fab fa-facebook"></i>
                     </a>
                 </li>
+                <li>
+                    <a style={{color:"black"}} href={"mailto:?subject="+ this.props.title +"&body=Check out this new article on Pranshu's blog:%0A" + this.props.link}>
+                        <i className="fas fa-envelope"></i>
+                    </a>
+                </li>
             </ul>
         );
     }
