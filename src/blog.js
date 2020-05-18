@@ -8,6 +8,7 @@ import Qoj from './blogs/qoj';
 import Eohl from './blogs/eohl';
 import Gitviz from './blogs/gitviz';
 import Applemusic from './blogs/applemusic';
+import DistribComp from './blogs/distribcomp';
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -37,6 +38,7 @@ export default class Blog extends React.Component {
                                 <Route path="/blog/evolution-of-human-languages" component={Eohl} />
                                 <Route path="/blog/exploring-github-repositories" component={Gitviz} />
                                 <Route path="/blog/analysing-apple-music-activity" component={Applemusic} />
+                                <Route path="/blog/distributed-computing-with-mapreduce" component={DistribComp} />
                                 <br></br><br></br>
                                 <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
                                 <h4 className="playfair">blog by Pranshu Gupta</h4>
