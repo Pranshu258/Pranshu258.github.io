@@ -27,7 +27,7 @@ export default class Qoj extends React.Component {
                     </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">The Abstract Equality Operator</h3>
-                <p className="muli">
+                <p className="montserrat">
                     JavaScript has two equality operators the Abstract Equality Operator '==' and Strict Equality Operator '==='. The abstract equality expressions are evaluated as per the abstract equality comparison algorithm. Let's look at some examples:
                      </p>
                 <pre><code>
@@ -70,11 +70,11 @@ true`
                 <p>
                     Here, the comparison is not happening between two objects. The RHS is first typecasted to a boolean i.e. <code>false</code>. Then it is typecasted to a number i.e. 0. On the other hand, the LHS is typecasted to a number i.e. 0. Hence,the result is <code>true</code>
                 </p>
-                <p className="muli">
+                <p className="montserrat">
                     Read more about The Abstract Equality Comparison Algorithm <a href="https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3" target="_blank" rel="noopener noreferrer">here</a>.
                     </p>
                 <h3 className="headings">Floating Point Math</h3>
-                <p className="muli">
+                <p className="montserrat">
                     All the numbers is JavaScript (and other languages) are represented on the hardware using the IEEE 754 Standard for Floating Point Arithmetic. Javascript uses the 64 bit representation. Now, when representing decimal numbers in binary, any fraction whose denominator is not a power of two can not be represented exactly in binary. This forces the language to make approximations. Consider the expression <code>0.2 + 0.1 == 0.3</code>, ideally it should evaluate to <code>true</code>. However, because the binary representations of 0.1 and 0.2 are slightly larger than the true value and on the other hand the binary represenation of 0.3 is smaller than the true value, we get <code>false</code> as the output.
                         The number closest to 0.1 if we use double precision floating point representation is:
                     </p>
@@ -93,7 +93,7 @@ false
                 </code></pre>
                 <p>Therefore, this is not a problem with the language, but an inadequacy of the representation in hardware</p>
                 <h3 className="headings">Strings and Numbers</h3>
-                <p className="muli">
+                <p className="montserrat">
                     The expression <code>"Hello" + 3</code> evaluates to "Hello3", because the number 3 gets implicitly cast to a string and then it is concatenated to the string "Hello". What if we subtract a number from a string? e.g. <code>"Hello" - 3</code>. In this case, we get <code>NaN</code>. Well, that's ok, subtracting two strings doesn't make "that" much sense. Let's do the following:
                     <pre><code>
                         {

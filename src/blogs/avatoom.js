@@ -441,7 +441,7 @@ export default class Avatoom extends React.Component {
                 </div>
 
 
-                <p className="muli">
+                <p className="montserrat">
                     As we can see most of the clusters contain a large percentage of rock songs while a few of them were
                     able
                     to sepearate out Hip-Hop, Metal, R&B and Pop. Before going into the problems, there are a few

@@ -41,7 +41,7 @@ export default class Blog extends React.Component {
                                 <Route path="/blog/distributed-computing-with-mapreduce" component={DistribComp} />
                                 <br></br><br></br>
                                 <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
-                                <h4 className="playfair">blog by Pranshu Gupta</h4>
+                                <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>
                             </div>
                             <div className="col-lg-3">
                                 <br></br><br></br>

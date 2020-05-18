@@ -1,17 +1,14 @@
 .roboto {
-    font-family: 'Roboto', sans-serif;
-}
-
-.playfair {
-    font-family: 'Playfair Display', serif;
-}
-
-.muli {
-    font-family: 'Muli', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
 }
 
 .calligraffitti {
     font-family: 'Calligraffitti', cursive;
+}
+
+.montserrat {
+    font-family: 'Montserrat', sans-serif;
 }
 
 .big {
