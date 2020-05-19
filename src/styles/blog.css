@@ -10,6 +10,14 @@
     font-weight: bold;
 }
 
+@media (max-width: 768px) {
+    .title {
+        font-size: 280%;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: bold;
+    }
+}
+
 .headings {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
@@ -20,7 +28,7 @@ figcaption {
 }
 
 .bhead {
-    padding: 10px 10px 10px 0px; 
+    padding: 10px 10px 10px 0px;
     margin: 52px 0 10px 0px;
-    text-align:left;
+    text-align: left;
 }
