@@ -24,7 +24,25 @@ export default class DistribComp extends React.Component {
                     MapReduce was one of the first frameworks that democratized distributed computing, by making it easier for engineers to write applications that run on distributed systems without having distributed computing expertise. It helped Google and its developers to build highly parallelized and fault-tolerant systems, without wasting time in writing code to enable parallelism and focus on the business logic instead. In this article, we will try to understand how MapReduce helps us build such systems.  
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
-                <h2 className="headings">Distributed Computing</h2>
+                <h2 className="headings">Distributed Systems</h2>
+                <p>                  
+                    A distributed system is a set of co-operating computers that are communicating with each other over the network to get some tasks done. Such systems are generally used in storage for big websites, peer to peer file sharing platforms, big data computation, and geo-redundancy.  
+                </p>
+                <p>
+                    However, when designing a system, one should always consider building a system that runs on a single machine. A distributed system has many overheads such as over the network communication and multiple failure points. Therefore, it is unnecessary to create one unless certain characteristics like high performance, fault tolerance, geo-redundancy, and isolation of components are required.
+                </p>
+                <p>
+
+                </p>
+                <h3 className="headings">Performance</h3>
+                <p>
+                    
+                </p>
+                <h3 className="headings">Fault-Tolerance</h3>
+                <p>
+                    
+                </p>
+                <h3 className="headings">Consistency</h3>
                 <p>
                     
                 </p>
