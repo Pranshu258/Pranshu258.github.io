@@ -20,7 +20,7 @@ export default class About extends React.Component {
                 <div className="col-md-9">
                     <br></br><br></br><br></br>
                     <h1 className="montserrat big">
-                        Pranshu Gupta
+                        <b>Pranshu Gupta</b>
                     </h1>
                     <div style={{ paddingLeft: "5px" }}>
                         <p>
