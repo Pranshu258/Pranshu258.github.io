@@ -24,11 +24,10 @@ export default class About extends React.Component {
                     </h1>
                     <div style={{ paddingLeft: "5px" }}>
                         <p>
-                            I am a graduate student in College of Computing at Georgia Institute of Technology, specializing in machine learning, currently involved in research with the Social Dynamics and Wellbeing Lab at Georgia Tech.
-                            Before Georgia Tech, I worked at Microsoft for two years, where I built intelligent applications on cloud.
+                            I am a MSCS graduate from Georgia Institute of Technology, currently working as a Software Engineer for the Azure Resource Manager team at Microsoft in Redmond, USA. Before Microsoft, I was involved in research with the Social Dynamics and Wellbeing Lab at Georgia Tech, where we tried to understand social dynamics and wellbeing from social media data.
                         </p>
                         <p>
-                            I am interested in computer vision, graphics, machine learning and developing applications powered by artificial intelligence. I love building Software, learning more about Computer Science and Painting.
+                            I am interested in vision, graphics, distributed computing and developing applications powered by artificial intelligence. I love building Software, learning more about Computer Science and Painting.
                         </p>
                         <p>
                             <svg width="280px" height="40%" class="img-responsive" data-slug-id="msazure-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 506 72">
@@ -45,7 +44,7 @@ export default class About extends React.Component {
                             </svg>
                         </p>
                         <p>
-                            Incoming Software Engineer II at Azure Compute, Summer 2020
+                            Software Engineer II at Microsoft Azure, Summer 2020
                         </p>
                     </div>
                     <br></br><br></br>
