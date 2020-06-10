@@ -24,7 +24,7 @@ export default class About extends React.Component {
                     </h1>
                     <div style={{ paddingLeft: "5px" }}>
                         <p>
-                            I am a MSCS graduate from Georgia Institute of Technology, currently working as a Software Engineer for the Azure Resource Manager team at Microsoft in Redmond, USA. Before Microsoft, I was involved in research with the Social Dynamics and Wellbeing Lab at Georgia Tech, where we tried to understand social dynamics and wellbeing from social media data.
+                            I am a MSCS graduate from Georgia Institute of Technology, currently working as a Software Engineer for the Azure Resource Manager team at Microsoft in Redmond, USA. Before Microsoft, I was involved in research with the SocWeb Lab at Georgia Tech, where we tried to understand social dynamics and wellbeing of people from social media data.
                         </p>
                         <p>
                             I am interested in vision, graphics, distributed computing and developing applications powered by artificial intelligence. I love building Software, learning more about Computer Science and Painting.
