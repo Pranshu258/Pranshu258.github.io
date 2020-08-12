@@ -56,8 +56,11 @@ export default class DistribComp extends React.Component {
                     The system must be designed in such a that it can either handle such failures as if they didn't happen at all, or it can have a mechanism to recover from them. We need to abstract out these things for an application developer so that she may focus on developing the business logic for the application and not waste time on handling the performance, consistency, and resilience aspects of the system. For an application developer, the system should behave like a simple monolithic system. This is where MapReduce comes into the picture, it is a framework that abstracts away the details of the distributed system and allows the developer to focus on the stuff that is important for the application.
                 </p>
                 <h2 className="headings">MapReduce</h2>
-                
                 <p>
+                    Search engines like Google need to perform multi-hour computations on multi-terabyte data-sets regularly. Some of these computations include building a search index, or sorting, or analyzing the structure of the web. Such tasks are only practical with thousands of computers.
+                </p>
+                <p>
+                    However, most application programmers are not experts in distributed systems. Google needed a system that made it easy for non-specialist programmers to implement applications that could run in a distributed fashion. Thus, MapReduce was born, it provided a framework that enabled programmers to build distributed applications by writing simple sequential code.
                 </p>
                 <div>
                     <Gist url="https://gist.github.com/Pranshu258/c1ad56f279d5741a1f1adc110acaff44" file="request_headers.py" />
