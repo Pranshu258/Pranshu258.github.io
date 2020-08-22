@@ -118,6 +118,11 @@ export default class Body extends React.Component {
                                     <b>FOLLOW ON INSTAGRAM</b>
                                 </button>
                             </a>
+                            <Link className="blogLink" to={"artworks/"}>
+                                <button style={{ margin: "0 10px 0 0" }} className="btn btn-warning">
+                                    <b>GALLERY</b>
+                                </button>
+                            </Link>
                             <br></br><br></br><br></br>
                         </div>
                     </div>

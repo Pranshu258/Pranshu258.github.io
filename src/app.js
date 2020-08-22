@@ -6,6 +6,7 @@ import Nav from './nav';
 import Body from './body';
 import Footer from './footer';
 import Blog from './blog';
+import Artworks from './artworks';
 
 import './styles/app.css';
 
@@ -18,6 +19,7 @@ export default class App extends React.Component {
                     <Nav />
                     <Route exact path="/" component={Body} />
                     <Route path="/blog" component={Blog} />
+                    <Route path="/artworks" component={Artworks} />
                     <Footer />
                 </Router>
             </div>
