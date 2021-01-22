@@ -44,7 +44,7 @@ export default class About extends React.Component {
                             </svg>
                         </p>
                         <p>
-                            Software Engineer II at Microsoft Azure, Summer 2020
+                            Software Engineer II at Microsoft Azure, June 2020 - Present
                         </p>
                     </div>
                     <br></br><br></br>
