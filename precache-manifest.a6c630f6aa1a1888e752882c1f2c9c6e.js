@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8f5e52c71ad895d055063c992e20a0f5",
+    "revision": "e1df2a8b40c63682df894c13f92c0fae",
     "url": "/index.html"
   },
   {
-    "revision": "99d3538703690743725a",
-    "url": "/static/css/main.81f5180c.chunk.css"
+    "revision": "79c65a49c4a414123c04",
+    "url": "/static/css/main.6d4e2dbf.chunk.css"
   },
   {
-    "revision": "601b37f46d801527e49f",
-    "url": "/static/js/2.4359666d.chunk.js"
+    "revision": "7627869d98a6ee136492",
+    "url": "/static/js/2.c8c57fb4.chunk.js"
   },
   {
-    "revision": "3ce4728b1162e319f61f0c072fc7f1a4",
-    "url": "/static/js/2.4359666d.chunk.js.LICENSE.txt"
+    "revision": "df4964ae36e0e724ce02a12cce603843",
+    "url": "/static/js/2.c8c57fb4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "99d3538703690743725a",
-    "url": "/static/js/main.0eb9a486.chunk.js"
+    "revision": "79c65a49c4a414123c04",
+    "url": "/static/js/main.607260d3.chunk.js"
   },
   {
     "revision": "69c95a5b5ce42bbf935c",
@@ -38,6 +38,50 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "d302e9a1eea072d50fae0680e7df2a26",
     "url": "/static/media/Folkcloudblack.d302e9a1.png"
+  },
+  {
+    "revision": "269e1674d5477565864c017163198d1f",
+    "url": "/static/media/IMG_5742.269e1674.jpg"
+  },
+  {
+    "revision": "bb3014e24919f256d7a2432729194b2a",
+    "url": "/static/media/IMG_5746.bb3014e2.jpg"
+  },
+  {
+    "revision": "25298ba4feff2034c18afce465fbe745",
+    "url": "/static/media/IMG_6029.25298ba4.jpg"
+  },
+  {
+    "revision": "c06415b57fa5115821489f7d2cb0a5de",
+    "url": "/static/media/IMG_6043.c06415b5.jpg"
+  },
+  {
+    "revision": "cf80cfc8913fa455662ef57aa723767f",
+    "url": "/static/media/IMG_6281.cf80cfc8.jpg"
+  },
+  {
+    "revision": "39a77456b6e5c786ecd5efaae20f796e",
+    "url": "/static/media/IMG_6283.39a77456.jpg"
+  },
+  {
+    "revision": "9471a35e3b3292c6c851c7998215dde4",
+    "url": "/static/media/IMG_6337.9471a35e.jpg"
+  },
+  {
+    "revision": "6cf2d618dc98e1df2f84640e71f0340e",
+    "url": "/static/media/IMG_6378.6cf2d618.jpg"
+  },
+  {
+    "revision": "0247dcb8f8dba0781ef7252225ba0de9",
+    "url": "/static/media/IMG_6950.0247dcb8.jpg"
+  },
+  {
+    "revision": "551024ebe4f5d1dd48216f86ec2f71a7",
+    "url": "/static/media/IMG_6958.551024eb.jpg"
+  },
+  {
+    "revision": "5d34f547df58b7c47c027013a67d7683",
+    "url": "/static/media/IMG_6977.5d34f547.jpg"
   },
   {
     "revision": "597891607475777651da0bccf5c3bcc9",
