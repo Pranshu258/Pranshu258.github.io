@@ -2,6 +2,22 @@
     padding: 0px 0 8px 0;
 }
 
+.paperpill {
+    border-radius: 25px;
+    margin: 2px;
+    border-color: transparent;
+    padding: 6px 12px 6px 12px;
+    background-image: linear-gradient(to right, #045304, #107C10);
+    border: 1px;
+    white-space: nowrap;
+    color: white;
+}
+
+.paperpill:hover {
+    box-shadow: 0 0 10px #107C10;
+    color: white;
+}
+
 .blogpill {
     border-radius: 25px;
     margin: 2px;
@@ -64,6 +80,13 @@ hr {
 
 .gt3 {
     background: -webkit-linear-gradient(#AA771C, #ffc107);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gt4 {
+    background: -webkit-linear-gradient(#045304, #107C10);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

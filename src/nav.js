@@ -24,6 +24,11 @@ export default class Nav extends Component {
                                 </Link>
                             </li>
                             <li>
+                                <Link activeClass="active" to="publications" spy={true} smooth={true} offset={-70} duration= {500}>
+                                    <button onClick={() => this.handleCrossPageNav("publications")} className="btn btn-default" style={{color: "white"}}>Papers</button>
+                                </Link>
+                            </li>
+                            <li>
                                 <Link activeClass="active" to="blog" spy={true} smooth={true} offset={-70} duration= {500}>
                                     <button onClick={() => this.handleCrossPageNav("blog")} className="btn btn-default" style={{color: "white"}}>Blog</button>
                                 </Link>

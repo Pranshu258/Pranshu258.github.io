@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { blogList } from './data/blogs'
 import { projectList } from './data/projects'
+import { publicationList } from './data/publications'
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -23,6 +24,37 @@ export default class Body extends React.Component {
             <div className="body content">
                 <div className="container">
                     <About />
+                    <hr></hr>
+                    <div className="row" id="publications">
+                        <div className="col-md-3">
+                            <br></br><br></br><br></br>
+                            <i className="fas fa-scroll big gt4"></i>
+                            <br></br><br></br>
+                            <h2 className="roboto">
+                                PAPERS
+                            </h2>
+                        </div>
+                        <div className="col-md-9">
+                            <br></br><br></br>
+                            <div style={{ paddingLeft: "5px" }}>
+                                {
+                                    publicationList.map((object, i) =>
+                                        <div>
+                                            <div className="featuredText">
+                                                <a target="_blank" rel="noopener noreferrer" className="blogLink" href={object.link}>
+                                                    <h3 className="roboto">{object.name}</h3>
+                                                </a>
+                                                <p>{object.description}</p>
+                                                <div>{object.tags.map((tag, j) => <span className="btn paperpill">{tag}</span>)}</div>
+                                            </div>
+                                            {i < publicationList.length - 1 ? <hr></hr> : null}
+                                        </div>
+                                    )
+                                }
+                            </div>
+                            <br></br><br></br>
+                        </div>
+                    </div>
                     <hr></hr>
                     <div className="row" id="blog">
                         <div className="col-md-3">
