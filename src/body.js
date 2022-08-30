@@ -7,10 +7,10 @@ import { publicationList } from './data/publications'
 import './styles/fonts.css';
 import './styles/body.css';
 
-import art1 from './images/img1.jpg';
-import art3 from './images/img12.jpg';
-import art4 from './images/img13.jpg';
-import art5 from './images/img14.jpg';
+import art1 from './images/art/artwork (19).jpg';
+import art3 from './images/art/artwork (34).jpg';
+import art4 from './images/art/artwork (21).jpg';
+import art5 from './images/art/artwork (36).jpg';
 
 
 import About from "./about";
@@ -18,7 +18,7 @@ import About from "./about";
 export default class Body extends React.Component {
     render() {
         var bannerStyle = {
-            margin: "20px 0 20px 0",
+            margin: "20px 0 20px 0"
         }
         return (
             <div className="body content">
