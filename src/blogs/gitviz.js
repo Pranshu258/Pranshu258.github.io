@@ -11,6 +11,14 @@ import "../styles/prism.css";
 import '../styles/fonts.css';
 import '../styles/blog.css';
 
+import commit_messages from '../images/git_blog/commitmessages.png'
+import commits from '../images/git_blog/commits.png'
+import commits_per_contributor from '../images/git_blog/commitspercontributor.png'
+import forks from '../images/git_blog/forks.png'
+import issue_closing_time from '../images/git_blog/issueclosingtime.png'
+import issues from '../images/git_blog/issues.png'
+import pull_requests from '../images/git_blog/pullrequests.png'
+
 export default class Gitviz extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
@@ -85,35 +93,17 @@ export default class Gitviz extends React.Component {
                     <br></br>
                     In the plot below, we look at the total commits pushed to Angular and React each month since they were published on GitHub. We can see that Angular usually has a higher number of commits per month as compared to React. If we look at the number of commits per contributor per month, we can see that it still a little bit higher for Angular. However, React developers seem to be closing the gap in 2020.
                 </p>
-            <div style={{ maxWidth: "100vw", overflowX: "scroll" }}>
-                <div style={{ height: "250px", width: "900px" }}>
-                    <LineChart
-                        data={gitvizdata['commits']}
-                        ylabel='new commits'
-                        legend_loc='top-left'
-                    />
-                </div>
+            <div style={{ maxWidth: "100vw" }}>
+                <img alt="" src={commits} className="img-fluid"></img>
             </div>
-            <div style={{ maxWidth: "100vw", overflowX: "scroll" }}>
-                <div style={{ height: "250px", width: "900px" }}>
-                    <LineChart
-                        data={gitvizdata['commits_per_contributor']}
-                        ylabel='new commits per contributor'
-                        legend_loc='top-left'
-                    />
-                </div>
+            <div style={{ maxWidth: "100vw" }}>
+                <img alt="" src={commits_per_contributor} className="img-fluid"></img>
             </div>
             <br></br>
             <p>In the above plot, to count the number of unique contributors, we have considered the author of the commit as the contributor. In case the author is not available, we look for the committer, and if that is not available as well, we associate the commit to default anonymous contributor.</p>
             <p>Developers add a message describing the changes associated with the commit so that it is easier for others to review the changes in the future. We can see that commit messages posted by Angular developers have become much more descriptive as compared to the ones posted by React developers over the past year. However, the opposite was true before that.</p>
-            <div style={{ maxWidth: "100vw", overflowX: "scroll" }}>
-                <div style={{ height: "250px", width: "900px" }}>
-                    <LineChart
-                        data={gitvizdata['commits_msg_len']}
-                        ylabel='commits message length'
-                        legend_loc='top-left'
-                    />
-                </div>
+            <div style={{ maxWidth: "100vw" }}>
+                <img alt="" src={commit_messages} className="img-fluid"></img>
             </div>
             <br></br>
             <h3 className="headings">Contribution</h3>
@@ -122,28 +112,16 @@ export default class Gitviz extends React.Component {
                 </p>
             <p>
                 The following plot shows the number of new forks being created by developers on GitHub each month. We can see that React has more forks than Angular since the beginning and the gap has never closed. This indicates that a larger number of GitHub users are interested in contributing to React
-                </p>
-            <div style={{ maxWidth: "100vw", overflowX: "scroll" }}>
-                <div style={{ height: "250px", width: "900px" }}>
-                    <LineChart
-                        data={gitvizdata['forks']}
-                        ylabel='new forks'
-                        legend_loc='top-left'
-                    />
-                </div>
+            </p>
+            <div style={{ maxWidth: "100vw" }}>
+                <img alt="" src={forks} className="img-fluid"></img>
             </div>
             <br></br>
             <p>
                 However, if we look at the pull requests made to the repositories each month, we can see that Angular has a much higher number of pull requests each month, and again the gap has never closed. Thus, we can say that although there is more interest in contributing to React among the community, it is Angular where most of the contribution goes, not React.
-                </p>
-            <div style={{ maxWidth: "100vw", overflowX: "scroll" }}>
-                <div style={{ height: "250px", width: "900px" }}>
-                    <LineChart
-                        data={gitvizdata['pulls']}
-                        ylabel='new pull requests'
-                        legend_loc='top-left'
-                    />
-                </div>
+            </p>
+            <div style={{ maxWidth: "100vw" }}>
+                <img alt="" src={pull_requests} className="img-fluid"></img>
             </div>
             <br></br>
             <h3 className="headings">Maintenance</h3>
@@ -152,28 +130,16 @@ export default class Gitviz extends React.Component {
                 </p>
             <p>
                 In the following plots, we look at the number of new issues created on the repositories each month. We can see that the number of issues submitted on Angular is much higher as compared to React. This could be due to the larger codebase of Angular, or it could be indicative of Angular's usage in larger enterprise-level projects, where issue resolution is considered more critical as compared to smaller projects.
-                </p>
-            <div style={{ maxWidth: "100vw", overflowX: "scroll" }}>
-                <div style={{ height: "250px", width: "900px" }}>
-                    <LineChart
-                        data={gitvizdata['issues']}
-                        ylabel='new issues'
-                        legend_loc='top-left'
-                    />
-                </div>
+            </p>
+            <div style={{ maxWidth: "100vw" }}>
+                <img alt="" src={issues} className="img-fluid"></img>
             </div>
             <br></br>
             <p>
                 It is important that the issues submitted on the repositories are worked on and fixed as quickly as possible. We can see in the plot below, that both Angular and React have been equally fast at resolving the issues and maintaining a healthy project in recent years.
-                </p>
-            <div style={{ maxWidth: "100vw", overflowX: "scroll" }}>
-                <div style={{ height: "250px", width: "900px" }}>
-                    <LineChart
-                        data={gitvizdata['issue_closing_time']}
-                        ylabel='issue closing time (days)'
-                        legend_loc='top'
-                    />
-                </div>
+            </p>
+            <div style={{ maxWidth: "100vw" }}>
+                <img alt="" src={issue_closing_time} className="img-fluid"></img>
             </div>
             <br></br>
             <h3 className="headings">Conclusion</h3>
