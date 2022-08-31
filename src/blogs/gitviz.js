@@ -2,10 +2,7 @@ import React from 'react';
 import Sharer from "../sharer";
 
 import Prism from "prismjs";
-import LineChart from '../charts/linechart';
 import Gist from 'super-react-gist';
-
-import { gitvizdata } from '../data/gitviz';
 
 import "../styles/prism.css";
 import '../styles/fonts.css';
