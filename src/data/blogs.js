@@ -1,3 +1,11 @@
+import Avatoom from '../blogs/avatoom';
+import Ovac from '../blogs/ovac';
+import Aibn from '../blogs/aibn';
+import Qoj from '../blogs/qoj';
+import Eohl from '../blogs/eohl';
+import Gitviz from '../blogs/gitviz';
+import Applemusic from '../blogs/applemusic';
+
 export let blogList = [
     {
         name: "Exploring GitHub Repositories",
@@ -5,7 +13,8 @@ export let blogList = [
         tags: [
             "Data Visualization",
             "Python"
-        ]
+        ],
+        component: <Gitviz/>
     },
     {
         name: "Analysing Apple Music Activity",
@@ -13,7 +22,8 @@ export let blogList = [
         tags: [
             "Data Visualization",
             "Python"
-        ]
+        ],
+        component: <Applemusic/>
     },
     {
         name: "A voyage across the Ocean of Music",
@@ -21,7 +31,8 @@ export let blogList = [
         tags: [
             "Machine Learning",
             "Python"
-        ]
+        ],
+        component: <Avatoom/>
     },
     {
         name: "Algorithms inspired by Nature",
@@ -29,7 +40,8 @@ export let blogList = [
         tags: [
             "Artificial Intelligence",
             "Evolutionary Computing"
-        ]
+        ],
+        component: <Aibn/>
     },
     {
         name: "On Virtualization and Containers",
@@ -37,7 +49,8 @@ export let blogList = [
         tags: [
             "Cloud Computing",
             "Virtualization"
-        ]
+        ],
+        component: <Ovac/>
     },
     {
         name: "Quirks of JavaScript",
@@ -45,7 +58,8 @@ export let blogList = [
         tags: [
             "Programming Languages",
             "Web Development"
-        ]
+        ],
+        component: <Qoj/>
     },
     {
         name: "Evolution of Human Languages",
@@ -53,6 +67,7 @@ export let blogList = [
         tags: [
             "Human Psychology",
             "Psycholinguistics"
-        ]
+        ],
+        component: <Eohl/>
     }
 ]

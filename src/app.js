@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import Nav from './nav';
 import Body from './body';
@@ -17,9 +17,11 @@ export default class App extends React.Component {
             <div className="layout">
                 <Router>
                     <Nav />
-                    <Route exact path="/" component={Body} />
-                    <Route path="/blog" component={Blog} />
-                    <Route path="/artworks" component={Artworks} />
+                    <Routes>
+                        <Route exact path="/" element={<Body/>} />
+                        <Route path="/blog/*" element={<Blog/>} />
+                        <Route path="/artworks" element={<Artworks/>} />
+                    </Routes>
                     <Footer />
                 </Router>
             </div>

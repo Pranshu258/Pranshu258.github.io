@@ -1,14 +1,7 @@
 import React from 'react';
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
-import Avatoom from './blogs/avatoom';
-import Ovac from './blogs/ovac';
-import Aibn from './blogs/aibn';
-import Qoj from './blogs/qoj';
-import Eohl from './blogs/eohl';
-import Gitviz from './blogs/gitviz';
-import Applemusic from './blogs/applemusic';
-import DistribComp from './blogs/distribcomp';
+import { blogList } from './data/blogs'
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -31,14 +24,13 @@ export default class Blog extends React.Component {
                     <div className="row-fluid" style={globalStyle}>
                         <div className="row-fluid">
                             <div className="col-lg-9">
-                                <Route path="/blog/a-voyage-across-the-ocean-of-music" component={Avatoom} />
-                                <Route path="/blog/on-virtualization-and-containers" component={Ovac} />
-                                <Route path="/blog/algorithms-inspired-by-nature" component={Aibn} />
-                                <Route path="/blog/quirks-of-javascript" component={Qoj} />
-                                <Route path="/blog/evolution-of-human-languages" component={Eohl} />
-                                <Route path="/blog/exploring-github-repositories" component={Gitviz} />
-                                <Route path="/blog/analysing-apple-music-activity" component={Applemusic} />
-                                <Route path="/blog/distributed-computing-with-mapreduce" component={DistribComp} />
+                                <Routes>
+                                    {
+                                        blogList.map((object, i) =>
+                                            <Route path={object.name.replace(/\s+/g, '-').toLowerCase()} exact element={object.component} />
+                                        )
+                                    }
+                                </Routes>
                                 <br></br><br></br>
                                 <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
                                 <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>
