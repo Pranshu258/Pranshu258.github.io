@@ -8,9 +8,9 @@ import './styles/fonts.css';
 import './styles/body.css';
 
 import art1 from './images/art/IMG_3918.jpg';
-import art2 from './images/art/IMG_6977.JPG';
+import art2 from './images/art/IMG_6977.jpg';
 import art3 from './images/art/IMG_4609.jpg';
-import art4 from './images/art/IMG_7411.JPG';
+import art4 from './images/art/IMG_7411.jpg';
 import art5 from './images/art/IMG_3748.jpg';
 import art6 from './images/art/IMG_3725.jpg';
 import art7 from './images/art/IMG_3476.jpg';
