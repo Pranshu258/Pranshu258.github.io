@@ -7,11 +7,16 @@ import { publicationList } from './data/publications'
 import './styles/fonts.css';
 import './styles/body.css';
 
-import art1 from './images/art/artwork (19).jpg';
-import art3 from './images/art/artwork (34).jpg';
-import art4 from './images/art/artwork (21).jpg';
-import art5 from './images/art/artwork (36).jpg';
-
+import art1 from './images/art/IMG_3918.jpg';
+import art2 from './images/art/IMG_6977.JPG';
+import art3 from './images/art/IMG_4609.jpg';
+import art4 from './images/art/IMG_7411.JPG';
+import art5 from './images/art/IMG_3748.jpg';
+import art6 from './images/art/IMG_3725.jpg';
+import art7 from './images/art/IMG_3476.jpg';
+import art8 from './images/art/IMG_6424.jpg';
+import art9 from './images/art/IMG_8235.jpg';
+import art10 from './images/art/IMG_3730.jpg';
 
 import About from "./about";
 
@@ -131,8 +136,22 @@ export default class Body extends React.Component {
                     <div className="row">
                         <div className="col-sm-12">
                             <div className="row">
+                                <div className="col-sm-4">
+                                    <img alt="" src={art5} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-4">
+                                    <img alt="" src={art6} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-4">
+                                    <img alt="" src={art7} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                            </div>
+                            <div className="row">
                                 <div className="col-sm-3">
                                     <img alt="" src={art1} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-3">
+                                    <img alt="" src={art2} className="img-fluid" style={bannerStyle}></img>
                                 </div>
                                 <div className="col-sm-3">
                                     <img alt="" src={art3} className="img-fluid" style={bannerStyle}></img>
@@ -140,8 +159,16 @@ export default class Body extends React.Component {
                                 <div className="col-sm-3">
                                     <img alt="" src={art4} className="img-fluid" style={bannerStyle}></img>
                                 </div>
-                                <div className="col-sm-3">
-                                    <img alt="" src={art5} className="img-fluid" style={bannerStyle}></img>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-4">
+                                    <img alt="" src={art8} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-4">
+                                    <img alt="" src={art9} className="img-fluid" style={bannerStyle}></img>
+                                </div>
+                                <div className="col-sm-4">
+                                    <img alt="" src={art10} className="img-fluid" style={bannerStyle}></img>
                                 </div>
                             </div>
                             <br></br>
@@ -150,11 +177,6 @@ export default class Body extends React.Component {
                                     <b>FOLLOW ON INSTAGRAM</b>
                                 </button>
                             </a>
-                            <Link className="blogLink" to={"artworks/"}>
-                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-warning">
-                                    <b>GALLERY</b>
-                                </button>
-                            </Link>
                             <br></br><br></br><br></br>
                         </div>
                     </div>

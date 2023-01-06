@@ -21,7 +21,7 @@ export default class Footer extends React.Component {
                             <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.facebook.com/pranshug258"><i className="fab fa-facebook socialIcon"></i></a>
                             
                         </ul>
-                        <small className="montserrat">© Copyright 2022, Pranshu Gupta</small><br></br>
+                        <small className="montserrat">© Copyright 2023, Pranshu Gupta</small><br></br>
                         <small>digital illustrations by Ouch.pics https://icons8.com</small>
                     </div>
                     <div className="col-sm-2"></div>
