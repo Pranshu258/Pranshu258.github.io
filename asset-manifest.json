@@ -1,20 +1,10 @@
 {
   "files": {
     "main.css": "/static/css/main.6c94b403.css",
-    "main.js": "/static/js/main.71a89bfe.js",
-    "static/media/IMG_8235.jpg": "/static/media/IMG_8235.dfde0d787e6843127506.jpg",
-    "static/media/IMG_3748.jpg": "/static/media/IMG_3748.edbeb8b39d1a674737de.jpg",
-    "static/media/IMG_3918.jpg": "/static/media/IMG_3918.626bb7fb503afa0651ab.jpg",
-    "static/media/IMG_6424.jpg": "/static/media/IMG_6424.229b1aef8627ee342c30.jpg",
-    "static/media/IMG_4609.jpg": "/static/media/IMG_4609.74c08677b01a2aa88958.jpg",
+    "main.js": "/static/js/main.e2fcdb5e.js",
     "static/media/IMG_5746.jpg": "/static/media/IMG_5746.74614cd189412d38662c.jpg",
     "static/media/me.jpg": "/static/media/me.837da2d0bbbcda061cac.jpg",
-    "static/media/IMG_7411.jpg": "/static/media/IMG_7411.bc5044813aebe2126398.jpg",
-    "static/media/IMG_3725.jpg": "/static/media/IMG_3725.460ad1718f336c002cbe.jpg",
     "static/media/IMG_6378.jpg": "/static/media/IMG_6378.e506143201c280ff0e4b.jpg",
-    "static/media/IMG_3476.jpg": "/static/media/IMG_3476.4a850364866878d4efe7.jpg",
-    "static/media/IMG_3730.jpg": "/static/media/IMG_3730.83474aa190459b1b76af.jpg",
-    "static/media/IMG_6977.jpg": "/static/media/IMG_6977.077c12c6308f3689ce2f.jpg",
     "static/media/IMG_6043.jpg": "/static/media/IMG_6043.fbfea8e3480078643dd0.jpg",
     "static/media/IMG_6283.jpg": "/static/media/IMG_6283.025fd42d4e04f70107bb.jpg",
     "static/media/kmean-20cluster-2d.png": "/static/media/kmean-20cluster-2d.11c22d30071818469082.png",
@@ -24,13 +14,23 @@
     "static/media/img3.jpg": "/static/media/img3.fd270e6cf2a4dfd86c4d.jpg",
     "static/media/IMG_6950.jpg": "/static/media/IMG_6950.97c420866ed1aa571c2b.jpg",
     "static/media/img4.jpg": "/static/media/img4.206b5b19833f30e922af.jpg",
+    "static/media/IMG_4609.jpg": "/static/media/IMG_4609.80d3fef7a153b7637d8d.jpg",
+    "static/media/IMG_3748.jpg": "/static/media/IMG_3748.25dd62aafe8c6e3f92c4.jpg",
+    "static/media/IMG_6424.jpg": "/static/media/IMG_6424.9cd20cfaca310bafd149.jpg",
     "static/media/img1.jpg": "/static/media/img1.e7e55f8a1bf79cf4894a.jpg",
+    "static/media/IMG_3918.jpg": "/static/media/IMG_3918.7b310d991789b4d6ef4b.jpg",
     "static/media/IMG_5742.jpg": "/static/media/IMG_5742.f810752a22827854d3d1.jpg",
     "static/media/IMG_6958.jpg": "/static/media/IMG_6958.b93e9c479baf6a02c46c.jpg",
+    "static/media/IMG_6977.jpg": "/static/media/IMG_6977.0659b61200b2cc1361b2.jpg",
     "static/media/tsne_cluster.png": "/static/media/tsne_cluster.c2abcdfe5f69d9e2679d.png",
     "static/media/2comp_genre_scatter.png": "/static/media/2comp_genre_scatter.fc29a7e7249f58e8a21b.png",
+    "static/media/IMG_3725.jpg": "/static/media/IMG_3725.0b757b8d4efb8d9254ec.jpg",
+    "static/media/IMG_7411.jpg": "/static/media/IMG_7411.bbaa7758554372c3fcb4.jpg",
+    "static/media/IMG_3730.jpg": "/static/media/IMG_3730.df5c9db91fb77c953082.jpg",
     "static/media/IMG_6337.jpg": "/static/media/IMG_6337.dccb348198a0f5531119.jpg",
+    "static/media/IMG_3476.jpg": "/static/media/IMG_3476.6582f8540d7afaa3a171.jpg",
     "static/media/wc_cluster11.png": "/static/media/wc_cluster11.ccd5caf68f7d479993b6.png",
+    "static/media/IMG_8235.jpg": "/static/media/IMG_8235.854efa15c6b597d67009.jpg",
     "static/media/3comp_genre_scatter.png": "/static/media/3comp_genre_scatter.21d3b6ea83f527ec8ef4.png",
     "static/media/wc_cluster16.png": "/static/media/wc_cluster16.61dcbb4af9fd011baa12.png",
     "static/media/wc_cluster2.png": "/static/media/wc_cluster2.0381ae4e62ff8fd38401.png",
@@ -85,10 +85,10 @@
     "static/media/genre_distribution.png": "/static/media/genre_distribution.39b040ef13adf9326dff.png",
     "index.html": "/index.html",
     "main.6c94b403.css.map": "/static/css/main.6c94b403.css.map",
-    "main.71a89bfe.js.map": "/static/js/main.71a89bfe.js.map"
+    "main.e2fcdb5e.js.map": "/static/js/main.e2fcdb5e.js.map"
   },
   "entrypoints": [
     "static/css/main.6c94b403.css",
-    "static/js/main.71a89bfe.js"
+    "static/js/main.e2fcdb5e.js"
   ]
 }
