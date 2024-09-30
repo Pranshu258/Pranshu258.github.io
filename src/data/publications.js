@@ -1,5 +1,14 @@
 export let publicationList = [
     {
+        name: "Observer Effect in Social Media Use",
+        description: "While social media data is a valuable source for inferring human behavior, its in-practice utility hinges on extraneous factors. Notable is the “observer effect,” where awareness of being monitored can alter people's social media use",
+        tags: [
+            "CHI 2024",
+            "2nd Author"
+        ],
+        link: "https://koustuv.com/papers/CHI24_ObserverEffect.pdf"
+    },
+    {
         name: "Impacts of school shooter drills on the psychological well-being of American K-12 school communities",
         description: "Applied machine learning and interrupted time series analysis to 54 million social media posts in 114 schools spanning 33 states to study psychological impacts of school shooter drills. Showed that anxiety, stress, and depression increased by 39–42% following the drills, accompanied by an increase in civic engagement up to 10–106%",
         tags: [
