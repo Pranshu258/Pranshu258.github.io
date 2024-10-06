@@ -6,8 +6,6 @@ import './styles/blog.css';
 
 import { artList } from './data/artworks'
 
-import banner from './images/banner.png';
-
 export default class Artworks extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
