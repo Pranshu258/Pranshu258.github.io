@@ -1,6 +1,6 @@
 export let publicationList = [
     {
-        name: "Observer Effect in Social Media Use",
+        name: "Observer effect in social media use",
         description: "While social media data is a valuable source for inferring human behavior, its in-practice utility hinges on extraneous factors. Notable is the “observer effect,” where awareness of being monitored can alter people's social media use",
         tags: [
             "CHI 2024",
