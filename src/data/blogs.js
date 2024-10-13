@@ -5,8 +5,18 @@ import Qoj from '../blogs/qoj';
 import Eohl from '../blogs/eohl';
 import Gitviz from '../blogs/gitviz';
 import Applemusic from '../blogs/applemusic';
+import DNS from '../blogs/dns';
 
 export let blogList = [
+    {
+        name: "Understanding the Domain Name System",
+        description: "The domain name system (DNS) is a critical part of the internet infrastructure. It is responsible for translating human readable domain names into machine readable IP addresses. This blog post will explore the DNS system and its inner workings.",
+        tags: [
+            "Computer Networks",
+            "DNS"
+        ],
+        component: <DNS/>
+    },
     {
         name: "Exploring GitHub Repositories",
         description: "Exploring two repositories which have become the flag-bearers of web development, Angular and React, and trying to understand their journey on GitHub over the past few years.",
