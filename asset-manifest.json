@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.bc2d1386.css",
-    "main.js": "/static/js/main.2b2be8da.js",
+    "main.js": "/static/js/main.3dea95c4.js",
     "static/media/IMG_5746.jpg": "/static/media/IMG_5746.74614cd189412d38662c.jpg",
     "static/media/me.jpg": "/static/media/me.837da2d0bbbcda061cac.jpg",
     "static/media/IMG_6378.jpg": "/static/media/IMG_6378.e506143201c280ff0e4b.jpg",
@@ -63,7 +63,7 @@
     "static/media/Countrycloudblack.png": "/static/media/Countrycloudblack.2d72d4623998b80f3114.png",
     "static/media/Indiecloudblack.png": "/static/media/Indiecloudblack.a8a0b07c1cc6768bccb7.png",
     "static/media/img14.jpg": "/static/media/img14.b98b5ec6fed513d9ccf8.jpg",
-    "static/media/pablo-page-is-under-construction.png": "/static/media/pablo-page-is-under-construction.5cc74f0d7db9d6721e9c.png",
+    "static/media/open-doodles-clumsy-man-dropping-documents-and-files.svg": "/static/media/open-doodles-clumsy-man-dropping-documents-and-files.7636d4982b314764885a2b74d84cd29a.svg",
     "static/media/genre.png": "/static/media/genre.e0fd8544f002decddc14.png",
     "static/media/play_end_type_freq.png": "/static/media/play_end_type_freq.d20849e7d5129e195c80.png",
     "static/media/lang_dist.png": "/static/media/lang_dist.f95c13a39762c7cd7a8e.png",
@@ -85,10 +85,10 @@
     "static/media/genre_distribution.png": "/static/media/genre_distribution.39b040ef13adf9326dff.png",
     "index.html": "/index.html",
     "main.bc2d1386.css.map": "/static/css/main.bc2d1386.css.map",
-    "main.2b2be8da.js.map": "/static/js/main.2b2be8da.js.map"
+    "main.3dea95c4.js.map": "/static/js/main.3dea95c4.js.map"
   },
   "entrypoints": [
     "static/css/main.bc2d1386.css",
-    "static/js/main.2b2be8da.js"
+    "static/js/main.3dea95c4.js"
   ]
 }
