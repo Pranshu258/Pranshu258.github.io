@@ -2,7 +2,6 @@ import React from 'react';
 import Sharer from '../sharer';
 import '../styles/fonts.css';
 import '../styles/blog.css';
-import ReactMarkdown from 'react-markdown';
 
 export default class DNS extends React.Component {
     componentDidMount() {
