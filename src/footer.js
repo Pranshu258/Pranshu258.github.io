@@ -22,7 +22,6 @@ export default class Footer extends React.Component {
                             
                         </ul>
                         <small className="montserrat">© Copyright 2023, Pranshu Gupta</small><br></br>
-                        <small>digital illustrations by Ouch.pics https://icons8.com</small>
                     </div>
                     <div className="col-sm-2"></div>
                 </div>

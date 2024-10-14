@@ -8,7 +8,7 @@ import './styles/body.css';
 import './styles/blog.css';
 
 import banner from './images/banner.png';
-import blogPoster from './images/pablo-page-is-under-construction.png';
+import blogPoster from './images/open-doodles-clumsy-man-dropping-documents-and-files.svg';
 
 export default class Blog extends React.Component {
     render() {
@@ -34,6 +34,7 @@ export default class Blog extends React.Component {
                                 <br></br><br></br>
                                 <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
                                 <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>
+                                <small>Illustration by <a href="https://icons8.com/illustrations/author/206397">Pablo Marquez Ouch!</a></small>
                             </div>
                             <div className="col-lg-3">
                                 <br></br><br></br>
