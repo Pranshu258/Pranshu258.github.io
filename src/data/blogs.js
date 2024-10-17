@@ -6,8 +6,18 @@ import Eohl from '../blogs/eohl';
 import Gitviz from '../blogs/gitviz';
 import Applemusic from '../blogs/applemusic';
 import DNS from '../blogs/dns';
+import TransIsol from '../blogs/transisol';
 
 export let blogList = [
+    {
+        name: "Transaction Isolation in Database Systems",
+        description: "The domain name system (DNS) is a critical part of the internet infrastructure. It is responsible for translating human readable domain names into machine readable IP addresses. This blog post will explore the DNS system and its inner workings.",
+        tags: [
+            "Database Systems",
+            "Concurrnecy Control"
+        ],
+        component: <TransIsol/>
+    },
     {
         name: "Understanding the Domain Name System",
         description: "The domain name system (DNS) is a critical part of the internet infrastructure. It is responsible for translating human readable domain names into machine readable IP addresses. This blog post will explore the DNS system and its inner workings.",
