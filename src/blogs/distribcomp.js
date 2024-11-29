@@ -14,7 +14,7 @@ export default class DistribComp extends React.Component {
         return (
             <div className="language-go">
                 <div className="row bhead">
-                    <i className="fas fa-network-wired bigger gt1"></i>
+                    <i className="fas fa-computer bigger gt1"></i>
                 </div>
                 <h1 className="title">Distributed Computing with MapReduce</h1>
                 <p>Pranshu Gupta, May 20, 2020</p>
@@ -79,7 +79,6 @@ export default class DistribComp extends React.Component {
                     </svg>
                     <br></br>
                     <p>6.824 Distributed Systems, <a href="https://www.youtube.com/playlist?list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB">Video Lectures (YouTube)</a>, <a href="https://pdos.csail.mit.edu/6.824/">Course Details</a></p>
-
                 </div>
             </div >
         )
