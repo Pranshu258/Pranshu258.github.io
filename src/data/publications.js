@@ -6,7 +6,7 @@ export let publicationList = [
             "CHI 2024",
             "2nd Author"
         ],
-        link: "https://koustuv.com/papers/CHI24_ObserverEffect.pdf"
+        link: "https://dl.acm.org/doi/10.1145/3613904.3642078"
     },
     {
         name: "Impacts of school shooter drills on the psychological well-being of American K-12 school communities",
