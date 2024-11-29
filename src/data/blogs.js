@@ -10,6 +10,15 @@ import TransIsol from '../blogs/transisol';
 
 export let blogList = [
     {
+        name: "Transaction Isolation in Database Systems",
+        description: "Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This blog post will explore the different isolation levels and how they affect the transactional behavior of the database system.",
+        tags: [
+            "Database Systems",
+            "Transactions"
+        ],
+        component: <TransIsol/>
+    },
+    {
         name: "Understanding the Domain Name System",
         description: "The domain name system (DNS) is a critical part of the internet infrastructure. It is responsible for translating human readable domain names into machine readable IP addresses. This blog post will explore the DNS system and its inner workings.",
         tags: [
