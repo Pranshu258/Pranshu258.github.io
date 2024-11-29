@@ -4,20 +4,20 @@
 
 .title {
     font-size: 400%;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: bold;
 }
 
 @media (max-width: 768px) {
     .title {
         font-size: 250%;
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Raleway', sans-serif;
         font-weight: bold;
     }
 }
 
 .headings {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: bold;
 }
 
