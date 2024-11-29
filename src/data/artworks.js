@@ -16,7 +16,7 @@ export let artList = [
     },
     { 
         source: art02,
-        description: "A watercolor painting inspired from Tony Hinchliff's oil painting titled 'All in good time'. Painted on cold pressed Winsor & Newton paper, 12x16 inches.",
+        description: "A watercolor painting inspired from Tony Hinchliffe's oil painting titled 'All in good time'. Painted on cold pressed Winsor & Newton paper, 12x16 inches.",
     },
     { 
         source: art03,
