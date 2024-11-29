@@ -77,7 +77,6 @@ export default class Ovac extends React.Component {
                         <li> VMs are difficult to migrate unless they were created using OVF</li>
                     </ol>
                 </p>
-                <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                 <h2 className="roboto">Docker Containers</h2>
                 <p>
                     Containers are isolated execution environments which share the operating system resources. Virtualization at the operating system level can be regarded as containerization. The operating system takes care of providing the virtual environments where the applications run with isolation as if each application was running on a separate OS instance.

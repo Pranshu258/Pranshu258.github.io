@@ -1,19 +1,13 @@
-ul {
-  list-style-type: none;
+#sharerul {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-li {
-  float: left;
-}
-
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  margin: 0 10px 0 0;
-  text-decoration: none;
-  font-size: x-large;
+.sharerIcon {
+  margin-bottom: 1px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 180%;
 }

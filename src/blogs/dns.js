@@ -17,7 +17,7 @@ export default class DNS extends React.Component {
                 <h1 className="title">Understanding the Domain Name System</h1>
                 <p>Pranshu Gupta, Oct 13, 2024</p>
                 <Sharer link={window.location.href} title={"Understanding the Domain Name System"}></Sharer>
-                <br></br>
+                
                 <p className="introduction">
                     The purpose of DNS is to introduce levels of inderiction between a resource and its location, along with convenience for humans and internet applications. For example, it is much easier to remember the name of the the server (www.microsoft.com) as compared to its actual location (an IP address such as 142.250.69.196).
                 </p>
@@ -28,7 +28,7 @@ export default class DNS extends React.Component {
                     <li>DNS Name Servers - these servers act as information repositories, storing various DNS resource records.</li>
                     <li>DNS Resolvers - DNS resolvers  are responsible for initiating and sequencing the queries leading to a full resolution of the domain into an IP address.</li>
                 </ol>
-                <br></br><br></br><br></br><br></br><br></br>
+                
                 <h4 className="headings">Name Space</h4>
                 <p>The DNS name space is organized as a variable depth rooted tree. Each node in this tree has an associated label which is case insensitive. For example: &quot;azure.microsoft.com&quot; is domain name with &quot;com&quot; as the root. In the DNS tree, the node associated with &quot;com&quot; has many children. Many domain names,  &quot;<a style={{ textAlign: "left", color: "black", fontSize: "inherit" }}href="http://www.microsoft.com">www.microsoft.com</a>&quot;, &quot;<a style={{ textAlign: "left", color: "black", fontSize: "inherit" }}href="http://www.google.com">www.google.com</a>&quot;, &quot;<a style={{ textAlign: "left", color: "black", fontSize: "inherit" }}href="http://www.netflix.com">www.netflix.com</a>&quot;, all end with &quot;.com&quot; in their domain names, so all of them will have nodes as children of &quot;com&quot;.</p>
                 <h4 className="headings">Resource Records</h4>
@@ -40,7 +40,6 @@ export default class DNS extends React.Component {
                     <li>(PTR) Pointer Record - A PTR record is used for reverse DNS lookups, which start with an IP address and lookup the domain name. They are often used in email servers to verify sender&#39;s domain name and combat spam and phishing attacks. </li>
                     <li>(CNAME) Canonical Name Recors - CNAME record maps an alias domain name to a canonical (true) domain name. For example &quot;microsoft.com&quot; is an alias for &quot;www.microsoft.com&quot;. CNAME records are commonly used for subdomains like &quot;www&quot; that should resolve to the same ip address as the main domain.</li>
                 </ol>
-                <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">DNS Database Distribution</h3>
                 <p>The DNS database does not live on a single server, instead it is distributed across the internet via name servers, DNS zones and DNS caches. The separation between DNS zone and Caches is invisible to users/apps. </p>
@@ -53,7 +52,7 @@ export default class DNS extends React.Component {
                 <h3 className="headings">DNS Communication Protocol</h3>
                 <p>DNS uses a UDP based datagram protocol with retransmissions. </p>
                 <blockquote>
-                    <p><strong>Note:</strong> What is UDP? <br></br>UDP sends messages without establishing a connection between the client and the server. This makes UDP faster but less reliable. UDP does not guarantee delivery, order or protection against duplicates. It is used for time-sensitive applications such as online gaming, and DNS lookups. </p>
+                    <p><strong>Note:</strong> What is UDP? UDP sends messages without establishing a connection between the client and the server. This makes UDP faster but less reliable. UDP does not guarantee delivery, order or protection against duplicates. It is used for time-sensitive applications such as online gaming, and DNS lookups. </p>
                 </blockquote>
                 <h4 className="headings">DNS in Virtual Networks</h4>
                 <p>There are several approaches to manage and resolve domain names within a virtual network: </p>
@@ -61,7 +60,7 @@ export default class DNS extends React.Component {
                     <li>Private DNS Zones - Private DNS zones can be used to manage and resolve domain names with in the virtual network without exposing them to public internet.</li>
                     <li>Dustom DNS Server - Private DNS zones are ideal for resolving names within the same virtual network, while custom DNS servers might be necessary for more complex scenarios involving multiple networks or hybrid environments.</li>
                 </ol>
-                <br></br><br></br><br></br><br></br><br></br><br></br>
+                
                 <h4 className="headings">DNS in Dual Stack Networks</h4>
                 <blockquote>
                     <p><strong>Note:</strong> Dual Stack Network is a network environment that supports both IPv4 and IPv6 protocols simultaneously. This allows devices and applications to communicate using either protocol, facilitating smoother transition from IPv4 to the newer IPv6.</p>
@@ -72,14 +71,14 @@ export default class DNS extends React.Component {
                     <li>IPv4 always allowed. IPv6 connections allowed only for some resources outside the virtual network. </li>
                     <li>IPv4 always allowed. IPv6 connections always allowed.</li>
                 </ol>
-                <br></br><br></br><br></br><br></br><br></br><br></br>
+                
                 <p>Enabling dual-stack in your environment without enablong full end-to-end connectivity to all IPv6 destinations will not only affect those IPv6 destinations but also IPv4 destinations that also have IPv6 options. This is because most operating systems will choose IPv6 connection if available, but a dual stack service in initial phases of deployment might only allow IPv6 connections within its virtual network. This will result in a failed connection attempt, after which the operating system will fall back to IPv4. This has a negative impact on request latency. </p>
                 <p>There are two ways to solve this latency issue:</p>
                 <ol>
                     <li>Modify the settings of the operating system, so that it prefers IPv4. </li>
                     <li>Filter DNS responses to only allow IPv4 records to be returned.</li>
                 </ol>
-                <br></br><br></br><br></br>
+                
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">Security for DNS</h3>
                 <p>DNS uses UDP as the default protocol, which uses plain text to transmit data across the network. This is concerning for security and privacy reasons. Anyone who has tools to monitor transmissions can read the DNS queries being made by the user. Also, if DNS queries are not private, it becomes easier for governments to censor the internet and for attackers to stalk users&#39; online activities.</p>
@@ -105,7 +104,7 @@ export default class DNS extends React.Component {
                     <li><a style={{ textAlign: "left", color: "black", fontSize: "inherit" }} href="https://www.cloudflare.com/learning/dns/dns-security/">https://www.cloudflare.com/learning/dns/dns-security/</a></li>
                     <li><a style={{ textAlign: "left", color: "black", fontSize: "inherit" }} href="https://blog.cloudflare.com/dnssec-an-introduction/">https://blog.cloudflare.com/dnssec-an-introduction/</a></li>
                 </ol>
-                <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+                
             </div>
         )
     }
