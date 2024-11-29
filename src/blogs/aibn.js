@@ -12,7 +12,7 @@ export default class Aibn extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fab fa-canadian-maple-leaf bigger gt1"></i>
+                    <i className="fas fa-bugs bigger gt1"></i>
                 </div>
                 <h1 className="title">Algorithms Inspired by Nature</h1>
                 <p>Pranshu Gupta, Feb 22, 2019</p>

@@ -26,7 +26,7 @@ export default class Applemusic extends React.Component {
         return (
             <div className="language-python">
                 <div className="row bhead">
-                    <i className="fab fa-itunes bigger gt1"></i>
+                    <i className="fab fa-itunes-note bigger gt1"></i>
                 </div>
                 <h1 className="title">Analysing Apple Music Activity</h1>
                 <p>Pranshu Gupta, May 2, 2020</p>
