@@ -11,15 +11,6 @@ import DistribComp from '../blogs/distribcomp';
 
 export let blogList = [
     {
-        name: "Distributed Computing with MapReduce",
-        description: "Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This blog post will explore the different isolation levels and how they affect the transactional behavior of the database system.",
-        tags: [
-            "Distributed Systems",
-            "MapReduce"
-        ],
-        component: <DistribComp/>
-    },
-    {
         name: "Transaction Isolation in Database Systems",
         description: "Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This blog post will explore the different isolation levels and how they affect the transactional behavior of the database system.",
         tags: [
@@ -27,6 +18,15 @@ export let blogList = [
             "Transactions"
         ],
         component: <TransIsol/>
+    },
+    {
+        name: "Distributed Computing with MapReduce",
+        description: "Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This blog post will explore the different isolation levels and how they affect the transactional behavior of the database system.",
+        tags: [
+            "Distributed Systems",
+            "MapReduce"
+        ],
+        component: <DistribComp/>
     },
     {
         name: "Understanding the Domain Name System",
