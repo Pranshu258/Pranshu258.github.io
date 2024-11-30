@@ -78,7 +78,7 @@ export default class TransIsol extends React.Component {
                     <i className="fas fa-database bigger gt1"></i>
                 </div>
                 <h1 className="title">Transaction Isolation in Database Systems</h1>
-                <p>Pranshu Gupta, Nov 28, 2024</p>
+                <p>Pranshu Gupta, Nov 30, 2024</p>
                 <Sharer className="sharer" link={window.location.href} title={"Transaction Isolation in Database Systems"}></Sharer>
                 <br></br>
                 <p className="introduction">
