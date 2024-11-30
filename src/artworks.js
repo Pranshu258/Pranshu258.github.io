@@ -31,23 +31,17 @@ export default class Artworks extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-md-4">
-                                <div style={{ display: 'flex', justifyContent: 'left' }}>
-                                    <InstagramEmbed url="https://www.instagram.com/p/CySjN5TOvxF/" />
-                                </div>
-                                <br></br>
-                            </div>
                             <div className="col-md-8">
                                 <p>
                                     Art is my soul's expression, a journey through the vibrant hues and delicate strokes of watercolor, with gouache adding depth and brilliance. My landscapes are a heartfelt homage to the breathtaking Pacific Northwest, each piece a testament to the awe and wonder I feel in nature's embrace. My passion extends to movies and video games, where I channel my admiration into fan art that resonates with fellow enthusiasts. Through my art, I strive to capture not just the scene, but the very essence and emotion it evokes within me.
                                 </p>
                                 <h2 className='calligraffitti'><b>- Pranshu Gupta</b></h2>
                                 <br></br>
-                                <Carousel 
-                                    showThumbs={true} 
+                                <Carousel
+                                    showThumbs={true}
                                     showStatus={false}
-                                    infiniteLoop={true} 
-                                    useKeyboardArrows={true} 
+                                    infiniteLoop={true}
+                                    useKeyboardArrows={true}
                                     autoPlay={true}
                                     showIndicators={false}
                                     swipeable={true}
@@ -65,6 +59,12 @@ export default class Artworks extends React.Component {
                                         )
                                     }
                                 </Carousel>
+                            </div>
+                            <div className="col-md-4">
+                                <div style={{ display: 'flex', justifyContent: 'left' }}>
+                                    <InstagramEmbed url="https://www.instagram.com/p/CySjN5TOvxF/" />
+                                </div>
+                                <br></br>
                             </div>
                         </div>
                     </div>
