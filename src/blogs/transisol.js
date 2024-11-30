@@ -38,6 +38,15 @@ Another approach is to use **serializable** schedules, which are not necessarily
 ## Optimistic Concurrency Control
 Optimistic concurrency control assumes that conflicts are rare and that transactions can be executed concurrently without any coordination. When a transaction commits, the database system checks if the data it read has changed since it started. If the data has changed, the transaction is rolled back. 
 
+Generally,transacttions execution is split into three phases: read phase, validation phase, and write phase. 
+1. **Read Phase**: The transaction executes its steps in its own private context, without making any of the changes visible to other transactions. After this step, both the read set and the write set of the transactioon are known.
+2. **Validation Phase**: Read and writes sets of concurrent transaction are checked for presence of possible conflicts between their operations that might violate serializability. If a conflict is detected, the private context of the transaction is cleared and read phase is restarted.
+3. **Write Phase**: If the transaction passes the validation phase, it can write the changes from its private context to the database and commit.
+
+## Multi-Version Concurrency Control
+Multi-version concurrency control (MVCC) is a way to achieve transactional consistency in database manmagement systems by allowing multiple record versionsand using monotinically incremented transaction IDs or timestamps. This allows reads and writes to proceed with a minimal coordination on the storage level, since reads can continue accessing older values until new ones are committed.
+
+## Pessimistic Concurrency Control
 
 `;
 
@@ -56,6 +65,7 @@ export default class TransIsol extends React.Component {
                 <h1 className="title">Transaction Isolation in Database Systems</h1>
                 <p>Pranshu Gupta, Nov 28, 2024</p>
                 <Sharer className="sharer" link={window.location.href} title={"Transaction Isolation in Database Systems"}></Sharer>
+                <br></br>
                 <p className="introduction">
                     Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This article will explore the different isolation levels and how they affect the transactional behavior of the database system.<br></br>
                 </p>
