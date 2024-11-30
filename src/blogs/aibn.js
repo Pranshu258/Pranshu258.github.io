@@ -7,6 +7,7 @@ import '../styles/blog.css';
 export default class Aibn extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0)
+        document.title = "Algorithms Inspired by Nature | blog by Pranshu Gupta";
     }
     render() {
         return (

@@ -19,6 +19,7 @@ import pull_requests from '../images/git_blog/pullrequests.png'
 export default class Gitviz extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
+        document.title = "Exploring GitHub Repositories | blog by Pranshu Gupta";
         setTimeout(() => Prism.highlightAll(), 0)
     }
     render() {

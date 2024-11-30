@@ -10,6 +10,7 @@ import '../styles/blog.css';
 export default class Qoj extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
+        document.title = "Quirks of JavaScript - The Language of the Web | blog by Pranshu Gupta";
         Prism.highlightAll();
     }
     render() {

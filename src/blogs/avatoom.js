@@ -43,7 +43,8 @@ import cluster16wc from "../images/wc_cluster16.png"
 
 export default class Avatoom extends React.Component {
     componentDidMount() {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
+        document.title = "A voyage across the Ocean of Music | blog by Pranshu Gupta";
     }
     render() {
         return (

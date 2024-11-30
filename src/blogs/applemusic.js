@@ -20,6 +20,7 @@ import plot9 from '../images/hourly_play_durations.png';
 export default class Applemusic extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
+        document.title = "Analysing Apple Music Activity | blog by Pranshu Gupta";
         Prism.highlightAll();
     }
     render() {

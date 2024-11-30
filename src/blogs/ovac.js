@@ -9,7 +9,8 @@ import vmsdocker from "../images/vmvsdocker.png";
 
 export default class Ovac extends React.Component {
     componentDidMount() {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
+        document.title = "On Virtualization and Containers | blog by Pranshu Gupta";
     }
     render() {
         return (

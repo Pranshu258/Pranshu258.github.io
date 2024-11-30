@@ -5,7 +5,8 @@ import '../styles/blog.css';
 
 export default class DNS extends React.Component {
     componentDidMount() {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
+        document.title = "Understanding the Domain Name System | blog by Pranshu Gupta";
     }
 
     render() {

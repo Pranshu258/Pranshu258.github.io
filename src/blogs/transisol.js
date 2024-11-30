@@ -25,7 +25,8 @@ A database system can prevent these anomalies by implemeting different levels of
 
 export default class TransIsol extends React.Component {
     componentDidMount() {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
+        document.title = "Transaction Isolation in Database Systems | blog by Pranshu Gupta";
     }
 
     render() {

@@ -5,7 +5,8 @@ import '../styles/blog.css';
 
 export default class Eohl extends React.Component {
     componentDidMount() {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
+        document.title = "Evolution of Human Languages | blog by Pranshu Gupta";
     }
     render() {
         return (
