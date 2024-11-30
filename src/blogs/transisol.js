@@ -16,11 +16,7 @@ const markdown = `
 
 A database system can prevent these anomalies by implemeting different levels of transaction isolation. However, to prevent incomplete or temporary writes from propagating over transaction boundaries, we need additional coordination and synchronization, which negatively impacts performance.
 
-## Snapshot Isolation
-## Optimistic concurrency control
-## Multiversion concurrency control
-## Pessimistic concurrency control
-## Lock based concurrency control
+## Isolation Levels
 `;
 
 export default class TransIsol extends React.Component {
