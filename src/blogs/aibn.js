@@ -27,7 +27,7 @@ export default class Aibn extends React.Component {
                     discuss some of these algorithms and heuristics and how they help us solve complex problems
                     of practical importance.
                 </p>
-                <a href="https://arxiv.org/pdf/1903.01893.pdf"><button className="btn btn-danger">Full PDF Article &nbsp;<i class="fa-solid fa-square-arrow-up-right"></i></button></a>
+                <a href="https://arxiv.org/pdf/1903.01893.pdf"><button className="btn btn-danger">Full PDF Article &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a>
                 <br></br><br></br>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">Heuristics and Metaheuristics</h3>

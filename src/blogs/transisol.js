@@ -14,7 +14,8 @@ const markdown = `
 5. A dirty write is a situation in which a trsaction does a dirty read, modifies the value, and commits it.
 6. A write skew occurs when each individual transaction is consistent with the database constraints, but the combination of the transactions is not.
 
-A database system can prevent these anomalies by implemeting different levels of transaction isolation.
+A database system can prevent these anomalies by implemeting different levels of transaction isolation. However, to prevent incomplete or temporary writes from propagating over transaction boundaries, we need additional coordination and synchronization, which negatively impacts performance.
+
 ## Snapshot Isolation
 ## Optimistic concurrency control
 ## Multiversion concurrency control
@@ -37,8 +38,7 @@ export default class TransIsol extends React.Component {
                 <p>Pranshu Gupta, Nov 28, 2024</p>
                 <Sharer className="sharer" link={window.location.href} title={"Transaction Isolation in Database Systems"}></Sharer>
                 <p className="introduction">
-                    Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This blog post will explore the different isolation levels and how they affect the transactional behavior of the database system.<br></br>
-                    However, to prevent incomplete or temporary writes from propagating over transaction boundaries, we need additional coordination and synchronization, which negatively impacts performance.
+                    Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This article will explore the different isolation levels and how they affect the transactional behavior of the database system.<br></br>
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <ReactMarkdown remarkPlugins={[remarkGfm]} children={markdown}></ReactMarkdown>
