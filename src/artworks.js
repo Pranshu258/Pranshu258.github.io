@@ -61,7 +61,7 @@ export default class Artworks extends React.Component {
                                 </Carousel>
                             </div>
                             <div className="col-md-4">
-                                <div style={{ display: 'flex', justifyContent: 'left' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
                                     <InstagramEmbed url="https://www.instagram.com/p/CySjN5TOvxF/" />
                                 </div>
                                 <br></br>
