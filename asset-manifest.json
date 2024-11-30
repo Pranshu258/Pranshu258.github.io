@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.ffc7eb37.css",
-    "main.js": "/static/js/main.ea46335b.js",
+    "main.js": "/static/js/main.b832ee52.js",
     "static/media/me.jpg": "/static/media/me.43674ab5398a193b0bc2.jpg",
     "static/media/kmean-20cluster-2d.png": "/static/media/kmean-20cluster-2d.11c22d30071818469082.png",
     "static/media/tsne_genre.png": "/static/media/tsne_genre.6602648de25c5e6013be.png",
@@ -65,10 +65,10 @@
     "static/media/genre_distribution.png": "/static/media/genre_distribution.39b040ef13adf9326dff.png",
     "index.html": "/index.html",
     "main.ffc7eb37.css.map": "/static/css/main.ffc7eb37.css.map",
-    "main.ea46335b.js.map": "/static/js/main.ea46335b.js.map"
+    "main.b832ee52.js.map": "/static/js/main.b832ee52.js.map"
   },
   "entrypoints": [
     "static/css/main.ffc7eb37.css",
-    "static/js/main.ea46335b.js"
+    "static/js/main.b832ee52.js"
   ]
 }
