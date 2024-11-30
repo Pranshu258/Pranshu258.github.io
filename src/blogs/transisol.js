@@ -47,7 +47,22 @@ Generally,transacttions execution is split into three phases: read phase, valida
 Multi-version concurrency control (MVCC) is a way to achieve transactional consistency in database manmagement systems by allowing multiple record versionsand using monotinically incremented transaction IDs or timestamps. This allows reads and writes to proceed with a minimal coordination on the storage level, since reads can continue accessing older values until new ones are committed.
 
 ## Pessimistic Concurrency Control
+Pessimistic oncurrency control schemes are more conservative and determine transaction conflicts while they are running and block or abort the execution. 
 
+### Lock Free Pessimistic Concurrency Control
+One of the approaches is timestamp ordering, where each transaction is assigned a timestamp. It is ensured that transactions are executed only if there is no committed transaction with a higher timestamp. The transaction manager keeps track of the 'max_write_timestamp' and 'max_read_timestamp' for each data item. 
+
+Read operations that attempt to read a value with a timestamp lower than the 'max_write_timestamp' are blocked, since there is already a newer value, allowing this operation would violate the transaction order. Similarly, write operations that attempt to write a value with a timestamp lower than the 'max_read_timestamp' are blocked.
+
+However, write operations that attempt to write a value with a timestamp lower than the 'max_write_timestamp' are allowed, since we can safely ignore the write operation if there is a newer value.
+
+As soon as read or write operations are performed, the corresponding maximum timestamp values are updated. Aborted transactions restart with a new timestamp, otherwise they will be aborted again.
+
+### Lock based Pessimistic Concurrency Control
+Another approach is to use locks to prevent conflicts. A transaction that wants to read or write a data item must first acquire a lock on that item. If the lock is not available, the transaction is blocked until the lock is released. If the lock is not released with in a configured timeout, the transaction is aborted.
+
+#### Two-Phase Locking
+In two-phase locking, a transaction acquires all the locks it needs before it starts executing (growing phase) and releases all the locks when it commits or aborts (shrinking phase). This ensures that no other transaction can access the locked data until the transaction is completed.
 `;
 
 export default class TransIsol extends React.Component {
