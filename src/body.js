@@ -174,12 +174,12 @@ export default class Body extends React.Component {
                             <br></br>
                             <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/pranshu.paints/">
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-warning">
-                                    <b>FOLLOW ON INSTAGRAM</b>
+                                    <b>FOLLOW ON INSTAGRAM</b> &nbsp;<i class="fa-solid fa-square-arrow-up-right"></i>
                                 </button>
                             </a>
                             <Link to="artworks/">
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-warning">
-                                    <b>ARTIST'S BIO</b>
+                                    <b>ARTIST'S BIO</b> &nbsp;<i class="fa-solid fa-square-arrow-up-right"></i>
                                 </button>
                             </Link>
                             <br></br><br></br><br></br>
