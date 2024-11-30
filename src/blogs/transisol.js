@@ -30,7 +30,7 @@ Some databases use snapshot isoolation, under which a transaction can observe th
 
 If two transactions try to modify the same data, the second transaction will be rolled back. While dirty reads and non-repeatable reads are avoided, a write skew is possible under snapshot isolation. If two transactions read from local state, modify independent records, preserve local invariants, and commit, it is possible that the global invariants are violated.
 
-### Serializable
+### Serializable Trasactions
 Serializability is the strongest isolation level. A schedule is said to be **serial** when the transactions in it are executed completely independently and without any interleaving i.e. one transaction is executed completely before the next transaction starts. However, serializability significantly limits the system throughput and is not suitable for high-performance applications.
 
 Another approach is to use **serializable** schedules, which are not necessarily serial, but are guaranteed to be equivalent to some serial schedule. In other words, they could have interleaved transactions, but they produce the same result as if we executed a set of transactions one after another in some order. Serializable schedules are more flexible than serial schedules and can be used in high-performance applications.
