@@ -17,7 +17,7 @@ export default class DistribComp extends React.Component {
                     <i className="fas fa-computer bigger gt1"></i>
                 </div>
                 <h1 className="title">Distributed Computing with MapReduce</h1>
-                <p>Pranshu Gupta, May 20, 2020</p>
+                <p>Pranshu Gupta, Nov 29, 2024</p>
                 <Sharer link={window.location.href} title={"Distributed Computing with MapReduce"}></Sharer>
                 <br></br>
                 <p className="introduction">
@@ -36,7 +36,7 @@ export default class DistribComp extends React.Component {
                 </p>
                 <h3 className="headings">Performance</h3>
                 <p>
-                    One of the important goals when building a distributed system is to achieve very high performance, to the extent that it is not possible with a single system. Distributed systems have the advantage of utilizing a large number of systems and delegating tasks among them, making them inherently faster.
+                    One of the important goals when building a distributed system is to achieve very high performance, to the extent that it is not possible with a single system. Distributed systems have the advantage of utilizing a large number of nodes and delegating tasks among them, making them inherently faster.
                 </p>
                 <p>
                     Consider a big website like YouTube which millions of users visit every day, would it be impossible for a single machine to be able to serve that much load, definitely not. We need to use multiple machines, but what do we do with them. We may deploy the webserver on each of them, and let each of them handle a fraction of users instead of one handling them all.
@@ -53,7 +53,7 @@ export default class DistribComp extends React.Component {
                     Because multiple machines are involved in a distributed system, there are many points of failure. A single computer can continuously stay up for a year, but with more than a thousand systems involved, we might have three machines failing every day. Several things can happen, one of the machines in the cluster may shut down, or the cables connecting them via the network may fault, do not forget the network switches.
                 </p>
                 <p>
-                    The system must be designed in such a that it can either handle such failures as if they didn't happen at all, or it can have a mechanism to recover from them. We need to abstract out these things for an application developer so that she may focus on developing the business logic for the application and not waste time on handling the performance, consistency, and resilience aspects of the system. For an application developer, the system should behave like a simple monolithic system. This is where MapReduce comes into the picture, it is a framework that abstracts away the details of the distributed system and allows the developer to focus on the stuff that is important for the application.
+                    The system must be designed in a way that it can either handle such failures as if they didn't happen at all, or it can have a mechanism to recover from them. We need to abstract out these things for an application developer so that she may focus on developing the business logic for the application and not waste time on handling the performance, consistency, and resilience aspects of the system. For an application developer, the system should behave like a simple monolithic system. This is where MapReduce comes into the picture, it is a framework that abstracts away the details of the distributed system and allows the developer to focus on the stuff that is important for the application.
                 </p>
                 <h2 className="headings">MapReduce</h2>
                 <p>
@@ -62,9 +62,40 @@ export default class DistribComp extends React.Component {
                 <p>
                     However, most application programmers are not experts in distributed systems. Google needed a system that made it easy for non-specialist programmers to implement applications that could run in a distributed fashion. Thus, MapReduce was born, it provided a framework that enabled programmers to build distributed applications by writing simple sequential code.
                 </p>
-                <div>
-                    <Gist url="https://gist.github.com/Pranshu258/c1ad56f279d5741a1f1adc110acaff44" file="request_headers.py" />
-                </div>
+                <h3 className="headings">Programming Model</h3>
+                <p>
+                    The computation takes a set of input key/value pairs and produces a set of output key/value pairs. The user of the framework can express the computation as two functions - Map and Reduce. The Map function processes a key/value pair to generate a set of intermediate key/value pairs, while the Reduce function merges all intermediate values associated with the same intermediate key.
+                </p>
+                <h3 className="headings">Map Execution</h3>
+                <p>
+                    The map invocations are distributed across multiple machines by automatically partitioning the input data into a set of M splits. The map reduce library starts several instances of the map program on a cluster of machines. Each instance of the map program processes one of the M input splits. The intermediate key/value pairs produced by the map functions are buffered in memory and periodically written to local disk.
+                </p>
+                <h3 className="headings">Reduce Execution</h3>
+                <p>
+                    The reduce workers read the buffered data from the local disk, and then sort and group the intermediate key/value pairs by the intermediate key. The set of intermediate values for each unique key are passed to the user's Reduce function. The output of the Reduce function is appended to a final output file for this reduce partition.
+                </p>
+                <h3 className="headings">Fault Tolerance</h3>
+                <p>
+                    One of the nodes, known as 'master' is resposible for assigning map/reduce tasks to other nodes. The master node keeps pinging the worker nodes periodically, and if it doesn't receive a response from a worker node for a certain period of time, it assumes that the worker node has failed and assigns its tasks to one of the other healthy nodes.
+                </p>
+                <p>
+                    It is possible that the master node itself fails, in which case the entire computation is lost. To prevent this, the master node periodically writes checkpoints to the distributed file system. If the master node fails, a new master node is started on a different machine, which reads the last checkpoint and resumes the computation from there.
+                </p>
+                <h2 className="headings">Applications</h2>
+                <p>
+                    MapReduce has been used to implement a wide range of applications, including web indexing, data mining, log file analysis, and machine learning. It has been used to build systems that can process petabytes of data on thousands of machines.
+                </p>
+                <ol>
+                    <li>The google search engine utilized MapReduce to build its search index. Although google has moved to new frameworks such as Percolator.</li>
+                    <li>Companies like Amazon, eBay and Alibaba use the MapReduce framework to generate sales initiatives, based on user purchase history datasets, which can be huge on popular ecommerce sites.</li>
+                    <li>GPU implementations of MapReduce are used to handle large datasets for machine learning and AI.</li>
+                </ol>
+                <h2 className="headings">Conclusion</h2>
+                <p>
+                    The MapReduce framework was introduced by Google in 2004, and has since been implemented in many other systems, including Apache Hadoop, which is an open-source implementation of the MapReduce framework. Hadoop is widely used in industry and academia for processing large datasets. The framework has also inspired other distributed computing frameworks, such as Apache Spark, which is designed to be faster and more flexible than MapReduce.
+                </p>
+                <a target='_blank' href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf"><button className="btn btn-danger">Original MapReduce paper  &nbsp;<i class="fa-solid fa-square-arrow-up-right"></i></button></a> &nbsp;
+                <a target='_blank' href="https://spark.apache.org/"><button className="btn btn-danger">Apache Spark &nbsp;<i class="fa-solid fa-square-arrow-up-right"></i></button></a>
                 <br></br>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <div>
