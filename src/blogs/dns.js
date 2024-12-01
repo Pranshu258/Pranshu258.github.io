@@ -20,7 +20,7 @@ export default class DNS extends React.Component {
                 <Sharer link={window.location.href} title={"Understanding the Domain Name System"}></Sharer>
                 <br></br>
                 <p className="introduction">
-                    The purpose of DNS is to introduce levels of inderiction between a resource and its location, along with convenience for humans and internet applications. For example, it is much easier to remember the name of the the server (www.microsoft.com) as compared to its actual location (an IP address such as 142.250.69.196).
+                    The purpose of DNS is to introduce levels of indirection between a resource and its location, along with convenience for humans and internet applications. For example, it is much easier to remember the name of the the server (www.microsoft.com) as compared to its actual location (an IP address such as 142.250.69.196).
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">Architecture</h3>

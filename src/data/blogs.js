@@ -12,7 +12,7 @@ import DistribComp from '../blogs/distribcomp';
 export let blogList = [
     {
         name: "Transaction Isolation in Database Systems",
-        description: "Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This blog post will explore the different isolation levels and how they affect the transactional behavior of the database system.",
+        description: "Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time.",
         tags: [
             "Database Systems",
             "Transactions"
@@ -21,7 +21,7 @@ export let blogList = [
     },
     {
         name: "Distributed Computing with MapReduce",
-        description: "MapReduce was one of the first frameworks that democratized distributed computing, by making it easier for engineers to write applications that run on distributed systems without having distributed computing expertise. It helped developers to build highly parallelized and fault-tolerant systems, without wasting time in writing code to enable parallelism and focus on the business logic instead.",
+        description: "MapReduce was one of the first frameworks that democratized distributed computing, by making it easier for engineers to write applications that run on distributed systems without having distributed computing expertise.",
         tags: [
             "Distributed Systems",
             "MapReduce"
