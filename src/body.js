@@ -86,7 +86,7 @@ export default class Body extends React.Component {
                                         <div>
                                             <div className="featuredText">
                                                 <a target="_blank" rel="noopener noreferrer" className="blogLink" href={object.link}>
-                                                    <h3 className="roboto">{object.name}</h3>
+                                                    <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-external-link-alt'></i></h3>
                                                 </a>
                                                 <p>{object.description}</p>
                                                 <div>{object.tags.map((tag, j) => <span className="btn paperpill">{tag}</span>)}</div>
@@ -117,7 +117,7 @@ export default class Body extends React.Component {
                                         <div key={i}>
                                             <div className="featuredText">
                                                 <Link className="blogLink" to={"blog/" + object.name.replace(/\s+/g, '-').toLowerCase()}>
-                                                    <h3 className="roboto">{object.name}</h3>
+                                                    <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-arrow-right'></i></h3>
                                                 </Link>
                                                 <p>{object.description}</p>
                                                 <div>{object.tags.map((tag, j) => <span className="btn blogpill">{tag}</span>)}</div>
@@ -167,7 +167,7 @@ export default class Body extends React.Component {
                                         <div>
                                             <div className="featuredText">
                                                 <a target="_blank" rel="noopener noreferrer" className="blogLink" href={object.link}>
-                                                    <h3 className="roboto">{object.name}</h3>
+                                                    <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-external-link-alt'></i></h3>
                                                 </a>
                                                 <p>{object.description}</p>
                                                 <div>{object.tags.map((tag, j) => <span className="btn projectpill">{tag}</span>)}</div>
@@ -232,7 +232,7 @@ export default class Body extends React.Component {
                             <br></br>
                             <Link to="artworks/">
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-warning">
-                                    <b>ARTIST'S BIO</b>
+                                    <b>ARTIST'S BIO</b><i style={{marginLeft: '10px'}} className='fas fa-arrow-right'></i>
                                 </button>
                             </Link>
                             <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/pranshu.paints/">
