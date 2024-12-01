@@ -130,7 +130,7 @@ export default class Body extends React.Component {
                             <br></br><br></br>
                             <div className="pagination">
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handlePreviousPage} disabled={currentPage === 1}>
-                                    <i className="fas fa-arrow-left paginationIcon"></i>
+                                    <i className="fas fa-arrow-left paginationIcon" title={`go to previous page`}></i>
                                 </button>
                                 {pageNumbers.map(number => (
                                     <button
@@ -139,11 +139,11 @@ export default class Body extends React.Component {
                                         className={`btn btn-dark ${currentPage === number ? 'active' : ''}`}
                                         onClick={() => this.handlePageClick(number)}
                                     >
-                                        <i className={`fas fa-${number} paginationIcon`}></i>
+                                        <i className={`fas fa-${number} paginationIcon`} title={`go to page ${number}`}></i>
                                     </button>
                                 ))}
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handleNextPage} disabled={currentPage === this.totalPages()}>
-                                    <i className="fas fa-arrow-right paginationIcon"></i>
+                                    <i className="fas fa-arrow-right paginationIcon" title={`go to next page`}></i>
                                 </button>
                             </div>
                             <br></br>
