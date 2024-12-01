@@ -8,8 +8,19 @@ import Applemusic from '../blogs/applemusic';
 import DNS from '../blogs/dns';
 import TransIsol from '../blogs/transisol';
 import DistribComp from '../blogs/distribcomp';
+import CancerViz from '../blogs/cancerviz';
 
 export let blogList = [
+    {
+        name: "Exploring cancer incidence data from CDC",
+        description: "The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends and patterns in cancer incidences across the United States of America.",
+        tags: [
+            "Cancer Research",
+            "Healthcare",
+            "Data Visualization"
+        ],
+        component: <CancerViz/>
+    },
     {
         name: "Transaction Isolation in Database Systems",
         description: "Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time.",
