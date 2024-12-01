@@ -91,3 +91,22 @@ hr {
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+.paginationIcon {
+    margin: 5px;
+}
+
+.pagination {
+    margin-left: 5px;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+}
+
+.pagination button {
+    border-radius: 25px;
+}
+
+.paperLink {
+    padding: 6px 12px 6px 12px;
+}

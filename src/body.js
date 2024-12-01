@@ -21,10 +21,49 @@ import art10 from './images/art/IMG_3730.jpg';
 import About from "./about";
 
 export default class Body extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentPage: 1,
+            blogsPerPage: 5
+        };
+    }
+
+    handleNextPage = () => {
+        if (this.state.currentPage < this.totalPages()) {
+            this.setState({ currentPage: this.state.currentPage + 1 });
+        }
+    };
+
+    handlePreviousPage = () => {
+        if (this.state.currentPage > 1) {
+            this.setState({ currentPage: this.state.currentPage - 1 });
+        }
+    };
+
+    handlePageClick = (pageNumber) => {
+        this.setState({ currentPage: pageNumber });
+    };
+
+    totalPages = () => {
+        return Math.ceil(blogList.length / this.state.blogsPerPage);
+    };
+
     render() {
+        const { currentPage, blogsPerPage } = this.state;
+        const indexOfLastBlog = currentPage * blogsPerPage;
+        const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+        const currentBlogs = blogList.slice(indexOfFirstBlog, indexOfLastBlog);
+
+        const pageNumbers = [];
+        for (let i = 1; i <= this.totalPages(); i++) {
+            pageNumbers.push(i);
+        }
+
         var bannerStyle = {
             margin: "20px 0 20px 0"
         }
+
         return (
             <div className="body content">
                 <div className="container">
@@ -74,8 +113,8 @@ export default class Body extends React.Component {
                             <br></br><br></br>
                             <div style={{ paddingLeft: "5px" }}>
                                 {
-                                    blogList.map((object, i) =>
-                                        <div>
+                                    currentBlogs.map((object, i) =>
+                                        <div key={i}>
                                             <div className="featuredText">
                                                 <Link className="blogLink" to={"blog/" + object.name.replace(/\s+/g, '-').toLowerCase()}>
                                                     <h3 className="roboto">{object.name}</h3>
@@ -83,12 +122,31 @@ export default class Body extends React.Component {
                                                 <p>{object.description}</p>
                                                 <div>{object.tags.map((tag, j) => <span className="btn blogpill">{tag}</span>)}</div>
                                             </div>
-                                            {i < blogList.length - 1 ? <hr></hr> : null}
+                                            {i < currentBlogs.length - 1 ? <hr></hr> : null}
                                         </div>
                                     )
                                 }
                             </div>
                             <br></br><br></br>
+                            <div className="pagination">
+                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handlePreviousPage} disabled={currentPage === 1}>
+                                    <i className="fas fa-arrow-left paginationIcon"></i>
+                                </button>
+                                {pageNumbers.map(number => (
+                                    <button
+                                        key={number}
+                                        style={{ margin: "0 10px 10px 0" }}
+                                        className={`btn btn-dark ${currentPage === number ? 'active' : ''}`}
+                                        onClick={() => this.handlePageClick(number)}
+                                    >
+                                        <i className={`fas fa-${number} paginationIcon`}></i>
+                                    </button>
+                                ))}
+                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handleNextPage} disabled={currentPage === this.totalPages()}>
+                                    <i className="fas fa-arrow-right paginationIcon"></i>
+                                </button>
+                            </div>
+                            <br></br>
                         </div>
                     </div>
                     <hr></hr>
