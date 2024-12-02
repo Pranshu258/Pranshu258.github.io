@@ -11,13 +11,13 @@ import { ResponsiveLine } from '@nivo/line'
 
 const TotalIncidencePerYear = ({ data }) => (
     <ResponsiveLine
-        data={data.casesPerYear}
+        data={data}
         margin={{ top: 10, right: 50, bottom: 80, left: 80 }}
         xScale={{ type: 'point' }}
         yScale={{
             type: 'linear',
-            min: 'auto',
-            max: 'auto',
+            min: '0',
+            max: '2000000',
             stacked: true,
             reverse: false
         }}
@@ -77,7 +77,7 @@ export default class CancerViz extends React.Component {
                 <h2>Introduction</h2>
                 <div style={{height: '320px', minWidth: '720px'}}>
                     <h6 style={{textAlign: 'center'}}>Total cancer incidences per year (2001-2021)</h6>
-                    <TotalIncidencePerYear data={cancerViz}></TotalIncidencePerYear>
+                    <TotalIncidencePerYear data={cancerViz.casesPerYear}></TotalIncidencePerYear>
                 </div>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h5>Acknowledgements</h5>
