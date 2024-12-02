@@ -14,12 +14,11 @@ export default class Footer extends React.Component {
                         <ul id="footerul">
                             <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.linkedin.com/in/pranshug258"><i className="fab fa-linkedin socialIcon"></i></a>
                             <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.goodreads.com/prang"><i className="fab fa-goodreads socialIcon"></i></a>
-                            <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.instagram.com/pranshu.paints/"><i className="fab fa-instagram socialIcon"></i></a>                   
+                            <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.instagram.com/pranshu.paints/"><i className="fab fa-instagram socialIcon"></i></a>       
+                            <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.youtube.com/playlist?list=PLYYwWL0YAN2KHK81AcrbhLdeHZdgPjGS6"><i className="fab fa-youtube socialIcon"></i></a>            
                             <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://open.spotify.com/user/pranshugupta?si=a2369fa3eaf24985"><i className="fab fa-spotify socialIcon"></i></a>
                             <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://github.com/Pranshu258"><i className="fab fa-github socialIcon"></i></a>
-                            <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://in.pinterest.com/pranshugupta258/boards/"><i className="fab fa-pinterest socialIcon"></i></a>
-                            <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.facebook.com/pranshug258"><i className="fab fa-facebook socialIcon"></i></a>
-                            
+                            <a target="_blank" rel="noopener noreferrer" style={{color:"white"}} href="https://www.facebook.com/pranshug258"><i className="fab fa-facebook socialIcon"></i></a>                            
                         </ul>
                         <small className="montserrat">© Copyright 2024, Pranshu Gupta</small><br></br>
                     </div>
