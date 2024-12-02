@@ -34,9 +34,16 @@ export default class CancerViz extends React.Component {
                 <ReactMarkdown remarkPlugins={[remarkGfm]} children={markdown}></ReactMarkdown>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h5>Acknowledgements</h5>
-                <p>This article was made possible by the public data provided by the Centers for Disease Control and Prevention (CDC) and the data.gov initiative.</p>
-                <img src={cdclogo} style={{height: '40px', marginRight: '10px'}} alt="CDC Logo" className="img-fluid"></img>
-                <img src={datagovlogo} style={{height: '40px', marginRight: '10px'}} alt="data gov Logo" className="img-fluid"></img>
+                <p>
+                    This article was made possible by the data collected and published for the people by the Centers for Disease Control and Prevention (CDC) and the data.gov initiative.<br></br>
+                    <code>
+                        {
+                            `United States Cancer Statistics - Incidence: 1999 - 2021, WONDER Online Database. United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute; 2023 submission; 2024 release. Accessed at http://wonder.cdc.gov/cancer-v2021.html on Dec 1, 2024.`
+                        }
+                    </code>
+                </p>
+                <img src={cdclogo} style={{ height: '40px', marginRight: '10px' }} alt="CDC Logo" className="img-fluid"></img>
+                <img src={datagovlogo} style={{ height: '40px', marginRight: '10px' }} alt="data gov Logo" className="img-fluid"></img>
                 <hr style={{ backgroundColor: "white" }}></hr>
             </div>
         )

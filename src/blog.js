@@ -31,13 +31,13 @@ export default class Blog extends React.Component {
                                         )
                                     }
                                 </Routes>
-                                <br></br><br></br>
+                                <br></br>
                                 <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
                                 <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>
                                 <small>Illustration by <a href="https://icons8.com/illustrations/author/206397">Pablo Marquez Ouch!</a></small>
                             </div>
                             <div className="col-lg-3">
-                                <br></br><br></br>
+                                <br></br>
                                 <img alt="" src={banner} className="img-fluid" style={bannerStyle}></img>
                                 <br></br><br></br>
                             </div>
