@@ -6,10 +6,53 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import cdclogo from '../images/cdclogo.png';
 import datagovlogo from '../images/datagov.png';
+import { cancerViz } from '../data/cancerviz';
+import { ResponsiveLine } from '@nivo/line'
 
-const markdown = `
-## Introduction
-`;
+const TotalIncidencePerYear = ({ data }) => (
+    <ResponsiveLine
+        data={data.casesPerYear}
+        margin={{ top: 10, right: 50, bottom: 80, left: 80 }}
+        xScale={{ type: 'point' }}
+        yScale={{
+            type: 'linear',
+            min: 'auto',
+            max: 'auto',
+            stacked: true,
+            reverse: false
+        }}
+        yFormat=" >-.2f"
+        axisTop={null}
+        axisRight={null}
+        axisBottom={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: 'Year',
+            legendOffset: 36,
+            legendPosition: 'middle',
+            truncateTickAt: 0
+        }}
+        axisLeft={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: 'Incidence Count',
+            legendOffset: -70,
+            legendPosition: 'middle',
+            truncateTickAt: 0
+        }}
+        pointSize={10}
+        pointColor={{ theme: 'background' }}
+        pointBorderWidth={2}
+        pointBorderColor={{ from: 'serieColor' }}
+        pointLabel="data.yFormatted"
+        pointLabelYOffset={-12}
+        enableTouchCrosshair={true}
+        useMesh={true}
+        legends={[]}
+    />
+)
 
 export default class CancerViz extends React.Component {
     componentDidMount() {
@@ -31,13 +74,18 @@ export default class CancerViz extends React.Component {
                     <br></br>
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} children={markdown}></ReactMarkdown>
+                <h2>Introduction</h2>
+                <div style={{height: '320px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences per year (2001-2021)</h6>
+                    <TotalIncidencePerYear data={cancerViz}></TotalIncidencePerYear>
+                </div>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h5>Acknowledgements</h5>
                 <p>
                     This article was made possible by the data collected and published for the people by the Centers for Disease Control and Prevention (CDC) and the data.gov initiative.<br></br>
                     <code>
-                        <b>Citation: United States Cancer Statistics - Incidence: 1999 - 2021, WONDER Online Database. United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute; 2023 submission; 2024 release. Accessed at http://wonder.cdc.gov/cancer-v2021.html on Dec 1, 2024.
+                        <b>
+                            Citation: United States Cancer Statistics - Incidence: 1999 - 2021, WONDER Online Database. United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute; 2023 submission; 2024 release. Accessed at http://wonder.cdc.gov/cancer-v2021.html on Dec 1, 2024.
                         </b>
                     </code>
                 </p>
