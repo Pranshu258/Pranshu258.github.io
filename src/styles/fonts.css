@@ -34,3 +34,16 @@
 .collosal {
     font-size: 5000%;
 }
+
+/* styles/fonts.css */
+@font-face {
+    font-family: 'Cascadia';
+    src: url('../fonts/Cascadia.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Apply the font to specific elements or globally */
+code {
+    font-family: 'Cascadia', sans-serif;
+}
