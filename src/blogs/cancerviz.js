@@ -9,16 +9,24 @@ import datagovlogo from '../images/datagov.png';
 import { cancerViz } from '../data/cancerviz';
 import { ResponsiveLine } from '@nivo/line'
 
-const TotalIncidencePerYear = ({ data }) => (
+const CustomTooltip = ({ point }) => (
+    <div style={{ background: 'white', padding: '5px', border: '1px solid #ccc' }}>
+        <strong>Series:</strong> {point.serieId}<br />
+        <strong>Year:</strong> {point.data.xFormatted}<br />
+        <strong>Incidence:</strong> {point.data.yFormatted}
+    </div>
+);
+
+const YearlyIncidenceVisualization = ({ data }) => (
     <ResponsiveLine
         data={data}
-        margin={{ top: 10, right: 50, bottom: 80, left: 80 }}
+        margin={{ top: 10, right: 120, bottom: 80, left: 80 }}
         xScale={{ type: 'point' }}
         yScale={{
             type: 'linear',
-            min: '0',
-            max: '2000000',
-            stacked: true,
+            min: 'auto',
+            max: 'auto',
+            stacked: false,
             reverse: false
         }}
         yFormat=" >-.2f"
@@ -42,7 +50,7 @@ const TotalIncidencePerYear = ({ data }) => (
             legendPosition: 'middle',
             truncateTickAt: 0
         }}
-        pointSize={10}
+        pointSize={4}
         pointColor={{ theme: 'background' }}
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}
@@ -50,14 +58,41 @@ const TotalIncidencePerYear = ({ data }) => (
         pointLabelYOffset={-12}
         enableTouchCrosshair={true}
         useMesh={true}
-        legends={[]}
+        colors={{ scheme: 'dark2' }}
+        legends={[
+            {
+                anchor: 'bottom-right',
+                direction: 'column',
+                justify: false,
+                translateX: 100,
+                translateY: 0,
+                itemsSpacing: 0,
+                itemDirection: 'left-to-right',
+                itemWidth: 80,
+                itemHeight: 20,
+                itemOpacity: 0.75,
+                symbolSize: 12,
+                symbolShape: 'circle',
+                symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                effects: [
+                    {
+                        on: 'hover',
+                        style: {
+                            itemBackground: 'rgba(0, 0, 0, .03)',
+                            itemOpacity: 1
+                        }
+                    }
+                ]
+            }
+        ]}
+        tooltip={CustomTooltip}
     />
 )
 
 export default class CancerViz extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
-        document.title = "Exploring cancer incidence data from CDC | blog by Pranshu Gupta";
+        document.title = "Exploring cancer dataset from CDC Wonder | blog by Pranshu Gupta";
     }
 
     render() {
@@ -66,9 +101,9 @@ export default class CancerViz extends React.Component {
                 <div className="row bhead">
                     <i className="fas fa-staff-snake bigger gt1"></i>
                 </div>
-                <h1 className="title">Exploring cancer incidence data from CDC</h1>
+                <h1 className="title">Exploring cancer dataset from CDC Wonder</h1>
                 <p>Pranshu Gupta, Dec 5, 2024</p>
-                <Sharer className="sharer" link={window.location.href} title={"Exploring cancer incidence data from CDC"}></Sharer>
+                <Sharer className="sharer" link={window.location.href} title={"Exploring cancer dataset from CDC Wonder"}></Sharer>
                 <p className="introduction">
                     The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends and patterns in cancer incidences across the United States of America for leading cancer sites in the human body.
                     <br></br>
@@ -77,7 +112,39 @@ export default class CancerViz extends React.Component {
                 <h2>Introduction</h2>
                 <div style={{height: '320px', minWidth: '720px'}}>
                     <h6 style={{textAlign: 'center'}}>Total cancer incidences per year (2001-2021)</h6>
-                    <TotalIncidencePerYear data={cancerViz.casesPerYear}></TotalIncidencePerYear>
+                    <YearlyIncidenceVisualization data={cancerViz.casesPerYear}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '400px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences per year by sites (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.casesPerYearBySite}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '400px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences (Female) per year by sites (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.femaleCasesPerYearBySite}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '400px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences (Male) per year by sites (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.maleCasesPerYearBySite}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '320px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences per age group (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.totalCasesPerAgeGroup}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '320px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences per age group by sex (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.totalCasesPerAgeGroupBySex}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '320px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences per age group by sites (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.totalCasesPerAgeGroupBySite}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '400px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences (Female) per age group by sites (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.femaleCasesPerAgeGroupBySite}></YearlyIncidenceVisualization>
+                </div>
+                <div style={{height: '400px', minWidth: '720px'}}>
+                    <h6 style={{textAlign: 'center'}}>Total cancer incidences (Male) per age group by sites (2001-2021)</h6>
+                    <YearlyIncidenceVisualization data={cancerViz.maleCasesPerAgeGroupBySite}></YearlyIncidenceVisualization>
                 </div>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h5>Acknowledgements</h5>
