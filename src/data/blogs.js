@@ -12,7 +12,7 @@ import CancerViz from '../blogs/cancerviz';
 
 export let blogList = [
     {
-        name: "Exploring cancer incidence data from CDC",
+        name: "Exploring cancer dataset from CDC Wonder",
         description: "The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends and patterns in cancer incidences across the United States of America.",
         tags: [
             "Cancer Statistics",
