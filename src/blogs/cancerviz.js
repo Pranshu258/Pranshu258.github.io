@@ -169,7 +169,8 @@ export default class CancerViz extends React.Component {
         super(props);
         this.state = {
             currentPieChart: "Total",
-            currentSiteLineChart: "Total"
+            currentSiteLineChart: "Total",
+            currentAgeSiteLineChart: "Total"
         };
     }
 
@@ -197,13 +198,25 @@ export default class CancerViz extends React.Component {
         this.setState({ currentSiteLineChart: "Total" });
     };
 
+    showMaleAgeSiteLineChart = () => {
+        this.setState({ currentAgeSiteLineChart: "Male" });
+    };
+
+    showFemaleAgeSiteLineChart = () => {
+        this.setState({ currentAgeSiteLineChart: "Female" });
+    };
+
+    showTotalAgeSiteLineChart = () => {
+        this.setState({ currentAgeSiteLineChart: "Total" });
+    };
+
     componentDidMount() {
         window.scrollTo(0, 0);
         document.title = "Statistical insights on Cancer in America | blog by Pranshu Gupta";
     }
 
     render() {
-        const { currentPieChart, currentSiteLineChart } = this.state;
+        const { currentPieChart, currentSiteLineChart, currentAgeSiteLineChart } = this.state;
 
         return (
             <div>
@@ -281,10 +294,10 @@ export default class CancerViz extends React.Component {
                     The charts below show the number of cases reported each year for the leading cancer sites in the human body.
                 </p>
                 <div className="pagination" style={{ justifyContent: 'left' }}>
-                    <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalSiteLineChart} active={currentSiteLineChart === "Total"}>
+                    <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalSiteLineChart}>
                         Total
                     </button>
-                    <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Female" ? "btn btn-dark" : "btn btn-light"} onClick={this.showFemaleSiteLineChart} active={currentSiteLineChart === "Female"}>
+                    <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Female" ? "btn btn-dark" : "btn btn-light"} onClick={this.showFemaleSiteLineChart}>
                         Female
                     </button>
                     <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Male" ? "btn btn-dark" : "btn btn-light"} onClick={this.showMaleSiteLineChart}>
@@ -302,9 +315,33 @@ export default class CancerViz extends React.Component {
                     However, the American Cancer Society and other organizations revised their guidelines in 2014, to recommend shared decision-making between patients and healthcare providers regarding PSA testing, after which the more cases are being identified.
                 </p>
                 <p>
-                    The number of cases of colorectal cancer has decreaed year over year, which can be attributed to increased awareness and screening programs. Regular screening helps detect and remove precancerours polyps before they turn into cancer. However, the survival rate for colorectal cancer is lower in men compared to women. Late stage detection and influence of sex hormones is believed to be the reason. 
+                    The number of cases of colorectal cancer has decreased year over year, which can be attributed to increased awareness and screening programs. Regular screening helps detect and remove precancerours polyps before they turn into cancer. However, the survival rate for colorectal cancer is lower in men compared to women. Late stage detection and influence of sex hormones is believed to be the reason. 
+                </p>
+                <p>
+                    Melanoma
                 </p>
                 <h2>How does Cancer affect different age groups?</h2>
+                <p>
+
+                </p>
+                <div style={{ height: '25rem'}}>
+                    <CancerIncidenceLineChart data={cancerViz.totalCasesPerAgeGroupBySex}></CancerIncidenceLineChart>
+                </div>
+                <div className="pagination" style={{ justifyContent: 'left' }}>
+                    <button style={{ marginRight: "10px" }} className={currentAgeSiteLineChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalAgeSiteLineChart} active={currentAgeSiteLineChart === "Total"}>
+                        Total
+                    </button>
+                    <button style={{ marginRight: "10px" }} className={currentAgeSiteLineChart === "Female" ? "btn btn-dark" : "btn btn-light"} onClick={this.showFemaleAgeSiteLineChart} active={currentAgeSiteLineChart === "Female"}>
+                        Female
+                    </button>
+                    <button style={{ marginRight: "10px" }} className={currentAgeSiteLineChart === "Male" ? "btn btn-dark" : "btn btn-light"} onClick={this.showMaleAgeSiteLineChart}>
+                        Male
+                    </button>
+                </div>
+                <br></br>
+                <div style={{ height: '30rem'}}>
+                    <CancerIncidenceLineChart data={currentAgeSiteLineChart === "Female" ? cancerViz.femaleCasesPerAgeGroupBySite : (currentAgeSiteLineChart === "Total" ? cancerViz.totalCasesPerAgeGroupBySite : cancerViz.maleCasesPerAgeGroupBySite)}></CancerIncidenceLineChart>
+                </div>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2>References</h2>
                 <ol>
