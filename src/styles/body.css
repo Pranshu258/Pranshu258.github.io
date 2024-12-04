@@ -59,16 +59,17 @@ hr {
     background-color: #333333;
 }
 
-.blogLink, .blogLink:hover {
+.blogLink,
+.blogLink:hover {
     text-decoration: none;
     color: white;
 }
 
 .gt1 {
-  background: -webkit-linear-gradient(#e0003d, #a100b7);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+    background: -webkit-linear-gradient(#e0003d, #a100b7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .gt2 {
@@ -97,7 +98,6 @@ hr {
 }
 
 .pagination {
-    margin-left: 5px;
     display: flex;
     justify-content: left;
     align-items: left;
