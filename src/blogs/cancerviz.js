@@ -169,6 +169,7 @@ export default class CancerViz extends React.Component {
         super(props);
         this.state = {
             currentPieChart: "Total",
+            currentSiteLineChart: "Total"
         };
     }
 
@@ -184,13 +185,25 @@ export default class CancerViz extends React.Component {
         this.setState({ currentPieChart: "Total" });
     };
 
+    showMaleSiteLineChart = () => {
+        this.setState({ currentSiteLineChart: "Male" });
+    };
+
+    showFemaleSiteLineChart = () => {
+        this.setState({ currentSiteLineChart: "Female" });
+    };
+
+    showTotalSiteLineChart = () => {
+        this.setState({ currentSiteLineChart: "Total" });
+    };
+
     componentDidMount() {
         window.scrollTo(0, 0);
-        document.title = "Statistical Insights on Cancer in America | blog by Pranshu Gupta";
+        document.title = "Statistical insights on Cancer in America | blog by Pranshu Gupta";
     }
 
     render() {
-        const { currentPieChart } = this.state;
+        const { currentPieChart, currentSiteLineChart } = this.state;
 
         return (
             <div>
@@ -259,8 +272,39 @@ export default class CancerViz extends React.Component {
                     Overall, breast cancer is the most common type of cancer in humans, followed by lung and bronchus cancer. 99% of breast cancer cases are found in women due to several reasons such as, higher number of breast tissue in women, influence of estrogen and progesterone hormones (which are more active in the female body), and genetic factors (mutations in BRCA1 and BRCA2). Mutations in BRCA1 and BRCA2 genes affect the male body as well, and can lead to prostate cancer, which is the most common cancer type in men.
                 </p>
                 <p>
+                    The second most common cancer type is lung and bronchus cancer, which is common across both the sexes. Lung cancer is primarily caused by smoking (including passive smoking). <b>Radon exposure and increasing air pollution levels have also contributed to the rise in cases for lung cancer.</b>
+                </p>
+                <p>
                     Similarly, the number of thyroid cancer cases is much higher in women compared to men. It is believed that hormones such as estrogen, play a significant role in the development of thyroid cancer. Women are prone to thyroid disorders in general, and tumors are often detected early during the course of other treatments. Early detection and easier treatment options have led to a high survival rate for most thyroid cancers.
                 </p>
+                <p>
+                    The charts below show the number of cases reported each year for the leading cancer sites in the human body.
+                </p>
+                <div className="pagination" style={{ justifyContent: 'left' }}>
+                    <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalSiteLineChart} active={currentSiteLineChart === "Total"}>
+                        Total
+                    </button>
+                    <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Female" ? "btn btn-dark" : "btn btn-light"} onClick={this.showFemaleSiteLineChart} active={currentSiteLineChart === "Female"}>
+                        Female
+                    </button>
+                    <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Male" ? "btn btn-dark" : "btn btn-light"} onClick={this.showMaleSiteLineChart}>
+                        Male
+                    </button>
+                </div>
+                <br></br>
+                <div style={{ height: '30rem'}}>
+                    <CancerIncidenceLineChart data={currentSiteLineChart === "Female" ? cancerViz.femaleCasesPerYearBySite : (currentSiteLineChart === "Total" ? cancerViz.casesPerYearBySite : cancerViz.maleCasesPerYearBySite)}></CancerIncidenceLineChart>
+                </div>
+                <p>
+                    <b>Policies and laws can also affect the number of reported cancer cases. For example, in 2012 the US Preventive Services Task Force recommended against routine prostate-specific antigen (PSA) testing for prostate cancer.</b> At the time, the opinion was that the risks of overdiagnosis and overtreatment outweighed the benefits of early detection. As fewer men were screened for prostate cancer, the number of reported cases also decreased, which can be seen in the above chart.
+                </p>
+                <p>
+                    However, the American Cancer Society and other organizations revised their guidelines in 2014, to recommend shared decision-making between patients and healthcare providers regarding PSA testing, after which the more cases are being identified.
+                </p>
+                <p>
+                    The number of cases of colorectal cancer has decreaed year over year, which can be attributed to increased awareness and screening programs. Regular screening helps detect and remove precancerours polyps before they turn into cancer. However, the survival rate for colorectal cancer is lower in men compared to women. Late stage detection and influence of sex hormones is believed to be the reason. 
+                </p>
+                <h2>How does Cancer affect different age groups?</h2>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2>References</h2>
                 <ol>
@@ -270,6 +314,11 @@ export default class CancerViz extends React.Component {
                     <li>https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know</li>
                     <li>https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women</li>
                     <li>https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161</li>
+                    <li>https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer</li>
+                    <li>https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening</li>
+                    <li>https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html</li>
+                    <li>https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html</li>
+                    <li>https://www.healthline.com/health/colorectal-cancer-survival-rate#gender-and-outlook</li>
                 </ol>
                 <h5>Acknowledgements</h5>
                 <p>
