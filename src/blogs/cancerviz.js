@@ -372,23 +372,23 @@ export default class CancerViz extends React.Component {
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2>References</h2>
                 <ol>
-                    <li><a href='https://www.cancer.gov/about-cancer/understanding/what-is-cancer'>https://www.cancer.gov/about-cancer/understanding/what-is-cancer</a></li>
-                    <li><a href="https://www.cancer.org/research/acs-research-news/facts-and-figures-2024.html">https://www.cancer.org/research/acs-research-news/facts-and-figures-2024.html</a></li>
-                    <li><a href="https://www.mcleodhealth.org/blog/why-are-cancer-rates-rising/">https://www.mcleodhealth.org/blog/why-are-cancer-rates-rising/</a></li>
-                    <li><a href="https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/">https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/</a></li>
-                    <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know">https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know</a></li>
-                    <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women">https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women</a></li>
-                    <li><a href="https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161">https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161</a></li>
-                    <li><a href="https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer<">https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer</a></li>
-                    <li><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening">https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening</a></li>
-                    <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html">https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html</a></li>
-                    <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html">https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html</a></li>
-                    <li><a href="https://www.healthline.com/health/colorectal-cancer-survival-rate#gender-and-outlook">https://www.healthline.com/health/colorectal-cancer-survival-rate#gender-and-outlook</a></li>
-                    <li><a href="https://ozonewatch.gsfc.nasa.gov/">https://ozonewatch.gsfc.nasa.gov/</a></li>
-                    <li><a href="https://www.skinvision.com/articles/why-melanoma-is-increasing-and-what-we-can-do">https://www.skinvision.com/articles/why-melanoma-is-increasing-and-what-we-can-do</a></li>
-                    <li><a href="https://www.skincancer.org/skin-cancer-information/melanoma/melanoma-causes-and-risk-factors/">https://www.skincancer.org/skin-cancer-information/melanoma/melanoma-causes-and-risk-factors/</a></li>
-                    <li><a href="https://www.cancer.org/cancer/managing-cancer/treatment-types/immunotherapy/car-t-cell1.html">https://www.cancer.org/cancer/managing-cancer/treatment-types/immunotherapy/car-t-cell1.html</a></li>
-                    <li><a href="https://www.mdanderson.org/cancerwise/what-is-tumor-infiltrating-lymphocyte-til-therapy--6-things-to-know.h00-159460056.html">https://www.mdanderson.org/cancerwise/what-is-tumor-infiltrating-lymphocyte-til-therapy--6-things-to-know.h00-159460056.html</a></li>
+                    <li><a href='https://www.cancer.gov/about-cancer/understanding/what-is-cancer'>NCI - What is Cancer?</a></li>
+                    <li><a href="https://www.cancer.org/research/acs-research-news/facts-and-figures-2024.html">Cancer Org - Facts and Figures 2024</a></li>
+                    <li><a href="https://www.mcleodhealth.org/blog/why-are-cancer-rates-rising/">McLeod Health - Why are Cancer rates rising?</a></li>
+                    <li><a href="https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/">Dana Farber Org - Why are Men More Likely Than Women to Develop Cancer Over the Course of Their Lives?</a></li>
+                    <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know">Hopkins Medicine - Thyroid Cancer: What women should know?</a></li>
+                    <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women">Hopkins Medicine - Thyroid disorders in women</a></li>
+                    <li><a href="https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161">Mayo Clinic - Thyroid Cancer: Symptoms and Causes</a></li>
+                    <li><a href="https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer<">Lung Prg - What causes lung Cancer?</a></li>
+                    <li><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening">USPTF - Prostate Cancer Screening</a></li>
+                    <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html">Cancer Org - Key Cancer Statistics</a></li>
+                    <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html">Cancer Org - Colorectal Cancer and Survival Rates</a></li>
+                    <li><a href="https://www.healthline.com/health/colorectal-cancer-survival-rate#gender-and-outlook">Health Line - Colorectal Cancer Survival Rates</a></li>
+                    <li><a href="https://ozonewatch.gsfc.nasa.gov/">NASA - Ozone Watch</a></li>
+                    <li><a href="https://www.skinvision.com/articles/why-melanoma-is-increasing-and-what-we-can-do">Skin Vision - Why melanoma is increasing and what we can do?</a></li>
+                    <li><a href="https://www.skincancer.org/skin-cancer-information/melanoma/melanoma-causes-and-risk-factors/">Skin Cancer Org - Melanoma causes and risk factors</a></li>
+                    <li><a href="https://www.cancer.org/cancer/managing-cancer/treatment-types/immunotherapy/car-t-cell1.html">Cancer Org - Immunotherapy</a></li>
+                    <li><a href="https://www.mdanderson.org/cancerwise/what-is-tumor-infiltrating-lymphocyte-til-therapy--6-things-to-know.h00-159460056.html">Md Anderson - What is Tumor Infiltrating Lymphocyte Therapy?</a></li>
                 </ol>
                 <h5>Acknowledgements</h5>
                 <p>
