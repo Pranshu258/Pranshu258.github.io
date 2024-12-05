@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.911845a2.css",
-    "main.js": "/static/js/main.44c189f4.js",
+    "main.css": "/static/css/main.70889366.css",
+    "main.js": "/static/js/main.2c5891fd.js",
     "static/media/me.jpg": "/static/media/me.43674ab5398a193b0bc2.jpg",
     "static/media/IMG_4820.jpg": "/static/media/IMG_4820.a81d0b5919a7a1dd512d.jpg",
     "static/media/IMG_2693.jpg": "/static/media/IMG_2693.bc0a9b5d852dfe410344.jpg",
@@ -50,6 +50,7 @@
     "static/media/Countrycloudblack.png": "/static/media/Countrycloudblack.2d72d4623998b80f3114.png",
     "static/media/Indiecloudblack.png": "/static/media/Indiecloudblack.a8a0b07c1cc6768bccb7.png",
     "static/media/open-doodles-clumsy-man-dropping-documents-and-files.svg": "/static/media/open-doodles-clumsy-man-dropping-documents-and-files.7636d4982b314764885a2b74d84cd29a.svg",
+    "static/media/Cascadia.ttf": "/static/media/Cascadia.bd7ac0c7c5582313a197.ttf",
     "static/media/genre.png": "/static/media/genre.e0fd8544f002decddc14.png",
     "static/media/play_end_type_freq.png": "/static/media/play_end_type_freq.d20849e7d5129e195c80.png",
     "static/media/lang_dist.png": "/static/media/lang_dist.f95c13a39762c7cd7a8e.png",
@@ -69,11 +70,11 @@
     "static/media/cluster_color_bar.png": "/static/media/cluster_color_bar.f15e0d298c56d043f812.png",
     "static/media/genre_distribution.png": "/static/media/genre_distribution.39b040ef13adf9326dff.png",
     "index.html": "/index.html",
-    "main.911845a2.css.map": "/static/css/main.911845a2.css.map",
-    "main.44c189f4.js.map": "/static/js/main.44c189f4.js.map"
+    "main.70889366.css.map": "/static/css/main.70889366.css.map",
+    "main.2c5891fd.js.map": "/static/js/main.2c5891fd.js.map"
   },
   "entrypoints": [
-    "static/css/main.911845a2.css",
-    "static/js/main.44c189f4.js"
+    "static/css/main.70889366.css",
+    "static/js/main.2c5891fd.js"
   ]
 }
