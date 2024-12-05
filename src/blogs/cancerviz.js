@@ -281,7 +281,7 @@ export default class CancerViz extends React.Component {
                         Male
                     </button>
                 </div>
-                <div style={{ height: '30rem', minWidth: '50rem'}}>
+                <div style={{ height: '30rem'}}>
                     <CancerIncidencePieChart data={currentPieChart === "Female" ? cancerViz.casesBySiteFemale : (currentPieChart === "Total" ? cancerViz.casesBySite : cancerViz.casesBySiteMale)}></CancerIncidencePieChart>
                 </div>
                 <p>
