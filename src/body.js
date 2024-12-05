@@ -25,7 +25,7 @@ export default class Body extends React.Component {
         super(props);
         this.state = {
             currentPage: 1,
-            blogsPerPage: 5
+            blogsPerPage: 4
         };
     }
 

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Sharer from '../sharer';
 import '../styles/fonts.css';
 import '../styles/blog.css';
 import { cancerViz } from '../data/cancerviz';
 import { ResponsiveLine } from '@nivo/line'
 import { ResponsivePie } from '@nivo/pie'
+import { schemeDark2 } from 'd3-scale-chromatic';
 
 const CustomTooltip = ({ point }) => (
     <div style={{ background: 'white', padding: '5px', border: '1px solid #ccc' }}>
@@ -14,69 +15,94 @@ const CustomTooltip = ({ point }) => (
     </div>
 );
 
-const CancerIncidenceLineChart = ({ data }) => (
-    <ResponsiveLine
-        data={data}
-        margin={{ top: 10, right: 120, bottom: 80, left: 80 }}
-        xScale={{ type: 'point' }}
-        yScale={{
-            type: 'linear',
-            min: 'auto',
-            max: 'auto',
-            stacked: false,
-            reverse: false
-        }}
-        yFormat=" >-.2f"
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: -90,
-            legend: 'Year',
-            legendOffset: 54,
-            legendPosition: 'middle',
-            truncateTickAt: 0
-        }}
-        axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: 'Incidence Count',
-            legendOffset: -70,
-            legendPosition: 'middle',
-            truncateTickAt: 0
-        }}
-        pointSize={4}
-        pointColor={{ theme: 'background' }}
-        pointBorderWidth={2}
-        pointBorderColor={{ from: 'serieColor' }}
-        pointLabel="data.yFormatted"
-        pointLabelYOffset={-12}
-        enableTouchCrosshair={true}
-        useMesh={true}
-        colors={{ scheme: 'dark2' }}
-        legends={[
-            {
-                anchor: 'top-right',
-                direction: 'column',
-                justify: false,
-                translateX: 100,
-                translateY: 0,
-                itemsSpacing: 0,
-                itemDirection: 'left-to-right',
-                itemTextColor: '#000',
-                itemWidth: 80,
-                itemHeight: 20,
-                itemOpacity: 1,
-                symbolSize: 12,
-                symbolShape: 'circle',
-                symbolBorderColor: 'rgba(0, 0, 0, .5)',
-            }
-        ]}
-        tooltip={CustomTooltip}
-    />
-)
+const CancerIncidenceLineChart = ({ data }) => {
+    const [selectedSeries, setSelectedSeries] = useState(null);
+
+    const handleLegendClick = (series) => {
+        setSelectedSeries(series.id === selectedSeries ? null : series.id);
+    };
+
+    const colorScheme = schemeDark2;
+
+    const coloredData = data.map((series, index) => ({
+        ...series,
+        color: colorScheme[index % colorScheme.length]
+    }));
+
+    const filteredData = selectedSeries ? coloredData.filter(d => d.id === selectedSeries) : coloredData;
+
+    const legendData = coloredData.map(series => ({
+        id: series.id,
+        label: series.id,
+        color: series.color
+    }));
+
+    return (
+        <ResponsiveLine
+            data={filteredData}
+            margin={{ top: 10, right: 120, bottom: 80, left: 80 }}
+            xScale={{ type: 'point' }}
+            yScale={{
+                type: 'linear',
+                min: 'auto',
+                max: 'auto',
+                stacked: false,
+                reverse: false
+            }}
+            yFormat=" >-.2f"
+            axisTop={null}
+            axisRight={null}
+            axisBottom={{
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: -90,
+                legend: 'Year',
+                legendOffset: 54,
+                legendPosition: 'middle',
+                truncateTickAt: 0
+            }}
+            axisLeft={{
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                legend: 'Incidence Count',
+                legendOffset: -70,
+                legendPosition: 'middle',
+                truncateTickAt: 0
+            }}
+            pointSize={4}
+            pointColor={{ theme: 'background' }}
+            pointBorderWidth={2}
+            pointBorderColor={{ from: 'serieColor' }}
+            pointLabel="data.yFormatted"
+            pointLabelYOffset={-12}
+            enableTouchCrosshair={true}
+            useMesh={true}
+            colors={d => d.color}
+            legends={[
+                {
+                    anchor: 'top-right',
+                    direction: 'column',
+                    justify: false,
+                    translateX: 100,
+                    translateY: 0,
+                    itemsSpacing: 0,
+                    itemDirection: 'left-to-right',
+                    itemTextColor: '#000',
+                    itemWidth: 80,
+                    itemHeight: 20,
+                    itemOpacity: 1,
+                    symbolSize: 12,
+                    symbolShape: 'circle',
+                    symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                    onClick: handleLegendClick,
+                    data: legendData
+                }
+            ]}
+            tooltip={CustomTooltip}
+        />
+    )
+} 
 
 const CancerIncidencePieChart = ({ data }) => (
     <ResponsivePie
@@ -130,39 +156,6 @@ const CancerIncidencePieChart = ({ data }) => (
         ]}
     />
 )
-
-const Visualisations = [
-    {
-        title: "Incidents/Site (Male)",
-        chart: <CancerIncidencePieChart data={cancerViz.casesBySiteMale}></CancerIncidencePieChart>,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec"
-    },
-    {
-        title: "Incidents/Year/Site (Female)",
-        chart: <CancerIncidenceLineChart data={cancerViz.femaleCasesPerYearBySite}></CancerIncidenceLineChart>,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec"
-    },
-    {
-        title: "Incidents/Year/Site (Male)",
-        chart: <CancerIncidenceLineChart data={cancerViz.maleCasesPerYearBySite}></CancerIncidenceLineChart>,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec"
-    },
-    {
-        title: "Incidents/Age Group/Sex",
-        chart: <CancerIncidenceLineChart data={cancerViz.totalCasesPerAgeGroupBySex}></CancerIncidenceLineChart>,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec"
-    },
-    {
-        title: "Incidents/Age Group/Sites (Female)",
-        chart: <CancerIncidenceLineChart data={cancerViz.femaleCasesPerAgeGroupBySite}></CancerIncidenceLineChart>,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec"
-    },
-    {
-        title: "Incidents/Age Group/Sites (Male)",
-        chart: <CancerIncidenceLineChart data={cancerViz.maleCasesPerAgeGroupBySite}></CancerIncidenceLineChart>,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec"
-    },
-];
 
 export default class CancerViz extends React.Component {
     constructor(props) {
@@ -227,7 +220,7 @@ export default class CancerViz extends React.Component {
                 <p>Pranshu Gupta, Dec 5, 2024</p>
                 <Sharer className="sharer" link={window.location.href} title={"Statistical insights on Cancer in America"}></Sharer>
                 <p className="introduction">
-                    The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends and patterns in cancer incidences across the United States of America for leading cancer sites in the human body.
+                    Cancer is a group of diseases characterized by abnormal and uncontrolled growth of cells, that can invade and spread to other parts of the body. The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends and patterns in cancer incidences across the United States of America for leading cancer sites in the human body.
                     <br></br>
                 </p>
                 <p style={{backgroundColor: "pink", padding: '10px', borderRadius: '8px'}}>
@@ -236,7 +229,10 @@ export default class CancerViz extends React.Component {
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2>What is Cancer?</h2>
                 <p>
-
+                    Cell growth, division and cell death are critical but tightly regulated processes in the human body. Sometimes, this process breaks down and damaged cells can start to multiply and grown when they shouldn't. Such growths are called tumors, and can be benign (non-cancerous) or malignant (cancerous). Tumors become cancerous when they start invading nearby tissues and spreading to other parts of the body, a process called metastasis.
+                </p>
+                <p>
+                    The immune system can usually identify damaged cells and destroy them when needed. However, this ability weakens as we grown older, which is why cancer is more common in older adults. Certain mutations in the DNA can also lead to cancer. These mutations can be inherited from parents, or can be caused by environmental factors such as exposure to radiation, chemicals, or viruses.
                 </p>
                 <h2>Is Cancer on the Rise?</h2>
                 <p>
@@ -248,8 +244,8 @@ export default class CancerViz extends React.Component {
                 <p>
                     However, there are other factors that have contributed to the rise in cancer cases:
                     <ul>
-                        <li>Increased exposure of environmental carcinogens due to pollution also contributes to rise in cases.</li>
-                        <li>Modern lifestyle choices such as smoking, excessive alcohol consumption have also been linked to higher cancer rates.</li>
+                        <li>Increased exposure of environmental carcinogens due to pollution.</li>
+                        <li>Modern lifestyle choices such as smoking, excessive alcohol consumption.</li>
                         <li>Advances in healthcare and medicine have allowed people to live longer. As cancer is more common in older adults, an aging population would lead to more cases.</li>
                     </ul>
                 </p>
@@ -263,10 +259,12 @@ export default class CancerViz extends React.Component {
                     Another thing to note is the decrease of cancer cases in the year 2020. <b>The COVID-19 pandemic led to a decrease in cancer screenings and diagnoses, as many healthcare facilities halted their services to reduce the risk of viral transmission.</b>
                 </p>
                 <p>
-                    That being said, there is hope, as the risk of dying from cancer has declined steadily over the past few decades. This has been attributed to advancements in detection and treatment processes, and smoking cessation. This is a testament to the progress made in cancer research and treatment.
+                    That being said, there is hope, as the risk of dying from cancer has declined steadily over the past few decades. This has been attributed to advancements in detection and treatment processes, and smoking cessation. It is a testament to the progress made in cancer research and treatment.
                 </p>
                 <h2>What are the leading types of Cancer?</h2>
-                <br></br>
+                <p>
+                    The most common types of cancer reported in the United States are breast cancer, lung and bronchus cancer, and prostate cancer. The charts below show the number of cases reported for the leading cancer sites in the human body, both male and female.
+                </p>
                 <div className="pagination" style={{ justifyContent: 'left' }}>
                     <button style={{ marginRight: "10px" }} className={currentPieChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalPieChart} active={currentPieChart === "Total"}>
                         Total
@@ -318,15 +316,18 @@ export default class CancerViz extends React.Component {
                     The number of cases of colorectal cancer has decreased year over year, which can be attributed to increased awareness and screening programs. Regular screening helps detect and remove precancerours polyps before they turn into cancer. However, the survival rate for colorectal cancer is lower in men compared to women. Late stage detection and influence of sex hormones is believed to be the reason. 
                 </p>
                 <p>
-                    Melanoma
+                    Melanoma has become more common in recent years, and is the leading cause of skin cancer deaths. <b>Increased exposure to UV radiation due to ozone depletion, tanning beds, and changing climate patterns are among some of the factors that led to the rise of melanoma.</b> Light skinned population is at a higher risk of developing melanoma, because of lower melanin levels in their skin (Melanin is a pigment that protects the skin from UV radiation). Some genetic factors also play a role in the development of melanoma. Mutations in the genes such as BRAF, CDKN2A, MC1R and CDK4, can lead to uncontrolled cell growth and division, which can result in melanoma. 
                 </p>
                 <h2>How does Cancer affect different age groups?</h2>
                 <p>
-
+                    Cancer can affect people of all ages, however, as we grow older, the risk of developing cancer increases. The chart below shows the number of cases reported for different age groups.
                 </p>
                 <div style={{ height: '25rem'}}>
                     <CancerIncidenceLineChart data={cancerViz.totalCasesPerAgeGroupBySex}></CancerIncidenceLineChart>
                 </div>
+                <p>
+                    However, different types of cancer affect different age groups. For example, thyroid cancer is more common in middle aged adults, while prostate, lung, and colorectal cancers are more common in older adults.
+                </p>
                 <div className="pagination" style={{ justifyContent: 'left' }}>
                     <button style={{ marginRight: "10px" }} className={currentAgeSiteLineChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalAgeSiteLineChart} active={currentAgeSiteLineChart === "Total"}>
                         Total
@@ -342,24 +343,49 @@ export default class CancerViz extends React.Component {
                 <div style={{ height: '30rem'}}>
                     <CancerIncidenceLineChart data={currentAgeSiteLineChart === "Female" ? cancerViz.femaleCasesPerAgeGroupBySite : (currentAgeSiteLineChart === "Total" ? cancerViz.totalCasesPerAgeGroupBySite : cancerViz.maleCasesPerAgeGroupBySite)}></CancerIncidenceLineChart>
                 </div>
+                <h2>Advances in Cancer Treatment</h2>
+                <p>
+                    There have been lot of advancements in treatment processes and early detection mechanisms for cancer. Some of the key improvements include:
+                </p>
+                <h4>Chimeric Antigen Receptor (CAR) T-Cell Therapy</h4>
+                <p>
+                CAR T-cell therapies involve extracting T-cells from the patient's body and genetically modifying them in a lab so that they become capable of identifying a specific type of cancer cell. These modified T-cells are then infused back into the body are usually able to proliferate after a single infusion. Because the modification helps the T-cell to identify and attack the cancer cells in a targeted way, these treatments have proven to be highly effective for blood cancers like leukemia and lymphoma.
+                </p>
+                <h4>Tumor Infiltrating Lymphocyte Therapy</h4>
+                <p>
+                    The immune system can sometimes recognize cancer on its owm and create the T-cells that can attack the cancerous cells. However, often the immune system is unable to mount a strong enough response to eliminate the cancer. TIL therapy involves extracting T-cells from the tumor itself, because such T-cells would have already identified the target cancer cells. Therefore, unlike CAR T-cell therapy, genetic modification is usually not needed. These extracted T-cells are then grown in higher quantities in a lab then infused back into the patient's body, so that the immune system has emough ammunition to fight the tumor. 
+                </p>
+                <p>
+                    Learn more about immunotherapy and other treatment options for cancer on the <a href="https://www.cancer.org/cancer/managing-cancer/treatment-types/immunotherapy.html">American Cancer Society website</a>.
+                </p>
+                <h2>Conclusion</h2>
+                <p>
+                    Cancer is a complex disease that affects millions of people around the world. Many organizations and researchers across the world are working tirelessly to find cures for cancer and improve the quality of life for those affected by it. With increased awareness, early screening, and advancements in treatment processes, we are moving towards a better and more hopeful future.  
+                </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2>References</h2>
                 <ol>
-                    <li>https://www.cancer.org/research/acs-research-news/facts-and-figures-2024.html</li>
-                    <li>https://www.mcleodhealth.org/blog/why-are-cancer-rates-rising/</li>
-                    <li>https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/</li>
-                    <li>https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know</li>
-                    <li>https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women</li>
-                    <li>https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161</li>
-                    <li>https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer</li>
-                    <li>https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening</li>
-                    <li>https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html</li>
-                    <li>https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html</li>
-                    <li>https://www.healthline.com/health/colorectal-cancer-survival-rate#gender-and-outlook</li>
+                    <li><a href='https://www.cancer.gov/about-cancer/understanding/what-is-cancer'>https://www.cancer.gov/about-cancer/understanding/what-is-cancer</a></li>
+                    <li><a href="https://www.cancer.org/research/acs-research-news/facts-and-figures-2024.html">https://www.cancer.org/research/acs-research-news/facts-and-figures-2024.html</a></li>
+                    <li><a href="https://www.mcleodhealth.org/blog/why-are-cancer-rates-rising/">https://www.mcleodhealth.org/blog/why-are-cancer-rates-rising/</a></li>
+                    <li><a href="https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/">https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/</a></li>
+                    <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know">https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know</a></li>
+                    <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women">https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women</a></li>
+                    <li><a href="https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161">https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161</a></li>
+                    <li><a href="https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer<">https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer</a></li>
+                    <li><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening">https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening</a></li>
+                    <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html">https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html</a></li>
+                    <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html">https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html</a></li>
+                    <li><a href="https://www.healthline.com/health/colorectal-cancer-survival-rate#gender-and-outlook">https://www.healthline.com/health/colorectal-cancer-survival-rate#gender-and-outlook</a></li>
+                    <li><a href="https://ozonewatch.gsfc.nasa.gov/">https://ozonewatch.gsfc.nasa.gov/</a></li>
+                    <li><a href="https://www.skinvision.com/articles/why-melanoma-is-increasing-and-what-we-can-do">https://www.skinvision.com/articles/why-melanoma-is-increasing-and-what-we-can-do</a></li>
+                    <li><a href="https://www.skincancer.org/skin-cancer-information/melanoma/melanoma-causes-and-risk-factors/">https://www.skincancer.org/skin-cancer-information/melanoma/melanoma-causes-and-risk-factors/</a></li>
+                    <li><a href="https://www.cancer.org/cancer/managing-cancer/treatment-types/immunotherapy/car-t-cell1.html">https://www.cancer.org/cancer/managing-cancer/treatment-types/immunotherapy/car-t-cell1.html</a></li>
+                    <li><a href="https://www.mdanderson.org/cancerwise/what-is-tumor-infiltrating-lymphocyte-til-therapy--6-things-to-know.h00-159460056.html">https://www.mdanderson.org/cancerwise/what-is-tumor-infiltrating-lymphocyte-til-therapy--6-things-to-know.h00-159460056.html</a></li>
                 </ol>
                 <h5>Acknowledgements</h5>
                 <p>
-                    United States Cancer Statistics - Incidence: 1999 - 2021, WONDER Online Database. United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute; 2023 submission; 2024 release. Accessed at http://wonder.cdc.gov/cancer-v2021.html on Dec 1, 2024.
+                    United States Cancer Statistics - Incidence: 1999 - 2021, WONDER Online Database. United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute; 2023 submission; 2024 release. Accessed at <a href="http://wonder.cdc.gov/cancer-v2021.html">http://wonder.cdc.gov/cancer-v2021.html</a> on Dec 1, 2024.
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <p>

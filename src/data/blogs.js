@@ -13,7 +13,7 @@ import CancerViz from '../blogs/cancerviz';
 export let blogList = [
     {
         name: "Statistical insights on Cancer in America",
-        description: "The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends and patterns in cancer incidences across the United States of America.",
+        description: "Cancer is a group of diseases characterized by abnormal and uncontrolled growth of cells, that can invade and spread to other parts of the body. The USCS online databases provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends in the cancer incidences for leading cancer sites in the human body.",
         tags: [
             "Cancer Statistics",
             "Healthcare",
