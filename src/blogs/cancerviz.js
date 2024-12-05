@@ -250,13 +250,18 @@ export default class CancerViz extends React.Component {
                     </ul>
                 </p>
                 <p>
-                    In the chart above, we can see that the number of cases reported for men is higher than that in women. This has been linked to higher rates of smoking and alcohol consumption among men, and occupational exposure to carcinogens at work, as men are often employed in industries that expose them to harmful chemicals.
-                </p>
-                <p>
-                    A recent study by the Dana-Farber Cancer Institute has uncovered some genetic factors that lead to higher cancer rates in men. For instance, <b>the X chromosome has a gene called 'KDM6A' which is responsible for suppressing tumors.</b> Since the female body has two X chromosomes, it has a backup copy of the gene, making it less susceptible to Leukemia. In contrast, the male body has only one X chromosome.
-                </p>
-                <p>
-                    Another thing to note is the decrease of cancer cases in the year 2020. <b>The COVID-19 pandemic led to a decrease in cancer screenings and diagnoses, as many healthcare facilities halted their services to reduce the risk of viral transmission.</b>
+                    Some key observations we can make from the above chart are:
+                    <ol>
+                        <li>
+                        In the chart above, we can see that the number of cases reported for men is higher than that in women. This has been linked to higher rates of smoking and alcohol consumption among men, and occupational exposure to carcinogens at work, as men are often employed in industries that expose them to harmful chemicals.
+                        </li>
+                        <li>
+                        A recent study by the Dana-Farber Cancer Institute has uncovered some genetic factors that lead to higher cancer rates in men. For instance, <b>the X chromosome has a gene called 'KDM6A' which is responsible for suppressing tumors.</b> Since the female body has two X chromosomes, it has a backup copy of the gene, making it less susceptible to Leukemia. In contrast, the male body has only one X chromosome.
+                        </li>
+                        <li>
+                        Another thing to note is the decrease of cancer cases in the year 2020. <b>The COVID-19 pandemic led to a decrease in cancer screenings and diagnoses, as many healthcare facilities halted their services to reduce the risk of viral transmission.</b>
+                        </li>
+                    </ol>
                 </p>
                 <p>
                     That being said, there is hope, as the risk of dying from cancer has declined steadily over the past few decades. This has been attributed to advancements in detection and treatment processes, and smoking cessation. It is a testament to the progress made in cancer research and treatment.
@@ -288,9 +293,6 @@ export default class CancerViz extends React.Component {
                 <p>
                     Similarly, the number of thyroid cancer cases is much higher in women compared to men. It is believed that hormones such as estrogen, play a significant role in the development of thyroid cancer. Women are prone to thyroid disorders in general, and tumors are often detected early during the course of other treatments. Early detection and easier treatment options have led to a high survival rate for most thyroid cancers.
                 </p>
-                <p>
-                    The charts below show the number of cases reported each year for the leading cancer sites in the human body.
-                </p>
                 <div className="pagination" style={{ justifyContent: 'left' }}>
                     <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalSiteLineChart}>
                         Total
@@ -307,16 +309,21 @@ export default class CancerViz extends React.Component {
                     <CancerIncidenceLineChart data={currentSiteLineChart === "Female" ? cancerViz.femaleCasesPerYearBySite : (currentSiteLineChart === "Total" ? cancerViz.casesPerYearBySite : cancerViz.maleCasesPerYearBySite)}></CancerIncidenceLineChart>
                 </div>
                 <p>
-                    <b>Policies and laws can also affect the number of reported cancer cases. For example, in 2012 the US Preventive Services Task Force recommended against routine prostate-specific antigen (PSA) testing for prostate cancer.</b> At the time, the opinion was that the risks of overdiagnosis and overtreatment outweighed the benefits of early detection. As fewer men were screened for prostate cancer, the number of reported cases also decreased, which can be seen in the above chart.
-                </p>
-                <p>
-                    However, the American Cancer Society and other organizations revised their guidelines in 2014, to recommend shared decision-making between patients and healthcare providers regarding PSA testing, after which the more cases are being identified.
-                </p>
-                <p>
-                    The number of cases of colorectal cancer has decreased year over year, which can be attributed to increased awareness and screening programs. Regular screening helps detect and remove precancerours polyps before they turn into cancer. However, the survival rate for colorectal cancer is lower in men compared to women. Late stage detection and influence of sex hormones is believed to be the reason. 
-                </p>
-                <p>
-                    Melanoma has become more common in recent years, and is the leading cause of skin cancer deaths. <b>Increased exposure to UV radiation due to ozone depletion, tanning beds, and changing climate patterns are among some of the factors that led to the rise of melanoma.</b> Light skinned population is at a higher risk of developing melanoma, because of lower melanin levels in their skin (Melanin is a pigment that protects the skin from UV radiation). Some genetic factors also play a role in the development of melanoma. Mutations in the genes such as BRAF, CDKN2A, MC1R and CDK4, can lead to uncontrolled cell growth and division, which can result in melanoma. 
+                    The charts below show the number of cases reported each year for the leading cancer sites in the human body. Some key observations we can make from the above chart are:
+                    <ol>
+                        <li>
+                        <b>Policies and laws can also affect the number of reported cancer cases. For example, in 2012 the US Preventive Services Task Force recommended against routine prostate-specific antigen (PSA) testing for prostate cancer.</b> At the time, the opinion was that the risks of overdiagnosis and overtreatment outweighed the benefits of early detection. As fewer men were screened for prostate cancer, the number of reported cases also decreased, which can be seen in the above chart.
+                        </li>
+                        <li>
+                        However, the American Cancer Society and other organizations revised their guidelines in 2014, to recommend shared decision-making between patients and healthcare providers regarding PSA testing, after which the more cases are being identified.
+                        </li>
+                        <li>
+                        The number of cases of colorectal cancer has decreased year over year, which can be attributed to increased awareness and screening programs. Regular screening helps detect and remove precancerours polyps before they turn into cancer. However, the survival rate for colorectal cancer is lower in men compared to women. Late stage detection and influence of sex hormones is believed to be the reason. 
+                        </li>
+                        <li>
+                        Melanoma has become more common in recent years, and is the leading cause of skin cancer deaths. <b>Increased exposure to UV radiation due to ozone depletion, tanning beds, and changing climate patterns are among some of the factors that led to the rise of melanoma.</b> Light skinned population is at a higher risk of developing melanoma, because of lower melanin levels in their skin (Melanin is a pigment that protects the skin from UV radiation). Some genetic factors also play a role in the development of melanoma. Mutations in the genes such as BRAF, CDKN2A, MC1R and CDK4, can lead to uncontrolled cell growth and division, which can result in melanoma. 
+                        </li>
+                    </ol>
                 </p>
                 <h2>How does Cancer affect different age groups?</h2>
                 <p>
