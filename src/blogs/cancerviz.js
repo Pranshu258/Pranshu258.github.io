@@ -220,7 +220,7 @@ export default class CancerViz extends React.Component {
                 <p>Pranshu Gupta, Dec 5, 2024</p>
                 <Sharer className="sharer" link={window.location.href} title={"Statistical insights on Cancer in America"}></Sharer>
                 <p className="introduction">
-                    Cancer is a group of diseases characterized by abnormal and uncontrolled growth of cells, that can invade and spread to other parts of the body. The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends and patterns in cancer incidences across the United States of America for leading cancer sites in the human body.
+                    Cancer is a group of diseases characterized by abnormal and uncontrolled growth of cells, that can invade and spread to other parts of the body. The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the country. In this article we will analyse the data to find trends and patterns in cancer incidences for leading cancer sites in the human body.
                     <br></br>
                 </p>
                 <p style={{backgroundColor: "pink", padding: '10px', borderRadius: '8px'}}>
@@ -229,10 +229,10 @@ export default class CancerViz extends React.Component {
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2>What is Cancer?</h2>
                 <p>
-                    Cell growth, division and cell death are critical but tightly regulated processes in the human body. Sometimes, this process breaks down and damaged cells can start to multiply and grown when they shouldn't. Such growths are called tumors, and can be benign (non-cancerous) or malignant (cancerous). Tumors become cancerous when they start invading nearby tissues and spreading to other parts of the body, a process called metastasis.
+                    Cell growth, division and cell death are critical but tightly regulated processes in the human body. Sometimes, this process breaks down and damaged cells can start to multiply and grow when they shouldn't. Such growths are called tumors, and can be benign (non-cancerous) or malignant (cancerous). Tumors become cancerous when they start invading nearby tissues and spreading to other parts of the body, a process called metastasis.
                 </p>
                 <p>
-                    The immune system can usually identify damaged cells and destroy them when needed. However, this ability weakens as we grown older, which is why cancer is more common in older adults. Certain mutations in the DNA can also lead to cancer. These mutations can be inherited from parents, or can be caused by environmental factors such as exposure to radiation, chemicals, or viruses.
+                    The immune system can usually identify damaged cells and destroy them when needed. However, this ability weakens as we grow older, which is why cancer is more common in older adults. Certain mutations in the DNA can also lead to cancer. These mutations can be inherited from parents, or can be caused by environmental factors such as exposure to radiation, chemicals, or viruses.
                 </p>
                 <h2>Is Cancer on the Rise?</h2>
                 <p>
@@ -253,18 +253,18 @@ export default class CancerViz extends React.Component {
                     Some key observations we can make from the above chart are:
                     <ol>
                         <li>
-                        In the chart above, we can see that the number of cases reported for men is higher than that in women. This has been linked to higher rates of smoking and alcohol consumption among men, and occupational exposure to carcinogens at work, as men are often employed in industries that expose them to harmful chemicals.
+                        We can see that the number of cases reported for men is higher than that for women. This has been linked to higher rates of smoking and alcohol consumption among men, and occupational exposure to carcinogens at work, as men are more often employed in industries that expose them to harmful chemicals.
                         </li>
                         <li>
-                        A recent study by the Dana-Farber Cancer Institute has uncovered some genetic factors that lead to higher cancer rates in men. For instance, <b>the X chromosome has a gene called 'KDM6A' which is responsible for suppressing tumors.</b> Since the female body has two X chromosomes, it has a backup copy of the gene, making it less susceptible to Leukemia. In contrast, the male body has only one X chromosome.
+                        A recent study by the Dana-Farber Cancer Institute has uncovered some genetic factors that lead to higher cancer rates in men. For instance, <b>the X chromosome has a gene called 'KDM6A' which is responsible for suppressing tumors.</b> Since the female body has two X chromosomes, it has a backup copy of the gene, making it less susceptible to certain types of cancer such as Leukemia. In contrast, the male body has only one X chromosome.
                         </li>
                         <li>
-                        Another thing to note is the decrease of cancer cases in the year 2020. <b>The COVID-19 pandemic led to a decrease in cancer screenings and diagnoses, as many healthcare facilities halted their services to reduce the risk of viral transmission.</b>
+                        Another thing to note is the decrease of cancer cases in the year 2020. <b>The COVID-19 pandemic led to a decrease in cancer screenings and diagnoses, as many healthcare facilities halted their services to reduce the risk of viral transmission.</b> It is believed that it resulted in delays in cancer diagnoses and treatment, which could lead to an increase in cancer-related deaths in the future.
                         </li>
                     </ol>
                 </p>
                 <p>
-                    That being said, there is hope, as the risk of dying from cancer has declined steadily over the past few decades. This has been attributed to advancements in detection and treatment processes, and smoking cessation. It is a testament to the progress made in cancer research and treatment.
+                    That being said, there is hope, as the risk of dying from cancer has declined steadily over the past few decades. Mainly because of advancements in detection and treatment processes, and smoking cessation. It is a testament to the progress made in cancer research and treatment.
                 </p>
                 <h2>What are the leading types of Cancer?</h2>
                 <p>
@@ -285,13 +285,13 @@ export default class CancerViz extends React.Component {
                     <CancerIncidencePieChart data={currentPieChart === "Female" ? cancerViz.casesBySiteFemale : (currentPieChart === "Total" ? cancerViz.casesBySite : cancerViz.casesBySiteMale)}></CancerIncidencePieChart>
                 </div>
                 <p>
-                    Overall, breast cancer is the most common type of cancer in humans, followed by lung and bronchus cancer. 99% of breast cancer cases are found in women due to several reasons such as, higher number of breast tissue in women, influence of estrogen and progesterone hormones (which are more active in the female body), and genetic factors (mutations in BRCA1 and BRCA2). Mutations in BRCA1 and BRCA2 genes affect the male body as well, and can lead to prostate cancer, which is the most common cancer type in men.
-                </p>
-                <p>
-                    The second most common cancer type is lung and bronchus cancer, which is common across both the sexes. Lung cancer is primarily caused by smoking (including passive smoking). <b>Radon exposure and increasing air pollution levels have also contributed to the rise in cases for lung cancer.</b>
+                    99% of breast cancer cases are found in women due to several reasons such as, higher number of breast tissue in women, influence of estrogen and progesterone hormones (which are more active in the female body), and genetic factors (mutations in BRCA1 and BRCA2). Mutations in BRCA1 and BRCA2 genes affect the male body as well, and can lead to prostate cancer, which is the most common cancer type in men.
                 </p>
                 <p>
                     Similarly, the number of thyroid cancer cases is much higher in women compared to men. It is believed that hormones such as estrogen, play a significant role in the development of thyroid cancer. Women are prone to thyroid disorders in general, and tumors are often detected early during the course of other treatments. Early detection and easier treatment options have led to a high survival rate for most thyroid cancers.
+                </p>
+                <p>
+                    The second most common cancer type is lung and bronchus cancer, which is common across both the sexes. Lung cancer is primarily caused by smoking (including passive smoking). <b>Radon exposure and increasing air pollution levels have also contributed to the rise in cases for lung cancer.</b>
                 </p>
                 <div className="pagination" style={{ justifyContent: 'left' }}>
                     <button style={{ marginRight: "10px" }} className={currentSiteLineChart === "Total" ? "btn btn-dark" : "btn btn-light"} onClick={this.showTotalSiteLineChart}>
@@ -375,11 +375,11 @@ export default class CancerViz extends React.Component {
                     <li><a href='https://www.cancer.gov/about-cancer/understanding/what-is-cancer'>NCI - What is Cancer?</a></li>
                     <li><a href="https://www.cancer.org/research/acs-research-news/facts-and-figures-2024.html">Cancer Org - Facts and Figures 2024</a></li>
                     <li><a href="https://www.mcleodhealth.org/blog/why-are-cancer-rates-rising/">McLeod Health - Why are Cancer rates rising?</a></li>
-                    <li><a href="https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/">Dana Farber Org - Why are Men More Likely Than Women to Develop Cancer Over the Course of Their Lives?</a></li>
+                    <li><a href="https://blog.dana-farber.org/insight/2018/10/men-likely-women-develop-cancer-course-lives/">DanaFarber - Why are men more likely than women to develop Cancer over the course of their lives?</a></li>
                     <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-cancer/thyroid-cancer-what-women-should-know">Hopkins Medicine - Thyroid Cancer: What women should know?</a></li>
                     <li><a href="https://www.hopkinsmedicine.org/health/conditions-and-diseases/thyroid-disorders-in-women">Hopkins Medicine - Thyroid disorders in women</a></li>
                     <li><a href="https://www.mayoclinic.org/diseases-conditions/thyroid-cancer/symptoms-causes/syc-20354161">Mayo Clinic - Thyroid Cancer: Symptoms and Causes</a></li>
-                    <li><a href="https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer<">Lung Prg - What causes lung Cancer?</a></li>
+                    <li><a href="https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/basics/what-causes-lung-cancer<">Lung Org - What causes lung Cancer?</a></li>
                     <li><a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/prostate-cancer-screening">USPTF - Prostate Cancer Screening</a></li>
                     <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/about/key-statistics.html">Cancer Org - Key Cancer Statistics</a></li>
                     <li><a href="https://www.cancer.org/cancer/types/colon-rectal-cancer/detection-diagnosis-staging/survival-rates.html">Cancer Org - Colorectal Cancer and Survival Rates</a></li>
