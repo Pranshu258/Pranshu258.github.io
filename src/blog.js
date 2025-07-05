@@ -41,8 +41,8 @@ export default class Blog extends React.Component {
                                         <ul style={{listStyle: 'none', padding: 0}}>
                                             {blogList.map((object, i) => {
                                                 // Compute previous and next
-                                                const prev = blogList[i - 1];
-                                                const next = blogList[i + 1];
+                                                const next = blogList[i - 1];
+                                                const prev = blogList[i + 1];
                                                 // Only show for the current blog route
                                                 // Use window.location.pathname to get current path
                                                 const currentPath = window.location.pathname.split('/').pop();
