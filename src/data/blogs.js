@@ -9,8 +9,18 @@ import DNS from '../blogs/dns';
 import TransIsol from '../blogs/transisol';
 import DistribComp from '../blogs/distribcomp';
 import CancerViz from '../blogs/cancerviz';
+import OpenPrequalBlog from '../blogs/openprequal';
 
 export let blogList = [
+    {
+        name: "Coding YouTube's load balancer using Github Copilot",
+        description: "Can we vibe code 'Prequal', the load balancing algorithm used by Google for services that make YouTube? Let's find out, using GitHub Copilot. Google's Prequal is an adaptive load balancing algorithm that uses real-time metrics like requests-in-flight, and latency to make intelligent routing decisions.",
+        tags: [
+            "Distributed Systems",
+            "Load Balancing",
+        ],
+        component: <OpenPrequalBlog/>
+    },
     {
         name: "Statistical insights on Cancer in America",
         description: "Cancer is a group of diseases characterized by abnormal and uncontrolled growth of cells, that can invade and spread to other parts of the body. The USCS online databases provide cancer incidence and mortality data for the United States. In this article we will analyse the data to find trends in the cancer incidences for leading cancer sites in the human body.",
