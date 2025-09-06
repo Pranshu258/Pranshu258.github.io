@@ -3,6 +3,9 @@ import Sharer from '../sharer';
 import '../styles/fonts.css';
 import '../styles/blog.css';
 
+import reverseproxy from '../images/openprequal/reverseproxy.svg';
+
+
 export default class OpenPrequalBlog extends React.Component {
     constructor(props) {
         super(props);
@@ -18,8 +21,6 @@ export default class OpenPrequalBlog extends React.Component {
     }
 
     render() {
-        const { currentLatencyMetric, currentDistribution } = this.state;
-
         return (
             <div>
                 <div className="row bhead">
@@ -34,10 +35,10 @@ export default class OpenPrequalBlog extends React.Component {
                     YouTube is the world's largest video sharing platform, where anyone can upload, watch and share videos for free. Over 100 hours of video content is uploaded every minute, a mind bending amount of content, ranging from adorable cats to deep scientific explainations. Load balancing is a critical component of any highly scalable service like YouTube. Google uses an algorithm that it calls <b>Prequal</b>, an abbreviation for "Probing to reduce Queueing and Latency", for load balacing services that make up the YouTube platform.
                 </p>
                 <p>
-                    Prequal is a load balancer for distributed multi-tenant systems, that aims to minimize real-time request latency in presence of heterogenous server capacities and non-uniform, time-varying antagonist load. In this article, we will explore an AI assited implementation of this algorithm using Python's FastAPI. FastAPI is a popular web framework for building APIs with Python and has been optimized to be on par with NodeJS and Go (using libraries like Starlette and Pydantic).
+                    Prequal is a load balancer for distributed multi-tenant systems, that aims to minimize real-time request latency in presence of heterogenous server capacities and non-uniform, time-varying antagonist load. In this article, we will explore an AI assisted implementation of this algorithm using Python's FastAPI. FastAPI is a popular web framework for building APIs with Python and has been optimized to be on par with NodeJS and Go (using libraries like Starlette and Pydantic).
                 </p>
                 <p style={{backgroundColor: "pink", padding: '10px', borderRadius: '5px'}}>
-                    This is an experimental project with many potential performance optimizations that remain unexplored.
+                    OpenPrequal is an experimental project that I worked on in my spare time. There are quite a few potential performance optimizations that remain unexplored as of today.
                 </p>
                 <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal">
                     <button className="btn btn-danger">
@@ -56,16 +57,45 @@ export default class OpenPrequalBlog extends React.Component {
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>Agent Assisted Coding</h2>
                 <p>
-                    For this project, I relied entirely on VS Code and GitHub Copilot, guiding the agent by specifying requirements and desired changes, while making very few manual code edits myself. Most of my prompts were handled by OpenAI's GPT-4.1, with occasional use of GPT-5 mini, o3-mini, and Anthropic Claude Sonnet for tasks where GPT-4.1 did not perform as well. This is expected, since GPT-4.1 is a non-reasoning model and may not match the performance of reasoning models like o3 and GPT-5 on more complex tasks.
+                    For this project, I relied entirely on VS Code and GitHub Copilot, guiding the agent by specifying requirements and desired changes, while making very few manual code edits myself. Most of my prompts were handled by OpenAI's GPT-4.1, with occasional use of GPT-5 mini, o3-mini, and Anthropic Claude Sonnet for tasks where GPT-4.1 did not perform as well. This is expected, since GPT-4.1 is a non-reasoning model and may not match the performance of reasoning models like o3 and GPT-5 on more complex tasks. 
                 </p>
-                <h3>Reasoning Models?</h3>
+                <ul>
+                    <li><a href='https://platform.openai.com/docs/models/gpt-4.1'>GPT-4.1</a> excels at instruction following and tool calling, with broad knowledge across domains. It features a 1M token context window, and low latency without a reasoning step.</li>
+                    <li><a href='https://platform.openai.com/docs/models/gpt-5'>GPT-5</a> is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains. GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts. </li>
+                    <li><a href='https://platform.openai.com/docs/models/o3'>o3</a> is a well-rounded and powerful model across domains. It excels at technical writing and instruction-following, and can be used to think through multi-step problems that involve analysis across text, code, and images. o3-mini is a smaller model alternartive to o3.</li>
+                    <li><a href='https://www.anthropic.com/claude/sonnet'>Anthropic Claude Sonnet</a> is a hybrid reasoning model and is a powerful choice for agentic coding, and can complete tasks across the entire software development lifecycle—from initial planning to bug fixes, maintenance to large refactors.</li>
+                </ul>
                 <p>
-
+                    Reasoning models are LLMs that have been fine tuned to break complex problems into smaller steps, employing chain of thought reasoning and other multi-step decision making strategies, before generating the final output.
                 </p>
+                <hr style={{ backgroundColor: "white" }} />
+                <h2>Load Balancing using Reverse Proxy</h2>
+                <p>
+                    A load balancer is a system that acts as a traffic proxy and disibutes network or application traffic across endpoints on a number of severs. This helps increase the overall performance and availability of applications by reducing the burden on idividual services and distributing deamnd across different surfaces. There are many load balacing algorithms that can be used, each having there pros and cons.
+                </p>
+                <ul>
+                    <li><b>Round Robin:</b> Distributes requests sequentially across all servers in the pool, ensuring each server receives an equal share of traffic.</li>
+                    <li><b>Least Connections:</b> Routes new requests to the server with the fewest active connections, balancing the load based on current usage.</li>
+                    <li><b>Weighted Round Robin:</b> Assigns more requests to servers with higher capacity by giving them a greater weight in the rotation.</li>
+                    <li><b>Random:</b> Selects a server at random for each request, providing a simple but sometimes uneven distribution.</li>
+                    <li><b>Least Latency:</b> Directs traffic to the server with the lowest average response time, optimizing for speed.</li>
+                    <li><b>Power of Two Choices (P2C):</b> Randomly selects two servers and routes the request to the one with fewer active connections (or lower latency), combining randomness with load awareness.</li>
+                    <li><b>Power of N Choices:</b> Extends P2C by randomly sampling N servers and choosing the best among them (e.g., least loaded or lowest latency), further improving load distribution in large clusters.</li>
+                </ul>
+                <figure>
+                    <img alt="" className="img-fluid" src={reverseproxy} />
+                    <figcaption>Reverse Proxy API Gateway</figcaption>
+                </figure>
+                <h2>Probing to reduce Queueing and Latency</h2>
+                <hr style={{ backgroundColor: "white" }} />
                 <h2>References</h2>
                 <ol>
                     <li><a href='https://fastapi.tiangolo.com/'>Python FastAPI</a> - modern, fast (high-performance), web framework for building APIs with Python</li>
                     <li><a href='https://github.com/features/copilot'>GitHub Copilot</a> - AI that builds with you</li>
+                    <li><a href='https://www.ibm.com/think/topics/reasoning-model'>What is a reasoning model?</a>- by Dave Bergmann, IBM</li>
+                    <li><a href='https://www.ibm.com/think/topics/chain-of-thoughts'>Chain of Thoughts</a>- What is chain of thought (CoT) prompting?</li>
+                    <li><a href='https://www.anthropic.com/claude/sonnet'>Anthropic Claude Sonnet</a>- Hybrid reasoning model with superior intelligence</li>
+                    <li><a href='https://platform.openai.com/docs/models'>Models</a>- OpenAI Platform</li>
                 </ol>
                 <hr style={{ backgroundColor: "white" }} />
             </div>
