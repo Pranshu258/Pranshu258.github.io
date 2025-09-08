@@ -57,7 +57,7 @@ export default class OpenPrequalBlog extends React.Component {
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>Agent Assisted Coding</h2>
                 <p>
-                    For this project, I relied entirely on VS Code and GitHub Copilot, guiding the agent by specifying requirements and desired changes, while making very few manual code edits myself. Most of my prompts were handled by OpenAI's GPT-4.1, with occasional use of GPT-5 mini, o3-mini, and Anthropic Claude Sonnet for tasks where GPT-4.1 did not perform as well. This is expected, since GPT-4.1 is a non-reasoning model and may not match the performance of reasoning models like o3 and GPT-5 on more complex tasks. 
+                    For this project, I relied entirely on VS Code and GitHub Copilot, guiding the agent by specifying requirements and desired changes, while making very few manual code edits myself. Most of my prompts were handled by OpenAI's GPT-4.1, with occasional use of GPT-5 mini, o3-mini, and Anthropic Claude Sonnet for tasks where GPT-4.1 did not perform as well. This is expected, since GPT-4.1 is a non-reasoning model and may not match the performance of reasoning models like o3 and GPT-5 on more complex tasks.
                 </p>
                 <ul>
                     <li><a href='https://platform.openai.com/docs/models/gpt-4.1'>OpenAI GPT-4.1</a> excels at instruction following and tool calling, with broad knowledge across domains. It features a 1M token context window, and low latency without a reasoning step.</li>
@@ -90,12 +90,16 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     Prequal (Probing to reduce Queueing and Latency) is a load balacing algorithm that actively probes server load to leverage the power of N choices paradigm, extending it with asynchronous and reusable probes. It does not balance CPU load, but selects servers according to estimated latency and active requests in flight instead. Latency on the server side is defined as the time duration between the application logic receiving the request and handing the response back. The request contributes to the number of requests in flight for server during this time duration.
                 </p>
+                <h3>Probe Scheduling and Management</h3>
                 <ul>
-                    <li>The reverse proxy issues a specified number of probes 'r' triggered by each request, in addition to a issuing a forced probe after a configured idle time has been exceeded, to ensure availability of recent probe responses in the pool even when no requests have arrived recently. The probing rate (probes per unit time) is the product of request per second and 'r'. This ensures that the probing rate is higher for higher request rate. This is intentional so that the proxy can make decisions based on the latest data.</li>
+                    <li>The reverse proxy issues a specified number of probes 'r' triggered by each request, in addition to a issuing a forced probe after a configured idle time has been exceeded, to ensure availability of recent probe responses in the pool even when no requests have arrived recently. The probing rate (probes per unit time) is proportional to the ratio of 'r' and incoming requests per second. This ensures that the probing rate remains constant irrespective of the request rate. This is intentional so that the proxy can make decisions based on the latest data, without flooding the backends with probes. See implementation <a href='https://github.com/Pranshu258/OpenPrequal/blob/b83520df5736928d1b1334b383e1d6e7bac3f8d7/src/algorithms/prequal_load_balancer.py#L84'>here</a>.</li>
                     <li>Probe destinations are sampled uniformly without replacement from the set of available servers. It also helps avoid the thundering herd phenomenon, in which a server with low estimated latency is inundatred with requests as it is seen as the best choice, which leads to request queueing and higher latency.</li>
-                    <li>Each server tracks the number of requests in flight and latency statistics, which are provided to the proxy on probe requests.</li>
                     <li>When responding to a probe, the RIF comes from simply checking a counter. The estimated latency is the median of the recent latencies observed at the current RIF value. The server maintains a recent history of latency binned over RIF values.</li>
                     <li>The proxy maintains a pool of probe responses to be used in server selection. Each pool element indicates the replica server that responded, the timestamp, and the load signlas, i.e. current RIF and estimated latency. The pool is capped at a maximum size of 16.</li>
+                </ul>
+                <h3>Metrics Management</h3>
+                <ul>
+                    <li>Each server tracks the number of requests in flight and latency statistics, which are provided to the proxy on probe requests.</li>
                 </ul>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>References</h2>
