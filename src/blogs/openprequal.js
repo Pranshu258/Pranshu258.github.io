@@ -37,7 +37,7 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     Prequal is a load balancer for distributed multi-tenant systems, that aims to minimize real-time request latency in presence of heterogenous server capacities and non-uniform, time-varying antagonist load. In this article, we will explore an AI assisted implementation of this algorithm using Python's FastAPI. FastAPI is a popular web framework for building APIs with Python and has been optimized to be on par with NodeJS and Go (using libraries like Starlette and Pydantic).
                 </p>
-                <p style={{backgroundColor: "pink", padding: '10px', borderRadius: '5px'}}>
+                <p style={{backgroundColor: "orange", padding: '10px', borderRadius: '5px'}}>
                     OpenPrequal is an experimental project that I worked on in my spare time. There are several potential performance optimizations that remain unexplored as of today.
                 </p>
                 <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal">
@@ -48,7 +48,7 @@ export default class OpenPrequalBlog extends React.Component {
                     </button>
                 </a>
                 <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal">
-                    <button className="btn btn-warning">
+                    <button className="btn btn-primary">
                         <i className="fab fa-github"></i>
                         <b style={{ padding: "10px" }}>OpenPrequal on GitHub</b>
                         <i className="fas fa-external-link-alt"></i>
@@ -67,6 +67,9 @@ export default class OpenPrequalBlog extends React.Component {
                 </ul>
                 <p>
                     Reasoning models are LLMs that have been fine tuned to break complex problems into smaller steps, employing chain of thought reasoning and other multi-step decision making strategies, before generating the final output. It has been observed that such models perform better at complex tasks that involve mathematical and logical reasoning, such as programming. 
+                </p>
+                <p>
+                    That being said, even reasoning LLMs are not perfect, they would often get stuck into fixing a syntax error, rewriting the file again and again, while making no progress, or sometimes, make it worse. As an AI agent user, it is essential to know what you want to implement, and to be able to understand and verify if the code that was generated is doing what you intended it to do.
                 </p>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>Load Balancing using Reverse Proxy</h2>
