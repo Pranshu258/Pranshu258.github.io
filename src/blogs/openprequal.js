@@ -100,7 +100,7 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     The diagram above shows the high level architecture of the OpenPrequal API gateway and load balancer. The components in green are specific to the prequal load balacing algorithm and are not triggered if a different algorithm is configured for the reverse proxy gateway. In the following sections we will discuss each component in detail.
                 </p>
-                <h3>Probe Scheduling and Management</h3>
+                <h3>Probe Management</h3>
                 <ul>
                     <li>The reverse proxy issues a specified number of probes 'r' triggered by each request, in addition to a issuing a forced probe after a configured idle time has been exceeded, to ensure availability of recent probe responses in the pool even when no requests have arrived recently. The probing rate (probes per unit time) is proportional to the ratio of 'r' and incoming requests per second. This ensures that the probing rate remains constant irrespective of the request rate. This is intentional so that the proxy can make decisions based on the latest data, without flooding the backends with probes. See implementation <a href='https://github.com/Pranshu258/OpenPrequal/blob/b83520df5736928d1b1334b383e1d6e7bac3f8d7/src/algorithms/prequal_load_balancer.py#L84'>here</a>.</li>
                     <li>Probe destinations are sampled uniformly without replacement from the set of available servers. It also helps avoid the thundering herd phenomenon, in which a server with low estimated latency is inundatred with requests as it is seen as the best choice, which leads to request queueing and higher latency.</li>
@@ -114,6 +114,9 @@ export default class OpenPrequalBlog extends React.Component {
                     <li>The request contributes one unit to the "requests in flight" metric during the duration which spans its latency (as described above).</li>
                     <li>When responding to a probe, the RIF comes from simply checking the counter. The latency is always recorded with the RIF at the time the request arrived. The latency metric in the probe response is the median of the recent latencies associated with the current RIF value. If the current value is not available is history, the median is estimated using the closest RIF value. OpenPrequal implementation also does interpolation between two closest available values if possible.</li>
                 </ul>
+                <h3>Heartbeat Client</h3>
+                <h3>Backend Registry</h3>
+                <h3>Latency Simulator</h3>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>References</h2>
                 <ol>
