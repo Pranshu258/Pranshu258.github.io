@@ -123,6 +123,159 @@ export default class OpenPrequalBlog extends React.Component {
                 <h3>Backend Registry</h3>
                 <h3>Latency Simulator</h3>
                 <hr style={{ backgroundColor: "white" }} />
+                <h2>Agent Assisted Workflow</h2>
+                <p>
+                    All of this was made possible by hundreds of prompts across around 300 commits. 
+                </p>
+                <table className="development-timeline-table" style={{width: '100%', borderCollapse: 'collapse', marginTop: '20px'}}>
+                    <thead>
+                        <tr style={{backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6'}}>
+                            <th style={{padding: '12px', textAlign: 'left', border: '1px solid #dee2e6'}}>Phase</th>
+                            <th style={{padding: '12px', textAlign: 'left', border: '1px solid #dee2e6'}}>Timeline</th>
+                            <th style={{padding: '12px', textAlign: 'left', border: '1px solid #dee2e6'}}>Key Developments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Phase 1: Initial Foundation</strong>
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                4 months ago
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Core Infrastructure:</strong><br/>
+                                • Initial project setup and basic implementation<br/>
+                                • Added Kubernetes infrastructure (helm charts, sidecar services)<br/>
+                                • Implemented basic metrics and monitoring capabilities<br/>
+                                • Created test scripts and initial documentation<br/>
+                                • Added asset management and build processes
+                            </td>
+                        </tr>
+                        <tr style={{backgroundColor: '#f8f9fa'}}>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Phase 2: Core Load Balancing Development</strong>
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                5 weeks ago
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Load Balancer Architecture:</strong><br/>
+                                • Extracted abstract load balancer class for extensibility<br/>
+                                • Implemented Round Robin load balancer as foundation<br/>
+                                • Created comprehensive backend registry system<br/>
+                                • Separated concerns between proxy handler, registry, and load balancer<br/><br/>
+                                <strong>Health Monitoring System:</strong><br/>
+                                • Introduced heartbeat mechanism for backend health tracking<br/>
+                                • Implemented sophisticated probing system for server health checks<br/>
+                                • Added probe response classes and health status management<br/>
+                                • Created probe manager for centralized health monitoring<br/><br/>
+                                <strong>Prequal Algorithm Implementation:</strong><br/>
+                                • Developed the core "Prequal" load balancing algorithm<br/>
+                                • Implemented Request-in-Flight (RIF) based routing<br/>
+                                • Added latency-based routing decisions<br/>
+                                • Implemented windowed latency tracking and metrics collection<br/>
+                                • Added Prometheus metrics integration
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Phase 3: Optimization and Refinement</strong>
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                3-4 weeks ago
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Performance Optimizations:</strong><br/>
+                                • Moved probe scheduler off the critical request path<br/>
+                                • Implemented caching for median calculations and RIF maps<br/>
+                                • Added background probe tasks and optimized probe frequency<br/>
+                                • Reduced lock contention and removed unnecessary locking mechanisms<br/>
+                                • Used deque for efficient RPS tracking<br/>
+                                • Simplified backend selection and classification logic<br/><br/>
+                                <strong>Load Testing Infrastructure:</strong><br/>
+                                • Integrated Locust for comprehensive load testing<br/>
+                                • Added automated benchmarking scripts and result collection<br/>
+                                • Implemented multiple load balancing algorithms for comparison<br/>
+                                • Created result analysis and visualization tools<br/>
+                                • Added backend distribution logging and monitoring<br/><br/>
+                                <strong>Advanced Features:</strong><br/>
+                                • Added heterogeneous backend support with configurable latencies<br/>
+                                • Implemented timeout handling and jitter mechanisms<br/>
+                                • Enhanced error handling and comprehensive logging systems<br/>
+                                • Added forced probe scheduling to prevent worker starvation
+                            </td>
+                        </tr>
+                        <tr style={{backgroundColor: '#f8f9fa'}}>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Phase 4: Algorithm Expansion</strong>
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                2-3 weeks ago
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Load Balancing Strategies:</strong><br/>
+                                • <strong>Least Latency:</strong> Route to backend with lowest average latency<br/>
+                                • <strong>Least RIF:</strong> Route to backend with fewest requests in flight<br/>
+                                • <strong>Power of Two Choices:</strong> Select best of two random backends<br/>
+                                • <strong>Random:</strong> Baseline random selection for comparison<br/>
+                                • <strong>Round Robin:</strong> Traditional sequential selection<br/><br/>
+                                <strong>Performance Analysis:</strong><br/>
+                                • Comprehensive performance comparison between all algorithms<br/>
+                                • Statistical analysis of latency distributions<br/>
+                                • Backend utilization pattern analysis<br/>
+                                • Failure rate and exception tracking
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Phase 5: Production Readiness</strong>
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                2 weeks ago
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Containerization & Deployment:</strong><br/>
+                                • Enhanced Docker support with optimized build scripts<br/>
+                                • Improved Kubernetes deployment configurations<br/>
+                                • Added profiling capabilities for performance analysis<br/>
+                                • Created automated deployment and scaling scripts<br/><br/>
+                                <strong>Code Quality Improvements:</strong><br/>
+                                • Implemented comprehensive unit testing suite<br/>
+                                • Added pre-commit hooks and automated code formatting<br/>
+                                • Enhanced error handling and structured logging<br/>
+                                • Added type safety and documentation
+                            </td>
+                        </tr>
+                        <tr style={{backgroundColor: '#f8f9fa'}}>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Phase 6: Recent Optimizations</strong>
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                Last 2 weeks
+                            </td>
+                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                                <strong>Redis Integration:</strong><br/>
+                                • Added Redis for distributed backend registry<br/>
+                                • Implemented Redis-based caching and state management<br/>
+                                • Created Redis templates and configuration management<br/>
+                                • Added batch operations for improved performance<br/>
+                                • Lock-free Redis implementation for better concurrency<br/><br/>
+                                <strong>Health Check Enhancements:</strong><br/>
+                                • Improved unhealthy backend detection algorithms<br/>
+                                • Added consecutive failure tracking and thresholds<br/>
+                                • Implemented short-circuit logic for unhealthy backends<br/>
+                                • Enhanced probe response handling and timeout management<br/><br/>
+                                <strong>Performance Monitoring:</strong><br/>
+                                • Separated metrics for RIF average latency vs general average latency<br/>
+                                • Enhanced result collection and analysis tools<br/>
+                                • Reduced cache TTL for better responsiveness<br/>
+                                • Added comprehensive benchmarking documentation
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr style={{ backgroundColor: "white" }} />
                 <h2>References</h2>
                 <ol>
                     <li><a href='https://fastapi.tiangolo.com/'>Python FastAPI</a> - modern, fast (high-performance), web framework for building APIs with Python</li>
