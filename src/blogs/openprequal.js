@@ -108,9 +108,11 @@ export default class OpenPrequalBlog extends React.Component {
                     <li>The proxy maintains a pool of probe responses to be used in server selection. Each pool element indicates the replica server that responded, the timestamp, and the load signals, i.e. current RIF and estimated latency. The pool is capped at a maximum size of 16.</li>
                 </ul>
                 <h3>Metrics Management</h3>
-
                 <ul>
                     <li>Each server tracks the number of requests in flight and latency statistics, which are provided to the proxy on probe requests.</li>
+                    <li>The latency is defined as the time duration between the moment when the application logic receives the request and the moment when it forwards the response to the proxy. </li>
+                    <li>The request contributes one unit to the "requests in flight" metric during the duration which spans its latency (as described above).</li>
+                    <li>When responding to a probe, the RIF comes from simply checking the counter. The latency is always recorded with the RIF at the time the request arrived. The latency metric in the probe response is the median of the recent latencies associated with the current RIF value. If the current value is not available is history, the median is estimated using the closest RIF value. OpenPrequal implementation also does interpolation between two closest available values if possible.</li>
                 </ul>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>References</h2>
