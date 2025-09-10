@@ -115,6 +115,11 @@ export default class OpenPrequalBlog extends React.Component {
                     <li>When responding to a probe, the RIF comes from simply checking the counter. The latency is always recorded with the RIF at the time the request arrived. The latency metric in the probe response is the median of the recent latencies associated with the current RIF value. If the current value is not available is history, the median is estimated using the closest RIF value. OpenPrequal implementation also does interpolation between two closest available values if possible.</li>
                 </ul>
                 <h3>Heartbeat Client</h3>
+                <p>
+                    The heartbeat client is a module within the backend and it is responsible for sending periodic heartbeats to the proxy server. The heartbeat request includes the current metrics state of the backend. The metrics state is used to update the backend state in the registry. The proxy maintains the timestamps for the most recent heartbeat and marks the backend unhealthy if the heartbeat is older than a configured threshold. Unhealthy backends are not used by the load balancer algorithm for request handling. 
+
+                    In Prequal load balancer, probes also update the backend state, in addition to the heartbeats.
+                </p>
                 <h3>Backend Registry</h3>
                 <h3>Latency Simulator</h3>
                 <hr style={{ backgroundColor: "white" }} />
