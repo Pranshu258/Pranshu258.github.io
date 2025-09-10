@@ -4,7 +4,7 @@ import '../styles/fonts.css';
 import '../styles/blog.css';
 
 import reverseproxy from '../images/openprequal/reverseproxy.svg';
-
+import openprequal from '../images/openprequal/openprequal.svg';
 
 export default class OpenPrequalBlog extends React.Component {
     constructor(props) {
@@ -27,7 +27,7 @@ export default class OpenPrequalBlog extends React.Component {
                     <i className="fas fa-hexagon-nodes bigger gt1"></i>
                 </div>
                 <h1 className="title">Coding YouTube's load balancer using GitHub Copilot</h1>
-                <p>Pranshu Gupta, September 07, 2025</p>
+                <p>Pranshu Gupta, September 12, 2025</p>
                 <Sharer className="sharer" link={window.location.href} title={"Coding YouTube's load balancer using GitHub Copilot"}></Sharer>
                 
                 <h2>Introduction</h2>
@@ -93,14 +93,22 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     Prequal (Probing to reduce Queueing and Latency) is a load balacing algorithm that actively probes server load to leverage the power of N choices paradigm, extending it with asynchronous and reusable probes. It does not balance CPU load, but selects servers according to estimated latency and active requests in flight instead. Latency on the server side is defined as the time duration between the application logic receiving the request and handing the response back. The request contributes to the number of requests in flight for server during this time duration.
                 </p>
+                <figure>
+                    <img alt="" className="img-fluid" src={openprequal} />
+                    <figcaption>OpenPrequal Reverse Proxy and Load Balancer</figcaption>
+                </figure>
+                <p>
+                    The diagram above shows the high level architecture of the OpenPrequal API gateway and load balancer. The components in green are specific to the prequal load balacing algorithm and are not triggered if a different algorithm is configured for the reverse proxy gateway. In the following sections we will discuss each component in detail.
+                </p>
                 <h3>Probe Scheduling and Management</h3>
                 <ul>
                     <li>The reverse proxy issues a specified number of probes 'r' triggered by each request, in addition to a issuing a forced probe after a configured idle time has been exceeded, to ensure availability of recent probe responses in the pool even when no requests have arrived recently. The probing rate (probes per unit time) is proportional to the ratio of 'r' and incoming requests per second. This ensures that the probing rate remains constant irrespective of the request rate. This is intentional so that the proxy can make decisions based on the latest data, without flooding the backends with probes. See implementation <a href='https://github.com/Pranshu258/OpenPrequal/blob/b83520df5736928d1b1334b383e1d6e7bac3f8d7/src/algorithms/prequal_load_balancer.py#L84'>here</a>.</li>
                     <li>Probe destinations are sampled uniformly without replacement from the set of available servers. It also helps avoid the thundering herd phenomenon, in which a server with low estimated latency is inundatred with requests as it is seen as the best choice, which leads to request queueing and higher latency.</li>
                     <li>When responding to a probe, the RIF comes from simply checking a counter. The estimated latency is the median of the recent latencies observed at the current RIF value. The server maintains a recent history of latency binned over RIF values.</li>
-                    <li>The proxy maintains a pool of probe responses to be used in server selection. Each pool element indicates the replica server that responded, the timestamp, and the load signlas, i.e. current RIF and estimated latency. The pool is capped at a maximum size of 16.</li>
+                    <li>The proxy maintains a pool of probe responses to be used in server selection. Each pool element indicates the replica server that responded, the timestamp, and the load signals, i.e. current RIF and estimated latency. The pool is capped at a maximum size of 16.</li>
                 </ul>
                 <h3>Metrics Management</h3>
+
                 <ul>
                     <li>Each server tracks the number of requests in flight and latency statistics, which are provided to the proxy on probe requests.</li>
                 </ul>
