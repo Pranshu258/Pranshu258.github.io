@@ -121,6 +121,9 @@ export default class OpenPrequalBlog extends React.Component {
                     In Prequal load balancer, probes also update the backend state, in addition to the heartbeats.
                 </p>
                 <h3>Backend Registry</h3>
+                <p>
+                    The backend registry is the component that maintains the backend server states, including health, along with recent latencies and requests in flight obtained from probes and heartbeats. OpenPrequal supports both in-memory and redis backend registry. The in-memory registry should only be used with single uvicorn workers, because each worker will have its own view of the registry and it's own probe tasks, which might not capture the metrics across all backend workers. Redis based backend registry centralizes the backend state, so that all workers have a consistent view.
+                </p>
                 <h3>Latency Simulator</h3>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>Agent Assisted Workflow</h2>
