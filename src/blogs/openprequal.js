@@ -29,7 +29,7 @@ export default class OpenPrequalBlog extends React.Component {
                 <h1 className="title">Coding YouTube's load balancer using GitHub Copilot</h1>
                 <p>Pranshu Gupta, September 12, 2025</p>
                 <Sharer className="sharer" link={window.location.href} title={"Coding YouTube's load balancer using GitHub Copilot"}></Sharer>
-                
+
                 <h2>Introduction</h2>
                 <p>
                     YouTube is the world's largest video sharing platform, where anyone can upload, watch and share videos for free. Over 100 hours of video content is uploaded every minute, a mind bending amount of content, ranging from adorable cats to deep scientific explainations. Load balancing is a critical component of any highly scalable service like YouTube. Google uses an algorithm that it calls <b>Prequal</b>, an abbreviation for "Probing to reduce Queueing and Latency", for load balacing services that make up the YouTube platform.
@@ -37,7 +37,7 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     Prequal is a load balancer for distributed multi-tenant systems, that aims to minimize real-time request latency in presence of heterogenous server capacities and non-uniform, time-varying antagonist load. In this article, we will explore an AI assisted implementation of this algorithm using Python's FastAPI. FastAPI is a popular web framework for building APIs with Python and has been optimized to be on par with NodeJS and Go (using libraries like Starlette and Pydantic).
                 </p>
-                <p style={{backgroundColor: "orange", padding: '10px', borderRadius: '5px'}}>
+                <p style={{ backgroundColor: "orange", padding: '10px', borderRadius: '5px' }}>
                     OpenPrequal is an experimental project that I worked on in my spare time. There are several potential performance optimizations that remain unexplored as of today.
                 </p>
                 <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal">
@@ -66,7 +66,7 @@ export default class OpenPrequalBlog extends React.Component {
                     <li><a href='https://www.anthropic.com/claude/sonnet'>Anthropic Claude Sonnet</a> is a hybrid reasoning model and is a powerful choice for agentic coding, and can complete tasks across the entire software development lifecycle—from initial planning to bug fixes, maintenance to large refactors.</li>
                 </ul>
                 <p>
-                    Reasoning models are LLMs that have been fine tuned to break complex problems into smaller steps, employing chain of thought reasoning and other multi-step decision making strategies, before generating the final output. It has been observed that such models perform better at complex tasks that involve mathematical and logical reasoning, such as programming. 
+                    Reasoning models are LLMs that have been fine tuned to break complex problems into smaller steps, employing chain of thought reasoning and other multi-step decision making strategies, before generating the final output. It has been observed that such models perform better at complex tasks that involve mathematical and logical reasoning, such as programming.
                 </p>
                 <p>
                     That being said, even reasoning LLMs are not perfect, they would often get stuck into fixing a syntax error, rewriting the file again and again, while making no progress, or sometimes, make it worse. As an AI agent user, it is essential to know what you want to implement, and to be able to understand and verify if the code that was generated is doing what you intended it to do.
@@ -116,163 +116,263 @@ export default class OpenPrequalBlog extends React.Component {
                 </ul>
                 <h3>Heartbeat Client</h3>
                 <p>
-                    The heartbeat client is a module within the backend and it is responsible for sending periodic heartbeats to the proxy server. The heartbeat request includes the current metrics state of the backend. The metrics state is used to update the backend state in the registry. The proxy maintains the timestamps for the most recent heartbeat and marks the backend unhealthy if the heartbeat is older than a configured threshold. Unhealthy backends are not used by the load balancer algorithm for request handling. 
+                    The heartbeat client is a module within the backend and it is responsible for sending periodic heartbeats to the proxy server. The heartbeat request includes the current metrics state of the backend. The metrics state is used to update the backend state in the registry. The proxy maintains the timestamps for the most recent heartbeat and marks the backend unhealthy if the heartbeat is older than a configured threshold. Unhealthy backends are not used by the load balancer algorithm for request handling.
 
                     In Prequal load balancer, probes also update the backend state, in addition to the heartbeats.
                 </p>
                 <h3>Backend Registry</h3>
                 <p>
-                    The backend registry is the component that maintains the backend server states, including health, along with recent latencies and requests in flight obtained from probes and heartbeats. OpenPrequal supports both in-memory and redis backend registry. The in-memory registry should only be used with single uvicorn workers, because each worker will have its own view of the registry and it's own probe tasks, which might not capture the metrics across all backend workers. Redis based backend registry centralizes the backend state, so that all workers have a consistent view.
+                    The backend registry is the component that maintains the backend server states, including health, along with recent latencies and requests in flight obtained from probes and heartbeats. OpenPrequal supports both in-memory and redis backend registry. The in-memory registry should only be used with single uvicorn workers, because each worker will have its own view of the registry and it's own probe tasks, which might not capture the metrics across all backend workers. However, Redis based backend registry centralizes the backend state, so that all workers have a consistent view, making it suitable for multiple workers for both proxy server and backend servers.
                 </p>
-                <h3>Latency Simulator</h3>
-                <hr style={{ backgroundColor: "white" }} />
-                <h2>Agent Assisted Workflow</h2>
+                <h2>Benchmarking and Load Tests</h2>
                 <p>
-                    All of this was made possible by hundreds of prompts across around 300 commits. 
+                    The load tests systematically benchmark seven load balancing algorithms by running each through identical 5-minute stress tests. The test used 1 proxy server with 10 workers on port 8000 and 20 backend servers (each with 10 workers) on ports 8001-8020. Each test simulated 5000 concurrent users with a spawn rate of 100 users/second using Locust with auto-scaling processes. The test suite measured latency percentiles, throughput, failure rates, and backend traffic distribution to determine which algorithm performs best under high load.
                 </p>
-                <table className="development-timeline-table" style={{width: '100%', borderCollapse: 'collapse', marginTop: '20px'}}>
+
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                     <thead>
-                        <tr style={{backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6'}}>
-                            <th style={{padding: '12px', textAlign: 'left', border: '1px solid #dee2e6'}}>Phase</th>
-                            <th style={{padding: '12px', textAlign: 'left', border: '1px solid #dee2e6'}}>Timeline</th>
-                            <th style={{padding: '12px', textAlign: 'left', border: '1px solid #dee2e6'}}>Key Developments</th>
+                        <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Algorithm</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Requests/sec</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Failure Rate</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Avg Latency (ms)</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>p50 Latency (ms)</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>p95 Latency (ms)</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>p99 Latency (ms)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}><strong>Prequal</strong></td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>769</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>0.001%</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2946</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2300</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>6800</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>8600</td>
+                        </tr>
+                        <tr style={{ backgroundColor: '#f8f9fa' }}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least Latency</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1015</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>26.3%</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1497</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>910</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>4300</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>13000</td>
+                        </tr>
+                        <tr>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least Latency + P2C</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1266</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>66.9%</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>644</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>3100</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>5800</td>
+                        </tr>
+                        <tr style={{ backgroundColor: '#f8f9fa' }}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least RIF</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1103</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27.8%</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1182</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>510</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>4300</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>11000</td>
+                        </tr>
+                        <tr>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least RIF + P2C</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>820</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>47.5%</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2460</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1900</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>7300</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>10000</td>
+                        </tr>
+                        <tr style={{ backgroundColor: '#f8f9fa' }}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Random</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1168</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>55.2%</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>950</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>340</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>3300</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>6700</td>
+                        </tr>
+                        <tr>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Round Robin</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>695</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>36.9%</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1957</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1700</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>5000</td>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>6900</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br></br>
+                <p>
+                    The Prequal algorithm stands out with exceptional reliability, achieving only <b>0.001% failure rate</b> compared to 26-67% for other algorithms. While it trades some latency and throughput for reliability (769 req/s), this makes it ideal for production environments where uptime is critical.
+                </p>
+                <p>
+                    The testing revealed interesting trade-offs between throughput, latency, and reliability:
+                </p>
+                <ul>
+                    <li><b>Highest Throughput:</b> Least Latency + Power of Two Choices (1,266 req/s) with exceptional median latency (24ms), but suffers from 67% failure rate</li>
+                    <li><b>Best Balance:</b> Random algorithm offers good throughput (1,168 req/s) with reasonable latency characteristics</li>
+                    <li><b>Most Predictable:</b> Round Robin provides uniform load distribution but lowest throughput</li>
+                </ul>
+                <p>
+                    Adding Power of Two Choices (P2C) to basic algorithms produces mixed results. While it can improve latency characteristics and load distribution, it significantly increases failure rates, possibly due to increased contention or race conditions under high load. This suggests that P2C variants require careful tuning and robust error handling in production environments.
+                </p>
+                <p>
+                    For production workloads where reliability is paramount, <b>Prequal is the clear winner</b>. Its exceptional failure rate and intelligent server selection make it ideal for critical applications that cannot tolerate downtime.
+                </p>
+                <hr style={{ backgroundColor: "white" }} />
+                <h2>Agent Assisted Workflow</h2>
+                <p>
+                    All of this was made possible by hundreds of prompts across around 300 commits.
+                </p>
+                <table className="development-timeline-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                    <thead>
+                        <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Phase</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Timeline</th>
+                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Key Developments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Phase 1: Initial Foundation</strong>
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 4 months ago
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
-                                <strong>Core Infrastructure:</strong><br/>
-                                • Initial project setup and basic implementation<br/>
-                                • Added Kubernetes infrastructure (helm charts, sidecar services)<br/>
-                                • Implemented basic metrics and monitoring capabilities<br/>
-                                • Created test scripts and initial documentation<br/>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
+                                <strong>Core Infrastructure:</strong><br />
+                                • Initial project setup and basic implementation<br />
+                                • Added Kubernetes infrastructure (helm charts, sidecar services)<br />
+                                • Implemented basic metrics and monitoring capabilities<br />
+                                • Created test scripts and initial documentation<br />
                                 • Added asset management and build processes
                             </td>
                         </tr>
-                        <tr style={{backgroundColor: '#f8f9fa'}}>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                        <tr style={{ backgroundColor: '#f8f9fa' }}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Phase 2: Core Load Balancing Development</strong>
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 5 weeks ago
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
-                                <strong>Load Balancer Architecture:</strong><br/>
-                                • Extracted abstract load balancer class for extensibility<br/>
-                                • Implemented Round Robin load balancer as foundation<br/>
-                                • Created comprehensive backend registry system<br/>
-                                • Separated concerns between proxy handler, registry, and load balancer<br/><br/>
-                                <strong>Health Monitoring System:</strong><br/>
-                                • Introduced heartbeat mechanism for backend health tracking<br/>
-                                • Implemented sophisticated probing system for server health checks<br/>
-                                • Added probe response classes and health status management<br/>
-                                • Created probe manager for centralized health monitoring<br/><br/>
-                                <strong>Prequal Algorithm Implementation:</strong><br/>
-                                • Developed the core "Prequal" load balancing algorithm<br/>
-                                • Implemented Request-in-Flight (RIF) based routing<br/>
-                                • Added latency-based routing decisions<br/>
-                                • Implemented windowed latency tracking and metrics collection<br/>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
+                                <strong>Load Balancer Architecture:</strong><br />
+                                • Extracted abstract load balancer class for extensibility<br />
+                                • Implemented Round Robin load balancer as foundation<br />
+                                • Created comprehensive backend registry system<br />
+                                • Separated concerns between proxy handler, registry, and load balancer<br /><br />
+                                <strong>Health Monitoring System:</strong><br />
+                                • Introduced heartbeat mechanism for backend health tracking<br />
+                                • Implemented sophisticated probing system for server health checks<br />
+                                • Added probe response classes and health status management<br />
+                                • Created probe manager for centralized health monitoring<br /><br />
+                                <strong>Prequal Algorithm Implementation:</strong><br />
+                                • Developed the core "Prequal" load balancing algorithm<br />
+                                • Implemented Request-in-Flight (RIF) based routing<br />
+                                • Added latency-based routing decisions<br />
+                                • Implemented windowed latency tracking and metrics collection<br />
                                 • Added Prometheus metrics integration
                             </td>
                         </tr>
                         <tr>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Phase 3: Optimization and Refinement</strong>
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 3-4 weeks ago
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
-                                <strong>Performance Optimizations:</strong><br/>
-                                • Moved probe scheduler off the critical request path<br/>
-                                • Implemented caching for median calculations and RIF maps<br/>
-                                • Added background probe tasks and optimized probe frequency<br/>
-                                • Reduced lock contention and removed unnecessary locking mechanisms<br/>
-                                • Used deque for efficient RPS tracking<br/>
-                                • Simplified backend selection and classification logic<br/><br/>
-                                <strong>Load Testing Infrastructure:</strong><br/>
-                                • Integrated Locust for comprehensive load testing<br/>
-                                • Added automated benchmarking scripts and result collection<br/>
-                                • Implemented multiple load balancing algorithms for comparison<br/>
-                                • Created result analysis and visualization tools<br/>
-                                • Added backend distribution logging and monitoring<br/><br/>
-                                <strong>Advanced Features:</strong><br/>
-                                • Added heterogeneous backend support with configurable latencies<br/>
-                                • Implemented timeout handling and jitter mechanisms<br/>
-                                • Enhanced error handling and comprehensive logging systems<br/>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
+                                <strong>Performance Optimizations:</strong><br />
+                                • Moved probe scheduler off the critical request path<br />
+                                • Implemented caching for median calculations and RIF maps<br />
+                                • Added background probe tasks and optimized probe frequency<br />
+                                • Reduced lock contention and removed unnecessary locking mechanisms<br />
+                                • Used deque for efficient RPS tracking<br />
+                                • Simplified backend selection and classification logic<br /><br />
+                                <strong>Load Testing Infrastructure:</strong><br />
+                                • Integrated Locust for comprehensive load testing<br />
+                                • Added automated benchmarking scripts and result collection<br />
+                                • Implemented multiple load balancing algorithms for comparison<br />
+                                • Created result analysis and visualization tools<br />
+                                • Added backend distribution logging and monitoring<br /><br />
+                                <strong>Advanced Features:</strong><br />
+                                • Added heterogeneous backend support with configurable latencies<br />
+                                • Implemented timeout handling and jitter mechanisms<br />
+                                • Enhanced error handling and comprehensive logging systems<br />
                                 • Added forced probe scheduling to prevent worker starvation
                             </td>
                         </tr>
-                        <tr style={{backgroundColor: '#f8f9fa'}}>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                        <tr style={{ backgroundColor: '#f8f9fa' }}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Phase 4: Algorithm Expansion</strong>
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 2-3 weeks ago
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
-                                <strong>Load Balancing Strategies:</strong><br/>
-                                • <strong>Least Latency:</strong> Route to backend with lowest average latency<br/>
-                                • <strong>Least RIF:</strong> Route to backend with fewest requests in flight<br/>
-                                • <strong>Power of Two Choices:</strong> Select best of two random backends<br/>
-                                • <strong>Random:</strong> Baseline random selection for comparison<br/>
-                                • <strong>Round Robin:</strong> Traditional sequential selection<br/><br/>
-                                <strong>Performance Analysis:</strong><br/>
-                                • Comprehensive performance comparison between all algorithms<br/>
-                                • Statistical analysis of latency distributions<br/>
-                                • Backend utilization pattern analysis<br/>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
+                                <strong>Load Balancing Strategies:</strong><br />
+                                • <strong>Least Latency:</strong> Route to backend with lowest average latency<br />
+                                • <strong>Least RIF:</strong> Route to backend with fewest requests in flight<br />
+                                • <strong>Power of Two Choices:</strong> Select best of two random backends<br />
+                                • <strong>Random:</strong> Baseline random selection for comparison<br />
+                                • <strong>Round Robin:</strong> Traditional sequential selection<br /><br />
+                                <strong>Performance Analysis:</strong><br />
+                                • Comprehensive performance comparison between all algorithms<br />
+                                • Statistical analysis of latency distributions<br />
+                                • Backend utilization pattern analysis<br />
                                 • Failure rate and exception tracking
                             </td>
                         </tr>
                         <tr>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Phase 5: Production Readiness</strong>
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 2 weeks ago
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
-                                <strong>Containerization & Deployment:</strong><br/>
-                                • Enhanced Docker support with optimized build scripts<br/>
-                                • Improved Kubernetes deployment configurations<br/>
-                                • Added profiling capabilities for performance analysis<br/>
-                                • Created automated deployment and scaling scripts<br/><br/>
-                                <strong>Code Quality Improvements:</strong><br/>
-                                • Implemented comprehensive unit testing suite<br/>
-                                • Added pre-commit hooks and automated code formatting<br/>
-                                • Enhanced error handling and structured logging<br/>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
+                                <strong>Containerization & Deployment:</strong><br />
+                                • Enhanced Docker support with optimized build scripts<br />
+                                • Improved Kubernetes deployment configurations<br />
+                                • Added profiling capabilities for performance analysis<br />
+                                • Created automated deployment and scaling scripts<br /><br />
+                                <strong>Code Quality Improvements:</strong><br />
+                                • Implemented comprehensive unit testing suite<br />
+                                • Added pre-commit hooks and automated code formatting<br />
+                                • Enhanced error handling and structured logging<br />
                                 • Added type safety and documentation
                             </td>
                         </tr>
-                        <tr style={{backgroundColor: '#f8f9fa'}}>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                        <tr style={{ backgroundColor: '#f8f9fa' }}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Phase 6: Recent Optimizations</strong>
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 Last 2 weeks
                             </td>
-                            <td style={{padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top'}}>
-                                <strong>Redis Integration:</strong><br/>
-                                • Added Redis for distributed backend registry<br/>
-                                • Implemented Redis-based caching and state management<br/>
-                                • Created Redis templates and configuration management<br/>
-                                • Added batch operations for improved performance<br/>
-                                • Lock-free Redis implementation for better concurrency<br/><br/>
-                                <strong>Health Check Enhancements:</strong><br/>
-                                • Improved unhealthy backend detection algorithms<br/>
-                                • Added consecutive failure tracking and thresholds<br/>
-                                • Implemented short-circuit logic for unhealthy backends<br/>
-                                • Enhanced probe response handling and timeout management<br/><br/>
-                                <strong>Performance Monitoring:</strong><br/>
-                                • Separated metrics for RIF average latency vs general average latency<br/>
-                                • Enhanced result collection and analysis tools<br/>
-                                • Reduced cache TTL for better responsiveness<br/>
+                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
+                                <strong>Redis Integration:</strong><br />
+                                • Added Redis for distributed backend registry<br />
+                                • Implemented Redis-based caching and state management<br />
+                                • Created Redis templates and configuration management<br />
+                                • Added batch operations for improved performance<br />
+                                • Lock-free Redis implementation for better concurrency<br /><br />
+                                <strong>Health Check Enhancements:</strong><br />
+                                • Improved unhealthy backend detection algorithms<br />
+                                • Added consecutive failure tracking and thresholds<br />
+                                • Implemented short-circuit logic for unhealthy backends<br />
+                                • Enhanced probe response handling and timeout management<br /><br />
+                                <strong>Performance Monitoring:</strong><br />
+                                • Separated metrics for RIF average latency vs general average latency<br />
+                                • Enhanced result collection and analysis tools<br />
+                                • Reduced cache TTL for better responsiveness<br />
                                 • Added comprehensive benchmarking documentation
                             </td>
                         </tr>
