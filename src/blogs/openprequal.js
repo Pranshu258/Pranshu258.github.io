@@ -102,7 +102,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <h3>Probe Management</h3>
                 <ul>
-                    <li>The reverse proxy issues a specified number of probes 'r' triggered by each request, in addition to a issuing a forced probe after a configured idle time has been exceeded, to ensure availability of recent probe responses in the pool even when no requests have arrived recently. The probing rate (probes per unit time) is proportional to the ratio of 'r' and incoming requests per second. This ensures that the probing rate remains constant irrespective of the request rate. This is intentional so that the proxy can make decisions based on the latest data, without flooding the backends with probes. See implementation <a href='https://github.com/Pranshu258/OpenPrequal/blob/b83520df5736928d1b1334b383e1d6e7bac3f8d7/src/algorithms/prequal_load_balancer.py#L84'>here</a>.</li>
+                    <li>The reverse proxy issues a specified number of probes 'r' triggered by each request, in addition to a issuing a forced probe after a configured idle time has been exceeded, to ensure availability of recent probe responses in the pool even when no requests have arrived recently. The probing rate (probes per unit time) is proportional to the ratio of 'r' and incoming requests per second. This ensures that the probing rate remains constant irrespective of the request rate. This is intentional so that the proxy can make decisions based on the latest data, without flooding the backends with probes.</li>
                     <li>Probe destinations are sampled uniformly without replacement from the set of available servers. It also helps avoid the thundering herd phenomenon, in which a server with low estimated latency is inundatred with requests as it is seen as the best choice, which leads to request queueing and higher latency.</li>
                     <li>When responding to a probe, the RIF comes from simply checking a counter. The estimated latency is the median of the recent latencies observed at the current RIF value. The server maintains a recent history of latency binned over RIF values.</li>
                     <li>The proxy maintains a pool of probe responses to be used in server selection. Each pool element indicates the replica server that responded, the timestamp, and the load signals, i.e. current RIF and estimated latency. The pool is capped at a maximum size of 16.</li>
@@ -124,107 +124,103 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     The backend registry is the component that maintains the backend server states, including health, along with recent latencies and requests in flight obtained from probes and heartbeats. OpenPrequal supports both in-memory and redis backend registry. The in-memory registry should only be used with single uvicorn workers, because each worker will have its own view of the registry and it's own probe tasks, which might not capture the metrics across all backend workers. However, Redis based backend registry centralizes the backend state, so that all workers have a consistent view, making it suitable for multiple workers for both proxy server and backend servers.
                 </p>
-                <h2>Benchmarking and Load Tests</h2>
+                <hr style={{ backgroundColor: "white" }} />
+                <h2>Benchmarking</h2>
                 <p>
-                    The load tests systematically benchmark seven load balancing algorithms by running each through identical 5-minute stress tests. The test used 1 proxy server with 10 workers on port 8000 and 20 backend servers (each with 10 workers) on ports 8001-8020. Each test simulated 5000 concurrent users with a spawn rate of 100 users/second using Locust with auto-scaling processes. The test suite measured latency percentiles, throughput, failure rates, and backend traffic distribution to determine which algorithm performs best under high load.
+                    Locust and Vegeta are two polpular load testing frameworks. I found that for vanilla benchmarking, where you only care about the number of requests per second, Vegeta is much simpler to configure and gives similar results as Locust. Locust is more appropriate when you want to control the number of users rather than the number of requests. 
                 </p>
-
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
-                    <thead>
-                        <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Algorithm</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Requests/sec</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Failure Rate</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Avg Latency (ms)</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>p50 Latency (ms)</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>p95 Latency (ms)</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>p99 Latency (ms)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}><strong>Prequal</strong></td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>769</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>0.001%</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2946</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2300</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>6800</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>8600</td>
-                        </tr>
-                        <tr style={{ backgroundColor: '#f8f9fa' }}>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least Latency</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1015</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>26.3%</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1497</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>910</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>4300</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>13000</td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least Latency + P2C</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1266</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>66.9%</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>644</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>3100</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>5800</td>
-                        </tr>
-                        <tr style={{ backgroundColor: '#f8f9fa' }}>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least RIF</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1103</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27.8%</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1182</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>510</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>4300</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>11000</td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Least RIF + P2C</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>820</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>47.5%</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2460</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1900</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>7300</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>10000</td>
-                        </tr>
-                        <tr style={{ backgroundColor: '#f8f9fa' }}>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Random</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1168</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>55.2%</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>950</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>340</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>3300</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>6700</td>
-                        </tr>
-                        <tr>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Round Robin</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>695</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>36.9%</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1957</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>1700</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>5000</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>6900</td>
-                        </tr>
-                    </tbody>
+                <p>
+                    After extensive testing with Locust, I found that Prequal is not better than round robin and other simpler load balacing algorithms if the number of backend servers is low. Prequal shines when the system has 100 or more servers across which the proxy needs to load balance.  
+                </p>
+                <table className="development-timeline-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                    <caption>Metrics at 1200 RPS vegeta attack for 5 seconds, with single proxy worker, and 100 single worker heterogeneous backend servers, with local redis registry, on a MacBook Pro M3 Pro (latencies in ms). Vegeta configured as default (30s client timeout). Performance and success rate degrades rapidly with higher RPS. Increasing the number of proxy workers allows higher RPS.</caption>
+                        <thead>
+                            <tr>
+                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Algorithm</th>
+                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Average Latency</th>
+                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>P50 Latency</th>
+                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>P95 Latency</th>
+                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>P99 Latency</th>
+                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Max Latency</th>
+                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Success Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style={{ backgroundColor: '#fff' }}>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least Latency</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24045</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>26165</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>29706</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30000</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30001</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>96.76 %</td>
+                            </tr>
+                            <tr style={{ backgroundColor: '#f8f9fa' }}>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least Latency (P2C)</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>21883</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>25031</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27306</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27437</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30003</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>95.33 %</td>
+                            </tr>
+                            <tr style={{ backgroundColor: '#fff' }}>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least RIF</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>22455</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24696</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28587</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28985</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>29169</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>100 %</td>
+                            </tr>
+                            <tr style={{ backgroundColor: '#f8f9fa' }}>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least RIF (P2C)</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24987</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27098</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30000</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30000</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30003</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>93.41 %</td>
+                            </tr>
+                            <tr style={{ backgroundColor: '#fff', fontWeight: 'bold' }}>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Prequal</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>22975</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>25396</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27042</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27209</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27423</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>100 %</td>
+                            </tr>
+                            <tr style={{ backgroundColor: '#f8f9fa' }}>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Random</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>22806</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>25348</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27475</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27612</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>29437</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>99.63 %</td>
+                            </tr>
+                            <tr style={{ backgroundColor: '#fff' }}>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Round Robin</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>23522</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>26182</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28179</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28442</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28746</td>
+                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>99.91 %</td>
+                            </tr>
+                        </tbody>
                 </table>
-                <br></br>
                 <p>
-                    The Prequal algorithm stands out with exceptional reliability, achieving only <b>0.001% failure rate</b> compared to 26-67% for other algorithms. While it trades some latency and throughput for reliability (769 req/s), this makes it ideal for production environments where uptime is critical.
+                    As we can see in the table above, Prequal and Least RIF are the two best performing algorithms under heavy load (similar claim was made by Google in the original paper). Although I was able to reproduce these results consistently, the performance gap between round robin and prequal is not as huge as claimed by Google, but that could be because of the scale of the benchmarking tests. It is possible that the gaps widen if we further scale out the backend servers.
                 </p>
-                <p>
-                    The testing revealed interesting trade-offs between throughput, latency, and reliability:
-                </p>
-                <ul>
-                    <li><b>Highest Throughput:</b> Least Latency + Power of Two Choices (1,266 req/s) with exceptional median latency (24ms), but suffers from 67% failure rate</li>
-                    <li><b>Best Balance:</b> Random algorithm offers good throughput (1,168 req/s) with reasonable latency characteristics</li>
-                    <li><b>Most Predictable:</b> Round Robin provides uniform load distribution but lowest throughput</li>
-                </ul>
-                <p>
-                    Adding Power of Two Choices (P2C) to basic algorithms produces mixed results. While it can improve latency characteristics and load distribution, it significantly increases failure rates, possibly due to increased contention or race conditions under high load. This suggests that P2C variants require careful tuning and robust error handling in production environments.
-                </p>
-                <p>
-                    For production workloads where reliability is paramount, <b>Prequal is the clear winner</b>. Its exceptional failure rate and intelligent server selection make it ideal for critical applications that cannot tolerate downtime.
-                </p>
+                <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/tree/main/results">
+                    <button className="btn btn-primary">
+                        <i className="fab fa-github"></i>
+                        <b style={{ padding: "10px" }}>More Benchmarking Results</b>
+                        <i className="fas fa-external-link-alt"></i>
+                    </button>
+                </a>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>Agent Assisted Workflow</h2>
                 <p>
@@ -249,7 +245,6 @@ export default class OpenPrequalBlog extends React.Component {
                             <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Core Infrastructure:</strong><br />
                                 • Initial project setup and basic implementation<br />
-                                • Added Kubernetes infrastructure (helm charts, sidecar services)<br />
                                 • Implemented basic metrics and monitoring capabilities<br />
                                 • Created test scripts and initial documentation<br />
                                 • Added asset management and build processes
@@ -340,7 +335,6 @@ export default class OpenPrequalBlog extends React.Component {
                             <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
                                 <strong>Containerization & Deployment:</strong><br />
                                 • Enhanced Docker support with optimized build scripts<br />
-                                • Improved Kubernetes deployment configurations<br />
                                 • Added profiling capabilities for performance analysis<br />
                                 • Created automated deployment and scaling scripts<br /><br />
                                 <strong>Code Quality Improvements:</strong><br />
