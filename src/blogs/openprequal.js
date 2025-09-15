@@ -27,7 +27,7 @@ export default class OpenPrequalBlog extends React.Component {
                     <i className="fas fa-hexagon-nodes bigger gt1"></i>
                 </div>
                 <h1 className="title">Coding YouTube's load balancer using GitHub Copilot</h1>
-                <p>Pranshu Gupta, September 12, 2025</p>
+                <p>Pranshu Gupta, September 14, 2025</p>
                 <Sharer className="sharer" link={window.location.href} title={"Coding YouTube's load balancer using GitHub Copilot"}></Sharer>
 
                 <h2>Introduction</h2>
