@@ -4,6 +4,7 @@ import './styles/fonts.css';
 import './styles/body.css';
 
 import me from './images/me.jpg'
+import microsoftAILogo from './images/microsoft_ai_logo.jpeg'
 
 export default class About extends React.Component {
     render() {
@@ -32,8 +33,8 @@ export default class About extends React.Component {
                         <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", marginBottom: "10px" }}>
                             <img
                                 alt="Microsoft AI logo"
-                                src="https://media.licdn.com/dms/image/v2/D560BAQFJ6LoXx_kNzw/company-logo_200_200/B56ZnovkyCG0AI-/0/1760546420364/microsoft_ai_logo?e=1764201600&v=beta&t=BM0kpERCea-eJlv_rIbw_jxa6oZZJNyOxR3hM79WxI4"
-                                style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "2px" }}
+                                src={microsoftAILogo}
+                                style={{ width: "42px", height: "42px", objectFit: "cover", borderRadius: "2px" }}
                             ></img>
                             <svg width="180px" height="20%" role="presentation" className="w-132fx" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140.16977 24.239535" fill="none" version="1.1">
                                 <g fill="currentColor" transform="translate(-42.661116,-3.8207674)">
