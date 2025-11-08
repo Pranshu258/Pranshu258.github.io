@@ -3,7 +3,6 @@ import Sharer from '../sharer';
 import '../styles/fonts.css';
 import '../styles/blog.css';
 
-import reverseproxy from '../images/openprequal/reverseproxy.svg';
 import openprequal from '../images/openprequal/openprequal.svg';
 
 export default class OpenPrequalBlog extends React.Component {

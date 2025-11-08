@@ -1,8 +1,6 @@
 import React from 'react';
 import Sharer from "../sharer";
 
-import Gist from 'super-react-gist';
-
 import '../styles/fonts.css';
 import '../styles/blog.css';
 
@@ -94,8 +92,8 @@ export default class DistribComp extends React.Component {
                 <p>
                     The MapReduce framework was introduced by Google in 2004, and has since been implemented in many other systems, including Apache Hadoop, which is an open-source implementation of the MapReduce framework. Hadoop is widely used in industry and academia for processing large datasets. The framework has also inspired other distributed computing frameworks, such as Apache Spark, which is designed to be faster and more flexible than MapReduce.
                 </p>
-                <a target='_blank' href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf"><button className="btn btn-danger">Original MapReduce paper  &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a> &nbsp;
-                <a target='_blank' href="https://spark.apache.org/"><button className="btn btn-danger">Apache Spark &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a>
+                <a target='_blank' rel="noreferrer" href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf"><button className="btn btn-danger">Original MapReduce paper  &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a> &nbsp;
+                <a target='_blank' rel="noreferrer" href="https://spark.apache.org/"><button className="btn btn-danger">Apache Spark &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a>
                 <br></br>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <div>

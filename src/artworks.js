@@ -17,9 +17,6 @@ export default class Artworks extends React.Component {
         var globalStyle = {
             margin: "50px 0 50px 0",
         }
-        var bannerStyle = {
-            margin: "0 0 20px 0",
-        }
         return (
             <div className="content">
                 <div className="container">

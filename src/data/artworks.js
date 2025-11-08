@@ -2,11 +2,7 @@ import art01 from '../images/art/IMG_3748.jpg';
 import art02 from '../images/art/IMG_3476.jpg';
 import art03 from '../images/art/IMG_3725.jpg';
 import art04 from '../images/art/IMG_3730.jpg';
-import art05 from '../images/art/IMG_2693.jpg'; 
-import art06 from '../images/art/IMG_2694.jpg';
 import art07 from '../images/art/IMG_6424.jpg'; 
-import art08 from '../images/art/IMG_3464.jpg';
-import art09 from '../images/art/IMG_4820.jpg';
 import art10 from '../images/art/IMG_8235.jpg';
 import art11 from '../images/art/IMG_5508.jpg';
 
