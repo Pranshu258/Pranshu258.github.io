@@ -39,10 +39,10 @@ export default class About extends React.Component {
                     </h1>
                     <div style={{ paddingLeft: "5px" }}>
                         <p>
-                            I am a MSCS graduate from Georgia Institute of Technology, currently a member of technical staff at Microsoft AI, working on the agentic orchestrator for Microsoft Copilot, an AI companion for everyone. Before Microsoft, I was involved in research with the SocWeb Lab at Georgia Tech, where we tried to understand social dynamics and wellbeing of people from social media data.
+                            I am an MSCS graduate from Georgia Tech and currently a Member of Technical Staff at Microsoft AI. I work on the agentic orchestrator powering Microsoft Copilot — an AI companion for everyone. Before Microsoft, I was involved in research with the SocWeb Lab at Georgia Tech, where we tried to understand social dynamics and wellbeing of people from social media data.
                         </p>
                         <p>
-                            I am interested in vision, graphics, distributed computing and developing applications powered by artificial intelligence. I love building software, learning more about computer science, and painting with watercolors.
+                            My interests include computer vision, computer graphics, distributed systems, and AI-powered applications. I love building software, learning more about computer science, and painting with watercolors.
                         </p>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", marginBottom: "10px" }}>
                             <img
@@ -57,7 +57,7 @@ export default class About extends React.Component {
                             </svg>
                         </div>
                         <p>
-                            Member of Technical Staff at Microsoft AI, August 2025 - Present
+                            <b>Member of Technical Staff</b> at Microsoft AI, August 2025 - Present
                         </p>
                     </div>
                     <br></br>
