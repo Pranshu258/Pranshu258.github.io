@@ -1,3 +1,10 @@
+:root {
+    --brand-100: #207d42;
+    --brand-300: #196634;
+    --brand-500: #134f28;
+    --brand-700: #0c351b;
+}
+
 .featuredText {
     padding: 0px 0 8px 0;
 }
@@ -7,14 +14,14 @@
     margin: 2px;
     border-color: transparent;
     padding: 6px 12px 6px 12px;
-    background-image: linear-gradient(to right, #045304, #107C10);
+    background-image: linear-gradient(to right, var(--brand-500), var(--brand-700));
     border: 1px;
     white-space: nowrap;
     color: white;
 }
 
 .paperpill:hover {
-    box-shadow: 0 0 10px #107C10;
+    box-shadow: 0 0 10px var(--brand-700);
     color: white;
 }
 
@@ -23,14 +30,14 @@
     margin: 2px;
     border-color: transparent;
     padding: 6px 12px 6px 12px;
-    background-image: linear-gradient(to right, #e0003d, #a100b7);
+    background-image: linear-gradient(to right, var(--brand-100), var(--brand-300));
     border: 1px;
     white-space: nowrap;
     color: white;
 }
 
 .blogpill:hover {
-    box-shadow: 0 0 10px #f200b1;
+    box-shadow: 0 0 10px var(--brand-300);
     color: white;
 }
 
@@ -39,14 +46,14 @@
     margin: 2px;
     border-color: transparent;
     padding: 6px 12px 6px 12px;
-    background-image: linear-gradient(to right, #2a36da, #0075ff);
+    background-image: linear-gradient(to right, var(--brand-300), var(--brand-500));
     border: 1px;
     white-space: nowrap;
     color: white;
 }
 
 .projectpill:hover {
-    box-shadow: 0 0 10px #0075ff;
+    box-shadow: 0 0 10px var(--brand-500);
     color: white;
 }
 
@@ -66,14 +73,14 @@ hr {
 }
 
 .gt1 {
-    background: -webkit-linear-gradient(#e0003d, #a100b7);
+    background: -webkit-linear-gradient(var(--brand-100), var(--brand-300));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .gt2 {
-    background: -webkit-linear-gradient(#2a36da, #0075ff);
+    background: -webkit-linear-gradient(var(--brand-300), var(--brand-500));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -87,7 +94,7 @@ hr {
 }
 
 .gt4 {
-    background: -webkit-linear-gradient(#045304, #107C10);
+    background: -webkit-linear-gradient(var(--brand-500), var(--brand-700));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
