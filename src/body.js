@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { blogList } from './data/blogs'
 import { projectList } from './data/projects'
 import { publicationList } from './data/publications'
+import { createNextPageUpdater, createPreviousPageUpdater, getPageNumbers, getPageSlice, getTotalPages } from './utils/pagination';
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -24,41 +25,73 @@ export default class Body extends React.Component {
     constructor(props) {
         super(props);
         this.blogSectionRef = React.createRef();
+        this.publicationSectionRef = React.createRef();
+        this.projectSectionRef = React.createRef();
         this.state = {
             currentPage: 1,
             blogsPerPage: 4,
-            blogSectionHeight: 0
+            blogSectionHeight: 0,
+            publicationCurrentPage: 1,
+            publicationsPerPage: 2,
+            publicationSectionHeight: 0,
+            projectCurrentPage: 1,
+            projectsPerPage: 3,
+            projectSectionHeight: 0
         };
     }
 
     componentDidMount() {
         this.updateBlogSectionHeight();
+        this.updatePublicationSectionHeight();
+        this.updateProjectSectionHeight();
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.currentPage !== this.state.currentPage || prevState.blogsPerPage !== this.state.blogsPerPage) {
             this.updateBlogSectionHeight();
         }
+        if (prevState.publicationCurrentPage !== this.state.publicationCurrentPage || prevState.publicationsPerPage !== this.state.publicationsPerPage) {
+            this.updatePublicationSectionHeight();
+        }
+        if (prevState.projectCurrentPage !== this.state.projectCurrentPage || prevState.projectsPerPage !== this.state.projectsPerPage) {
+            this.updateProjectSectionHeight();
+        }
     }
 
     handleNextPage = () => {
-        if (this.state.currentPage < this.totalPages()) {
-            this.setState({ currentPage: this.state.currentPage + 1 });
-        }
+        this.setState(createNextPageUpdater(blogList.length, 'blogsPerPage', 'currentPage'));
     };
 
     handlePreviousPage = () => {
-        if (this.state.currentPage > 1) {
-            this.setState({ currentPage: this.state.currentPage - 1 });
-        }
+        this.setState(createPreviousPageUpdater('currentPage'));
     };
 
     handlePageClick = (pageNumber) => {
         this.setState({ currentPage: pageNumber });
     };
 
-    totalPages = () => {
-        return Math.ceil(blogList.length / this.state.blogsPerPage);
+    handlePublicationNextPage = () => {
+        this.setState(createNextPageUpdater(publicationList.length, 'publicationsPerPage', 'publicationCurrentPage'));
+    };
+
+    handlePublicationPreviousPage = () => {
+        this.setState(createPreviousPageUpdater('publicationCurrentPage'));
+    };
+
+    handlePublicationPageClick = (pageNumber) => {
+        this.setState({ publicationCurrentPage: pageNumber });
+    };
+
+    handleProjectNextPage = () => {
+        this.setState(createNextPageUpdater(projectList.length, 'projectsPerPage', 'projectCurrentPage'));
+    };
+
+    handleProjectPreviousPage = () => {
+        this.setState(createPreviousPageUpdater('projectCurrentPage'));
+    };
+
+    handleProjectPageClick = (pageNumber) => {
+        this.setState({ projectCurrentPage: pageNumber });
     };
 
     updateBlogSectionHeight = () => {
@@ -71,16 +104,49 @@ export default class Body extends React.Component {
         }
     };
 
-    render() {
-        const { currentPage, blogsPerPage, blogSectionHeight } = this.state;
-        const indexOfLastBlog = currentPage * blogsPerPage;
-        const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
-        const currentBlogs = blogList.slice(indexOfFirstBlog, indexOfLastBlog);
-
-        const pageNumbers = [];
-        for (let i = 1; i <= this.totalPages(); i++) {
-            pageNumbers.push(i);
+    updatePublicationSectionHeight = () => {
+        if (!this.publicationSectionRef.current) {
+            return;
         }
+        const measuredHeight = this.publicationSectionRef.current.clientHeight;
+        if (measuredHeight > this.state.publicationSectionHeight) {
+            this.setState({ publicationSectionHeight: measuredHeight });
+        }
+    };
+
+    updateProjectSectionHeight = () => {
+        if (!this.projectSectionRef.current) {
+            return;
+        }
+        const measuredHeight = this.projectSectionRef.current.clientHeight;
+        if (measuredHeight > this.state.projectSectionHeight) {
+            this.setState({ projectSectionHeight: measuredHeight });
+        }
+    };
+
+    render() {
+        const {
+            currentPage,
+            blogsPerPage,
+            blogSectionHeight,
+            publicationCurrentPage,
+            publicationsPerPage,
+            publicationSectionHeight,
+            projectCurrentPage,
+            projectsPerPage,
+            projectSectionHeight
+        } = this.state;
+        const currentBlogs = getPageSlice(blogList, currentPage, blogsPerPage);
+        const currentPublications = getPageSlice(publicationList, publicationCurrentPage, publicationsPerPage);
+        const currentProjects = getPageSlice(projectList, projectCurrentPage, projectsPerPage);
+
+        const blogTotalPages = getTotalPages(blogList.length, blogsPerPage);
+        const publicationTotalPages = getTotalPages(publicationList.length, publicationsPerPage);
+        const projectTotalPages = getTotalPages(projectList.length, projectsPerPage);
+
+        const blogPageNumbers = getPageNumbers(blogTotalPages);
+        const publicationPageNumbers = getPageNumbers(publicationTotalPages);
+        const projectPageNumbers = getPageNumbers(projectTotalPages);
 
         var bannerStyle = {
             margin: "20px 0 20px 0"
@@ -102,10 +168,16 @@ export default class Body extends React.Component {
                         </div>
                         <div className="col-md-9">
                             <br></br><br></br>
-                            <div style={{ paddingLeft: "5px" }}>
+                            <div
+                                ref={this.publicationSectionRef}
+                                style={{
+                                    paddingLeft: "5px",
+                                    minHeight: publicationSectionHeight || undefined
+                                }}
+                            >
                                 {
-                                    publicationList.map((object, i) =>
-                                        <div>
+                                    currentPublications.map((object, i) =>
+                                        <div key={object.name}>
                                             <div className="featuredText">
                                                 <a target="_blank" rel="noopener noreferrer" className="blogLink" href={object.link}>
                                                     <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-external-link-alt'></i></h3>
@@ -113,10 +185,29 @@ export default class Body extends React.Component {
                                                 <p>{object.description}</p>
                                                 <div>{object.tags.map((tag, j) => <span className="btn paperpill">{tag}</span>)}</div>
                                             </div>
-                                            {i < publicationList.length - 1 ? <hr></hr> : null}
+                                            {i < currentPublications.length - 1 ? <hr></hr> : null}
                                         </div>
                                     )
                                 }
+                            </div>
+                            <br></br><br></br>
+                            <div className="pagination">
+                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handlePublicationPreviousPage} disabled={publicationCurrentPage === 1}>
+                                    <i className="fas fa-arrow-left paginationIcon" title={`go to previous page`}></i>
+                                </button>
+                                {publicationPageNumbers.map(number => (
+                                    <button
+                                        key={`publication-page-${number}`}
+                                        style={{ margin: "0 10px 10px 0" }}
+                                        className={`btn btn-dark ${publicationCurrentPage === number ? 'active' : ''}`}
+                                        onClick={() => this.handlePublicationPageClick(number)}
+                                    >
+                                        <i className={`fas fa-${number} paginationIcon`} title={`go to page ${number}`}></i>
+                                    </button>
+                                ))}
+                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handlePublicationNextPage} disabled={publicationCurrentPage === publicationTotalPages || publicationTotalPages === 0}>
+                                    <i className="fas fa-arrow-right paginationIcon" title={`go to next page`}></i>
+                                </button>
                             </div>
                             <br></br><br></br>
                         </div>
@@ -142,7 +233,7 @@ export default class Body extends React.Component {
                             >
                                 {
                                     currentBlogs.map((object, i) =>
-                                        <div key={i}>
+                                        <div key={object.name}>
                                             <div className="featuredText">
                                                 <Link className="blogLink" to={"blog/" + object.name.replace(/\s+/g, '-').toLowerCase()}>
                                                     <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-arrow-right'></i></h3>
@@ -160,9 +251,9 @@ export default class Body extends React.Component {
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handlePreviousPage} disabled={currentPage === 1}>
                                     <i className="fas fa-arrow-left paginationIcon" title={`go to previous page`}></i>
                                 </button>
-                                {pageNumbers.map(number => (
+                                {blogPageNumbers.map(number => (
                                     <button
-                                        key={number}
+                                        key={`blog-page-${number}`}
                                         style={{ margin: "0 10px 10px 0" }}
                                         className={`btn btn-dark ${currentPage === number ? 'active' : ''}`}
                                         onClick={() => this.handlePageClick(number)}
@@ -170,7 +261,7 @@ export default class Body extends React.Component {
                                         <i className={`fas fa-${number} paginationIcon`} title={`go to page ${number}`}></i>
                                     </button>
                                 ))}
-                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handleNextPage} disabled={currentPage === this.totalPages()}>
+                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handleNextPage} disabled={currentPage === blogTotalPages || blogTotalPages === 0}>
                                     <i className="fas fa-arrow-right paginationIcon" title={`go to next page`}></i>
                                 </button>
                             </div>
@@ -189,10 +280,16 @@ export default class Body extends React.Component {
                         </div>
                         <div className="col-md-9">
                             <br></br><br></br>
-                            <div style={{ paddingLeft: "5px" }}>
+                            <div
+                                ref={this.projectSectionRef}
+                                style={{
+                                    paddingLeft: "5px",
+                                    minHeight: projectSectionHeight || undefined
+                                }}
+                            >
                                 {
-                                    projectList.map((object, i) =>
-                                        <div>
+                                    currentProjects.map((object, i) =>
+                                        <div key={object.name}>
                                             <div className="featuredText">
                                                 <a target="_blank" rel="noopener noreferrer" className="blogLink" href={object.link}>
                                                     <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-external-link-alt'></i></h3>
@@ -200,10 +297,29 @@ export default class Body extends React.Component {
                                                 <p>{object.description}</p>
                                                 <div>{object.tags.map((tag, j) => <span className="btn projectpill">{tag}</span>)}</div>
                                             </div>
-                                            {i < projectList.length - 1 ? <hr></hr> : null}
+                                            {i < currentProjects.length - 1 ? <hr></hr> : null}
                                         </div>
                                     )
                                 }
+                            </div>
+                            <br></br><br></br>
+                            <div className="pagination">
+                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handleProjectPreviousPage} disabled={projectCurrentPage === 1}>
+                                    <i className="fas fa-arrow-left paginationIcon" title={`go to previous page`}></i>
+                                </button>
+                                {projectPageNumbers.map(number => (
+                                    <button
+                                        key={`project-page-${number}`}
+                                        style={{ margin: "0 10px 10px 0" }}
+                                        className={`btn btn-dark ${projectCurrentPage === number ? 'active' : ''}`}
+                                        onClick={() => this.handleProjectPageClick(number)}
+                                    >
+                                        <i className={`fas fa-${number} paginationIcon`} title={`go to page ${number}`}></i>
+                                    </button>
+                                ))}
+                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handleProjectNextPage} disabled={projectCurrentPage === projectTotalPages || projectTotalPages === 0}>
+                                    <i className="fas fa-arrow-right paginationIcon" title={`go to next page`}></i>
+                                </button>
                             </div>
                             <br></br><br></br>
                         </div>
