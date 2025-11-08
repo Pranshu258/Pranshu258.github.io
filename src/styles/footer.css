@@ -4,10 +4,8 @@ footer {
     background-image: linear-gradient(45deg, #000000, #111111, #222222, #333333);
 }
 
+
 .socialIcon {
-    margin: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
     font-size: 200%;
 }
 
@@ -22,8 +20,33 @@ footer {
 }
 
 #footerul {
-    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    margin: 50px 0;
     padding: 0;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    list-style: none;
+}
+
+#footerul li {
+    list-style: none;
+}
+
+.footerTrigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footerTrigger:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 4px;
+    border-radius: 4px;
 }
