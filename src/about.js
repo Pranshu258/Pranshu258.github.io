@@ -3,7 +3,8 @@ import React from 'react';
 import './styles/fonts.css';
 import './styles/body.css';
 
-import me from './images/me.jpg'
+import meOptimized from './images/me-optimized.jpg'
+import meOptimized2x from './images/me-optimized@2x.jpg'
 import microsoftAILogo from './images/microsoft_ai_logo.jpeg'
 
 export default class About extends React.Component {
@@ -15,7 +16,20 @@ export default class About extends React.Component {
             <div className="row" id="about">
                 <div className="col-md-3">
                     <br></br><br></br>
-                    <img alt="" src={me} className="img-fluid" style={bannerStyle}></img>
+                    <picture>
+                        <source srcSet={`${meOptimized} 1x, ${meOptimized2x} 2x`} type="image/jpeg" />
+                        <img
+                            alt="Portrait of Pranshu Gupta"
+                            src={meOptimized}
+                            srcSet={`${meOptimized} 1x, ${meOptimized2x} 2x`}
+                            width="600"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                            className="img-fluid"
+                            style={bannerStyle}
+                        ></img>
+                    </picture>
                     <br></br><br></br>
                 </div>
                 <div className="col-md-9">
