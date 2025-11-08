@@ -23,10 +23,22 @@ import About from "./about";
 export default class Body extends React.Component {
     constructor(props) {
         super(props);
+        this.blogSectionRef = React.createRef();
         this.state = {
             currentPage: 1,
-            blogsPerPage: 6
+            blogsPerPage: 4,
+            blogSectionHeight: 0
         };
+    }
+
+    componentDidMount() {
+        this.updateBlogSectionHeight();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.currentPage !== this.state.currentPage || prevState.blogsPerPage !== this.state.blogsPerPage) {
+            this.updateBlogSectionHeight();
+        }
     }
 
     handleNextPage = () => {
@@ -49,8 +61,18 @@ export default class Body extends React.Component {
         return Math.ceil(blogList.length / this.state.blogsPerPage);
     };
 
+    updateBlogSectionHeight = () => {
+        if (!this.blogSectionRef.current) {
+            return;
+        }
+        const measuredHeight = this.blogSectionRef.current.clientHeight;
+        if (measuredHeight > this.state.blogSectionHeight) {
+            this.setState({ blogSectionHeight: measuredHeight });
+        }
+    };
+
     render() {
-        const { currentPage, blogsPerPage } = this.state;
+        const { currentPage, blogsPerPage, blogSectionHeight } = this.state;
         const indexOfLastBlog = currentPage * blogsPerPage;
         const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
         const currentBlogs = blogList.slice(indexOfFirstBlog, indexOfLastBlog);
@@ -111,7 +133,13 @@ export default class Body extends React.Component {
                         </div>
                         <div className="col-md-9">
                             <br></br><br></br>
-                            <div style={{ paddingLeft: "5px" }}>
+                            <div
+                                ref={this.blogSectionRef}
+                                style={{
+                                    paddingLeft: "5px",
+                                    minHeight: blogSectionHeight || undefined
+                                }}
+                            >
                                 {
                                     currentBlogs.map((object, i) =>
                                         <div key={i}>
