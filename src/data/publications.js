@@ -19,7 +19,7 @@ export let publicationList = [
     },
     {
         name: "A social media study on demographic differences in perceived job satisfaction",
-        description: "Applied machine learning techniques to assess job satisfaction by leveraging large-scale social media data. Current methodologies are limited in capturing subjective differences in expectations, needs, and values at work, and they do not lay emphasis on demographic differences, which may impact people's perceptions of job satisfaction. This study focuses on demographic diferences in perceived job satisfaction by geography, sex, and race in the U.S",
+    description: "Applied large-scale social media analytics to evaluate job satisfaction while highlighting how geography, sex, and race shape perceived experiences. Demonstrated that demographic context is essential for interpreting workplace sentiment online.",
         tags: [
             "CSCW (PACM HCI)",
             "Presented at CSCW 2021",
@@ -29,7 +29,7 @@ export let publicationList = [
     },
     {
         name: "Person-centered predictions of psychological constructs with social media contextualized by multimodal sensing",
-        description: "Personalized predictions have shown promises in various disciplines but they are fundamentally constrained in their ability to generalize across individuals. In contrast, generalized models capture normative behaviors between individuals but lack precision in predicting individual outcomes. This paper aims to balance the tradeoff between one-for-each and one-for-all models by clustering individuals on mutable behaviors and conducting cluster-specific predictions of psychological constructs in a multimodal sensing dataset of 754 individuals.",
+    description: "Bridged personalized and generalized prediction strategies by clustering 754 individuals on mutable behaviors before modeling psychological constructs. Showed that blending multimodal sensing with social media features improves accuracy without sacrificing interpretability.",
         tags: [
             "PACM IMWUT, 2021",
             "Presented at UbiComp 2021",
