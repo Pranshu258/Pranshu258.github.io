@@ -1,8 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.58a7a818.css",
-    "main.js": "/static/js/main.d13ea610.js",
-    "static/media/me.jpg": "/static/media/me.43674ab5398a193b0bc2.jpg",
+    "main.js": "/static/js/main.a0398387.js",
     "static/media/IMG_8235.jpg": "/static/media/IMG_8235.e9ef9ebc1b5369bb0053.jpg",
     "static/media/IMG_5508.jpg": "/static/media/IMG_5508.a2c085540d436a3c9af2.jpg",
     "static/media/kmean-20cluster-2d.png": "/static/media/kmean-20cluster-2d.11c22d30071818469082.png",
@@ -23,6 +22,8 @@
     "static/media/wc_cluster16.png": "/static/media/wc_cluster16.61dcbb4af9fd011baa12.png",
     "static/media/wc_cluster2.png": "/static/media/wc_cluster2.0381ae4e62ff8fd38401.png",
     "static/media/kmean-20cluster-3d.png": "/static/media/kmean-20cluster-3d.85be98c0191ab539dc9d.png",
+    "static/media/me-optimized@2x.jpg": "/static/media/me-optimized@2x.5dbb44bceed2982ae781.jpg",
+    "static/media/me-optimized.jpg": "/static/media/me-optimized.2935fd979a5221a09e06.jpg",
     "static/media/vmvsdocker.png": "/static/media/vmvsdocker.39897727d98695702b5e.png",
     "static/media/data_distribution.png": "/static/media/data_distribution.258c9bb67c6d7d851e29.png",
     "static/media/dockerArch.png": "/static/media/dockerArch.604a841c4a4796012465.png",
@@ -69,10 +70,10 @@
     "static/media/genre_distribution.png": "/static/media/genre_distribution.39b040ef13adf9326dff.png",
     "index.html": "/index.html",
     "main.58a7a818.css.map": "/static/css/main.58a7a818.css.map",
-    "main.d13ea610.js.map": "/static/js/main.d13ea610.js.map"
+    "main.a0398387.js.map": "/static/js/main.a0398387.js.map"
   },
   "entrypoints": [
     "static/css/main.58a7a818.css",
-    "static/js/main.d13ea610.js"
+    "static/js/main.a0398387.js"
   ]
 }
