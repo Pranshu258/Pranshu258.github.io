@@ -24,6 +24,11 @@
   text-decoration: none;
 }
 
+.sharerTrigger:hover {
+  color: black;
+  text-decoration: none;
+}
+
 .sharerTrigger:focus-visible {
   outline: 2px solid #000;
   outline-offset: 4px;

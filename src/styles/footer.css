@@ -45,6 +45,11 @@ footer {
     margin: 0;
 }
 
+.footerTrigger:hover {
+    color: white;
+    text-decoration: none;
+}
+
 .footerTrigger:focus-visible {
     outline: 2px solid #ffffff;
     outline-offset: 4px;
