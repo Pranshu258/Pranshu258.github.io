@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.58a7a818.css",
+    "main.css": "/static/css/main.3f802d36.css",
     "main.js": "/static/js/main.a0398387.js",
     "static/media/IMG_8235.jpg": "/static/media/IMG_8235.e9ef9ebc1b5369bb0053.jpg",
     "static/media/IMG_5508.jpg": "/static/media/IMG_5508.a2c085540d436a3c9af2.jpg",
@@ -69,11 +69,11 @@
     "static/media/microsoft_ai_logo.jpeg": "/static/media/microsoft_ai_logo.e3cd536c547fffc13012.jpeg",
     "static/media/genre_distribution.png": "/static/media/genre_distribution.39b040ef13adf9326dff.png",
     "index.html": "/index.html",
-    "main.58a7a818.css.map": "/static/css/main.58a7a818.css.map",
+    "main.3f802d36.css.map": "/static/css/main.3f802d36.css.map",
     "main.a0398387.js.map": "/static/js/main.a0398387.js.map"
   },
   "entrypoints": [
-    "static/css/main.58a7a818.css",
+    "static/css/main.3f802d36.css",
     "static/js/main.a0398387.js"
   ]
 }
