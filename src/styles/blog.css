@@ -40,3 +40,10 @@ figcaption {
     margin: 52px 0 10px 0px;
     text-align: left;
 }
+.bhead .gt1 {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: #0d4523;
+    color: #0d4523;
+}
