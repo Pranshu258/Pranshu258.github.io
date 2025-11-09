@@ -39,7 +39,7 @@ export default class About extends React.Component {
                     </h1>
                     <div style={{ paddingLeft: "5px" }}>
                         <p>
-                            I am an MSCS graduate from Georgia Tech and currently a Member of Technical Staff at Microsoft AI. I work on the agentic orchestrator powering Microsoft Copilot — an AI companion for everyone. Before Microsoft, I was involved in research with the SocWeb Lab at Georgia Tech, where we tried to understand social dynamics and wellbeing of people from social media data.
+                            I am an MSCS graduate from Georgia Tech and currently a Member of Technical Staff at Microsoft AI. I work on the agentic orchestrator powering Microsoft Copilot - an AI companion for everyone. Before Microsoft, I was involved in research with the SocWeb Lab at Georgia Tech, where we tried to understand social dynamics and wellbeing of people from social media data.
                         </p>
                         <p>
                             My interests include computer vision, computer graphics, distributed systems, and AI-powered applications. I love building software, learning more about computer science, and painting with watercolors.
