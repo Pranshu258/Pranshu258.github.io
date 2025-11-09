@@ -56,51 +56,57 @@ html[data-theme="light"] {
 }
 
 .paperpill {
-    border-radius: 25px;
+    border-radius: 18px;
     margin: 2px;
     border-color: transparent;
-    padding: 6px 12px 6px 12px;
-    background-image: linear-gradient(to right, var(--brand-500), var(--brand-700));
-    border: 1px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    background: rgba(19, 79, 40, 0.15);
+    border: 1px solid rgba(19, 79, 40, 0.25);
     white-space: nowrap;
-    color: white;
+    color: #ffffff;
 }
 
 .paperpill:hover {
-    box-shadow: 0 0 10px var(--brand-700);
-    color: white;
+    box-shadow: 0 0 6px rgba(19, 79, 40, 0.25);
+    color: #ffffff;
 }
 
 .blogpill {
-    border-radius: 25px;
+    border-radius: 18px;
     margin: 2px;
     border-color: transparent;
-    padding: 6px 12px 6px 12px;
-    background-image: linear-gradient(to right, var(--brand-100), var(--brand-300));
-    border: 1px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    background: rgba(32, 125, 66, 0.12);
+    border: 1px solid rgba(32, 125, 66, 0.22);
     white-space: nowrap;
-    color: white;
+    color: #ffffff;
 }
 
 .blogpill:hover {
-    box-shadow: 0 0 10px var(--brand-300);
-    color: white;
+    box-shadow: 0 0 6px rgba(32, 125, 66, 0.22);
+    color: #ffffff;
 }
 
 .projectpill {
-    border-radius: 25px;
+    border-radius: 18px;
     margin: 2px;
     border-color: transparent;
-    padding: 6px 12px 6px 12px;
-    background-image: linear-gradient(to right, var(--brand-300), var(--brand-500));
-    border: 1px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    background: rgba(25, 102, 52, 0.12);
+    border: 1px solid rgba(25, 102, 52, 0.22);
     white-space: nowrap;
-    color: white;
+    color: #ffffff;
 }
 
 .projectpill:hover {
-    box-shadow: 0 0 10px var(--brand-500);
-    color: white;
+    box-shadow: 0 0 6px rgba(25, 102, 52, 0.22);
+    color: #ffffff;
 }
 
 .content {
