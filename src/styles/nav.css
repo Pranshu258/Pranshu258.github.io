@@ -32,8 +32,13 @@
     border-color: var(--nav-button-border);
 }
 
+.navbar-default .nav-link-btn:focus,
 .navbar-default .nav-link-btn:focus-visible {
-    outline: 2px solid var(--toggle-focus-ring);
+    box-shadow: 0 0 0 0.2rem var(--nav-button-focus-ring);
+}
+
+.navbar-default .nav-link-btn:focus-visible {
+    outline: 2px solid var(--nav-button-focus-ring);
     outline-offset: 2px;
 }
 

@@ -15,6 +15,7 @@
     --nav-text-color: #ffffff;
     --nav-button-hover-bg: rgba(255, 255, 255, 0.12);
     --nav-button-border: rgba(32, 125, 66, 0.65);
+    --nav-button-focus-ring: rgba(32, 125, 66, 0.35);
     --footer-background: linear-gradient(45deg, #000000, #111111, #222222, #333333);
     --footer-text-color: #ffffff;
     --toggle-icon-color: #ffffff;
@@ -41,6 +42,7 @@ html[data-theme="light"] {
     --nav-text-color: #f3faf5;
     --nav-button-hover-bg: rgba(255, 255, 255, 0.1);
     --nav-button-border: rgba(25, 102, 52, 0.75);
+    --nav-button-focus-ring: rgba(25, 102, 52, 0.30);
     --footer-background: linear-gradient(45deg, #041f11, #082b17, #0c351b, #082b17);
     --footer-text-color: #ffffff;
     --toggle-icon-color: #f3faf5;
