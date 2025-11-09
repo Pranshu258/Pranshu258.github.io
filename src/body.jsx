@@ -242,7 +242,7 @@ export default class Body extends React.Component {
                                     )
                                 }
                             </div>
-                            <br></br><br></br>
+                            <br></br>
                             <div className="pagination">
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handlePublicationPreviousPage} disabled={publicationCurrentPage === 1}>
                                     <FaArrowLeft className="paginationIcon" title={`go to previous page`} />
@@ -302,7 +302,7 @@ export default class Body extends React.Component {
                                     )
                                 }
                             </div>
-                            <br></br><br></br>
+                            <br></br>
                             <div className="pagination">
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handlePreviousPage} disabled={currentPage === 1}>
                                     <FaArrowLeft className="paginationIcon" title={`go to previous page`} />
@@ -358,7 +358,7 @@ export default class Body extends React.Component {
                                     )
                                 }
                             </div>
-                            <br></br><br></br>
+                            <br></br>
                             <div className="pagination">
                                 <button style={{ margin: "0 10px 10px 0" }} className="btn btn-dark" onClick={this.handleProjectPreviousPage} disabled={projectCurrentPage === 1}>
                                     <FaArrowLeft className="paginationIcon" title={`go to previous page`} />
@@ -383,7 +383,7 @@ export default class Body extends React.Component {
                     <hr></hr>
                     <div className="row" id="artworks">
                         <div className="col-sm-12">
-                            <br></br><br></br><br></br>
+                            <br></br><br></br>
                             <FaPalette className="big gt3" />
                             <br></br><br></br>
                             <h2 className="roboto">
