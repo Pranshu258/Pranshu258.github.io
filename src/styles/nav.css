@@ -57,6 +57,17 @@
     border-color: var(--nav-button-border);
 } 
 
+.navbar-brand-mobile {
+    display: none;
+}
+
+.navbar-brand-mobile,
+.navbar-brand-mobile:hover,
+.navbar-brand-mobile:focus {
+    color: var(--nav-text-color);
+    text-decoration: none;
+}
+
 .navbar-toggler .menu-icon {
     position: relative;
     display: block;
@@ -119,6 +130,16 @@ ul li a {
 
 /* Mobile responsive styles */
 @media (max-width: 991px) {
+    .navbar-brand-mobile {
+        display: inline-flex;
+        align-items: center;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--nav-text-color);
+        margin-right: auto;
+        text-decoration: none;
+    }
+
     .navbar-toggler {
         border: 1px solid var(--nav-button-border);
         width: 44px;

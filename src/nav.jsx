@@ -6,9 +6,89 @@ import { Link } from "react-scroll";
 export default class Nav extends Component {
     constructor(props) {
         super(props);
+        const initialPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+        const initialHash = typeof window !== 'undefined' ? window.location.hash : '';
         this.state = {
-            isMenuOpen: false
+            isMenuOpen: false,
+            isMobile: typeof window !== 'undefined' ? window.innerWidth <= 991 : false,
+            currentPath: initialPath,
+            currentHash: initialHash
         };
+    }
+
+    componentDidMount() {
+        if (typeof window !== 'undefined') {
+            this.resizeListener = () => this.handleResize();
+            window.addEventListener('resize', this.resizeListener);
+            this.handleResize();
+            this.locationListener = () => this.handleLocationChange();
+            window.addEventListener('popstate', this.locationListener);
+            window.addEventListener('hashchange', this.locationListener);
+            this.patchHistoryMethods();
+            window.addEventListener('locationchange', this.locationListener);
+            this.handleLocationChange();
+        }
+    }
+
+    componentWillUnmount() {
+        if (typeof window !== 'undefined' && this.resizeListener) {
+            window.removeEventListener('resize', this.resizeListener);
+        }
+        if (typeof window !== 'undefined' && this.locationListener) {
+            window.removeEventListener('popstate', this.locationListener);
+            window.removeEventListener('hashchange', this.locationListener);
+            window.removeEventListener('locationchange', this.locationListener);
+        }
+        if (typeof window !== 'undefined' && this.originalHistoryMethods) {
+            Object.entries(this.originalHistoryMethods).forEach(([method, original]) => {
+                window.history[method] = original;
+            });
+            this.originalHistoryMethods = null;
+        }
+    }
+
+    handleResize = () => {
+        if (typeof window !== 'undefined') {
+            const isMobile = window.innerWidth <= 991;
+            this.setState(prevState => ({
+                isMobile,
+                isMenuOpen: isMobile ? prevState.isMenuOpen : false
+            }));
+        }
+    }
+
+    patchHistoryMethods = () => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        if (!this.originalHistoryMethods) {
+            this.originalHistoryMethods = {};
+        }
+        ['pushState', 'replaceState'].forEach(method => {
+            if (this.originalHistoryMethods[method]) {
+                return;
+            }
+            const original = window.history[method];
+            this.originalHistoryMethods[method] = original;
+            window.history[method] = (...args) => {
+                const result = original.apply(window.history, args);
+                window.dispatchEvent(new Event('locationchange'));
+                return result;
+            };
+        });
+    }
+
+    handleLocationChange = () => {
+        if (typeof window !== 'undefined') {
+            const nextPath = window.location.pathname;
+            const nextHash = window.location.hash;
+            if (nextPath !== this.state.currentPath || nextHash !== this.state.currentHash) {
+                this.setState({
+                    currentPath: nextPath,
+                    currentHash: nextHash
+                });
+            }
+        }
     }
 
     toggleMenu = () => {
@@ -34,12 +114,17 @@ export default class Nav extends Component {
 
     render() {
         const { theme = 'dark', onToggleTheme = () => {} } = this.props;
-        const { isMenuOpen } = this.state;
+        const { isMenuOpen, currentPath, currentHash } = this.state;
         const nextThemeLabel = theme === 'dark' ? 'light' : 'dark';
+        const isHomePage = currentPath === '/' && (currentHash === '' || currentHash === '#/' || currentHash === '#top');
+        const showMobileBrand = !isHomePage;
         
         return (
             <header>
                 <nav className="navbar fixed-top navbar-expand-lg navbar-default">
+                    {showMobileBrand && (
+                        <a href="/" className="navbar-brand-mobile">Pranshu Gupta</a>
+                    )}
                     <button 
                         className="navbar-toggler" 
                         type="button" 

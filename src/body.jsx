@@ -46,6 +46,10 @@ export default class Body extends React.Component {
         this.updateBlogSectionHeight();
         this.updatePublicationSectionHeight();
         this.updateProjectSectionHeight();
+        if (typeof window !== 'undefined') {
+            window.addEventListener('hashchange', this.handleHashChange);
+            this.scrollToHash(window.location.hash);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -57,6 +61,12 @@ export default class Body extends React.Component {
         }
         if (prevState.projectCurrentPage !== this.state.projectCurrentPage || prevState.projectsPerPage !== this.state.projectsPerPage) {
             this.updateProjectSectionHeight();
+        }
+    }
+
+    componentWillUnmount() {
+        if (typeof window !== 'undefined') {
+            window.removeEventListener('hashchange', this.handleHashChange);
         }
     }
 
@@ -131,6 +141,30 @@ export default class Body extends React.Component {
         if (measuredHeight > this.state.projectSectionHeight) {
             this.setState({ projectSectionHeight: measuredHeight });
         }
+    };
+
+    handleHashChange = () => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        this.scrollToHash(window.location.hash);
+    };
+
+    scrollToHash = (hash) => {
+        if (!hash || typeof window === 'undefined' || typeof document === 'undefined') {
+            return;
+        }
+        const targetId = hash.replace(/^#/, '');
+        if (!targetId) {
+            return;
+        }
+        const target = document.getElementById(targetId);
+        if (!target) {
+            return;
+        }
+        const navbarOffset = 70;
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarOffset;
+        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
     };
 
     render() {
