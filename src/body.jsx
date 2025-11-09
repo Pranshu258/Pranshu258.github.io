@@ -8,6 +8,8 @@ import { createNextPageUpdater, createPreviousPageUpdater, getPageNumbers, getPa
 import './styles/fonts.css';
 import './styles/body.css';
 
+const preloadedBlogs = new Set();
+
 import art1 from './images/art/IMG_3918.jpg';
 import art2 from './images/art/IMG_6977.jpg';
 import art3 from './images/art/IMG_4609.jpg';
@@ -92,6 +94,13 @@ export default class Body extends React.Component {
 
     handleProjectPageClick = (pageNumber) => {
         this.setState({ projectCurrentPage: pageNumber });
+    };
+
+    handleBlogLinkHover = (blogEntry) => {
+        if (!preloadedBlogs.has(blogEntry.slug)) {
+            preloadedBlogs.add(blogEntry.slug);
+            blogEntry.loader();
+        }
     };
 
     updateBlogSectionHeight = () => {
@@ -234,7 +243,11 @@ export default class Body extends React.Component {
                                 {
                                     currentBlogs.map((object, i) =>
                                         <div key={object.name}>
-                                            <div className="featuredText">
+                                            <div 
+                                                className="featuredText"
+                                                onMouseEnter={() => this.handleBlogLinkHover(object)}
+                                                onTouchStart={() => this.handleBlogLinkHover(object)}
+                                            >
                                                 <Link className="blogLink" to={"blog/" + object.slug}>
                                                     <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-arrow-right'></i></h3>
                                                 </Link>
