@@ -1,5 +1,6 @@
 import React from 'react';
 import './styles/footer.css';
+import { FaFacebook, FaGithub, FaGoodreads, FaInstagram, FaLinkedin, FaSpotify, FaYoutube } from 'react-icons/fa6';
 
 // import appleMusic from "./images/apple_music.svg"
 
@@ -14,37 +15,37 @@ export default class Footer extends React.Component {
                         <ul id="footerul">
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.linkedin.com/in/pranshug258">
-                                    <i className="fab fa-linkedin socialIcon"></i>
+                                    <FaLinkedin className="socialIcon" />
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.goodreads.com/prang">
-                                    <i className="fab fa-goodreads socialIcon"></i>
+                                    <FaGoodreads className="socialIcon" />
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.instagram.com/pranshu.paints/">
-                                    <i className="fab fa-instagram socialIcon"></i>
+                                    <FaInstagram className="socialIcon" />
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.youtube.com/playlist?list=PLYYwWL0YAN2KHK81AcrbhLdeHZdgPjGS6">
-                                    <i className="fab fa-youtube socialIcon"></i>
+                                    <FaYoutube className="socialIcon" />
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://open.spotify.com/user/pranshugupta?si=a2369fa3eaf24985">
-                                    <i className="fab fa-spotify socialIcon"></i>
+                                    <FaSpotify className="socialIcon" />
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://github.com/Pranshu258">
-                                    <i className="fab fa-github socialIcon"></i>
+                                    <FaGithub className="socialIcon" />
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.facebook.com/pranshug258">
-                                    <i className="fab fa-facebook socialIcon"></i>
+                                    <FaFacebook className="socialIcon" />
                                 </a>
                             </li>
                         </ul>

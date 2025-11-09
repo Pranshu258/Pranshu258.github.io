@@ -6,6 +6,7 @@ import "../styles/prism.css";
 
 import '../styles/fonts.css';
 import '../styles/blog.css';
+import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaItunesNote } from 'react-icons/fa6';
 
 import plot1 from '../images/track_play_frequency_per_genre.png';
 import plot2 from '../images/play_end_type_freq.png';
@@ -27,7 +28,7 @@ export default class Applemusic extends React.Component {
         return (
             <div className="language-python">
                 <div className="row bhead">
-                    <i className="fab fa-itunes-note bigger gt1"></i>
+                    <FaItunesNote className="bigger gt1" />
                 </div>
                 <h1 className="title">Analysing Apple Music Activity</h1>
                 <p>Pranshu Gupta, May 2, 2020</p>
@@ -37,7 +38,7 @@ export default class Applemusic extends React.Component {
                 </p>
                 <p>
                     The code for this post is available as a jupyter notebook on Google Colab.<br></br><br></br>
-                    <button className="btn btn-warning"><a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></a></button>
+                    <button className="btn btn-warning"><a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><FaExternalLinkAlt /></a></button>
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
@@ -149,7 +150,7 @@ UTC Offset In Seconds`
                     All of the code to generate plots for this post are available as a python jupyter notebook on google colaboratory. If you are an apple music subscriber, you can download your own dataset and understand your listening habits better than ever before. 
                 </p>
                 <br></br>
-                <button className="btn btn-warning"><a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></a></button>
+                <button className="btn btn-warning"><a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/16cWFwa_f9KO7M9PBX4sk18KP3Jjrqa2M?usp=sharing"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><FaExternalLinkAlt /></a></button>
             </div>
         )
     }

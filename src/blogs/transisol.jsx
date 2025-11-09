@@ -4,6 +4,7 @@ import '../styles/fonts.css';
 import '../styles/blog.css';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { FaDatabase } from 'react-icons/fa6';
 
 const markdown = `
 ## Transaction Anomalies
@@ -75,7 +76,7 @@ export default class TransIsol extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fas fa-database bigger gt1"></i>
+                    <FaDatabase className="bigger gt1" />
                 </div>
                 <h1 className="title">Transaction Isolation in Database Systems</h1>
                 <p>Pranshu Gupta, Nov 30, 2024</p>

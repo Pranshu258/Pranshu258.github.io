@@ -15,6 +15,7 @@ import forks from '../images/git_blog/forks.png'
 import issue_closing_time from '../images/git_blog/issueclosingtime.png'
 import issues from '../images/git_blog/issues.png'
 import pull_requests from '../images/git_blog/pullrequests.png'
+import { FaAngular, FaArrowUpRightFromSquare as FaExternalLinkAlt, FaGithub, FaReact } from 'react-icons/fa6';
 
 export default class Gitviz extends React.Component {
     componentDidMount() {
@@ -26,7 +27,7 @@ export default class Gitviz extends React.Component {
         return (
             <div className="language-python">
                 <div className="row bhead">
-                    <i className="fab fa-github bigger gt1"></i>
+                    <FaGithub className="bigger gt1" />
                 </div>
                 <h1 className="title">Exploring GitHub Repositories</h1>
                 <p>Pranshu Gupta, May 12, 2020</p>
@@ -38,7 +39,7 @@ export default class Gitviz extends React.Component {
                 </p>
                 <p>
                     The code for this post is available as a jupyter notebook on Google Colab.<br></br><br></br>
-                    <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/1bFCQI_0Gm5MpLGg0s1uKGF5fmu5EUrMJ?usp=sharing"><button className="btn btn-warning"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><i class="fas fa-external-link-alt"></i></button></a>
+                    <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://colab.research.google.com/drive/1bFCQI_0Gm5MpLGg0s1uKGF5fmu5EUrMJ?usp=sharing"><button className="btn btn-warning"><b style={{ padding: "0 10px 0 0px" }}>Open in Google Colab</b><FaExternalLinkAlt /></button></a>
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">GitHub Data Mining</h2>
@@ -74,12 +75,12 @@ export default class Gitviz extends React.Component {
                 <p>
                     <a target="_blank" rel="noopener noreferrer" href="https://angular.io/docs" style={{ color: "white", textDecoration: "none" }}>
                         <button className="btn btn-danger" style={{ marginRight: "10px", marginBottom: "10px" }}>
-                            Learn Angular <i class="fab fa-angular"></i>
+                            Learn Angular <FaAngular />
                         </button>
                     </a>
                     <a target="_blank" rel="noopener noreferrer" href="https://reactjs.org/docs/getting-started.html" style={{ color: "white", textDecoration: "none" }}>
                         <button className="btn btn-primary" style={{ marginRight: "10px", marginBottom: "10px" }}>
-                            Learn React <i class="fab fa-react"></i>
+                            Learn React <FaReact />
                         </button>
                     </a>
                 </p>

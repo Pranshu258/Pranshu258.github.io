@@ -2,6 +2,7 @@ import React from 'react';
 import Sharer from "../sharer";
 import '../styles/fonts.css';
 import '../styles/blog.css';
+import { FaLanguage } from 'react-icons/fa6';
 
 export default class Eohl extends React.Component {
     componentDidMount() {
@@ -12,7 +13,7 @@ export default class Eohl extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fas fa-language bigger gt1"></i>
+                    <FaLanguage className="bigger gt1" />
                 </div>
                 <h1 className="title">Evolution of Human Languages</h1>
                 <p>Pranshu Gupta, May 5, 2017</p>

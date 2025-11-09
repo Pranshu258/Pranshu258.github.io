@@ -6,6 +6,7 @@ import Prism from "prismjs";
 import "../styles/prism.css";
 import '../styles/fonts.css';
 import '../styles/blog.css';
+import { FaSquareJs as FaJsSquare } from 'react-icons/fa6';
 
 export default class Qoj extends React.Component {
     componentDidMount() {
@@ -17,7 +18,7 @@ export default class Qoj extends React.Component {
         return (
             <div className="language-javascript">
                 <div className="row bhead">
-                    <i className="fab fa-js-square bigger gt1"></i>
+                    <FaJsSquare className="bigger gt1" />
                 </div>
                 <h1 className="title">Quirks of JavaScript - <br></br>The Language of the Web</h1>
                 <p>Pranshu Gupta, June 5, 2017</p>

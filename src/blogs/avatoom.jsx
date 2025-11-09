@@ -40,6 +40,7 @@ import cluster16 from "../images/cluster16.png"
 import cluster2wc from "../images/wc_cluster2.png"
 import cluster11wc from "../images/wc_cluster11.png"
 import cluster16wc from "../images/wc_cluster16.png"
+import { FaCirclePlay as FaPlayCircle } from 'react-icons/fa6';
 
 export default class Avatoom extends React.Component {
     componentDidMount() {
@@ -50,7 +51,7 @@ export default class Avatoom extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fas fa-play-circle bigger gt1"></i>
+                    <FaPlayCircle className="bigger gt1" />
                 </div>
                 <h1 className="title">A voyage across the Ocean of Music</h1>
                 <p>

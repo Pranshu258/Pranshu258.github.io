@@ -1,5 +1,7 @@
 import React from 'react';
 import './styles/sharer.css';
+import { FaCircleCheck as FaCheckCircle, FaEnvelope, FaFacebook, FaLink, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
+import { TbBrandThreads } from 'react-icons/tb';
 
 export default class Sharer extends React.Component {
     constructor(props) {
@@ -32,7 +34,7 @@ export default class Sharer extends React.Component {
                             aria-label="Copy link to clipboard"
                             className="sharerTrigger"
                         >
-                            <i title='copy link' className="fas fa-link sharerIcon"></i>
+                            <FaLink className="sharerIcon" />
                         </button>
                     </li>
                     <li>
@@ -42,7 +44,7 @@ export default class Sharer extends React.Component {
                             className="sharerTrigger"
                             href={"https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(this.props.link).replace("blog", "%3Fp%3Dblog")}
                         >
-                            <i title='share on linkedin' className="fab fa-linkedin sharerIcon"></i>
+                            <FaLinkedin className="sharerIcon" />
                         </a>
                     </li>
                     <li>
@@ -52,7 +54,7 @@ export default class Sharer extends React.Component {
                             className="sharerTrigger"
                             href={"mailto:?subject=" + this.props.title + "&body=Check out this new article on Pranshu's blog:%0A" + this.props.link}
                         >
-                            <i title='share via email' className="fas fa-envelope sharerIcon"></i>
+                            <FaEnvelope className="sharerIcon" />
                         </a>
                     </li>
                     <li>
@@ -62,7 +64,7 @@ export default class Sharer extends React.Component {
                             className="sharerTrigger"
                             href={"https://www.threads.net/intent/post?text=" + encodeURIComponent(this.props.link).replace("blog", "%3Fp%3Dblog")}
                         >
-                            <i title='share on threads' className="fa-brands fa-threads  sharerIcon"></i>
+                            <TbBrandThreads className="sharerIcon" />
                         </a>
                     </li>
                     <li>
@@ -72,7 +74,7 @@ export default class Sharer extends React.Component {
                             className="sharerTrigger"
                             href={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(this.props.link)}
                         >
-                            <i title='share on facebook' className="fab fa-facebook sharerIcon"></i>
+                            <FaFacebook className="sharerIcon" />
                         </a>
                     </li>
                     <li>
@@ -82,13 +84,13 @@ export default class Sharer extends React.Component {
                             className="sharerTrigger"
                             href={"https://twitter.com/share?url=" + encodeURIComponent(this.props.link).replace("blog", "%3Fp%3Dblog")}
                         >
-                            <i title='share on X' className="fa-brands fa-x-twitter  sharerIcon"></i>
+                            <FaXTwitter className="sharerIcon" />
                         </a>
                     </li>
                 </ul>
                 <span> {this.state.tooltipVisible && (
                     <b style={{ color: 'green' }}>
-                        <i className='fas fa-circle-check'></i> link copied to clipboard!
+                        <FaCheckCircle /> link copied to clipboard!
                     </b>
                 )}</span>
                 <br></br>

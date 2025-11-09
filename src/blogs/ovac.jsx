@@ -6,6 +6,7 @@ import '../styles/blog.css';
 
 import dockerArch from "../images/dockerArch.png";
 import vmsdocker from "../images/vmvsdocker.png";
+import { FaServer } from 'react-icons/fa6';
 
 export default class Ovac extends React.Component {
     componentDidMount() {
@@ -16,7 +17,7 @@ export default class Ovac extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fas fa-server bigger gt1"></i>
+                    <FaServer className="bigger gt1" />
                 </div>
                 <h1 className="title">On Virtualization and Containers</h1>
                 <p>Pranshu Gupta, Feb 20, 2019</p>

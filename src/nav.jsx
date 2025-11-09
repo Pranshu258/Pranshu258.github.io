@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './styles/nav.css';
 
 import { Link } from "react-scroll";
+import { FaMoon, FaSun } from 'react-icons/fa6';
 
 export default class Nav extends Component {
     constructor(props) {
@@ -118,6 +119,7 @@ export default class Nav extends Component {
         const nextThemeLabel = theme === 'dark' ? 'light' : 'dark';
         const isHomePage = currentPath === '/' && (currentHash === '' || currentHash === '#/' || currentHash === '#top');
         const showMobileBrand = !isHomePage;
+    const ThemeIcon = theme === 'dark' ? FaSun : FaMoon;
         
         return (
             <header>
@@ -183,7 +185,7 @@ export default class Nav extends Component {
                                     aria-pressed={theme === 'dark'}
                                     title={`Switch to ${nextThemeLabel} mode`}
                                 >
-                                    <i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                                    <ThemeIcon />
                                 </button>
                             </li>
                         </ul>

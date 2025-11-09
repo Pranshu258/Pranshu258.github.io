@@ -6,6 +6,7 @@ import { cancerViz } from '../data/cancerviz';
 import { ResponsiveLine } from '@nivo/line'
 import { ResponsivePie } from '@nivo/pie'
 import { schemeDark2 } from 'd3-scale-chromatic';
+import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaGithub, FaStaffSnake } from 'react-icons/fa6';
 
 const CustomTooltip = ({ point }) => (
     <div style={{ background: 'white', padding: '5px', border: '1px solid #ccc' }}>
@@ -214,7 +215,7 @@ export default class CancerViz extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fas fa-staff-snake bigger gt1"></i>
+                    <FaStaffSnake className="bigger gt1" />
                 </div>
                 <h1 className="title">Statistical insights on Cancer in America</h1>
                 <p>Pranshu Gupta, Dec 5, 2024</p>
@@ -398,7 +399,7 @@ export default class CancerViz extends React.Component {
                 <p>
                     The code for data analysis/visualization used in this article is available as a jupyter notebook on GitHub.<br></br>
                 </p>
-                <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/CDC-Cancer-Incidence-Analysis"><button className="btn btn-warning"><i class="fab fa-github"></i><b style={{ padding: "10px" }}>Open GitHub Repo</b><i class="fas fa-external-link-alt"></i></button></a>
+                <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/CDC-Cancer-Incidence-Analysis"><button className="btn btn-warning"><FaGithub style={{ marginRight: '10px' }} /><b style={{ padding: "10px" }}>Open GitHub Repo</b><FaExternalLinkAlt style={{ marginLeft: '10px' }} /></button></a>
                 <hr style={{ backgroundColor: "white" }}></hr>
             </div>
         )

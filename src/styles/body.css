@@ -129,32 +129,52 @@ hr {
     color: var(--primary-link-hover-color);
 }
 
-.gt1 {
-    background: -webkit-linear-gradient(var(--brand-100), var(--brand-300));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+svg.gt1 {
+    color: #207d42;
 }
 
-.gt2 {
-    background: -webkit-linear-gradient(var(--brand-300), var(--brand-500));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+svg.gt1 [fill]:not([fill='none']) {
+    fill: url(#icon-gradient-gt1);
 }
 
-.gt3 {
-    background: -webkit-linear-gradient(#AA771C, #ffc107);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+svg.gt1 [stroke]:not([stroke='none']) {
+    stroke: url(#icon-gradient-gt1);
 }
 
-.gt4 {
-    background: -webkit-linear-gradient(var(--brand-500), var(--brand-700));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+svg.gt2 {
+    color: #196634;
+}
+
+svg.gt2 [fill]:not([fill='none']) {
+    fill: url(#icon-gradient-gt2);
+}
+
+svg.gt2 [stroke]:not([stroke='none']) {
+    stroke: url(#icon-gradient-gt2);
+}
+
+svg.gt3 {
+    color: #b6821f;
+}
+
+svg.gt3 [fill]:not([fill='none']) {
+    fill: url(#icon-gradient-gt3);
+}
+
+svg.gt3 [stroke]:not([stroke='none']) {
+    stroke: url(#icon-gradient-gt3);
+}
+
+svg.gt4 {
+    color: #134f28;
+}
+
+svg.gt4 [fill]:not([fill='none']) {
+    fill: url(#icon-gradient-gt4);
+}
+
+svg.gt4 [stroke]:not([stroke='none']) {
+    stroke: url(#icon-gradient-gt4);
 }
 
 .paginationIcon {

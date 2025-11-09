@@ -3,6 +3,7 @@ import Sharer from "../sharer";
 
 import '../styles/fonts.css';
 import '../styles/blog.css';
+import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaComputer } from 'react-icons/fa6';
 
 export default class DistribComp extends React.Component {
     componentDidMount() {
@@ -13,7 +14,7 @@ export default class DistribComp extends React.Component {
         return (
             <div className="language-go">
                 <div className="row bhead">
-                    <i className="fas fa-computer bigger gt1"></i>
+                    <FaComputer className="bigger gt1" />
                 </div>
                 <h1 className="title">Distributed Computing with MapReduce</h1>
                 <p>Pranshu Gupta, Nov 29, 2024</p>
@@ -92,8 +93,8 @@ export default class DistribComp extends React.Component {
                 <p>
                     The MapReduce framework was introduced by Google in 2004, and has since been implemented in many other systems, including Apache Hadoop, which is an open-source implementation of the MapReduce framework. Hadoop is widely used in industry and academia for processing large datasets. The framework has also inspired other distributed computing frameworks, such as Apache Spark, which is designed to be faster and more flexible than MapReduce.
                 </p>
-                <a target='_blank' rel="noreferrer" href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf"><button className="btn btn-danger">Original MapReduce paper  &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a> &nbsp;
-                <a target='_blank' rel="noreferrer" href="https://spark.apache.org/"><button className="btn btn-danger">Apache Spark &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a>
+                <a target='_blank' rel="noreferrer" href="https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf"><button className="btn btn-danger">Original MapReduce paper  &nbsp;<FaExternalLinkAlt /></button></a> &nbsp;
+                <a target='_blank' rel="noreferrer" href="https://spark.apache.org/"><button className="btn btn-danger">Apache Spark &nbsp;<FaExternalLinkAlt /></button></a>
                 <br></br>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <div>

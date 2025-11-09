@@ -41,11 +41,15 @@ figcaption {
     text-align: left;
 }
 .bhead .gt1 {
-    background: none;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-    -webkit-text-fill-color: #0d4523;
     color: #0d4523;
+}
+
+.bhead .gt1 [fill]:not([fill='none']) {
+    fill: currentColor;
+}
+
+.bhead .gt1 [stroke]:not([stroke='none']) {
+    stroke: currentColor;
 }
 
 .blog-loading {

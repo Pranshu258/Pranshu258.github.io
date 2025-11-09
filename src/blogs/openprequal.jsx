@@ -4,6 +4,8 @@ import '../styles/fonts.css';
 import '../styles/blog.css';
 
 import openprequal from '../images/openprequal/openprequal.svg';
+import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaGithub, FaGoogle, FaDiagramProject as FaHexagonNodes } from 'react-icons/fa6';
+import { TbLoadBalancer } from "react-icons/tb";
 
 export default class OpenPrequalBlog extends React.Component {
     constructor(props) {
@@ -23,7 +25,7 @@ export default class OpenPrequalBlog extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fas fa-hexagon-nodes bigger gt1"></i>
+                    <TbLoadBalancer className="bigger gt1" />
                 </div>
                 <h1 className="title">Coding YouTube's load balancer using GitHub Copilot</h1>
                 <p>Pranshu Gupta, September 14, 2025</p>
@@ -41,16 +43,16 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal">
                     <button className="btn btn-danger">
-                        <i className="fab fa-google"></i>
+                        <FaGoogle style={{ marginRight: '10px' }} />
                         <b style={{ padding: "10px" }}>Google's Prequal Paper</b>
-                        <i className="fas fa-external-link-alt"></i>
+                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                     </button>
                 </a>
                 <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal">
                     <button className="btn btn-primary">
-                        <i className="fab fa-github"></i>
+                        <FaGithub style={{ marginRight: '10px' }} />
                         <b style={{ padding: "10px" }}>OpenPrequal on GitHub</b>
-                        <i className="fas fa-external-link-alt"></i>
+                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                     </button>
                 </a>
                 <hr style={{ backgroundColor: "white" }} />
@@ -81,9 +83,9 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/algorithms/prequal_load_balancer.py">
                     <button className="btn btn-secondary">
-                        <i className="fab fa-github"></i>
+                        <FaGithub style={{ marginRight: '10px' }} />
                         <b style={{ padding: "10px" }}>Prequal Implementation</b>
-                        <i className="fas fa-external-link-alt"></i>
+                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                     </button>
                     </a>
                 </p>
@@ -97,9 +99,9 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/probe_manager.py">
                     <button className="btn btn-secondary">
-                        <i className="fab fa-github"></i>
+                        <FaGithub style={{ marginRight: '10px' }} />
                         <b style={{ padding: "10px" }}>Probe Manager Implementation</b>
-                        <i className="fas fa-external-link-alt"></i>
+                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                     </button>
                     </a>
                 </p>
@@ -113,9 +115,9 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/metrics_manager.py">
                     <button className="btn btn-secondary">
-                        <i className="fab fa-github"></i>
+                        <FaGithub style={{ marginRight: '10px' }} />
                         <b style={{ padding: "10px" }}>Metrics Manager Implementation</b>
-                        <i className="fas fa-external-link-alt"></i>
+                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                     </button>
                 </a>
                 </p>
@@ -129,9 +131,9 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/heartbeat_client.py">
                         <button className="btn btn-secondary">
-                            <i className="fab fa-github"></i>
+                            <FaGithub style={{ marginRight: '10px' }} />
                             <b style={{ padding: "10px" }}>Heartbeat Client Implementation</b>
-                            <i className="fas fa-external-link-alt"></i>
+                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                         </button>
                     </a>
                 </p>
@@ -145,16 +147,16 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/backend_registry.py">
                         <button className="btn btn-secondary">
-                            <i className="fab fa-github"></i>
+                            <FaGithub style={{ marginRight: '10px' }} />
                             <b style={{ padding: "10px" }}>In Memory Registry Implementation</b>
-                            <i className="fas fa-external-link-alt"></i>
+                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                         </button>
                     </a>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/redis_backend_registry.py">
                         <button className="btn btn-secondary">
-                            <i className="fab fa-github"></i>
+                            <FaGithub style={{ marginRight: '10px' }} />
                             <b style={{ padding: "10px" }}>Redis Registry Implementation</b>
-                            <i className="fas fa-external-link-alt"></i>
+                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                         </button>
                     </a>
                 </p>
@@ -252,16 +254,16 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal/tree/main/scripts">
                         <button className="btn btn-secondary">
-                            <i className="fab fa-github"></i>
+                            <FaGithub style={{ marginRight: '10px' }} />
                             <b style={{ padding: "10px" }}>Benchmarking Scripts</b>
-                            <i className="fas fa-external-link-alt"></i>
+                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                         </button>
                     </a>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/tree/main/results">
                     <button className="btn btn-secondary">
-                        <i className="fab fa-github"></i>
+                        <FaGithub style={{ marginRight: '10px' }} />
                         <b style={{ padding: "10px" }}>More Benchmarking Results</b>
-                        <i className="fas fa-external-link-alt"></i>
+                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
                     </button>
                 </a>
                 </p>

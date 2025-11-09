@@ -3,6 +3,7 @@ import Sharer from '../sharer';
 
 import '../styles/fonts.css';
 import '../styles/blog.css';
+import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaBugs } from 'react-icons/fa6';
 
 export default class Aibn extends React.Component {
     componentDidMount() {
@@ -13,7 +14,7 @@ export default class Aibn extends React.Component {
         return (
             <div>
                 <div className="row bhead">
-                    <i className="fas fa-bugs bigger gt1"></i>
+                    <FaBugs className="bigger gt1" />
                 </div>
                 <h1 className="title">Algorithms Inspired by Nature</h1>
                 <p>Pranshu Gupta, Feb 22, 2019</p>
@@ -27,7 +28,7 @@ export default class Aibn extends React.Component {
                     discuss some of these algorithms and heuristics and how they help us solve complex problems
                     of practical importance.
                 </p>
-                <a href="https://arxiv.org/pdf/1903.01893.pdf"><button className="btn btn-danger">Full PDF Article &nbsp;<i class="fa-solid fa-external-link-alt"></i></button></a>
+                <a href="https://arxiv.org/pdf/1903.01893.pdf"><button className="btn btn-danger">Full PDF Article &nbsp;<FaExternalLinkAlt /></button></a>
                 <br></br><br></br>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="headings">Heuristics and Metaheuristics</h3>
