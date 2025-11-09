@@ -11,8 +11,11 @@ import {
     FaCode,
     FaPalette,
     FaScroll,
-    FaArrowUpRightFromSquare as FaExternalLinkAlt
+    FaArrowUpRightFromSquare as FaExternalLinkAlt,
 } from 'react-icons/fa6';
+
+import { VscGithubProject } from "react-icons/vsc";
+import { GrArticle } from "react-icons/gr";
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -268,7 +271,7 @@ export default class Body extends React.Component {
                     <div className="row" id="blog">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <FaBlog className="big gt1" />
+                            <GrArticle className="big gt1" />
                             <br></br><br></br>
                             <h2 className="roboto">
                                 BLOG
@@ -328,7 +331,7 @@ export default class Body extends React.Component {
                     <div className="row" id="projects">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <FaCode className="big gt2" />
+                            <VscGithubProject className="big gt2" />
                             <br></br><br></br>
                             <h2 className="roboto">
                                 PROJECTS
