@@ -235,7 +235,7 @@ export default class Body extends React.Component {
                                     currentBlogs.map((object, i) =>
                                         <div key={object.name}>
                                             <div className="featuredText">
-                                                <Link className="blogLink" to={"blog/" + object.name.replace(/\s+/g, '-').toLowerCase()}>
+                                                <Link className="blogLink" to={"blog/" + object.slug}>
                                                     <h3 className="roboto">{object.name} <i style={{fontSize: '75%', marginLeft: '10px'}} className='fas fa-arrow-right'></i></h3>
                                                 </Link>
                                                 <p>{object.description}</p>

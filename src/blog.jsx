@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Route, Routes } from "react-router-dom";
 
 import { blogList } from './data/blogs'
@@ -11,6 +11,14 @@ import banner from './images/banner.png';
 import blogPoster from './images/open-doodles-clumsy-man-dropping-documents-and-files.svg';
 
 export default class Blog extends React.Component {
+    constructor(props) {
+        super(props);
+        this.lazyComponents = blogList.reduce((accumulator, entry) => {
+            accumulator[entry.slug] = React.lazy(entry.loader);
+            return accumulator;
+        }, {});
+    }
+
     render() {
         var globalStyle = {
             margin: "-12px 0 50px 0",
@@ -27,7 +35,20 @@ export default class Blog extends React.Component {
                                 <Routes>
                                     {
                                         blogList.map((object, i) =>
-                                            <Route path={object.name.replace(/\s+/g, '-').toLowerCase()} exact element={object.component} />
+                                            {
+                                                const BlogComponent = this.lazyComponents[object.slug];
+                                                return (
+                                                    <Route
+                                                        key={object.slug}
+                                                        path={object.slug}
+                                                        element={
+                                                            <Suspense fallback={<div className="blog-loading">Loading article...</div>}>
+                                                                <BlogComponent />
+                                                            </Suspense>
+                                                        }
+                                                    />
+                                                );
+                                            }
                                         )
                                     }
                                 </Routes>
@@ -46,18 +67,18 @@ export default class Blog extends React.Component {
                                                 // Only show for the current blog route
                                                 // Use window.location.pathname to get current path
                                                 const currentPath = window.location.pathname.split('/').pop();
-                                                const thisPath = object.name.replace(/\s+/g, '-').toLowerCase();
+                                                const thisPath = object.slug;
                                                 if (currentPath === thisPath) {
                                                     return (
                                                         <React.Fragment key={i}>
                                                             {prev && (
                                                                 <li>
-                                                                    &larr; Previous: <a href={"/blog/" + prev.name.replace(/\s+/g, '-').toLowerCase()}>{prev.name}</a>
+                                                                    &larr; Previous: <a href={"/blog/" + prev.slug}>{prev.name}</a>
                                                                 </li>
                                                             )}
                                                             {next && (
                                                                 <li style={{marginTop: '10px'}}>
-                                                                    &rarr; Next: <a href={"/blog/" + next.name.replace(/\s+/g, '-').toLowerCase()}>{next.name}</a>
+                                                                    &rarr; Next: <a href={"/blog/" + next.slug}>{next.name}</a>
                                                                 </li>
                                                             )}
                                                         </React.Fragment>
