@@ -19,7 +19,7 @@ export default class Blog extends React.Component {
             margin: "20px 0 20px 0",
         }
         return (
-            <div className="content">
+            <div className="content blog-content">
                 <div className="container">
                     <div className="row-fluid" style={globalStyle}>
                         <div className="row-fluid">

@@ -1,40 +1,58 @@
 /* navbar */
 .navbar-default {
-    background-image: linear-gradient(-45deg, #000000, #111111, #222222, #333333);
+    background-image: var(--nav-background);
+    color: var(--nav-text-color);
 }
-/* Title */
-.navbar-default .navbar-brand {
-    color: rgb(85,172,238);
-}
+
+.navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
-    color: rgb(85,172,238);
+    color: var(--nav-text-color);
 }
-/* Link */
-.navbar-default .navbar-nav > li > a {
-    color: white;
+
+.navbar-default .nav-link-btn {
+    color: var(--nav-text-color);
+    background: transparent;
+    border: 1px solid transparent;
+    margin: 0 6px;
+    padding: 6px 16px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
-    color: white;
+
+.navbar-default .nav-link-btn:hover,
+.navbar-default .nav-link-btn:focus {
+    color: var(--nav-text-color);
+    background-color: var(--nav-button-hover-bg);
+    border-color: var(--nav-button-border);
 }
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-    color: white;
+
+.navbar-default .nav-link-btn:focus-visible {
+    outline: 2px solid var(--toggle-focus-ring);
+    outline-offset: 2px;
 }
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:hover,
-.navbar-default .navbar-nav > .open > a:focus {
-    color: white;
+
+.navbar-default .nav-link-btn.theme-toggle {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-color: var(--nav-button-border);
+}
+
+.navbar-default .nav-link-btn.theme-toggle i {
+    color: var(--toggle-icon-color);
+    font-size: 1rem;
 }
 
 .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    background-image: var(--navbar-toggler-icon);
 }
-  
+
 .custom-toggler.navbar-toggler {
-    border-color: white;
+    border-color: var(--nav-button-border);
 } 
 
 .nav-item {

@@ -1,3 +1,8 @@
+.blog-content {
+    background-color: var(--blog-surface-background);
+    color: var(--surface-text-color);
+}
+
 .introduction {
     font-style: italic;
 }

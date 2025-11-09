@@ -10,7 +10,7 @@ export default class Footer extends React.Component {
                 <div className="row-fluid" id="footerContent">
                     <div className="col-sm-2">
                     </div>
-                    <div className="col-sm-8" style={{ color: "white", textAlign: "center"}}>
+                    <div className="col-sm-8" style={{ color: "var(--footer-text-color)", textAlign: "center" }}>
                         <ul id="footerul">
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.linkedin.com/in/pranshug258">

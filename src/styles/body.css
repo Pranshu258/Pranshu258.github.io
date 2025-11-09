@@ -3,6 +3,50 @@
     --brand-300: #196634;
     --brand-500: #134f28;
     --brand-700: #0c351b;
+    --body-background: linear-gradient(to right, #111111, #222222);
+    --body-text-color: #ffffff;
+    --surface-background: #f9f6ee;
+    --surface-text-color: #1f1f1f;
+    --divider-color: #333333;
+    --primary-link-color: #ffffff;
+    --primary-link-hover-color: #ffffff;
+    --page-background: #050505;
+    --nav-background: linear-gradient(-45deg, #000000, #111111, #222222, #333333);
+    --nav-text-color: #ffffff;
+    --nav-button-hover-bg: rgba(255, 255, 255, 0.12);
+    --nav-button-border: rgba(255, 255, 255, 0.2);
+    --footer-background: linear-gradient(45deg, #000000, #111111, #222222, #333333);
+    --footer-text-color: #ffffff;
+    --toggle-icon-color: #ffffff;
+    --toggle-focus-ring: rgba(255, 255, 255, 0.4);
+    --navbar-toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    --blog-surface-background: #f9f6ee;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+html[data-theme="light"] {
+    color-scheme: light;
+    --body-background: linear-gradient(to right, #f6faf6, #e9f3ea);
+    --body-text-color: #101611;
+    --surface-background: #ffffff;
+    --surface-text-color: #1f2a23;
+    --divider-color: #cad9cd;
+    --primary-link-color: #134f28;
+    --primary-link-hover-color: #196634;
+    --page-background: #eef4ef;
+    --nav-background: linear-gradient(-45deg, #041f11, #082b17, #0c351b, #082b17);
+    --nav-text-color: #f3faf5;
+    --nav-button-hover-bg: rgba(255, 255, 255, 0.1);
+    --nav-button-border: rgba(255, 255, 255, 0.18);
+    --footer-background: linear-gradient(45deg, #041f11, #082b17, #0c351b, #082b17);
+    --footer-text-color: #ffffff;
+    --toggle-icon-color: #f3faf5;
+    --toggle-focus-ring: rgba(255, 255, 255, 0.45);
+    --navbar-toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(16,22,17,1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    --blog-surface-background: #f9f6ee;
 }
 
 .featuredText {
@@ -57,19 +101,32 @@
     color: white;
 }
 
+.content {
+    background-color: var(--surface-background);
+    color: var(--surface-text-color);
+}
+
 .body {
-    background-image: linear-gradient(to right, #111111, #222222);
-    color: white;
+    background-image: var(--body-background);
+    color: var(--body-text-color);
+}
+
+.body.content {
+    color: var(--body-text-color);
 }
 
 hr {
-    background-color: #333333;
+    background-color: var(--divider-color);
 }
 
-.blogLink,
+.blogLink {
+    text-decoration: none;
+    color: var(--primary-link-color);
+}
+
 .blogLink:hover {
     text-decoration: none;
-    color: white;
+    color: var(--primary-link-hover-color);
 }
 
 .gt1 {
@@ -116,8 +173,4 @@ hr {
 
 .paperLink {
     padding: 6px 12px 6px 12px;
-}
-
-.content {
-    background-color: #f9f6ee;
 }
