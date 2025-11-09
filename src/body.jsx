@@ -15,7 +15,7 @@ import {
 } from 'react-icons/fa6';
 
 import { VscGithubProject } from "react-icons/vsc";
-import { GrArticle } from "react-icons/gr";
+import { LuNotebookPen } from "react-icons/lu";
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -271,7 +271,7 @@ export default class Body extends React.Component {
                     <div className="row" id="blog">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <GrArticle className="big gt1" />
+                            <LuNotebookPen className="big gt1" />
                             <br></br><br></br>
                             <h2 className="roboto">
                                 BLOG
