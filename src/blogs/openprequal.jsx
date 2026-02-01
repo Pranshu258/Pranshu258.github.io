@@ -82,11 +82,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/algorithms/prequal_load_balancer.py">
-                    <button className="btn btn-secondary">
-                        <FaGithub style={{ marginRight: '10px' }} />
-                        <b style={{ padding: "10px" }}>Prequal Implementation</b>
-                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                    </button>
+                    <b>Prequal Implementation</b>
                     </a>
                 </p>
                 <h3>Probe Management</h3>
@@ -98,11 +94,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </ul>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/probe_manager.py">
-                    <button className="btn btn-secondary">
-                        <FaGithub style={{ marginRight: '10px' }} />
-                        <b style={{ padding: "10px" }}>Probe Manager Implementation</b>
-                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                    </button>
+                    <b>Probe Manager Implementation</b>
                     </a>
                 </p>
                 <h3>Metrics Management</h3>
@@ -114,12 +106,8 @@ export default class OpenPrequalBlog extends React.Component {
                 </ul>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/metrics_manager.py">
-                    <button className="btn btn-secondary">
-                        <FaGithub style={{ marginRight: '10px' }} />
-                        <b style={{ padding: "10px" }}>Metrics Manager Implementation</b>
-                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                    </button>
-                </a>
+                    <b>Metrics Manager Implementation</b>
+                    </a>
                 </p>
                 
                 <h3>Heartbeat Client</h3>
@@ -130,11 +118,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/heartbeat_client.py">
-                        <button className="btn btn-secondary">
-                            <FaGithub style={{ marginRight: '10px' }} />
-                            <b style={{ padding: "10px" }}>Heartbeat Client Implementation</b>
-                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                        </button>
+                        <b>Heartbeat Client Implementation</b>
                     </a>
                 </p>
                 <h3>Backend Registry</h3>
@@ -146,18 +130,11 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/backend_registry.py">
-                        <button className="btn btn-secondary">
-                            <FaGithub style={{ marginRight: '10px' }} />
-                            <b style={{ padding: "10px" }}>In Memory Registry Implementation</b>
-                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                        </button>
+                        <b>In Memory Registry Implementation</b>
                     </a>
+                    <br></br>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/redis_backend_registry.py">
-                        <button className="btn btn-secondary">
-                            <FaGithub style={{ marginRight: '10px' }} />
-                            <b style={{ padding: "10px" }}>Redis Registry Implementation</b>
-                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                        </button>
+                        <b>Redis Registry Implementation</b>
                     </a>
                 </p>
                 
@@ -253,19 +230,12 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal/tree/main/scripts">
-                        <button className="btn btn-secondary">
-                            <FaGithub style={{ marginRight: '10px' }} />
-                            <b style={{ padding: "10px" }}>Benchmarking Scripts</b>
-                            <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                        </button>
+                        <b>Benchmarking Scripts</b>
                     </a>
+                    <br></br>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/tree/main/results">
-                    <button className="btn btn-secondary">
-                        <FaGithub style={{ marginRight: '10px' }} />
-                        <b style={{ padding: "10px" }}>More Benchmarking Results</b>
-                        <FaExternalLinkAlt style={{ marginLeft: '10px' }} />
-                    </button>
-                </a>
+                        <b>More Benchmarking Results</b>
+                    </a>
                 </p>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>Agent Assisted Coding</h2>
