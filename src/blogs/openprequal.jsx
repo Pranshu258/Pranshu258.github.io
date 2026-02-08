@@ -5,6 +5,7 @@ import '../styles/blog.css';
 
 import openprequal from '../images/openprequal/openprequal.svg';
 import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaGithub, FaGoogle, FaDiagramProject as FaHexagonNodes } from 'react-icons/fa6';
+import { MdArrowOutward } from "react-icons/md";
 import { TbLoadBalancer } from "react-icons/tb";
 
 export default class OpenPrequalBlog extends React.Component {
@@ -82,7 +83,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/algorithms/prequal_load_balancer.py">
-                    <b>Prequal Implementation</b>
+                    <b>Prequal Implementation <MdArrowOutward style={{ marginLeft: '3px', marginBottom: '2px' }}/></b>
                     </a>
                 </p>
                 <h3>Probe Management</h3>
@@ -94,7 +95,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </ul>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/probe_manager.py">
-                    <b>Probe Manager Implementation</b>
+                    <b>Probe Manager Implementation <MdArrowOutward style={{ marginLeft: '3px', marginBottom: '2px' }}/></b>
                     </a>
                 </p>
                 <h3>Metrics Management</h3>
@@ -106,7 +107,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </ul>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/metrics_manager.py">
-                    <b>Metrics Manager Implementation</b>
+                    <b>Metrics Manager Implementation <MdArrowOutward style={{ marginLeft: '3px', marginBottom: '2px' }}/></b>
                     </a>
                 </p>
                 
@@ -118,7 +119,7 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/heartbeat_client.py">
-                        <b>Heartbeat Client Implementation</b>
+                        <b>Heartbeat Client Implementation <MdArrowOutward style={{ marginLeft: '3px', marginBottom: '2px' }}/></b>
                     </a>
                 </p>
                 <h3>Backend Registry</h3>
@@ -130,11 +131,11 @@ export default class OpenPrequalBlog extends React.Component {
                 </p>
                 <p>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/backend_registry.py">
-                        <b>In Memory Registry Implementation</b>
+                        <b>In Memory Registry Implementation <MdArrowOutward style={{ marginLeft: '3px', marginBottom: '2px' }}/></b>
                     </a>
                     <br></br>
                     <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none" }} href="https://github.com/Pranshu258/OpenPrequal/blob/main/src/core/redis_backend_registry.py">
-                        <b>Redis Registry Implementation</b>
+                        <b>Redis Registry Implementation <MdArrowOutward style={{ marginLeft: '3px', marginBottom: '2px' }}/></b>
                     </a>
                 </p>
                 
