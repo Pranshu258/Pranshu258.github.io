@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import RenjuBoard from './RenjuBoard';
-import { attack, attackWithVisualization, checkWin, getWinningLine } from './ai';
+import { attack, attackWithVisualization, checkWin, getWinningLine, clearTranspositionTable } from './ai';
 import { 
   snapToGrid, 
   isValidMove, 
@@ -38,6 +38,7 @@ function RenjuGame() {
     setMoveCount(1);
     setLastMove(null);
     setWinningLine(null);
+    clearTranspositionTable(); // Clear cached positions for new game
 
     // First move - Black always goes first (center of the board)
     // Grid center is at index 7: BOARD_OFFSET + 7 * GRID_SIZE = 300
@@ -120,7 +121,10 @@ function RenjuGame() {
           setCandidateMoves([]);
         } else {
           // Use regular fast attack
-          attack(newComputerMoves, humanMoves, 0, depth, -1000, 1000);
+          const result = attack(newComputerMoves, humanMoves, 0, depth, -1000, 1000);
+          if (result.bestMove) {
+            newComputerMoves.push(result.bestMove);
+          }
         }
 
         if (cancelled) return;

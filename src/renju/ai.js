@@ -1,66 +1,143 @@
 // AI Algorithm - Ported from algo.py
 // Minimax with Alpha-Beta Pruning for Renju (Five in a Row)
+// Optimized with Set-based lookups, transposition table, and consolidated patterns
 
 const GRID_SIZE = 40;
+const BOARD_MAX = 14 * GRID_SIZE; // 560 for 15x15 board
+const MAX_CANDIDATE_MOVES = 10;
 
+// Scores for evaluation
+const SCORES = {
+  WIN: 10,
+  BLOCK_FOUR: 9,
+  FOUR_OPEN: 8,
+  FOUR_HALF: 7,
+  BLOCK_THREE: 6,
+  THREE_OPEN: 5,
+  THREE_HALF: 4,
+  TWO: 2,
+  NONE: 0
+};
+
+// Direction vectors for pattern checking
+const DIRECTIONS = [
+  [1, 0],   // horizontal
+  [0, 1],   // vertical
+  [1, 1],   // diagonal SE
+  [1, -1]   // diagonal NE
+];
+
+// 8-way neighbor offsets
+const NEIGHBORS = [
+  [0, -1], [1, -1], [1, 0], [1, 1],
+  [0, 1], [-1, 1], [-1, 0], [-1, -1]
+];
+
+// Transposition table for caching evaluated positions
+const transpositionTable = new Map();
+const MAX_TABLE_SIZE = 100000;
+
+// Helper: Create position key for Set lookup
+function posKey(x, y) {
+  return (x << 16) | (y & 0xFFFF); // Bit packing for faster hashing
+}
+
+// Helper: Create position Set from array
+function createPosSet(positions) {
+  const set = new Set();
+  for (let i = 0; i < positions.length; i++) {
+    set.add(posKey(positions[i][0], positions[i][1]));
+  }
+  return set;
+}
+
+// Helper: Check if position exists in Set
+function hasPos(set, x, y) {
+  return set.has(posKey(x, y));
+}
+
+// Helper: Generate hash for position (for transposition table)
+function hashPosition(player1, player2) {
+  const sorted1 = [...player1].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const sorted2 = [...player2].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  return JSON.stringify([sorted1, sorted2]);
+}
+
+/**
+ * Main attack function with alpha-beta pruning
+ * Returns: { score, bestMove } - no longer mutates input arrays
+ */
 export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
-  if (isGameOver(player) || depth === maxDepth) {
-    return evaluate(player, otherPlayer);
+  // Check transposition table
+  const hash = hashPosition(player, otherPlayer);
+  const cached = transpositionTable.get(hash);
+  if (cached && cached.depth >= maxDepth - depth) {
+    return depth === 0 ? cached : cached.score;
+  }
+
+  const playerSet = createPosSet(player);
+  
+  if (isGameOverFast(playerSet, player) || depth === maxDepth) {
+    const score = evaluateFast(player, otherPlayer);
+    return depth === 0 ? { score, bestMove: null } : score;
   }
 
   let bestMove = null;
   let bestScore = -1000;
-  const moves = getMoves(player, otherPlayer);
+  const moves = getMovesOptimized(player, otherPlayer);
 
   for (const move of moves) {
-    const newPlayer = [...player, move];
-    const newOther = [...otherPlayer];
+    player.push(move); // Temporarily add move
     
-    let score = attack(newOther, newPlayer, depth + 1, maxDepth, -beta, -Math.max(alpha, bestScore));
+    let score = attack(otherPlayer, player, depth + 1, maxDepth, -beta, -Math.max(alpha, bestScore));
+    if (typeof score === 'object') score = score.score;
     score = -score;
+
+    player.pop(); // Restore state
 
     if (score > bestScore) {
       bestScore = score;
       bestMove = move;
       if (bestScore >= beta) {
-        return bestScore;
+        break; // Beta cutoff
       }
     }
   }
 
-  if (depth === 0 && bestMove) {
-    player.push(bestMove);
+  // Cache result
+  if (transpositionTable.size < MAX_TABLE_SIZE) {
+    transpositionTable.set(hash, { score: bestScore, depth: maxDepth - depth, bestMove });
   }
 
-  return bestScore;
+  return depth === 0 ? { score: bestScore, bestMove } : bestScore;
 }
 
 // Async version that reports candidates being considered
 export async function attackWithVisualization(player, otherPlayer, maxDepth, onCandidateEvaluated) {
   const candidates = [];
   
-  async function search(player, otherPlayer, depth, alpha, beta) {
-    if (isGameOver(player) || depth === maxDepth) {
-      return evaluate(player, otherPlayer);
+  async function search(playerArr, otherArr, depth, alpha, beta) {
+    const playerSet = createPosSet(playerArr);
+    
+    if (isGameOverFast(playerSet, playerArr) || depth === maxDepth) {
+      return evaluateFast(playerArr, otherArr);
     }
 
     let bestMove = null;
     let bestScore = -1000;
-    const moves = getMoves(player, otherPlayer);
+    const moves = getMovesOptimized(playerArr, otherArr);
 
     for (const move of moves) {
-      const newPlayer = [...player, move];
-      const newOther = [...otherPlayer];
-      
       // At depth 0, report the candidate being evaluated
       if (depth === 0) {
         onCandidateEvaluated(move, 'evaluating');
-        // Small delay to visualize
         await new Promise(resolve => setTimeout(resolve, 150));
       }
       
-      let score = await search(newOther, newPlayer, depth + 1, -beta, -Math.max(alpha, bestScore));
+      playerArr.push(move);
+      let score = await search(otherArr, playerArr, depth + 1, -beta, -Math.max(alpha, bestScore));
       score = -score;
+      playerArr.pop();
 
       if (depth === 0) {
         candidates.push({ move, score });
@@ -71,346 +148,323 @@ export async function attackWithVisualization(player, otherPlayer, maxDepth, onC
         bestScore = score;
         bestMove = move;
         if (bestScore >= beta) {
-          return bestScore;
+          break;
         }
       }
     }
 
     if (depth === 0 && bestMove) {
-      player.push(bestMove);
+      playerArr.push(bestMove);
     }
 
     return bestScore;
   }
 
-  await search(player, otherPlayer, 0, -1000, 1000);
+  await search([...player], [...otherPlayer], 0, -1000, 1000);
   return candidates;
 }
 
-function isGameOver(player) {
+// Optimized game over check using Set
+function isGameOverFast(playerSet, player) {
   for (let i = 0; i < player.length; i++) {
     const [x, y] = player[i];
     
-    // Check horizontal
-    let count = 1;
-    for (let n = 1; n <= 4; n++) {
-      if (player.some(([px, py]) => px === x + GRID_SIZE * n && py === y)) {
-        count++;
-      } else {
-        break;
+    for (const [dx, dy] of DIRECTIONS) {
+      let count = 1;
+      // Check in positive direction
+      for (let n = 1; n <= 4; n++) {
+        if (hasPos(playerSet, x + GRID_SIZE * n * dx, y + GRID_SIZE * n * dy)) {
+          count++;
+        } else break;
       }
-    }
-    if (count === 5) return true;
-
-    // Check vertical
-    count = 1;
-    for (let n = 1; n <= 4; n++) {
-      if (player.some(([px, py]) => px === x && py === y + GRID_SIZE * n)) {
-        count++;
-      } else {
-        break;
+      // Check in negative direction
+      for (let n = 1; n <= 4; n++) {
+        if (hasPos(playerSet, x - GRID_SIZE * n * dx, y - GRID_SIZE * n * dy)) {
+          count++;
+        } else break;
       }
+      if (count >= 5) return true;
     }
-    if (count === 5) return true;
-
-    // Check diagonal (SE)
-    count = 1;
-    for (let n = 1; n <= 4; n++) {
-      if (player.some(([px, py]) => px === x + GRID_SIZE * n && py === y + GRID_SIZE * n)) {
-        count++;
-      } else {
-        break;
-      }
-    }
-    if (count === 5) return true;
-
-    // Check diagonal (SW)
-    count = 1;
-    for (let n = 1; n <= 4; n++) {
-      if (player.some(([px, py]) => px === x + GRID_SIZE * n && py === y - GRID_SIZE * n)) {
-        count++;
-      } else {
-        break;
-      }
-    }
-    if (count === 5) return true;
   }
   return false;
 }
 
-function getMoves(player1, player2) {
-  const moves = [];
-  const used = [...player1, ...player2];
+// Optimized move generation with partial sorting
+function getMovesOptimized(player1, player2) {
+  const usedSet = createPosSet([...player1, ...player2]);
   const moveSet = new Set();
+  const moves = [];
 
-  for (const [x, y] of used) {
-    const neighbors = [
-      [x, y - GRID_SIZE],
-      [x + GRID_SIZE, y - GRID_SIZE],
-      [x + GRID_SIZE, y],
-      [x + GRID_SIZE, y + GRID_SIZE],
-      [x, y + GRID_SIZE],
-      [x - GRID_SIZE, y + GRID_SIZE],
-      [x - GRID_SIZE, y],
-      [x - GRID_SIZE, y - GRID_SIZE]
-    ];
-
-    for (const [nx, ny] of neighbors) {
-      const key = `${nx},${ny}`;
-      if (!used.some(([ux, uy]) => ux === nx && uy === ny) && !moveSet.has(key)) {
+  // Generate candidate moves (neighbors of existing pieces)
+  for (const [x, y] of [...player1, ...player2]) {
+    for (const [dx, dy] of NEIGHBORS) {
+      const nx = x + GRID_SIZE * dx;
+      const ny = y + GRID_SIZE * dy;
+      const key = posKey(nx, ny);
+      
+      if (!usedSet.has(key) && !moveSet.has(key) && 
+          nx >= 0 && nx <= BOARD_MAX && ny >= 0 && ny <= BOARD_MAX) {
         moveSet.add(key);
-        // Valid range: 0 to 560 (14 * 40) for 15x15 board
-        if (nx >= 0 && nx <= 560 && ny >= 0 && ny <= 560) {
-          moves.push([nx, ny]);
-        }
+        moves.push([nx, ny]);
       }
     }
   }
 
-  // Score and sort moves
+  // Quick score estimation for move ordering (avoid full evaluation)
   const scoredMoves = moves.map(move => ({
     move,
-    score: evaluate([...player1, move], player2)
+    score: quickEvaluate(player1, player2, move)
   }));
 
+  // Partial sort: only get top N moves
   scoredMoves.sort((a, b) => b.score - a.score);
-  return scoredMoves.slice(0, 10).map(sm => sm.move); // Return top 10 moves
+  return scoredMoves.slice(0, MAX_CANDIDATE_MOVES).map(sm => sm.move);
 }
 
-export function evaluate(player1, player2) {
+// Quick evaluation for move ordering (lighter than full evaluate)
+function quickEvaluate(player, opponent, move) {
+  const [mx, my] = move;
+  const playerSet = createPosSet(player);
+  const opponentSet = createPosSet(opponent);
+  let score = 0;
+
+  for (const [dx, dy] of DIRECTIONS) {
+    let ownCount = 0;
+    let oppCount = 0;
+    let openEnds = 0;
+
+    // Count own pieces and check openness
+    for (let n = 1; n <= 4; n++) {
+      const px = mx + GRID_SIZE * n * dx;
+      const py = my + GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) ownCount++;
+      else if (!hasPos(opponentSet, px, py)) { openEnds++; break; }
+      else break;
+    }
+    for (let n = 1; n <= 4; n++) {
+      const px = mx - GRID_SIZE * n * dx;
+      const py = my - GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) ownCount++;
+      else if (!hasPos(opponentSet, px, py)) { openEnds++; break; }
+      else break;
+    }
+
+    // Count opponent pieces (for blocking)
+    for (let n = 1; n <= 4; n++) {
+      const px = mx + GRID_SIZE * n * dx;
+      const py = my + GRID_SIZE * n * dy;
+      if (hasPos(opponentSet, px, py)) oppCount++;
+      else break;
+    }
+    for (let n = 1; n <= 4; n++) {
+      const px = mx - GRID_SIZE * n * dx;
+      const py = my - GRID_SIZE * n * dy;
+      if (hasPos(opponentSet, px, py)) oppCount++;
+      else break;
+    }
+
+    // Score based on potential
+    if (ownCount >= 4) score += SCORES.WIN;
+    else if (ownCount === 3 && openEnds === 2) score += SCORES.FOUR_OPEN;
+    else if (ownCount === 3) score += SCORES.FOUR_HALF;
+    else if (ownCount === 2 && openEnds === 2) score += SCORES.THREE_OPEN;
+    else if (ownCount === 2) score += SCORES.THREE_HALF;
+    else if (ownCount === 1) score += SCORES.TWO;
+
+    // Blocking bonus
+    if (oppCount >= 4) score += SCORES.BLOCK_FOUR;
+    else if (oppCount === 3) score += SCORES.BLOCK_THREE;
+  }
+
+  return score;
+}
+
+// Full evaluation (kept for compatibility, uses optimized helpers)
+export function evaluateFast(player1, player2) {
   if (player1.length === 0) return 0;
   
-  const p = [...player1];
-  const m = p[p.length - 1];
-  const [mx, my] = m;
-  p.pop(); // Remove last move for checking
+  const mx = player1[player1.length - 1][0];
+  const my = player1[player1.length - 1][1];
+  
+  // Create sets excluding last move for player1
+  const p1Set = createPosSet(player1.slice(0, -1));
+  const p2Set = createPosSet(player2);
 
-  // Check for immediate win (5 in a row) - highest priority
-  if (checkFive(p, mx, my)) return 10;
+  // Check for immediate win (5 in a row)
+  if (checkFiveFast(p1Set, mx, my)) return SCORES.WIN;
 
   // Check if blocking opponent's 4 in a row
-  if (checkOpponentFour(player2, mx, my)) return 9;
+  if (checkFiveFast(p2Set, mx, my)) return SCORES.BLOCK_FOUR;
 
-  // Check for own 4 in a row (both sides unblocked)
-  const fourScore = checkFour(p, player2, mx, my);
+  // Check for own 4 in a row
+  const fourScore = checkFourFast(p1Set, p2Set, mx, my);
   if (fourScore > 0) return fourScore;
 
-  // Check if blocking opponent's 3 in a row
-  if (checkOpponentThree(player2, mx, my)) return 6;
+  // Check if blocking opponent's 3
+  if (checkThreeFast(p2Set, p1Set, mx, my) > 0) return SCORES.BLOCK_THREE;
 
   // Check for own 3 in a row
-  const threeScore = checkThree(p, player2, mx, my);
+  const threeScore = checkThreeFast(p1Set, p2Set, mx, my);
   if (threeScore > 0) return threeScore;
 
   // Check for 2 in a row
-  if (checkTwo(p, player2, mx, my)) return 2;
+  if (checkTwoFast(p1Set, mx, my)) return SCORES.TWO;
 
-  return 0;
+  return SCORES.NONE;
 }
 
-function checkFive(player, mx, my) {
-  const directions = [
-    [[40, 0], [80, 0], [120, 0], [160, 0]], // Right
-    [[-40, 0], [-80, 0], [-120, 0], [-160, 0]], // Left
-    [[0, 40], [0, 80], [0, 120], [0, 160]], // Down
-    [[0, -40], [0, -80], [0, -120], [0, -160]], // Up
-    [[40, 40], [80, 80], [120, 120], [160, 160]], // SE
-    [[-40, -40], [-80, -80], [-120, -120], [-160, -160]], // NW
-    [[-40, 40], [-80, 80], [-120, 120], [-160, 160]], // SW
-    [[40, -40], [80, -80], [120, -120], [160, -160]], // NE
-    // Middle positions
-    [[-40, 0], [40, 0], [80, 0], [120, 0]],
-    [[-80, 0], [-40, 0], [40, 0], [80, 0]],
-    [[-120, 0], [-80, 0], [-40, 0], [40, 0]],
-    [[0, -40], [0, 40], [0, 80], [0, 120]],
-    [[0, -80], [0, -40], [0, 40], [0, 80]],
-    [[0, -120], [0, -80], [0, -40], [0, 40]],
-    [[-40, -40], [40, 40], [80, 80], [120, 120]],
-    [[-80, -80], [-40, -40], [40, 40], [80, 80]],
-    [[-120, -120], [-80, -80], [-40, -40], [40, 40]],
-    [[-40, 40], [40, -40], [80, -80], [120, -120]],
-    [[-80, 80], [-40, 40], [40, -40], [80, -80]],
-    [[-120, 120], [-80, 80], [-40, 40], [40, -40]]
-  ];
+// Legacy evaluate wrapper for backward compatibility
+export function evaluate(player1, player2) {
+  return evaluateFast(player1, player2);
+}
 
-  for (const dir of directions) {
-    if (dir.every(([dx, dy]) => player.some(([px, py]) => px === mx + dx && py === my + dy))) {
-      return true;
+function checkFiveFast(playerSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 0;
+    for (let n = 1; n <= 4; n++) {
+      if (hasPos(playerSet, mx + GRID_SIZE * n * dx, my + GRID_SIZE * n * dy)) count++;
+      else break;
     }
+    for (let n = 1; n <= 4; n++) {
+      if (hasPos(playerSet, mx - GRID_SIZE * n * dx, my - GRID_SIZE * n * dy)) count++;
+      else break;
+    }
+    if (count >= 4) return true;
   }
   return false;
 }
 
-function checkOpponentFour(opponent, mx, my) {
-  return checkFive(opponent.filter(([x, y]) => !(x === mx && y === my)), mx, my);
-}
-
-function checkFour(player, opponent, mx, my) {
-  const fourPatterns = [
-    { pattern: [[40, 0], [80, 0], [120, 0]], ends: [[-40, 0], [160, 0]] },
-    { pattern: [[-40, 0], [40, 0], [80, 0]], ends: [[-80, 0], [120, 0]] },
-    { pattern: [[-80, 0], [-40, 0], [40, 0]], ends: [[-120, 0], [80, 0]] },
-    { pattern: [[-120, 0], [-80, 0], [-40, 0]], ends: [[-160, 0], [40, 0]] },
-    { pattern: [[0, 40], [0, 80], [0, 120]], ends: [[0, -40], [0, 160]] },
-    { pattern: [[0, -40], [0, 40], [0, 80]], ends: [[0, -80], [0, 120]] },
-    { pattern: [[0, -80], [0, -40], [0, 40]], ends: [[0, -120], [0, 80]] },
-    { pattern: [[0, -120], [0, -80], [0, -40]], ends: [[0, -160], [0, 40]] },
-    { pattern: [[40, 40], [80, 80], [120, 120]], ends: [[-40, -40], [160, 160]] },
-    { pattern: [[-40, -40], [40, 40], [80, 80]], ends: [[-80, -80], [120, 120]] },
-    { pattern: [[40, -40], [80, -80], [120, -120]], ends: [[-40, 40], [160, -160]] },
-    { pattern: [[-40, 40], [40, -40], [80, -80]], ends: [[-80, 80], [120, -120]] }
-  ];
-
-  for (const { pattern, ends } of fourPatterns) {
-    const hasPattern = pattern.every(([dx, dy]) => 
-      player.some(([px, py]) => px === mx + dx && py === my + dy)
-    );
+function checkFourFast(playerSet, opponentSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 0;
+    let openEnds = 0;
     
-    if (hasPattern) {
-      const bothEndsOpen = ends.every(([dx, dy]) => 
-        !opponent.some(([px, py]) => px === mx + dx && py === my + dy)
-      );
-      
-      if (bothEndsOpen) return 8;
-      
-      const oneEndOpen = ends.some(([dx, dy]) => 
-        !opponent.some(([px, py]) => px === mx + dx && py === my + dy)
-      );
-      
-      if (oneEndOpen) return 7;
-    }
-  }
-  return 0;
-}
-
-function checkOpponentThree(opponent, mx, my) {
-  // Simplified check for blocking opponent's three
-  const threePatterns = [
-    [[40, 0], [80, 0], [120, 0]],
-    [[-40, 0], [-80, 0], [-120, 0]],
-    [[0, 40], [0, 80], [0, 120]],
-    [[0, -40], [0, -80], [0, -120]],
-    [[40, 40], [80, 80], [120, 120]],
-    [[-40, -40], [-80, -80], [-120, -120]]
-  ];
-
-  for (const pattern of threePatterns) {
-    if (pattern.every(([dx, dy]) => 
-      opponent.some(([px, py]) => px === mx + dx && py === my + dy)
-    )) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function checkThree(player, opponent, mx, my) {
-  const threePatterns = [
-    { pattern: [[40, 0], [80, 0]], space: [[-40, 0], [120, 0]], outer: [[-80, 0], [160, 0]] },
-    { pattern: [[0, 40], [0, 80]], space: [[0, -40], [0, 120]], outer: [[0, -80], [0, 160]] },
-    { pattern: [[40, 40], [80, 80]], space: [[-40, -40], [120, 120]], outer: [[-80, -80], [160, 160]] },
-    { pattern: [[40, -40], [80, -80]], space: [[-40, 40], [120, -120]], outer: [[-80, 80], [160, -160]] }
-  ];
-
-  for (const { pattern, space, outer } of threePatterns) {
-    const hasPattern = pattern.every(([dx, dy]) => 
-      player.some(([px, py]) => px === mx + dx && py === my + dy)
-    );
-    
-    if (hasPattern) {
-      const spacesClear = space.every(([dx, dy]) => 
-        !opponent.some(([px, py]) => px === mx + dx && py === my + dy)
-      );
-      
-      if (spacesClear) {
-        const outerClear = outer.every(([dx, dy]) => 
-          !opponent.some(([px, py]) => px === mx + dx && py === my + dy)
-        );
-        return outerClear ? 5 : 4;
+    // Positive direction
+    for (let n = 1; n <= 4; n++) {
+      const px = mx + GRID_SIZE * n * dx;
+      const py = my + GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) count++;
+      else {
+        if (!hasPos(opponentSet, px, py)) openEnds++;
+        break;
       }
     }
+    // Negative direction
+    for (let n = 1; n <= 4; n++) {
+      const px = mx - GRID_SIZE * n * dx;
+      const py = my - GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) count++;
+      else {
+        if (!hasPos(opponentSet, px, py)) openEnds++;
+        break;
+      }
+    }
+    
+    if (count >= 3) {
+      return openEnds === 2 ? SCORES.FOUR_OPEN : (openEnds === 1 ? SCORES.FOUR_HALF : 0);
+    }
   }
   return 0;
 }
 
-function checkTwo(player, opponent, mx, my) {
-  const twoPatterns = [
-    [[40, 0]], [[-40, 0]], [[0, 40]], [[0, -40]],
-    [[40, 40]], [[-40, -40]], [[40, -40]], [[-40, 40]]
-  ];
+function checkThreeFast(playerSet, opponentSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 0;
+    let openEnds = 0;
+    
+    for (let n = 1; n <= 3; n++) {
+      const px = mx + GRID_SIZE * n * dx;
+      const py = my + GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) count++;
+      else {
+        if (!hasPos(opponentSet, px, py)) openEnds++;
+        break;
+      }
+    }
+    for (let n = 1; n <= 3; n++) {
+      const px = mx - GRID_SIZE * n * dx;
+      const py = my - GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) count++;
+      else {
+        if (!hasPos(opponentSet, px, py)) openEnds++;
+        break;
+      }
+    }
+    
+    if (count >= 2) {
+      return openEnds === 2 ? SCORES.THREE_OPEN : (openEnds === 1 ? SCORES.THREE_HALF : 0);
+    }
+  }
+  return 0;
+}
 
-  for (const pattern of twoPatterns) {
-    if (pattern.every(([dx, dy]) => 
-      player.some(([px, py]) => px === mx + dx && py === my + dy)
-    )) {
+function checkTwoFast(playerSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    if (hasPos(playerSet, mx + GRID_SIZE * dx, my + GRID_SIZE * dy) ||
+        hasPos(playerSet, mx - GRID_SIZE * dx, my - GRID_SIZE * dy)) {
       return true;
     }
   }
   return false;
 }
 
+// Optimized checkWin using Set-based lookup
 export function checkWin(player, x, y) {
-  const patterns = [
-    [[40, 0], [80, 0], [120, 0], [160, 0]],
-    [[-40, 0], [-80, 0], [-120, 0], [-160, 0]],
-    [[0, 40], [0, 80], [0, 120], [0, 160]],
-    [[0, -40], [0, -80], [0, -120], [0, -160]],
-    [[40, 40], [80, 80], [120, 120], [160, 160]],
-    [[-40, -40], [-80, -80], [-120, -120], [-160, -160]],
-    [[-40, 40], [-80, 80], [-120, 120], [-160, 160]],
-    [[40, -40], [80, -80], [120, -120], [160, -160]],
-    [[-40, 0], [40, 0], [80, 0], [120, 0]],
-    [[-80, 0], [-40, 0], [40, 0], [80, 0]],
-    [[-120, 0], [-80, 0], [-40, 0], [40, 0]],
-    [[0, -40], [0, 40], [0, 80], [0, 120]],
-    [[0, -80], [0, -40], [0, 40], [0, 80]],
-    [[0, -120], [0, -80], [0, -40], [0, 40]],
-    [[-40, -40], [40, 40], [80, 80], [120, 120]],
-    [[-80, -80], [-40, -40], [40, 40], [80, 80]],
-    [[-120, -120], [-80, -80], [-40, -40], [40, 40]],
-    [[-40, 40], [40, -40], [80, -80], [120, -120]],
-    [[-80, 80], [-40, 40], [40, -40], [80, -80]],
-    [[-120, 120], [-80, 80], [-40, 40], [40, -40]]
-  ];
-
-  for (const pattern of patterns) {
-    if (pattern.every(([dx, dy]) => player.some(([px, py]) => px === x + dx && py === y + dy))) {
-      return true;
+  const playerSet = createPosSet(player);
+  
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 1; // Count the piece at (x, y)
+    
+    // Count in positive direction
+    for (let n = 1; n <= 4; n++) {
+      if (hasPos(playerSet, x + GRID_SIZE * n * dx, y + GRID_SIZE * n * dy)) {
+        count++;
+      } else break;
     }
+    // Count in negative direction
+    for (let n = 1; n <= 4; n++) {
+      if (hasPos(playerSet, x - GRID_SIZE * n * dx, y - GRID_SIZE * n * dy)) {
+        count++;
+      } else break;
+    }
+    
+    if (count >= 5) return true;
   }
   return false;
 }
 
 // Returns the winning line coordinates [[x1,y1], [x2,y2], ...] or null
 export function getWinningLine(player, x, y) {
-  const patterns = [
-    [[0, 0], [40, 0], [80, 0], [120, 0], [160, 0]],
-    [[0, 0], [-40, 0], [-80, 0], [-120, 0], [-160, 0]],
-    [[0, 0], [0, 40], [0, 80], [0, 120], [0, 160]],
-    [[0, 0], [0, -40], [0, -80], [0, -120], [0, -160]],
-    [[0, 0], [40, 40], [80, 80], [120, 120], [160, 160]],
-    [[0, 0], [-40, -40], [-80, -80], [-120, -120], [-160, -160]],
-    [[0, 0], [-40, 40], [-80, 80], [-120, 120], [-160, 160]],
-    [[0, 0], [40, -40], [80, -80], [120, -120], [160, -160]],
-    [[-40, 0], [0, 0], [40, 0], [80, 0], [120, 0]],
-    [[-80, 0], [-40, 0], [0, 0], [40, 0], [80, 0]],
-    [[-120, 0], [-80, 0], [-40, 0], [0, 0], [40, 0]],
-    [[0, -40], [0, 0], [0, 40], [0, 80], [0, 120]],
-    [[0, -80], [0, -40], [0, 0], [0, 40], [0, 80]],
-    [[0, -120], [0, -80], [0, -40], [0, 0], [0, 40]],
-    [[-40, -40], [0, 0], [40, 40], [80, 80], [120, 120]],
-    [[-80, -80], [-40, -40], [0, 0], [40, 40], [80, 80]],
-    [[-120, -120], [-80, -80], [-40, -40], [0, 0], [40, 40]],
-    [[-40, 40], [0, 0], [40, -40], [80, -80], [120, -120]],
-    [[-80, 80], [-40, 40], [0, 0], [40, -40], [80, -80]],
-    [[-120, 120], [-80, 80], [-40, 40], [0, 0], [40, -40]]
-  ];
-
-  for (const pattern of patterns) {
-    const line = pattern.map(([dx, dy]) => [x + dx, y + dy]);
-    if (line.every(([px, py]) => player.some(([mx, my]) => mx === px && my === py))) {
-      return line;
+  const playerSet = createPosSet(player);
+  
+  for (const [dx, dy] of DIRECTIONS) {
+    const line = [[x, y]];
+    
+    // Extend in positive direction
+    for (let n = 1; n <= 4; n++) {
+      const px = x + GRID_SIZE * n * dx;
+      const py = y + GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) {
+        line.push([px, py]);
+      } else break;
+    }
+    // Extend in negative direction
+    for (let n = 1; n <= 4; n++) {
+      const px = x - GRID_SIZE * n * dx;
+      const py = y - GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) {
+        line.unshift([px, py]);
+      } else break;
+    }
+    
+    if (line.length >= 5) {
+      return line.slice(0, 5); // Return first 5 in the line
     }
   }
   return null;
+}
+
+// Utility function to clear transposition table (call between games)
+export function clearTranspositionTable() {
+  transpositionTable.clear();
 }
