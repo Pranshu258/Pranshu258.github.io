@@ -19,15 +19,16 @@ function RenjuGame() {
   const [thinkingMode, setThinkingMode] = useState(false);
   const [candidateMoves, setCandidateMoves] = useState([]);
   const [winningLine, setWinningLine] = useState(null);
+  const [currentDepth, setCurrentDepth] = useState(null);
 
   // Random depth for each AI move
-  // When human plays black (human has first-move advantage): AI searches deeper (4-6) to compensate
-  // When human plays white (AI has first-move advantage): AI searches shallower (2-6) to balance
+  // When human plays black (human has first-move advantage): AI searches deeper to compensate
+  // When human plays white (AI has first-move advantage): AI searches shallower to balance
   const getRandomDepth = (humanColor) => {
     if (humanColor === 'black') {
-      return Math.floor(Math.random() * 4) + 3; // 3-6 (harder AI)
+      return Math.floor(Math.random() * 8) + 1; 
     }
-    return Math.floor(Math.random() * 4) + 2; // 2-5 (easier AI)
+    return Math.floor(Math.random() * 6) + 1; 
   };
 
   const handleStartGame = (color) => {
@@ -38,6 +39,7 @@ function RenjuGame() {
     setMoveCount(1);
     setLastMove(null);
     setWinningLine(null);
+    setCurrentDepth(null);
     clearTranspositionTable(); // Clear cached positions for new game
 
     // First move - Black always goes first (center of the board)
@@ -92,6 +94,7 @@ function RenjuGame() {
 
         const newComputerMoves = [...computerMoves];
         const depth = getRandomDepth(userColor);
+        setCurrentDepth(depth);
 
         if (thinkingMode) {
           // Use visualization mode
@@ -375,10 +378,17 @@ function RenjuGame() {
             background: 'var(--blog-surface-background)',
             borderRadius: '10px',
             border: '1px solid var(--blog-surface-border, #333)',
-            fontSize: '0.85em',
-            textAlign: 'center'
+            fontSize: '0.85em'
           }}>
-            <div style={{ fontWeight: '500' }}>Move #{Math.ceil(moveCount / 2)}</div>
+            <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px' }}>Move #{Math.ceil(moveCount / 2)}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
+              <span>Max Depth:</span>
+              <span style={{ fontWeight: '500' }}>{userColor === 'black' ? 8 : 6}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
+              <span>Current Depth:</span>
+              <span style={{ fontWeight: '500' }}>{currentDepth ?? '—'}</span>
+            </div>
           </div>
 
           {/* AI Thinking Toggle */}
