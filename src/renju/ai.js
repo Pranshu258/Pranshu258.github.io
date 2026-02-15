@@ -6,16 +6,23 @@ const GRID_SIZE = 40;
 const BOARD_MAX = 14 * GRID_SIZE; // 560 for 15x15 board
 const MAX_CANDIDATE_MOVES = 10;
 
-// Scores for evaluation
+// Scores for evaluation (higher = better move)
 const SCORES = {
-  WIN: 10,
-  BLOCK_FOUR: 9,
-  FOUR_OPEN: 8,
-  FOUR_HALF: 7,
-  BLOCK_THREE: 6,
-  THREE_OPEN: 5,
-  THREE_HALF: 4,
-  TWO: 2,
+  WIN: 100,              // 5 in a row - immediate win
+  DOUBLE_FOUR: 90,       // Two open fours - guaranteed win
+  FOUR_THREE: 85,        // Open four + open three - forces win
+  DOUBLE_THREE: 80,      // Two open threes - creates unblockable threat
+  BLOCK_FOUR: 75,        // Block opponent's 4 in a row
+  FOUR_OPEN: 70,         // Own 4 with both ends open
+  FOUR_HALF: 50,         // Own 4 with one end blocked
+  BROKEN_FOUR: 45,       // XX_X or X_XX pattern
+  BLOCK_THREE: 35,       // Block opponent's open 3
+  THREE_OPEN: 30,        // Own 3 with both ends open
+  THREE_HALF: 15,        // Own 3 with one end blocked
+  JUMP_THREE: 12,        // X_XX_ pattern with gap
+  TWO_OPEN: 5,           // Own 2 with both ends open
+  TWO: 3,                // Own 2 in a row
+  CENTER_BONUS: 2,       // Bonus for center positions
   NONE: 0
 };
 
@@ -227,26 +234,57 @@ function quickEvaluate(player, opponent, move) {
   const playerSet = createPosSet(player);
   const opponentSet = createPosSet(opponent);
   let score = 0;
+  
+  // Track threat counts for combination detection
+  let openThrees = 0;
+  let openFours = 0;
 
   for (const [dx, dy] of DIRECTIONS) {
     let ownCount = 0;
     let oppCount = 0;
     let openEnds = 0;
+    let gaps = 0;
+    let gapPos = -1;
 
-    // Count own pieces and check openness
+    // Count own pieces and check openness (positive direction)
     for (let n = 1; n <= 4; n++) {
       const px = mx + GRID_SIZE * n * dx;
       const py = my + GRID_SIZE * n * dy;
-      if (hasPos(playerSet, px, py)) ownCount++;
-      else if (!hasPos(opponentSet, px, py)) { openEnds++; break; }
-      else break;
+      if (hasPos(playerSet, px, py)) {
+        ownCount++;
+      } else if (!hasPos(opponentSet, px, py)) {
+        if (gaps === 0 && n <= 3) {
+          // Check for piece after gap (broken pattern)
+          const nextPx = mx + GRID_SIZE * (n + 1) * dx;
+          const nextPy = my + GRID_SIZE * (n + 1) * dy;
+          if (hasPos(playerSet, nextPx, nextPy)) {
+            gaps++;
+            gapPos = n;
+            continue;
+          }
+        }
+        openEnds++;
+        break;
+      } else break;
     }
+    // Negative direction
     for (let n = 1; n <= 4; n++) {
       const px = mx - GRID_SIZE * n * dx;
       const py = my - GRID_SIZE * n * dy;
-      if (hasPos(playerSet, px, py)) ownCount++;
-      else if (!hasPos(opponentSet, px, py)) { openEnds++; break; }
-      else break;
+      if (hasPos(playerSet, px, py)) {
+        ownCount++;
+      } else if (!hasPos(opponentSet, px, py)) {
+        if (gaps === 0 && n <= 3) {
+          const nextPx = mx - GRID_SIZE * (n + 1) * dx;
+          const nextPy = my - GRID_SIZE * (n + 1) * dy;
+          if (hasPos(playerSet, nextPx, nextPy)) {
+            gaps++;
+            continue;
+          }
+        }
+        openEnds++;
+        break;
+      } else break;
     }
 
     // Count opponent pieces (for blocking)
@@ -264,16 +302,45 @@ function quickEvaluate(player, opponent, move) {
     }
 
     // Score based on potential
-    if (ownCount >= 4) score += SCORES.WIN;
-    else if (ownCount === 3 && openEnds === 2) score += SCORES.FOUR_OPEN;
-    else if (ownCount === 3) score += SCORES.FOUR_HALF;
-    else if (ownCount === 2 && openEnds === 2) score += SCORES.THREE_OPEN;
-    else if (ownCount === 2) score += SCORES.THREE_HALF;
-    else if (ownCount === 1) score += SCORES.TWO;
+    if (ownCount >= 4) {
+      score += SCORES.WIN;
+      openFours++;
+    } else if (ownCount === 3 && gaps === 1) {
+      score += SCORES.BROKEN_FOUR; // XX_X pattern
+    } else if (ownCount === 3 && openEnds === 2) {
+      score += SCORES.FOUR_OPEN;
+      openFours++;
+    } else if (ownCount === 3) {
+      score += SCORES.FOUR_HALF;
+    } else if (ownCount === 2 && gaps === 1 && openEnds >= 1) {
+      score += SCORES.JUMP_THREE; // X_XX pattern
+    } else if (ownCount === 2 && openEnds === 2) {
+      score += SCORES.THREE_OPEN;
+      openThrees++;
+    } else if (ownCount === 2) {
+      score += SCORES.THREE_HALF;
+    } else if (ownCount === 1 && openEnds === 2) {
+      score += SCORES.TWO_OPEN;
+    } else if (ownCount === 1) {
+      score += SCORES.TWO;
+    }
 
     // Blocking bonus
     if (oppCount >= 4) score += SCORES.BLOCK_FOUR;
     else if (oppCount === 3) score += SCORES.BLOCK_THREE;
+  }
+
+  // Combination bonuses (very powerful)
+  if (openFours >= 2) score += SCORES.DOUBLE_FOUR;
+  if (openFours >= 1 && openThrees >= 1) score += SCORES.FOUR_THREE;
+  if (openThrees >= 2) score += SCORES.DOUBLE_THREE;
+
+  // Center position bonus (prefer moves near center)
+  const centerX = BOARD_MAX / 2;
+  const centerY = BOARD_MAX / 2;
+  const distFromCenter = Math.abs(mx - centerX) + Math.abs(my - centerY);
+  if (distFromCenter < GRID_SIZE * 3) {
+    score += SCORES.CENTER_BONUS;
   }
 
   return score;
@@ -296,9 +363,20 @@ export function evaluateFast(player1, player2) {
   // Check if blocking opponent's 4 in a row
   if (checkFiveFast(p2Set, mx, my)) return SCORES.BLOCK_FOUR;
 
+  // Check for combination threats
+  const threatInfo = countThreats(p1Set, p2Set, mx, my);
+  
+  // Double four or four-three is nearly winning
+  if (threatInfo.openFours >= 2) return SCORES.DOUBLE_FOUR;
+  if (threatInfo.openFours >= 1 && threatInfo.openThrees >= 1) return SCORES.FOUR_THREE;
+  if (threatInfo.openThrees >= 2) return SCORES.DOUBLE_THREE;
+
   // Check for own 4 in a row
   const fourScore = checkFourFast(p1Set, p2Set, mx, my);
   if (fourScore > 0) return fourScore;
+  
+  // Check for broken four (XX_X pattern)
+  if (checkBrokenFour(p1Set, mx, my)) return SCORES.BROKEN_FOUR;
 
   // Check if blocking opponent's 3
   if (checkThreeFast(p2Set, p1Set, mx, my) > 0) return SCORES.BLOCK_THREE;
@@ -306,11 +384,115 @@ export function evaluateFast(player1, player2) {
   // Check for own 3 in a row
   const threeScore = checkThreeFast(p1Set, p2Set, mx, my);
   if (threeScore > 0) return threeScore;
+  
+  // Check for jump three (X_XX pattern)
+  if (checkJumpThree(p1Set, p2Set, mx, my)) return SCORES.JUMP_THREE;
 
-  // Check for 2 in a row
+  // Check for 2 in a row (open vs closed)
+  if (checkTwoOpen(p1Set, p2Set, mx, my)) return SCORES.TWO_OPEN;
   if (checkTwoFast(p1Set, mx, my)) return SCORES.TWO;
+  
+  // Center position bonus
+  const centerX = BOARD_MAX / 2;
+  const centerY = BOARD_MAX / 2;
+  const distFromCenter = Math.abs(mx - centerX) + Math.abs(my - centerY);
+  if (distFromCenter < GRID_SIZE * 3) {
+    return SCORES.CENTER_BONUS;
+  }
 
   return SCORES.NONE;
+}
+
+// Count open threes and fours for combination detection
+function countThreats(playerSet, opponentSet, mx, my) {
+  let openThrees = 0;
+  let openFours = 0;
+  
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 0;
+    let openEnds = 0;
+    
+    for (let n = 1; n <= 4; n++) {
+      const px = mx + GRID_SIZE * n * dx;
+      const py = my + GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) count++;
+      else {
+        if (!hasPos(opponentSet, px, py)) openEnds++;
+        break;
+      }
+    }
+    for (let n = 1; n <= 4; n++) {
+      const px = mx - GRID_SIZE * n * dx;
+      const py = my - GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) count++;
+      else {
+        if (!hasPos(opponentSet, px, py)) openEnds++;
+        break;
+      }
+    }
+    
+    if (count >= 3 && openEnds >= 1) openFours++;
+    else if (count === 2 && openEnds === 2) openThrees++;
+  }
+  
+  return { openThrees, openFours };
+}
+
+// Check for broken four pattern (XX_X or X_XX)
+function checkBrokenFour(playerSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    // Pattern: [mx,my] X _ X X or X X _ X [mx,my] etc.
+    // Check if placing here completes a broken four
+    for (let offset = -3; offset <= 0; offset++) {
+      let count = 0;
+      let gapCount = 0;
+      let gapFillsWithMove = false;
+      
+      for (let i = 0; i < 5; i++) {
+        const pos = offset + i;
+        const px = mx + GRID_SIZE * pos * dx;
+        const py = my + GRID_SIZE * pos * dy;
+        
+        if (pos === 0) {
+          // This is where the move would be placed
+          gapFillsWithMove = true;
+          count++;
+        } else if (hasPos(playerSet, px, py)) {
+          count++;
+        } else {
+          gapCount++;
+        }
+      }
+      
+      // Broken four: 4 pieces with 1 gap that this move fills
+      if (count === 4 && gapCount === 1 && gapFillsWithMove) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// Check for jump three pattern (X_XX with gap)
+function checkJumpThree(playerSet, opponentSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    // Check pattern like: [move] _ X X or X X _ [move]
+    for (const dir of [1, -1]) {
+      // Gap at position 1, pieces at 2 and 3
+      const gapX = mx + GRID_SIZE * 1 * dir * dx;
+      const gapY = my + GRID_SIZE * 1 * dir * dy;
+      const p1x = mx + GRID_SIZE * 2 * dir * dx;
+      const p1y = my + GRID_SIZE * 2 * dir * dy;
+      const p2x = mx + GRID_SIZE * 3 * dir * dx;
+      const p2y = my + GRID_SIZE * 3 * dir * dy;
+      
+      if (!hasPos(playerSet, gapX, gapY) && !hasPos(opponentSet, gapX, gapY) &&
+          hasPos(playerSet, p1x, p1y) && hasPos(playerSet, p2x, p2y)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 // Legacy evaluate wrapper for backward compatibility
@@ -404,6 +586,41 @@ function checkTwoFast(playerSet, mx, my) {
         hasPos(playerSet, mx - GRID_SIZE * dx, my - GRID_SIZE * dy)) {
       return true;
     }
+  }
+  return false;
+}
+
+// Check for open two (two in a row with both ends open)
+function checkTwoOpen(playerSet, opponentSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 0;
+    let openEnds = 0;
+    
+    // Check positive direction
+    const p1x = mx + GRID_SIZE * dx;
+    const p1y = my + GRID_SIZE * dy;
+    if (hasPos(playerSet, p1x, p1y)) {
+      count++;
+      const endX = mx + GRID_SIZE * 2 * dx;
+      const endY = my + GRID_SIZE * 2 * dy;
+      if (!hasPos(playerSet, endX, endY) && !hasPos(opponentSet, endX, endY)) {
+        openEnds++;
+      }
+    }
+    
+    // Check negative direction
+    const n1x = mx - GRID_SIZE * dx;
+    const n1y = my - GRID_SIZE * dy;
+    if (hasPos(playerSet, n1x, n1y)) {
+      count++;
+      const endX = mx - GRID_SIZE * 2 * dx;
+      const endY = my - GRID_SIZE * 2 * dy;
+      if (!hasPos(playerSet, endX, endY) && !hasPos(opponentSet, endX, endY)) {
+        openEnds++;
+      }
+    }
+    
+    if (count >= 1 && openEnds === 2) return true;
   }
   return false;
 }
