@@ -241,15 +241,16 @@ function RenjuGame() {
                   onClick={() => handleStartGame('black')}
                   style={{
                     padding: '14px 15px',
-                    background: 'linear-gradient(145deg, #2a2a2a, #1a1a1a)',
-                    border: '2px solid #444',
+                    background: 'linear-gradient(145deg, #2d2d2d, #1f1f1f)',
+                    border: '2px solid #404040',
                     borderRadius: '10px',
                     color: '#fff',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px'
+                    gap: '10px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                   }}
                 >
                   <span style={{ fontSize: '1.6em' }}>⚫</span>
@@ -262,15 +263,16 @@ function RenjuGame() {
                   onClick={() => handleStartGame('white')}
                   style={{
                     padding: '14px 15px',
-                    background: 'linear-gradient(145deg, #ffffff, #e0e0e0)',
-                    border: '2px solid #ccc',
+                    background: 'linear-gradient(145deg, #fafafa, #eeeeee)',
+                    border: '2px solid #d4d4d4',
                     borderRadius: '10px',
-                    color: '#1a1a1a',
+                    color: '#262626',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px'
+                    gap: '10px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
                   }}
                 >
                   <span style={{ fontSize: '1.6em' }}>⚪</span>
@@ -351,13 +353,16 @@ function RenjuGame() {
             <div style={{ 
               padding: '12px 15px',
               background: currentTurn === 'human' 
-                ? 'linear-gradient(135deg, #2196f3, #1976d2)' 
-                : 'linear-gradient(135deg, #ff9800, #f57c00)',
+                ? 'linear-gradient(135deg, #6366f1, #4f46e5)' 
+                : 'linear-gradient(135deg, #f59e0b, #d97706)',
               borderRadius: '10px',
               color: '#fff',
               fontWeight: '600',
               fontSize: '0.9em',
-              textAlign: 'center'
+              textAlign: 'center',
+              boxShadow: currentTurn === 'human' 
+                ? '0 4px 14px rgba(99, 102, 241, 0.35)'
+                : '0 4px 14px rgba(245, 158, 11, 0.35)'
             }}>
               {currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...'}
             </div>
@@ -386,9 +391,9 @@ function RenjuGame() {
             color: 'var(--surface-text-color)',
             fontSize: '0.85em',
             padding: '12px 15px',
-            background: thinkingMode ? 'rgba(33, 150, 243, 0.15)' : 'var(--blog-surface-background)',
+            background: thinkingMode ? 'rgba(99, 102, 241, 0.12)' : 'var(--blog-surface-background)',
             borderRadius: '10px',
-            border: thinkingMode ? '1px solid rgba(33, 150, 243, 0.5)' : '1px solid var(--blog-surface-border, #333)',
+            border: thinkingMode ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid var(--blog-surface-border, #333)',
             transition: 'all 0.2s',
             width: '100%',
             boxSizing: 'border-box'
@@ -404,11 +409,12 @@ function RenjuGame() {
             <div style={{
               width: '36px',
               height: '20px',
-              background: thinkingMode ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : 'var(--blog-surface-border, #555)',
+              background: thinkingMode ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'var(--blog-surface-border, #555)',
               borderRadius: '10px',
               position: 'relative',
               transition: 'all 0.2s',
-              flexShrink: 0
+              flexShrink: 0,
+              boxShadow: thinkingMode ? '0 2px 8px rgba(99, 102, 241, 0.3)' : 'none'
             }}>
               <div style={{
                 width: '16px',
@@ -419,7 +425,7 @@ function RenjuGame() {
                 top: '2px',
                 left: thinkingMode ? '18px' : '2px',
                 transition: 'all 0.2s',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
               }} />
             </div>
             <span>Visualize AI Analysis</span>
@@ -430,7 +436,7 @@ function RenjuGame() {
             onClick={handleRestart}
             style={{
               padding: '12px 15px',
-              background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
               border: 'none',
               borderRadius: '10px',
               color: '#fff',
@@ -438,7 +444,7 @@ function RenjuGame() {
               fontSize: '0.9em',
               fontWeight: '500',
               transition: 'all 0.2s',
-              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
+              boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
               width: '100%',
               boxSizing: 'border-box'
             }}
@@ -470,10 +476,13 @@ function RenjuGame() {
             <div style={{
               padding: '15px',
               background: gameState === 'won' 
-                ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' 
-                : 'linear-gradient(135deg, #b71c1c, #c62828)',
+                ? 'linear-gradient(135deg, #10b981, #059669)' 
+                : 'linear-gradient(135deg, #ef4444, #dc2626)',
               borderRadius: '10px',
-              textAlign: 'center'
+              textAlign: 'center',
+              boxShadow: gameState === 'won'
+                ? '0 4px 14px rgba(16, 185, 129, 0.35)'
+                : '0 4px 14px rgba(239, 68, 68, 0.35)'
             }}>
               <div style={{ fontSize: '1.5em', marginBottom: '6px' }}>
                 {gameState === 'won' ? '🎉' : '😔'}
