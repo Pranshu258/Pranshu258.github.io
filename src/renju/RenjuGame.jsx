@@ -25,9 +25,9 @@ function RenjuGame() {
   // When human plays white (AI has first-move advantage): AI searches shallower (2-6) to balance
   const getRandomDepth = (humanColor) => {
     if (humanColor === 'black') {
-      return Math.floor(Math.random() * 5) + 4; // 4-8 (harder AI)
+      return Math.floor(Math.random() * 4) + 3; // 3-6 (harder AI)
     }
-    return Math.floor(Math.random() * 5) + 2; // 2-6 (easier AI)
+    return Math.floor(Math.random() * 4) + 2; // 2-5 (easier AI)
   };
 
   const handleStartGame = (color) => {
