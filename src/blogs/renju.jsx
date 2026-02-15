@@ -32,7 +32,7 @@ export default class Renju extends React.Component {
 
                 <h2 className="headings">Play the Game</h2>
                 <p>
-                    The AI uses minimax search with alpha-beta pruning. To balance the game, the AI adjusts its strength based on your color choice - searching deeper (4-6) when you play black to offset your first-move advantage, and shallower (2-6) when you play white. Choose your stone color and see if you can beat it!
+                    The AI uses minimax search with alpha-beta pruning. To balance the game, the AI adjusts its strength based on your color choice - searching deeper when you play black to offset your first-move advantage, and shallower when you play white. Choose your stone color and see if you can beat it!
                 </p>
 
                 <RenjuGame />
