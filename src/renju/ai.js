@@ -19,7 +19,8 @@ export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
     let score = attack(newOther, newPlayer, depth + 1, maxDepth, -beta, -Math.max(alpha, bestScore));
     score = -score;
 
-    if (score > bestScore) {
+    // Tie-breaking: randomly choose between equally-scored moves for variety
+    if (score > bestScore || (score === bestScore && Math.random() > 0.5)) {
       bestScore = score;
       bestMove = move;
       if (bestScore >= beta) {
@@ -67,7 +68,8 @@ export async function attackWithVisualization(player, otherPlayer, maxDepth, onC
         onCandidateEvaluated(move, 'evaluated', score);
       }
 
-      if (score > bestScore) {
+      // Tie-breaking: randomly choose between equally-scored moves for variety
+      if (score > bestScore || (score === bestScore && Math.random() > 0.5)) {
         bestScore = score;
         bestMove = move;
         if (bestScore >= beta) {
