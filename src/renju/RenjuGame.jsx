@@ -96,7 +96,7 @@ function RenjuGame() {
         if (thinkingMode) {
           // Use visualization mode
           setCandidateMoves([]);
-          await attackWithVisualization(
+          const result = await attackWithVisualization(
             newComputerMoves,
             humanMoves,
             depth,
@@ -115,6 +115,10 @@ function RenjuGame() {
               });
             }
           );
+          // Add the best move to our array
+          if (result.bestMove) {
+            newComputerMoves.push(result.bestMove);
+          }
           // Clear candidates after decision
           await new Promise(resolve => setTimeout(resolve, 300));
           if (cancelled) return;

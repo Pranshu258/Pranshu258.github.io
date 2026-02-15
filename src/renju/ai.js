@@ -120,8 +120,10 @@ export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
 }
 
 // Async version that reports candidates being considered
+// Returns: { candidates, bestMove }
 export async function attackWithVisualization(player, otherPlayer, maxDepth, onCandidateEvaluated) {
   const candidates = [];
+  let finalBestMove = null;
   
   async function search(playerArr, otherArr, depth, alpha, beta) {
     const playerSet = createPosSet(playerArr);
@@ -160,15 +162,15 @@ export async function attackWithVisualization(player, otherPlayer, maxDepth, onC
       }
     }
 
-    if (depth === 0 && bestMove) {
-      playerArr.push(bestMove);
+    if (depth === 0) {
+      finalBestMove = bestMove;
     }
 
     return bestScore;
   }
 
   await search([...player], [...otherPlayer], 0, -1000, 1000);
-  return candidates;
+  return { candidates, bestMove: finalBestMove };
 }
 
 // Optimized game over check using Set
