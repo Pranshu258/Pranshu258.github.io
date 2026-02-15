@@ -8,7 +8,7 @@ export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
     return evaluate(player, otherPlayer);
   }
 
-  let bestMove = null;
+  let bestMoves = [];  // Collect all moves with best score for tie-breaking
   let bestScore = -1000;
   const moves = getMoves(player, otherPlayer);
 
@@ -19,18 +19,21 @@ export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
     let score = attack(newOther, newPlayer, depth + 1, maxDepth, -beta, -Math.max(alpha, bestScore));
     score = -score;
 
-    // Tie-breaking: randomly choose between equally-scored moves for variety
-    if (score > bestScore || (score === bestScore && Math.random() > 0.5)) {
+    if (score > bestScore) {
       bestScore = score;
-      bestMove = move;
+      bestMoves = [move];  // New best, reset the list
       if (bestScore >= beta) {
-        return bestScore;
+        break;  // Beta cutoff
       }
+    } else if (score === bestScore) {
+      bestMoves.push(move);  // Equally good, add to candidates
     }
   }
 
-  if (depth === 0 && bestMove) {
-    player.push(bestMove);
+  if (depth === 0 && bestMoves.length > 0) {
+    // Randomly select from equally-scored best moves
+    const selectedMove = bestMoves[Math.floor(Math.random() * bestMoves.length)];
+    player.push(selectedMove);
   }
 
   return bestScore;
@@ -45,7 +48,7 @@ export async function attackWithVisualization(player, otherPlayer, maxDepth, onC
       return evaluate(player, otherPlayer);
     }
 
-    let bestMove = null;
+    let bestMoves = [];  // Collect all moves with best score for tie-breaking
     let bestScore = -1000;
     const moves = getMoves(player, otherPlayer);
 
@@ -68,18 +71,21 @@ export async function attackWithVisualization(player, otherPlayer, maxDepth, onC
         onCandidateEvaluated(move, 'evaluated', score);
       }
 
-      // Tie-breaking: randomly choose between equally-scored moves for variety
-      if (score > bestScore || (score === bestScore && Math.random() > 0.5)) {
+      if (score > bestScore) {
         bestScore = score;
-        bestMove = move;
+        bestMoves = [move];  // New best, reset the list
         if (bestScore >= beta) {
-          return bestScore;
+          break;  // Beta cutoff
         }
+      } else if (score === bestScore) {
+        bestMoves.push(move);  // Equally good, add to candidates
       }
     }
 
-    if (depth === 0 && bestMove) {
-      player.push(bestMove);
+    if (depth === 0 && bestMoves.length > 0) {
+      // Randomly select from equally-scored best moves
+      const selectedMove = bestMoves[Math.floor(Math.random() * bestMoves.length)];
+      player.push(selectedMove);
     }
 
     return bestScore;
