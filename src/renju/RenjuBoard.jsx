@@ -8,7 +8,8 @@ const RenjuBoard = ({
   onMove,
   disabled,
   lastMove,
-  candidateMoves = []
+  candidateMoves = [],
+  winningLine = null
 }) => {
   const canvasRef = useRef(null);
 
@@ -17,10 +18,10 @@ const RenjuBoard = ({
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    drawBoard(ctx, humanMoves, computerMoves, userColor, lastMove, candidateMoves);
-  }, [humanMoves, computerMoves, userColor, lastMove, candidateMoves]);
+    drawBoard(ctx, humanMoves, computerMoves, userColor, lastMove, candidateMoves, winningLine);
+  }, [humanMoves, computerMoves, userColor, lastMove, candidateMoves, winningLine]);
 
-  const drawBoard = (ctx, human, computer, userStoneColor, lastMovePos, candidates) => {
+  const drawBoard = (ctx, human, computer, userStoneColor, lastMovePos, candidates, winLine) => {
     // Clear canvas
     ctx.clearRect(0, 0, BOARD_SIZE, BOARD_SIZE);
     
@@ -149,6 +150,36 @@ const RenjuBoard = ({
         ctx.restore();
       });
     }
+
+    // Draw winning line strike-through
+    if (winLine && winLine.length >= 2) {
+      ctx.save();
+      
+      // Get first and last stone positions
+      const firstStone = winLine[0];
+      const lastStone = winLine[winLine.length - 1];
+      
+      const x1 = firstStone[0] + GRID_SIZE / 2;
+      const y1 = firstStone[1] + GRID_SIZE / 2;
+      const x2 = lastStone[0] + GRID_SIZE / 2;
+      const y2 = lastStone[1] + GRID_SIZE / 2;
+      
+      // Draw a thick red line through the winning stones
+      ctx.strokeStyle = '#e53935';
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+      
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      
+      ctx.restore();
+    }
   };
 
   const drawStone = (ctx, x, y, radius, color) => {
@@ -234,7 +265,7 @@ const RenjuBoard = ({
         cursor: disabled ? 'default' : 'pointer',
         display: 'block',
         background: 'linear-gradient(145deg, #DEB887, #D4A574)',
-        maxWidth: '100%',
+        width: '100%',
         height: 'auto',
         border: '4px solid #8B5A2B'
       }}
