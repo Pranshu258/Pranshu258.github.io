@@ -10,6 +10,16 @@ const createBlogEntry = ({ name, description, tags, loader }) => ({
 
 export const blogList = [
     createBlogEntry({
+        name: "Building Renju: A Strategic Board Game with AI",
+        description: "A modern web implementation of Renju (Five in a Row) using React, complete with an AI opponent powered by the minimax algorithm with alpha-beta pruning. Play the game directly in your browser and learn about game AI, strategic thinking, and how classic algorithms create engaging experiences.",
+        tags: [
+            "Game Development",
+            "Artificial Intelligence",
+            "React"
+        ],
+        loader: () => import('../blogs/renju')
+    }),
+    createBlogEntry({
         name: "Coding YouTube's load balancer using Github Copilot",
         description: "Can we vibe code 'Prequal', the load balancing algorithm used by Google for services that make YouTube? Let's find out, using GitHub Copilot. Google's Prequal is an adaptive load balancing algorithm that uses real-time metrics like requests-in-flight, and latency to make intelligent routing decisions.",
         tags: [
