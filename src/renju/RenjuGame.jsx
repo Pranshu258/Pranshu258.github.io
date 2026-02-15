@@ -380,7 +380,8 @@ function RenjuGame() {
           <label style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '8px',
+            justifyContent: 'center',
+            gap: '10px',
             cursor: 'pointer',
             color: 'var(--surface-text-color)',
             fontSize: '0.85em',
@@ -388,21 +389,40 @@ function RenjuGame() {
             background: thinkingMode ? 'rgba(33, 150, 243, 0.15)' : 'var(--blog-surface-background)',
             borderRadius: '10px',
             border: thinkingMode ? '1px solid rgba(33, 150, 243, 0.5)' : '1px solid var(--blog-surface-border, #333)',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <input
               type="checkbox"
               checked={thinkingMode}
               onChange={(e) => setThinkingMode(e.target.checked)}
               style={{ 
-                cursor: 'pointer',
-                width: '14px',
-                height: '14px',
-                accentColor: '#2196f3',
-                margin: 0
+                display: 'none'
               }}
             />
-            <span>🧠 Show AI</span>
+            <div style={{
+              width: '36px',
+              height: '20px',
+              background: thinkingMode ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : 'var(--blog-surface-border, #555)',
+              borderRadius: '10px',
+              position: 'relative',
+              transition: 'all 0.2s',
+              flexShrink: 0
+            }}>
+              <div style={{
+                width: '16px',
+                height: '16px',
+                background: '#fff',
+                borderRadius: '50%',
+                position: 'absolute',
+                top: '2px',
+                left: thinkingMode ? '18px' : '2px',
+                transition: 'all 0.2s',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+              }} />
+            </div>
+            <span>Visualize AI Analysis</span>
           </label>
 
           {/* Action Buttons */}
@@ -418,7 +438,9 @@ function RenjuGame() {
               fontSize: '0.9em',
               fontWeight: '500',
               transition: 'all 0.2s',
-              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
+              width: '100%',
+              boxSizing: 'border-box'
             }}
           >
             🔄 Restart
@@ -435,7 +457,9 @@ function RenjuGame() {
               cursor: 'pointer',
               fontSize: '0.9em',
               fontWeight: '500',
-              transition: 'all 0.2s'
+              transition: 'all 0.2s',
+              width: '100%',
+              boxSizing: 'border-box'
             }}
           >
             ⚙️ New Game
