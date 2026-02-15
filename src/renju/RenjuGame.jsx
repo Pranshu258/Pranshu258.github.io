@@ -20,8 +20,15 @@ function RenjuGame() {
   const [candidateMoves, setCandidateMoves] = useState([]);
   const [winningLine, setWinningLine] = useState(null);
 
-  // Random depth between 2-8 for each AI move
-  const getRandomDepth = () => Math.floor(Math.random() * 5) + 2;
+  // Random depth for each AI move
+  // When human plays black (human has first-move advantage): AI searches deeper (4-6) to compensate
+  // When human plays white (AI has first-move advantage): AI searches shallower (2-6) to balance
+  const getRandomDepth = (humanColor) => {
+    if (humanColor === 'black') {
+      return Math.floor(Math.random() * 5) + 4; // 4-8 (harder AI)
+    }
+    return Math.floor(Math.random() * 5) + 2; // 2-6 (easier AI)
+  };
 
   const handleStartGame = (color) => {
     setUserColor(color);
@@ -83,7 +90,7 @@ function RenjuGame() {
         if (cancelled) return;
 
         const newComputerMoves = [...computerMoves];
-        const depth = getRandomDepth();
+        const depth = getRandomDepth(userColor);
 
         if (thinkingMode) {
           // Use visualization mode

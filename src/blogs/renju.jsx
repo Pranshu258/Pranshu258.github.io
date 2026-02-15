@@ -32,7 +32,7 @@ export default class Renju extends React.Component {
 
                 <h2 className="headings">Play the Game</h2>
                 <p>
-                    The AI uses minimax search with alpha-beta pruning, randomizing its search depth between 2-8 for each move. This creates a dynamic and unpredictable opponent that varies in strength throughout the game. Choose your stone color and see if you can beat it!
+                    The AI uses minimax search with alpha-beta pruning. To balance the game, the AI adjusts its strength based on your color choice - searching deeper (4-6) when you play black to offset your first-move advantage, and shallower (2-6) when you play white. Choose your stone color and see if you can beat it!
                 </p>
 
                 <RenjuGame />
@@ -66,8 +66,8 @@ export default class Renju extends React.Component {
                     </h4>
                     <p style={{ marginBottom: 0 }}>
                         In 2001, researchers proved that with perfect play, the first player (Black) always wins in standard Gomoku. 
-                        This led to the creation of Renju, which adds special rules to balance the game. However, in this simplified 
-                        version, Black still has a theoretical advantage - though with randomized search depths (2-8), the AI provides an unpredictable challenge!
+                        This led to the creation of Renju, which adds special rules to balance the game. In this implementation, 
+                        the AI dynamically adjusts its search depth to compensate for whoever has the first-move advantage, creating a more balanced experience!
                     </p>
                 </div>
                 <br></br>
