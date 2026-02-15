@@ -20,16 +20,23 @@ function RenjuGame() {
   const [candidateMoves, setCandidateMoves] = useState([]);
   const [winningLine, setWinningLine] = useState(null);
   const [currentDepth, setCurrentDepth] = useState(null);
+  const [maxDepth, setMaxDepth] = useState(6); // Adaptive difficulty: increases on player win, decreases on loss
 
-  // Random depth for each AI move
-  // When human plays black (human has first-move advantage): AI searches deeper to compensate
-  // When human plays white (AI has first-move advantage): AI searches shallower to balance
-  const getRandomDepth = (humanColor) => {
-    if (humanColor === 'black') {
-      return Math.floor(Math.random() * 8) + 1; 
-    }
-    return Math.floor(Math.random() * 6) + 1; 
+  // Random depth for each AI move (1 to maxDepth)
+  const getRandomDepth = () => {
+    return Math.floor(Math.random() * maxDepth) + 1;
   };
+
+  // Adjust difficulty based on game outcome
+  useEffect(() => {
+    if (gameState === 'won') {
+      // Player won - increase difficulty (cap at 10)
+      setMaxDepth(prev => Math.min(prev + 1, 10));
+    } else if (gameState === 'lost') {
+      // Player lost - decrease difficulty (floor at 2)
+      setMaxDepth(prev => Math.max(prev - 1, 2));
+    }
+  }, [gameState]);
 
   const handleStartGame = (color) => {
     setUserColor(color);
@@ -93,7 +100,7 @@ function RenjuGame() {
         if (cancelled) return;
 
         const newComputerMoves = [...computerMoves];
-        const depth = getRandomDepth(userColor);
+        const depth = getRandomDepth();
         setCurrentDepth(depth);
 
         if (thinkingMode) {
@@ -383,7 +390,7 @@ function RenjuGame() {
             <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px' }}>Move #{Math.ceil(moveCount / 2)}</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
               <span>Max Depth:</span>
-              <span style={{ fontWeight: '500' }}>{userColor === 'black' ? 8 : 6}</span>
+              <span style={{ fontWeight: '500' }}>{maxDepth}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
               <span>Current Depth:</span>
