@@ -285,7 +285,7 @@ function RenjuGame() {
             }}>
               <div style={{ 
                 fontSize: '2.2em', 
-                fontWeight: '300', 
+                fontWeight: '600', 
                 letterSpacing: '8px',
                 textTransform: 'uppercase',
                 marginBottom: '8px',
@@ -297,14 +297,32 @@ function RenjuGame() {
               </div>
               <div style={{ 
                 fontSize: '0.85em', 
-                color: '#64748b', 
-                marginBottom: '36px',
-                fontWeight: '400'
+                color: '#94a3b8', 
+                marginBottom: '16px',
+                fontWeight: '500'
               }}>
                 Five in a row wins
               </div>
+              <div style={{
+                fontSize: '0.8em',
+                color: '#fff',
+                marginBottom: '20px',
+                fontWeight: '500',
+                padding: '8px 16px',
+                background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                borderRadius: '6px',
+                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                letterSpacing: '0.3px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}>
+                <span>👇</span>
+                <span>Choose your side to begin</span>
+              </div>
               
-              <div style={{ display: 'flex', gap: '24px' }}>
+              <div style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
                 <button
                   onClick={() => handleStartGame('black')}
                   style={{
