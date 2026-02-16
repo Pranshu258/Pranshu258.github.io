@@ -269,79 +269,114 @@ function RenjuGame() {
             <div style={{
               position: 'absolute',
               top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95))',
-              padding: '28px 36px',
-              borderRadius: '16px',
+              left: 0,
+              right: 0,
+              transform: 'translateY(-50%)',
+              background: 'rgba(0, 0, 0, 0.85)',
+              padding: '36px 20px',
               color: '#fff',
-              textAlign: 'center',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              backdropFilter: 'blur(12px)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
             }}>
-              <div style={{ fontSize: '1.6em', fontWeight: '700', marginBottom: '6px', letterSpacing: '0.5px' }}>
+              <div style={{ 
+                fontSize: '2.2em', 
+                fontWeight: '300', 
+                letterSpacing: '8px',
+                textTransform: 'uppercase',
+                marginBottom: '8px',
+                background: 'linear-gradient(135deg, #fff 0%, #94a3b8 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
                 Renju
               </div>
-              <div style={{ fontSize: '0.85em', color: '#94a3b8', marginBottom: '20px' }}>
-                Get 5 in a row to win
+              <div style={{ 
+                fontSize: '0.85em', 
+                color: '#64748b', 
+                marginBottom: '36px',
+                fontWeight: '400'
+              }}>
+                Five in a row wins
               </div>
               
-              <div style={{ fontSize: '0.75em', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '12px' }}>
-                Choose Your Color
-              </div>
-              
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: '24px' }}>
                 <button
                   onClick={() => handleStartGame('black')}
                   style={{
-                    padding: '16px 24px',
-                    background: 'linear-gradient(145deg, #2d2d2d, #1a1a1a)',
-                    border: '2px solid #404040',
-                    borderRadius: '12px',
+                    padding: '20px 32px',
+                    background: '#1a1a1a',
+                    border: 'none',
+                    borderRadius: '16px',
                     color: '#fff',
                     cursor: 'pointer',
-                    transition: 'all 0.2s',
+                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                     display: 'flex',
-                    flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                    minWidth: '100px'
+                    gap: '16px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+                    minWidth: '160px'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                  onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)';
+                  }}
                 >
-                  <span style={{ fontSize: '2em' }}>⚫</span>
-                  <div>
-                    <div style={{ fontWeight: '600', fontSize: '0.95em' }}>Black</div>
-                    <div style={{ opacity: 0.6, fontSize: '0.7em' }}>You go first</div>
+                  <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.3)'
+                  }} />
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontWeight: '600', fontSize: '1em' }}>Black</div>
+                    <div style={{ opacity: 0.5, fontSize: '0.75em' }}>You play first</div>
                   </div>
                 </button>
                 <button
                   onClick={() => handleStartGame('white')}
                   style={{
-                    padding: '16px 24px',
-                    background: 'linear-gradient(145deg, #fafafa, #e8e8e8)',
-                    border: '2px solid #d4d4d4',
-                    borderRadius: '12px',
-                    color: '#262626',
+                    padding: '20px 32px',
+                    background: '#f5f5f5',
+                    border: 'none',
+                    borderRadius: '16px',
+                    color: '#1a1a1a',
                     cursor: 'pointer',
-                    transition: 'all 0.2s',
+                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                     display: 'flex',
-                    flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                    minWidth: '100px'
+                    gap: '16px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
+                    minWidth: '160px'
                   }}
-                  onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                  onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)';
+                  }}
                 >
-                  <span style={{ fontSize: '2em' }}>⚪</span>
-                  <div>
-                    <div style={{ fontWeight: '600', fontSize: '0.95em' }}>White</div>
-                    <div style={{ opacity: 0.6, fontSize: '0.7em' }}>AI goes first</div>
+                  <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(0,0,0,0.05)'
+                  }} />
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontWeight: '600', fontSize: '1em' }}>White</div>
+                    <div style={{ opacity: 0.5, fontSize: '0.75em' }}>AI plays first</div>
                   </div>
                 </button>
               </div>
@@ -352,36 +387,48 @@ function RenjuGame() {
           <div style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '15px',
+            gap: '12px',
             width: '180px',
             flexShrink: 0
           }}>
-            {/* Info */}
+            {/* Game Info Card */}
             <div style={{ 
               color: 'var(--surface-text-color)',
-              padding: '15px',
+              padding: '18px',
               background: 'var(--blog-surface-background)',
-              borderRadius: '10px',
+              borderRadius: '12px',
               border: '1px solid var(--blog-surface-border, #333)'
             }}>
-              <div style={{ fontWeight: '600', fontSize: '1.1em', marginBottom: '8px' }}>How to Play</div>
-              <div style={{ opacity: 0.7, fontSize: '0.8em', lineHeight: '1.5' }}>
-                Place stones on the board. First to get 5 in a row wins!
+              <div style={{ 
+                fontWeight: '600', 
+                fontSize: '1em', 
+                marginBottom: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <span>📖</span> How to Play
               </div>
-            </div>
-
-            {/* Rules */}
-            <div style={{ 
-              color: 'var(--surface-text-color)',
-              padding: '15px',
-              background: 'var(--blog-surface-background)',
-              borderRadius: '10px',
-              border: '1px solid var(--blog-surface-border, #333)',
-              fontSize: '0.8em',
-              opacity: 0.7
-            }}>
-              <div style={{ marginBottom: '6px' }}>⚫ Black moves first</div>
-              <div>🎯 5 in a row = win</div>
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '10px',
+                fontSize: '0.8em',
+                opacity: 0.8
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ opacity: 0.7 }}>⚫</span>
+                  <span>Black moves first</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ opacity: 0.7 }}>🎯</span>
+                  <span>Get 5 in a row to win</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ opacity: 0.7 }}>🤖</span>
+                  <span>AI adapts to your skill</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
