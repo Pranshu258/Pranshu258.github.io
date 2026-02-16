@@ -13,7 +13,7 @@ export default class Renju extends React.Component {
         window.scrollTo(0, 0);
         document.title = "Renju - A Strategic Board Game with AI | blog by Pranshu Gupta";
     }
-    
+
     render() {
         return (
             <div className="language-javascript">
@@ -23,23 +23,12 @@ export default class Renju extends React.Component {
                 <h1 className="title">Renju - A Strategic Board Game with AI</h1>
                 <p>Pranshu Gupta, February 15, 2026</p>
                 <Sharer link={window.location.href} title={"Renju - A Strategic Board Game with AI"}></Sharer>
-                
+
                 <p className="introduction">
-                    Renju, also known as "Five in a Row" or Gomoku, is a classic strategic board game  that has been played for centuries across Asia and beyond. In this project, I built a modern web implementation of Renju using React, complete with an AI opponent powered by the minimax algorithm with alpha-beta pruning. The result is a clean, minimalist game that runs entirely in the browser with no external dependencies.
+                    Renju, also known as "Five in a Row" or Gomoku, is a classic strategic board game that has been played for centuries across Asia and beyond. I present a modern web implementation of Renju using React, complete with an AI opponent powered by the minimax algorithm with alpha-beta pruning.
                 </p>
-
                 <hr style={{ backgroundColor: "white" }}></hr>
-
                 <h2 className="headings">Play the Game</h2>
-                <p>
-                    The AI uses minimax search with alpha-beta pruning with <b>adaptive difficulty</b> - it learns from each game! If you win, the AI increases its search depth (max 10) to become more challenging. If you lose, it decreases depth (min 2) to give you a better chance. The current and max depth are displayed during gameplay. Choose your stone color and see if you can beat it!
-                </p>
-
-                <RenjuGame />
-
-                <hr style={{ backgroundColor: "white" }}></hr>
-
-                <h2 className="headings">The Game Rules</h2>
                 <p>
                     Renju is deceptively simple in its rules but offers surprising strategic depth:
                 </p>
@@ -48,8 +37,11 @@ export default class Renju extends React.Component {
                     <li><b>Board:</b> Played on a 15×15 grid (similar to Go)</li>
                     <li><b>Turns:</b> Players alternate placing stones, with black always going first</li>
                     <li><b>Victory:</b> Five consecutive stones in any direction (horizontal, vertical, or diagonal) wins</li>
-                    <li><b>No Draw:</b> The game theoretically always has a winner if both players play optimally</li>
                 </ul>
+                <RenjuGame />
+                <p>
+                    The AI uses minimax search with alpha-beta pruning with <b>adaptive difficulty</b> - it learns from each game! If you win, the AI increases its search depth (max 10) to become more challenging. If you lose, it decreases depth (min 2) to give you a better chance. The current and max depth are displayed during gameplay. Choose your stone color and see if you can beat it!
+                </p>
                 <p>
                     While the rules are simple, mastering Renju requires thinking several moves ahead, recognizing patterns, and understanding both offensive and defensive strategies.
                 </p>
@@ -65,12 +57,12 @@ export default class Renju extends React.Component {
                         Fun Fact
                     </h4>
                     <p style={{ marginBottom: 0 }}>
-                        In 2001, researchers proved that with perfect play, the first player (Black) always wins in standard Gomoku. 
-                        This led to the creation of Renju, which adds special rules to balance the game. In this implementation, 
+                        In 2001, researchers proved that with perfect play, the first player (Black) always wins in standard Gomoku.
+                        This led to the creation of Renju, which adds special rules to balance the game. In this implementation,
                         the AI uses adaptive difficulty - it gets stronger when you win and easier when you lose, creating a personalized challenge that grows with your skill!
                     </p>
                 </div>
-                <br></br>
+                <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Source Code</h2>
                 <p>
                     The complete source code for this project is available on GitHub. You can run it locally or deploy it to any static hosting service. The game demonstrates how classic game-playing algorithms can create engaging experiences in modern web applications.
@@ -100,14 +92,12 @@ export default class Renju extends React.Component {
                     }}
                 >
                     <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
                     </svg>
                     View Source on GitHub
                 </a>
                                 <hr style={{ backgroundColor: "white" }}></hr>
 
-
-                <br />
             </div>
         );
     }

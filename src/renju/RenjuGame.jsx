@@ -248,7 +248,7 @@ function RenjuGame() {
     return (
       <div style={{
         padding: '20px 0',
-        margin: '30px 0',
+        margin: '20px 0',
         position: 'relative'
       }}>
         {/* Main Layout: Board + Setup Panel */}
@@ -271,23 +271,84 @@ function RenjuGame() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              background: 'rgba(0, 0, 0, 0.7)',
-              padding: '20px 30px',
-              borderRadius: '12px',
+              background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95))',
+              padding: '28px 36px',
+              borderRadius: '16px',
               color: '#fff',
               textAlign: 'center',
-              backdropFilter: 'blur(4px)'
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
             }}>
-              <div style={{ fontSize: '1.4em', fontWeight: '600', marginBottom: '5px' }}>
+              <div style={{ fontSize: '1.6em', fontWeight: '700', marginBottom: '6px', letterSpacing: '0.5px' }}>
                 Renju
               </div>
-              <div style={{ opacity: 0.7, fontSize: '0.9em' }}>
-                Select options to start →
+              <div style={{ fontSize: '0.85em', color: '#94a3b8', marginBottom: '20px' }}>
+                Get 5 in a row to win
+              </div>
+              
+              <div style={{ fontSize: '0.75em', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '12px' }}>
+                Choose Your Color
+              </div>
+              
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button
+                  onClick={() => handleStartGame('black')}
+                  style={{
+                    padding: '16px 24px',
+                    background: 'linear-gradient(145deg, #2d2d2d, #1a1a1a)',
+                    border: '2px solid #404040',
+                    borderRadius: '12px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    minWidth: '100px'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <span style={{ fontSize: '2em' }}>⚫</span>
+                  <div>
+                    <div style={{ fontWeight: '600', fontSize: '0.95em' }}>Black</div>
+                    <div style={{ opacity: 0.6, fontSize: '0.7em' }}>You go first</div>
+                  </div>
+                </button>
+                <button
+                  onClick={() => handleStartGame('white')}
+                  style={{
+                    padding: '16px 24px',
+                    background: 'linear-gradient(145deg, #fafafa, #e8e8e8)',
+                    border: '2px solid #d4d4d4',
+                    borderRadius: '12px',
+                    color: '#262626',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    minWidth: '100px'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                  <span style={{ fontSize: '2em' }}>⚪</span>
+                  <div>
+                    <div style={{ fontWeight: '600', fontSize: '0.95em' }}>White</div>
+                    <div style={{ opacity: 0.6, fontSize: '0.7em' }}>AI goes first</div>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Right Setup Panel */}
+          {/* Right Setup Panel - Simplified */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -295,7 +356,7 @@ function RenjuGame() {
             width: '180px',
             flexShrink: 0
           }}>
-            {/* Title */}
+            {/* Info */}
             <div style={{ 
               color: 'var(--surface-text-color)',
               padding: '15px',
@@ -303,76 +364,24 @@ function RenjuGame() {
               borderRadius: '10px',
               border: '1px solid var(--blog-surface-border, #333)'
             }}>
-              <div style={{ fontWeight: '600', fontSize: '1.1em', marginBottom: '4px' }}>New Game</div>
-              <div style={{ opacity: 0.6, fontSize: '0.8em' }}>Get 5 in a row to win</div>
-            </div>
-
-            {/* Stone Color Selector */}
-            <div style={{
-              color: 'var(--surface-text-color)',
-              padding: '12px 15px',
-              background: 'var(--blog-surface-background)',
-              borderRadius: '10px',
-              border: '1px solid var(--blog-surface-border, #333)'
-            }}>
-              <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>Play As</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <button
-                  onClick={() => handleStartGame('black')}
-                  style={{
-                    padding: '14px 15px',
-                    background: 'linear-gradient(145deg, #2d2d2d, #1f1f1f)',
-                    border: '2px solid #404040',
-                    borderRadius: '10px',
-                    color: '#fff',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                  }}
-                >
-                  <span style={{ fontSize: '1.6em' }}>⚫</span>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontWeight: '600', fontSize: '0.95em' }}>Black</div>
-                    <div style={{ opacity: 0.6, fontSize: '0.75em' }}>You go first</div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleStartGame('white')}
-                  style={{
-                    padding: '14px 15px',
-                    background: 'linear-gradient(145deg, #fafafa, #eeeeee)',
-                    border: '2px solid #d4d4d4',
-                    borderRadius: '10px',
-                    color: '#262626',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-                  }}
-                >
-                  <span style={{ fontSize: '1.6em' }}>⚪</span>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontWeight: '600', fontSize: '0.95em' }}>White</div>
-                    <div style={{ opacity: 0.6, fontSize: '0.75em' }}>AI goes first</div>
-                  </div>
-                </button>
+              <div style={{ fontWeight: '600', fontSize: '1.1em', marginBottom: '8px' }}>How to Play</div>
+              <div style={{ opacity: 0.7, fontSize: '0.8em', lineHeight: '1.5' }}>
+                Place stones on the board. First to get 5 in a row wins!
               </div>
             </div>
 
-            {/* Help Text */}
+            {/* Rules */}
             <div style={{ 
               color: 'var(--surface-text-color)',
-              opacity: 0.5,
+              padding: '15px',
+              background: 'var(--blog-surface-background)',
+              borderRadius: '10px',
+              border: '1px solid var(--blog-surface-border, #333)',
               fontSize: '0.8em',
-              textAlign: 'center',
-              marginTop: '5px'
+              opacity: 0.7
             }}>
-              Click a stone to start
+              <div style={{ marginBottom: '6px' }}>⚫ Black moves first</div>
+              <div>🎯 5 in a row = win</div>
             </div>
           </div>
         </div>
@@ -385,7 +394,7 @@ function RenjuGame() {
   return (
     <div style={{
       padding: '20px 0',
-      margin: '30px 0',
+      margin: '20px 0',
       position: 'relative'
     }}>
       {/* Main Layout: Board + Info Panel */}
@@ -448,92 +457,100 @@ function RenjuGame() {
             </div>
           )}
 
-          {/* Game Info */}
-          <div style={{
-            color: 'var(--surface-text-color)',
-            padding: '12px 15px',
-            background: 'var(--blog-surface-background)',
-            borderRadius: '10px',
-            border: '1px solid var(--blog-surface-border, #333)',
-            fontSize: '0.85em'
-          }}>
-            <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px' }}>Move #{Math.ceil(moveCount / 2)}</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
-              <span>Max Depth:</span>
-              <span style={{ fontWeight: '500' }}>{maxDepth}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
-              <span>Current Depth:</span>
-              <span style={{ fontWeight: '500' }}>{currentDepth ?? '—'}</span>
-            </div>
-          </div>
-
-          {/* AI Thinking Toggle */}
-          <label style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'flex-start',
-            gap: '12px',
-            cursor: 'pointer',
-            color: 'var(--surface-text-color)',
-            fontSize: '0.85em',
-            padding: '12px 15px',
-            background: thinkingMode ? 'rgba(99, 102, 241, 0.12)' : 'var(--blog-surface-background)',
-            borderRadius: '10px',
-            border: thinkingMode ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid var(--blog-surface-border, #333)',
-            transition: 'all 0.2s',
-            width: '100%',
-            boxSizing: 'border-box'
-          }}>
-            <input
-              type="checkbox"
-              checked={thinkingMode}
-              onChange={(e) => setThinkingMode(e.target.checked)}
-              style={{ 
-                display: 'none'
-              }}
-            />
+          {/* Game Result */}
+          {isGameOver && (
             <div style={{
-              width: '36px',
-              height: '20px',
-              background: thinkingMode ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'var(--blog-surface-border, #555)',
+              padding: '15px',
+              background: gameState === 'won' 
+                ? 'linear-gradient(135deg, #10b981, #059669)' 
+                : 'linear-gradient(135deg, #ef4444, #dc2626)',
               borderRadius: '10px',
-              position: 'relative',
-              transition: 'all 0.2s',
-              flexShrink: 0,
-              boxShadow: thinkingMode ? '0 2px 8px rgba(99, 102, 241, 0.3)' : 'none'
+              textAlign: 'center',
+              boxShadow: gameState === 'won'
+                ? '0 4px 14px rgba(16, 185, 129, 0.35)'
+                : '0 4px 14px rgba(239, 68, 68, 0.35)'
             }}>
+              <div style={{ fontSize: '1.5em', marginBottom: '6px' }}>
+                {gameState === 'won' ? '🎉' : '😔'}
+              </div>
               <div style={{
-                width: '16px',
-                height: '16px',
-                background: '#fff',
-                borderRadius: '50%',
-                position: 'absolute',
-                top: '2px',
-                left: thinkingMode ? '18px' : '2px',
-                transition: 'all 0.2s',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
-              }} />
+                color: '#fff',
+                fontWeight: '600',
+                fontSize: '1em'
+              }}>
+                {gameState === 'won' ? 'You Won!' : 'AI Won'}
+              </div>
             </div>
-            <span style={{ lineHeight: '1.3' }}>Visualize AI Analysis</span>
-          </label>
+          )}
+
+          {/* Action Buttons */}
+          <button
+            onClick={handleRestart}
+            style={{
+              padding: '12px 15px',
+              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+              border: 'none',
+              borderRadius: '10px',
+              color: '#fff',
+              cursor: 'pointer',
+              fontSize: '0.9em',
+              fontWeight: '500',
+              transition: 'all 0.2s',
+              boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
+              width: '100%',
+              boxSizing: 'border-box',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              minHeight: '44px'
+            }}
+          >
+            <span>🔄</span><span>Restart</span>
+          </button>
+          
+          <button
+            onClick={handleNewColor}
+            style={{
+              padding: '12px 15px',
+              background: 'transparent',
+              border: '1px solid var(--blog-surface-border, #ccc)',
+              borderRadius: '10px',
+              color: 'var(--surface-text-color)',
+              cursor: 'pointer',
+              fontSize: '0.9em',
+              fontWeight: '500',
+              transition: 'all 0.2s',
+              width: '100%',
+              boxSizing: 'border-box',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              minHeight: '44px'
+            }}
+          >
+            <span>⚙️</span><span>New Game</span>
+          </button>
 
           {/* Sound Toggle */}
           <label style={{ 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'flex-start',
-            gap: '12px',
+            gap: '6px',
             cursor: 'pointer',
             color: 'var(--surface-text-color)',
             fontSize: '0.85em',
             padding: '12px 15px',
+            margin: 0,
             background: soundEnabled ? 'rgba(34, 197, 94, 0.12)' : 'var(--blog-surface-background)',
             borderRadius: '10px',
             border: soundEnabled ? '1px solid rgba(34, 197, 94, 0.4)' : '1px solid var(--blog-surface-border, #333)',
             transition: 'all 0.2s',
             width: '100%',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            minHeight: '44px'
           }}>
             <input
               type="checkbox"
@@ -566,89 +583,79 @@ function RenjuGame() {
             <span style={{ lineHeight: '1' }}>{soundEnabled ? '🔊' : '🔇'} Sound</span>
           </label>
 
-          {/* Action Buttons */}
-          <button
-            onClick={handleRestart}
-            style={{
-              padding: '12px 15px',
-              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-              border: 'none',
-              borderRadius: '10px',
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: '0.9em',
-              fontWeight: '500',
-              transition: 'all 0.2s',
-              boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
-              width: '100%',
-              boxSizing: 'border-box',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px'
-            }}
-          >
-            <span>🔄</span><span>Restart</span>
-          </button>
-          
-          <button
-            onClick={handleNewColor}
-            style={{
-              padding: '12px 15px',
-              background: 'transparent',
-              border: '1px solid var(--blog-surface-border, #ccc)',
-              borderRadius: '10px',
-              color: 'var(--surface-text-color)',
-              cursor: 'pointer',
-              fontSize: '0.9em',
-              fontWeight: '500',
-              transition: 'all 0.2s',
-              width: '100%',
-              boxSizing: 'border-box',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px'
-            }}
-          >
-            <span>⚙️</span><span>New Game</span>
-          </button>
-
-          {/* Game Result or Help Text */}
-          {isGameOver ? (
+          {/* AI Thinking Toggle */}
+          <label style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'flex-start',
+            gap: '6px',
+            cursor: 'pointer',
+            color: 'var(--surface-text-color)',
+            fontSize: '0.85em',
+            padding: '12px 15px',
+            margin: 0,
+            background: thinkingMode ? 'rgba(99, 102, 241, 0.12)' : 'var(--blog-surface-background)',
+            borderRadius: '10px',
+            border: thinkingMode ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid var(--blog-surface-border, #333)',
+            transition: 'all 0.2s',
+            width: '100%',
+            boxSizing: 'border-box',
+            minHeight: '44px'
+          }}>
+            <input
+              type="checkbox"
+              checked={thinkingMode}
+              onChange={(e) => setThinkingMode(e.target.checked)}
+              style={{ 
+                display: 'none'
+              }}
+            />
             <div style={{
-              padding: '15px',
-              background: gameState === 'won' 
-                ? 'linear-gradient(135deg, #10b981, #059669)' 
-                : 'linear-gradient(135deg, #ef4444, #dc2626)',
+              width: '36px',
+              height: '20px',
+              background: thinkingMode ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'var(--blog-surface-border, #555)',
               borderRadius: '10px',
-              textAlign: 'center',
-              boxShadow: gameState === 'won'
-                ? '0 4px 14px rgba(16, 185, 129, 0.35)'
-                : '0 4px 14px rgba(239, 68, 68, 0.35)'
+              position: 'relative',
+              transition: 'all 0.2s',
+              flexShrink: 0,
+              margin: '0px',
+              boxShadow: thinkingMode ? '0 2px 8px rgba(99, 102, 241, 0.3)' : 'none'
             }}>
-              <div style={{ fontSize: '1.5em', marginBottom: '6px' }}>
-                {gameState === 'won' ? '🎉' : '😔'}
-              </div>
               <div style={{
-                color: '#fff',
-                fontWeight: '600',
-                fontSize: '1em'
-              }}>
-                {gameState === 'won' ? 'You Won!' : 'AI Won'}
-              </div>
+                width: '16px',
+                height: '16px',
+                background: '#fff',
+                borderRadius: '50%',
+                position: 'absolute',
+                margin: '0px',
+                top: '2px',
+                left: thinkingMode ? '18px' : '2px',
+                transition: 'all 0.2s',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+              }} />
             </div>
-          ) : (
-            <div style={{ 
-              color: 'var(--surface-text-color)',
-              opacity: 0.5,
-              fontSize: '0.8em',
-              textAlign: 'center',
-              marginTop: '5px'
-            }}>
-              Get 5 in a row to win
+            <span style={{ lineHeight: '1.3' }}>Visualize AI</span>
+          </label>
+
+          {/* Game Info */}
+          <div style={{
+            color: 'var(--surface-text-color)',
+            padding: '12px 15px',
+            background: 'var(--blog-surface-background)',
+            borderRadius: '10px',
+            border: '1px solid var(--blog-surface-border, #333)',
+            fontSize: '0.85em'
+          }}>
+            <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px' }}>Move #{Math.ceil(moveCount / 2)}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
+              <span>Max Depth:</span>
+              <span style={{ fontWeight: '500' }}>{maxDepth}</span>
             </div>
-          )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
+              <span>Current Depth:</span>
+              <span style={{ fontWeight: '500' }}>{currentDepth ?? '—'}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
