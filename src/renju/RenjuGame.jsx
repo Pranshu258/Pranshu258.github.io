@@ -472,8 +472,8 @@ function RenjuGame() {
           <label style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            justifyContent: 'center',
-            gap: '10px',
+            justifyContent: 'flex-start',
+            gap: '12px',
             cursor: 'pointer',
             color: 'var(--surface-text-color)',
             fontSize: '0.85em',
@@ -515,15 +515,15 @@ function RenjuGame() {
                 boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
               }} />
             </div>
-            <span>Visualize AI Analysis</span>
+            <span style={{ lineHeight: '1.3' }}>Visualize AI Analysis</span>
           </label>
 
           {/* Sound Toggle */}
           <label style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            justifyContent: 'center',
-            gap: '10px',
+            justifyContent: 'flex-start',
+            gap: '12px',
             cursor: 'pointer',
             color: 'var(--surface-text-color)',
             fontSize: '0.85em',
@@ -563,7 +563,7 @@ function RenjuGame() {
                 boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
               }} />
             </div>
-            <span>{soundEnabled ? '🔊' : '🔇'} Sound</span>
+            <span style={{ lineHeight: '1' }}>{soundEnabled ? '🔊' : '🔇'} Sound</span>
           </label>
 
           {/* Action Buttons */}
@@ -581,10 +581,14 @@ function RenjuGame() {
               transition: 'all 0.2s',
               boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
               width: '100%',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
             }}
           >
-            🔄 Restart
+            <span>🔄</span><span>Restart</span>
           </button>
           
           <button
@@ -600,10 +604,14 @@ function RenjuGame() {
               fontWeight: '500',
               transition: 'all 0.2s',
               width: '100%',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
             }}
           >
-            ⚙️ New Game
+            <span>⚙️</span><span>New Game</span>
           </button>
 
           {/* Game Result or Help Text */}
