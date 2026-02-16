@@ -420,7 +420,8 @@ function RenjuGame() {
           flexDirection: 'column',
           gap: '15px',
           width: '180px',
-          flexShrink: 0
+          flexShrink: 0,
+          alignSelf: 'stretch'
         }}>
           {/* Player Info */}
           <div style={{ 
@@ -483,7 +484,8 @@ function RenjuGame() {
             </div>
           )}
 
-          {/* Action Buttons */}
+          {/* Action Buttons - Bottom aligned */}
+          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <button
             onClick={handleRestart}
             style={{
@@ -636,6 +638,7 @@ function RenjuGame() {
             </div>
             <span style={{ lineHeight: '1.3' }}>Visualize AI</span>
           </label>
+          </div>
 
           {/* Game Info */}
           <div style={{
