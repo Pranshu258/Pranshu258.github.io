@@ -48,7 +48,7 @@ export default class Renju extends React.Component {
 
                 <h3 style={{ color: '#f6ad55', marginTop: '30px' }}>🤖 AI vs LLM Mode</h3>
                 <p>
-                    Beyond playing against the AI yourself, you can also pit the local minimax AI against a large language model (LLM) and watch them battle it out. In this mode, the LLM plays as Black (first move) and the local AI plays as White. The game runs automatically — you just sit back and observe.
+                    Beyond playing against the AI yourself, you can also pit the local minimax AI against a large language model (LLM) and watch them battle it out. In this mode, the LLM plays as Black (first move) and the local AI plays as White. The game runs automatically - you just sit back and observe.
                 </p>
                 <p>
                     To use this mode, you'll need access to an Azure OpenAI deployment. Enter your endpoint, deployment name, and API key in the configuration panel on the right side of the game, then hit <b>Start AI vs LLM</b>. The LLM receives a text representation of the board along with strategic guidance and responds with its next move in algebraic notation (e.g. H8).
@@ -57,12 +57,12 @@ export default class Renju extends React.Component {
                     A few things make this mode interesting:
                 </p>
                 <ul>
-                    <li><b>Threat Hints:</b> You can toggle whether the LLM receives pre-computed threat analysis in its prompt. With hints enabled, the prompt includes specific blocking coordinates for the opponent's open threes and fours — without them, the LLM must figure out threats on its own from the raw board state.</li>
+                    <li><b>Threat Hints:</b> You can toggle whether the LLM receives pre-computed threat analysis in its prompt. With hints enabled, the prompt includes specific blocking coordinates for the opponent's open threes and fours - without them, the LLM must figure out threats on its own from the raw board state.</li>
                     <li><b>Adaptive Difficulty (reversed):</b> The difficulty adjustment works in reverse here. When the local AI wins, its search depth <i>decreases</i> to give the LLM a better chance. When the LLM wins, the AI gets harder. This creates an interesting dynamic where the AI calibrates itself to the LLM's skill level.</li>
                     <li><b>Visualize AI:</b> You can enable the "Visualize AI" toggle to watch the minimax algorithm explore candidate moves in real time during the local AI's turn.</li>
                 </ul>
                 <p>
-                    It's a fun way to see how a general-purpose language model stacks up against a purpose-built game-playing algorithm — and spoiler: the minimax AI usually wins, but the LLM can occasionally pull off surprising moves!
+                    It's a fun way to see how a general-purpose language model stacks up against a purpose-built game-playing algorithm - and spoiler: the minimax AI usually wins, but the LLM can occasionally pull off surprising moves!
                 </p>
 
                 <div style={{
