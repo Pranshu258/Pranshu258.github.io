@@ -72,27 +72,153 @@ function moveHistoryText(blackMoves, whiteMoves) {
 }
 
 /**
+ * Analyze board for threats: lines of N stones with open ends.
+ * Returns array of { count, openEnds, blockingMoves: [notation], stones: [notation] }
+ */
+function findThreats(attackerMoves, defenderMoves, allOccupied) {
+  const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]];
+  const grid = Array.from({ length: 15 }, () => Array(15).fill('.'));
+  const attackerSet = new Set();
+  const occupiedSet = new Set();
+
+  for (const [x, y] of attackerMoves) {
+    const c = x / GRID_SIZE, r = y / GRID_SIZE;
+    grid[r][c] = 'A';
+    attackerSet.add(`${c},${r}`);
+  }
+  for (const [x, y] of defenderMoves) {
+    const c = x / GRID_SIZE, r = y / GRID_SIZE;
+    grid[r][c] = 'D';
+  }
+  for (const [x, y] of allOccupied) {
+    occupiedSet.add(`${x / GRID_SIZE},${y / GRID_SIZE}`);
+  }
+
+  const threats = [];
+  const seen = new Set();
+
+  for (const [x, y] of attackerMoves) {
+    const col = x / GRID_SIZE, row = y / GRID_SIZE;
+    for (const [dc, dr] of DIRS) {
+      // Only scan in positive direction to avoid duplicates
+      const stones = [];
+      const blockingMoves = [];
+
+      // Walk backward to find the start of this line
+      let sc = col, sr = row;
+      while (sc - dc >= 0 && sc - dc <= 14 && sr - dr >= 0 && sr - dr <= 14 && attackerSet.has(`${sc - dc},${sr - dr}`)) {
+        sc -= dc; sr -= dr;
+      }
+
+      // Now walk forward collecting stones and gaps
+      let c = sc, r = sr;
+      while (c >= 0 && c <= 14 && r >= 0 && r <= 14 && (attackerSet.has(`${c},${r}`) || (!occupiedSet.has(`${c},${r}`) && stones.length > 0))) {
+        if (attackerSet.has(`${c},${r}`)) {
+          stones.push([c, r]);
+        } else if (!occupiedSet.has(`${c},${r}`)) {
+          // Gap in the line — only allow one gap
+          break;
+        } else {
+          break; // defender stone blocks
+        }
+        c += dc; r += dr;
+      }
+
+      if (stones.length < 3) continue;
+
+      const key = stones.map(([a, b]) => `${a},${b}`).sort().join('|') + `|${dc},${dr}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      // Find open ends (empty squares at both ends of the line)
+      let openEnds = 0;
+      // Check before start
+      const bc = sc - dc, br = sr - dr;
+      if (bc >= 0 && bc <= 14 && br >= 0 && br <= 14 && !occupiedSet.has(`${bc},${br}`)) {
+        openEnds++;
+        blockingMoves.push(toNotation(bc * GRID_SIZE, br * GRID_SIZE));
+      }
+      // Check after end
+      if (c >= 0 && c <= 14 && r >= 0 && r <= 14 && !occupiedSet.has(`${c},${r}`)) {
+        openEnds++;
+        blockingMoves.push(toNotation(c * GRID_SIZE, r * GRID_SIZE));
+      }
+
+      if (openEnds > 0) {
+        threats.push({
+          count: stones.length,
+          openEnds,
+          blockingMoves,
+          stones: stones.map(([a, b]) => toNotation(a * GRID_SIZE, b * GRID_SIZE))
+        });
+      }
+    }
+  }
+
+  // Sort by severity: longer lines first, then more open ends
+  threats.sort((a, b) => b.count - a.count || b.openEnds - a.openEnds);
+  return threats;
+}
+
+/**
  * Build the system + user prompt for the LLM.
  */
-function buildPrompt(blackMoves, whiteMoves, llmColor) {
+function buildPrompt(blackMoves, whiteMoves, llmColor, threatHints = true) {
   const board = boardToText(blackMoves, whiteMoves);
   const history = moveHistoryText(blackMoves, whiteMoves);
 
   const yourStone = llmColor === 'black' ? 'X' : 'O';
   const opponentStone = llmColor === 'black' ? 'O' : 'X';
 
+  let threatWarning = '';
+
+  if (threatHints) {
+    const yourMoves = llmColor === 'black' ? blackMoves : whiteMoves;
+    const oppMoves = llmColor === 'black' ? whiteMoves : blackMoves;
+    const allOccupied = [...blackMoves, ...whiteMoves];
+
+    // Pre-compute threats
+    const oppThreats = findThreats(oppMoves, yourMoves, allOccupied);
+    const yourThreats = findThreats(yourMoves, oppMoves, allOccupied);
+
+    // Your winning opportunities
+    const yourWins = yourThreats.filter(t => t.count >= 4);
+    if (yourWins.length > 0) {
+      threatWarning += '\n*** YOU CAN WIN! You have 4+ in a row. Play: ' + yourWins[0].blockingMoves.join(' or ') + ' ***\n';
+    }
+
+    // Opponent critical threats (must block)
+    const criticalThreats = oppThreats.filter(t => t.count >= 4);
+    const seriousThreats = oppThreats.filter(t => t.count === 3 && t.openEnds === 2);
+
+    if (criticalThreats.length > 0) {
+      for (const t of criticalThreats) {
+        threatWarning += `\n!!! CRITICAL: Opponent has ${t.count} in a row at ${t.stones.join(',')}. BLOCK NOW at: ${t.blockingMoves.join(' or ')} !!!\n`;
+      }
+    }
+    if (seriousThreats.length > 0) {
+      for (const t of seriousThreats) {
+        threatWarning += `\n!! WARNING: Opponent has open 3 at ${t.stones.join(',')}. Block at: ${t.blockingMoves.join(' or ')} !!\n`;
+      }
+    }
+  }
+
   const system = `You play Renju on a 15×15 board. Columns A-O, rows 1-15. You are ${yourStone} (${llmColor}). Reply with ONLY your move like H8. Nothing else.`;
+
+  const strategyText = threatWarning
+    ? `Strategy priorities (in order):
+1. If you can win, play the winning move shown above.
+2. If there is a CRITICAL or WARNING threat above, you MUST block at one of the suggested positions.
+3. Otherwise, build toward 5 in a row near your existing stones.`
+    : `Strategy: Try to get 5 in a row. Block opponent threats (3 or 4 in a row with open ends).`;
 
   const user = `Board:
 ${board}
 Moves so far: ${history || 'none'}
 
 You are ${yourStone}. Opponent is ${opponentStone}.
-
-Strategy priorities (in order):
-1. If you can win (you have 4 in a row with an open end), play the winning move.
-2. If opponent has 4 in a row or an open-ended 3, you MUST block it immediately or you lose.
-3. Build toward 5 in a row while also blocking opponent threats.
+${threatWarning}
+${strategyText}
 
 Pick an empty intersection (marked .) for your move.
 
@@ -132,11 +258,11 @@ function parseLLMMove(responseText) {
  * @param {number} maxRetries - retry count on invalid moves
  * @returns {Promise<{move: [number,number]|null, raw: string, error?: string}>}
  */
-export async function getLLMMove(config, blackMoves, whiteMoves, llmColor, allMoves, maxRetries = 3) {
+export async function getLLMMove(config, blackMoves, whiteMoves, llmColor, allMoves, maxRetries = 3, threatHints = true) {
   const { endpoint, deploymentName, apiKey, apiVersion } = config;
   const url = `${endpoint.replace(/\/+$/, '')}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion || '2024-02-01'}`;
 
-  const { system, user } = buildPrompt(blackMoves, whiteMoves, llmColor);
+  const { system, user } = buildPrompt(blackMoves, whiteMoves, llmColor, threatHints);
   console.log(`[LLM] System prompt:\n${system}`);
   console.log(`[LLM] User prompt:\n${user}`);
 

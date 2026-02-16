@@ -83,6 +83,7 @@ function RenjuGame() {
   const [llmLog, setLlmLog] = useState([]); // move log for AI vs LLM
   const [llmError, setLlmError] = useState(null);
   const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
+  const [threatHints, setThreatHints] = useState(true);
   const aiVsLlmCancelRef = useRef(false);
   const audioContextRef = useRef(null);
 
@@ -276,8 +277,8 @@ function RenjuGame() {
     aiVsLlmCancelRef.current = false;
     setGameMode('aivsllm');
     setGameState('playing');
-    setHumanMoves([]); // repurposed: Black moves (local AI)
-    setComputerMoves([]); // repurposed: White moves (LLM)
+    setHumanMoves([]); // repurposed: Black moves (LLM)
+    setComputerMoves([]); // repurposed: White moves (local AI)
     setMoveCount(1);
     setLastMove(null);
     setWinningLine(null);
@@ -287,12 +288,8 @@ function RenjuGame() {
     setAiVsLlmRunning(true);
     clearTranspositionTable();
 
-    // Black (local AI) opens at center
-    const centerPos = 280;
-    setHumanMoves([[centerPos, centerPos]]);
-    setLastMove([centerPos, centerPos]);
-    setLlmLog([{ turn: 1, player: 'AI (Black)', notation: toNotation(centerPos, centerPos) }]);
-    setCurrentTurn('computer'); // LLM's turn next
+    // LLM (Black) goes first — start the loop
+    setCurrentTurn('human'); // LLM's turn first
   };
 
   // Auto-play loop for AI vs LLM
@@ -303,9 +300,9 @@ function RenjuGame() {
     aiVsLlmCancelRef.current = false;
 
     const runLoop = async () => {
-      let blackMoves = [...humanMoves];
-      let whiteMoves = [...computerMoves];
-      let turn = currentTurn; // 'human' = AI-Black, 'computer' = LLM-White
+      let blackMoves = [...humanMoves]; // LLM plays Black
+      let whiteMoves = [...computerMoves]; // Local AI plays White
+      let turn = currentTurn; // 'human' = LLM-Black, 'computer' = AI-White
       let moves = moveCount;
 
       // eslint-disable-next-line no-constant-condition
@@ -314,11 +311,11 @@ function RenjuGame() {
         await new Promise(r => setTimeout(r, 600));
         if (cancelled || aiVsLlmCancelRef.current) return;
 
-        if (turn === 'computer') {
-          // LLM (White) turn
-          setCurrentTurn('computer');
+        if (turn === 'human') {
+          // LLM (Black) turn
+          setCurrentTurn('human');
           const allMoves = [...blackMoves, ...whiteMoves];
-          const result = await getLLMMove(llmConfig, blackMoves, whiteMoves, 'white', allMoves);
+          const result = await getLLMMove(llmConfig, blackMoves, whiteMoves, 'black', allMoves, 3, threatHints);
 
           if (cancelled || aiVsLlmCancelRef.current) return;
 
@@ -328,14 +325,14 @@ function RenjuGame() {
             return;
           }
 
-          whiteMoves = [...whiteMoves, result.move];
-          setComputerMoves([...whiteMoves]);
+          blackMoves = [...blackMoves, result.move];
+          setHumanMoves([...blackMoves]);
           setLastMove(result.move);
           if (soundEnabled) playStoneSound(audioContextRef.current);
-          setLlmLog(prev => [...prev, { turn: moves, player: 'LLM (White)', notation: toNotation(...result.move), raw: result.raw }]);
+          setLlmLog(prev => [...prev, { turn: moves, player: 'LLM (Black)', notation: toNotation(...result.move), raw: result.raw }]);
 
-          if (checkWin(whiteMoves, result.move[0], result.move[1])) {
-            setWinningLine(getWinningLine(whiteMoves, result.move[0], result.move[1]));
+          if (checkWinRenju(blackMoves, result.move[0], result.move[1], true)) {
+            setWinningLine(getWinningLine(blackMoves, result.move[0], result.move[1]));
             setGameState('lost'); // LLM won
             setAiVsLlmRunning(false);
             return;
@@ -343,14 +340,14 @@ function RenjuGame() {
 
           moves++;
           setMoveCount(moves);
-          turn = 'human';
+          turn = 'computer';
         } else {
-          // Local AI (Black) turn
-          setCurrentTurn('human');
+          // Local AI (White) turn
+          setCurrentTurn('computer');
           const depth = Math.floor(Math.random() * maxDepth) + 1;
           setCurrentDepth(depth);
 
-          const result = attack([...blackMoves], [...whiteMoves], 0, depth, -1000, 1000, true);
+          const result = attack([...whiteMoves], [...blackMoves], 0, depth, -1000, 1000, false);
 
           if (cancelled || aiVsLlmCancelRef.current) return;
 
@@ -360,15 +357,14 @@ function RenjuGame() {
             return;
           }
 
-          blackMoves = [...blackMoves, result.bestMove];
-          setHumanMoves([...blackMoves]);
+          whiteMoves = [...whiteMoves, result.bestMove];
+          setComputerMoves([...whiteMoves]);
           setLastMove(result.bestMove);
           if (soundEnabled) playStoneSound(audioContextRef.current);
-          setLlmLog(prev => [...prev, { turn: moves, player: 'AI (Black)', notation: toNotation(...result.bestMove) }]);
+          setLlmLog(prev => [...prev, { turn: moves, player: 'AI (White)', notation: toNotation(...result.bestMove) }]);
 
-          const aiWon = checkWinRenju(blackMoves, result.bestMove[0], result.bestMove[1], true);
-          if (aiWon) {
-            setWinningLine(getWinningLine(blackMoves, result.bestMove[0], result.bestMove[1]));
+          if (checkWin(whiteMoves, result.bestMove[0], result.bestMove[1])) {
+            setWinningLine(getWinningLine(whiteMoves, result.bestMove[0], result.bestMove[1]));
             setGameState('won'); // Local AI won
             setAiVsLlmRunning(false);
             return;
@@ -376,7 +372,7 @@ function RenjuGame() {
 
           moves++;
           setMoveCount(moves);
-          turn = 'computer';
+          turn = 'human';
         }
       }
     };
@@ -743,13 +739,21 @@ function RenjuGame() {
           }}>
             {gameMode === 'aivsllm' ? (
               <>
-                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Mode</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.95em' }}>
-                  <span>🤖</span>
+                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Mode</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9em' }}>
+                  <div style={{
+                    width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0,
+                    background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.2)'
+                  }} />
                   <span style={{ fontWeight: '600' }}>AI</span>
-                  <span style={{ opacity: 0.5 }}>vs</span>
+                  <span style={{ opacity: 0.4, fontSize: '0.85em' }}>vs</span>
                   <span style={{ fontWeight: '600' }}>LLM</span>
-                  <span>☁️</span>
+                  <div style={{
+                    width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0,
+                    background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.4)'
+                  }} />
                 </div>
               </>
             ) : (
@@ -784,7 +788,7 @@ function RenjuGame() {
                 : '0 4px 14px rgba(245, 158, 11, 0.35)'
             }}>
               {gameMode === 'aivsllm'
-                ? (currentTurn === 'human' ? '⚫ AI thinking...' : '☁️ LLM thinking...')
+                ? (currentTurn === 'human' ? '☁️ LLM thinking...' : '⚫ AI thinking...')
                 : (currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...')}
             </div>
           )}
@@ -811,7 +815,7 @@ function RenjuGame() {
                 fontSize: '1em'
               }}>
                 {gameMode === 'aivsllm'
-                  ? (gameState === 'won' ? 'AI (Black) Won!' : 'LLM (White) Won!')
+                  ? (gameState === 'won' ? 'Local AI Won!' : 'LLM Won!')
                   : (gameState === 'won' ? 'You Won!' : 'AI Won')}
               </div>
             </div>
@@ -834,33 +838,6 @@ function RenjuGame() {
 
           {/* Action Buttons - Bottom aligned */}
           <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {/* Stop button for AI vs LLM */}
-          {gameMode === 'aivsllm' && aiVsLlmRunning && (
-            <button
-              onClick={handleStopAiVsLlm}
-              style={{
-                padding: '12px 15px',
-                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                border: 'none',
-                borderRadius: '10px',
-                color: '#fff',
-                cursor: 'pointer',
-                fontSize: '0.9em',
-                fontWeight: '500',
-                transition: 'all 0.2s',
-                boxShadow: '0 4px 14px rgba(239, 68, 68, 0.35)',
-                width: '100%',
-                boxSizing: 'border-box',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                minHeight: '44px'
-              }}
-            >
-              <span>⏹️</span><span>Stop</span>
-            </button>
-          )}
           <button
             onClick={handleRestart}
             style={{
@@ -1013,6 +990,58 @@ function RenjuGame() {
             </div>
             <span style={{ lineHeight: '1.3' }}>Visualize AI</span>
           </label>
+
+          {/* Threat Hints Toggle (AI vs LLM only) */}
+          {gameMode === 'aivsllm' && (
+          <label style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'flex-start',
+            gap: '6px',
+            cursor: 'pointer',
+            color: 'var(--surface-text-color)',
+            fontSize: '0.85em',
+            padding: '12px 15px',
+            margin: 0,
+            background: threatHints ? 'rgba(245, 158, 11, 0.12)' : 'var(--blog-surface-background)',
+            borderRadius: '10px',
+            border: threatHints ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid var(--blog-surface-border, #333)',
+            transition: 'all 0.2s',
+            width: '100%',
+            boxSizing: 'border-box',
+            minHeight: '44px'
+          }}>
+            <input
+              type="checkbox"
+              checked={threatHints}
+              onChange={(e) => setThreatHints(e.target.checked)}
+              style={{ display: 'none' }}
+            />
+            <div style={{
+              width: '36px',
+              height: '20px',
+              background: threatHints ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'var(--blog-surface-border, #555)',
+              borderRadius: '10px',
+              position: 'relative',
+              transition: 'all 0.2s',
+              flexShrink: 0,
+              boxShadow: threatHints ? '0 2px 8px rgba(245, 158, 11, 0.3)' : 'none'
+            }}>
+              <div style={{
+                width: '16px',
+                height: '16px',
+                background: '#fff',
+                borderRadius: '50%',
+                position: 'absolute',
+                top: '2px',
+                left: threatHints ? '18px' : '2px',
+                transition: 'all 0.2s',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+              }} />
+            </div>
+            <span style={{ lineHeight: '1.3' }}>Threat Hints</span>
+          </label>
+          )}
           </div>
 
           {/* Game Info */}
