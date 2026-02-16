@@ -203,26 +203,37 @@ function buildPrompt(blackMoves, whiteMoves, llmColor, threatHints = true) {
     }
   }
 
-  const system = `You play Renju on a 15×15 board. Columns A-O, rows 1-15. You are ${yourStone} (${llmColor}). Reply with ONLY your move like H8. Nothing else.`;
+  const colorRules = llmColor === 'black'
+    ? `You are X (Black). Black has restrictions: no double-three (3-3), no double-four (4-4), no overline (6+). A forbidden move loses immediately.`
+    : `You are O (White). White has NO restrictions — you may freely create double-threes, double-fours, and overlines. Exploit Black's restrictions by forcing positions where Black's responses are forbidden.`;
 
-  const strategyText = threatWarning
-    ? `Strategy priorities (in order):
-1. If you can win, play the winning move shown above.
-2. If there is a CRITICAL or WARNING threat above, you MUST block at one of the suggested positions.
-3. Otherwise, build toward 5 in a row near your existing stones.`
-    : `Strategy: Try to get 5 in a row. Block opponent threats (3 or 4 in a row with open ends).`;
+  const system = `You are an expert Renju player on a 15×15 board. Columns A-O, rows 1-15. X=Black, O=White. ${colorRules} Respond with ONLY your move coordinate like H8. Nothing else.`;
+
+  const strategySection = threatWarning
+    ? `${threatWarning}
+Tactical priorities:
+1. Play any winning move shown above immediately.
+2. Block any CRITICAL/WARNING threat above — failure to block loses.
+3. Create forks (multiple simultaneous threats the opponent cannot all block).
+4. Build open threes that can become open fours.
+5. Control center and adjacent intersections.`
+    : `Tactical priorities:
+1. Check for an immediate winning move (you have 4 in a line with an open end).
+2. Block opponent's fours (straight or broken) — they win next turn if unblocked.
+3. Block opponent's open threes — they become unstoppable fours if unblocked.
+4. Create forks: multiple simultaneous threats (e.g. open-three + four) the opponent cannot all block.
+5. Build open threes near your existing stones to set up forcing sequences.
+6. Control center and key intersections.${llmColor === 'black' ? '\n7. Before playing, verify your move does not create a forbidden double-three, double-four, or overline.' : ''}`;
 
   const user = `Board:
 ${board}
-Moves so far: ${history || 'none'}
+Move history: ${history || 'none'}
 
-You are ${yourStone}. Opponent is ${opponentStone}.
-${threatWarning}
-${strategyText}
+${strategySection}
 
-Pick an empty intersection (marked .) for your move.
+Pick an empty intersection (.) for your move.
 
-Your move (e.g. H8):`;
+Your move:`;
 
   return { system, user };
 }
@@ -285,7 +296,8 @@ export async function getLLMMove(config, blackMoves, whiteMoves, llmColor, allMo
 
       if (!res.ok) {
         const errBody = await res.text();
-        throw new Error(`Azure API error ${res.status}: ${errBody}`);
+        console.error(`[LLM] Azure API error ${res.status}:`, errBody);
+        throw new Error(`LLM call failed (${res.status})`);
       }
 
       const data = await res.json();

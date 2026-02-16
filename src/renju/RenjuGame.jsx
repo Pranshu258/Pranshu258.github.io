@@ -714,7 +714,7 @@ function RenjuGame() {
               >
                 <span>🤖</span><span>Start AI vs LLM</span>
               </button>
-              {llmError && (
+              {llmError && !aiVsLlmRunning && gameState === 'setup' && (
                 <div style={{ marginTop: '8px', color: '#f87171', fontSize: '0.75em' }}>
                   {llmError}
                 </div>
