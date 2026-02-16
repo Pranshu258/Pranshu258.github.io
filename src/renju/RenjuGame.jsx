@@ -259,7 +259,7 @@ function RenjuGame() {
 
       return () => { cancelled = true; };
     }
-  }, [currentTurn, gameState, computerMoves, humanMoves, moveCount, thinkingMode]);
+  }, [currentTurn, gameState, gameMode, computerMoves, humanMoves, moveCount, thinkingMode]);
 
   const handleRestart = () => {
     if (gameMode === 'aivsllm') {
@@ -347,24 +347,55 @@ function RenjuGame() {
           const depth = Math.floor(Math.random() * maxDepth) + 1;
           setCurrentDepth(depth);
 
-          const result = attack([...whiteMoves], [...blackMoves], 0, depth, -1000, 1000, false);
+          let bestMove = null;
+
+          if (thinkingMode) {
+            setCandidateMoves([]);
+            const result = await attackWithVisualization(
+              [...whiteMoves],
+              [...blackMoves],
+              depth,
+              (move, status, score) => {
+                if (cancelled || aiVsLlmCancelRef.current) return;
+                setCandidateMoves(prev => {
+                  const existing = prev.find(c => c.move[0] === move[0] && c.move[1] === move[1]);
+                  if (existing) {
+                    return prev.map(c =>
+                      c.move[0] === move[0] && c.move[1] === move[1]
+                        ? { ...c, status, score }
+                        : c
+                    );
+                  }
+                  return [...prev, { move, status, score }];
+                });
+              },
+              false // AI is White
+            );
+            bestMove = result.bestMove;
+            await new Promise(r => setTimeout(r, 300));
+            if (cancelled || aiVsLlmCancelRef.current) return;
+            setCandidateMoves([]);
+          } else {
+            const result = attack([...whiteMoves], [...blackMoves], 0, depth, -1000, 1000, false);
+            bestMove = result.bestMove;
+          }
 
           if (cancelled || aiVsLlmCancelRef.current) return;
 
-          if (!result.bestMove) {
+          if (!bestMove) {
             setLlmError('Local AI failed to find a move');
             setAiVsLlmRunning(false);
             return;
           }
 
-          whiteMoves = [...whiteMoves, result.bestMove];
+          whiteMoves = [...whiteMoves, bestMove];
           setComputerMoves([...whiteMoves]);
-          setLastMove(result.bestMove);
+          setLastMove(bestMove);
           if (soundEnabled) playStoneSound(audioContextRef.current);
-          setLlmLog(prev => [...prev, { turn: moves, player: 'AI (White)', notation: toNotation(...result.bestMove) }]);
+          setLlmLog(prev => [...prev, { turn: moves, player: 'AI (White)', notation: toNotation(...bestMove) }]);
 
-          if (checkWin(whiteMoves, result.bestMove[0], result.bestMove[1])) {
-            setWinningLine(getWinningLine(whiteMoves, result.bestMove[0], result.bestMove[1]));
+          if (checkWin(whiteMoves, bestMove[0], bestMove[1])) {
+            setWinningLine(getWinningLine(whiteMoves, bestMove[0], bestMove[1]));
             setGameState('won'); // Local AI won
             setAiVsLlmRunning(false);
             return;
