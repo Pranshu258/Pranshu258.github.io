@@ -63,6 +63,226 @@ function hasPos(set, x, y) {
   return set.has(posKey(x, y));
 }
 
+// Helper: Check if position is within valid board bounds
+function isOnBoard(x, y) {
+  return x >= 0 && x <= BOARD_MAX && y >= 0 && y <= BOARD_MAX;
+}
+
+// ============================================================
+// RENJU FORBIDDEN MOVE DETECTION (for Black player only)
+// ============================================================
+
+/**
+ * Check if a move would create an overline (6+ in a row)
+ * This is forbidden for Black in Renju
+ */
+function wouldCreateOverline(playerSet, mx, my) {
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 1; // Count the move itself
+    
+    // Count in positive direction
+    for (let n = 1; n <= 5; n++) {
+      if (hasPos(playerSet, mx + GRID_SIZE * n * dx, my + GRID_SIZE * n * dy)) {
+        count++;
+      } else break;
+    }
+    // Count in negative direction
+    for (let n = 1; n <= 5; n++) {
+      if (hasPos(playerSet, mx - GRID_SIZE * n * dx, my - GRID_SIZE * n * dy)) {
+        count++;
+      } else break;
+    }
+    
+    if (count > 5) return true;
+  }
+  return false;
+}
+
+/**
+ * Count how many "open fours" a move creates
+ * An open four is 4 in a row with at least one open end that can become 5
+ */
+function countFoursCreated(playerSet, opponentSet, mx, my) {
+  let fourCount = 0;
+  
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 1; // Count the move itself
+    let openEndPositive = false;
+    let openEndNegative = false;
+    
+    // Count in positive direction
+    for (let n = 1; n <= 4; n++) {
+      const px = mx + GRID_SIZE * n * dx;
+      const py = my + GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) {
+        count++;
+      } else {
+        // Check if this end is open
+        if (isOnBoard(px, py) && !hasPos(opponentSet, px, py)) {
+          openEndPositive = true;
+        }
+        break;
+      }
+    }
+    
+    // Count in negative direction
+    for (let n = 1; n <= 4; n++) {
+      const px = mx - GRID_SIZE * n * dx;
+      const py = my - GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) {
+        count++;
+      } else {
+        // Check if this end is open
+        if (isOnBoard(px, py) && !hasPos(opponentSet, px, py)) {
+          openEndNegative = true;
+        }
+        break;
+      }
+    }
+    
+    // A four is created if we have exactly 4 in a row with potential to become 5
+    if (count === 4 && (openEndPositive || openEndNegative)) {
+      fourCount++;
+    }
+  }
+  
+  return fourCount;
+}
+
+/**
+ * Count how many "open threes" a move creates
+ * An open three is 3 in a row with BOTH ends open (can become an open four)
+ */
+function countOpenThreesCreated(playerSet, opponentSet, mx, my) {
+  let threeCount = 0;
+  
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 1; // Count the move itself
+    let openEndPositive = false;
+    let openEndNegative = false;
+    let spaceAfterPositive = false;
+    let spaceAfterNegative = false;
+    
+    // Count in positive direction
+    for (let n = 1; n <= 3; n++) {
+      const px = mx + GRID_SIZE * n * dx;
+      const py = my + GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) {
+        count++;
+      } else {
+        // Check if this end is open
+        if (isOnBoard(px, py) && !hasPos(opponentSet, px, py)) {
+          openEndPositive = true;
+          // Check space after opening
+          const nextPx = mx + GRID_SIZE * (n + 1) * dx;
+          const nextPy = my + GRID_SIZE * (n + 1) * dy;
+          if (isOnBoard(nextPx, nextPy) && !hasPos(opponentSet, nextPx, nextPy)) {
+            spaceAfterPositive = true;
+          }
+        }
+        break;
+      }
+    }
+    
+    // Count in negative direction
+    for (let n = 1; n <= 3; n++) {
+      const px = mx - GRID_SIZE * n * dx;
+      const py = my - GRID_SIZE * n * dy;
+      if (hasPos(playerSet, px, py)) {
+        count++;
+      } else {
+        // Check if this end is open
+        if (isOnBoard(px, py) && !hasPos(opponentSet, px, py)) {
+          openEndNegative = true;
+          // Check space after opening
+          const nextPx = mx - GRID_SIZE * (n + 1) * dx;
+          const nextPy = my - GRID_SIZE * (n + 1) * dy;
+          if (isOnBoard(nextPx, nextPy) && !hasPos(opponentSet, nextPx, nextPy)) {
+            spaceAfterNegative = true;
+          }
+        }
+        break;
+      }
+    }
+    
+    // An open three has exactly 3 stones with both ends open and room to grow
+    if (count === 3 && openEndPositive && openEndNegative && 
+        (spaceAfterPositive || spaceAfterNegative)) {
+      threeCount++;
+    }
+  }
+  
+  return threeCount;
+}
+
+/**
+ * Check if a move is forbidden for Black player in Renju
+ * Forbidden moves: overline (6+), double-four (4-4), double-three (3-3)
+ * Returns: { forbidden: boolean, reason: string }
+ */
+export function isForbiddenMove(playerMoves, opponentMoves, move, isBlack) {
+  if (!isBlack) {
+    return { forbidden: false, reason: null };
+  }
+  
+  const [mx, my] = move;
+  const playerSet = createPosSet(playerMoves);
+  const opponentSet = createPosSet(opponentMoves);
+  
+  // Check for overline (6+ in a row)
+  if (wouldCreateOverline(playerSet, mx, my)) {
+    return { forbidden: true, reason: 'overline' };
+  }
+  
+  // Check for double-four (two fours created)
+  const fours = countFoursCreated(playerSet, opponentSet, mx, my);
+  if (fours >= 2) {
+    return { forbidden: true, reason: 'double-four' };
+  }
+  
+  // Check for double-three (two open threes created)
+  const openThrees = countOpenThreesCreated(playerSet, opponentSet, mx, my);
+  if (openThrees >= 2) {
+    return { forbidden: true, reason: 'double-three' };
+  }
+  
+  return { forbidden: false, reason: null };
+}
+
+/**
+ * Check win for Black considering the overline rule
+ * Black must have EXACTLY 5 in a row, not more
+ */
+export function checkWinRenju(player, x, y, isBlack) {
+  const playerSet = createPosSet(player);
+  
+  for (const [dx, dy] of DIRECTIONS) {
+    let count = 1; // Count the piece at (x, y)
+    
+    // Count in positive direction
+    for (let n = 1; n <= 5; n++) {
+      if (hasPos(playerSet, x + GRID_SIZE * n * dx, y + GRID_SIZE * n * dy)) {
+        count++;
+      } else break;
+    }
+    // Count in negative direction
+    for (let n = 1; n <= 5; n++) {
+      if (hasPos(playerSet, x - GRID_SIZE * n * dx, y - GRID_SIZE * n * dy)) {
+        count++;
+      } else break;
+    }
+    
+    // For Black: exactly 5 wins (overline doesn't count as win)
+    // For White: 5 or more wins
+    if (isBlack) {
+      if (count === 5) return true;
+    } else {
+      if (count >= 5) return true;
+    }
+  }
+  return false;
+}
+
 // Helper: Generate hash for position (for transposition table)
 function hashPosition(player1, player2) {
   const sorted1 = [...player1].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
@@ -73,8 +293,9 @@ function hashPosition(player1, player2) {
 /**
  * Main attack function with alpha-beta pruning
  * Returns: { score, bestMove } - no longer mutates input arrays
+ * @param isBlack - whether the current player (at depth 0) is Black (for Renju rules)
  */
-export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
+export function attack(player, otherPlayer, depth, maxDepth, alpha, beta, isBlack = false) {
   // Check transposition table
   const hash = hashPosition(player, otherPlayer);
   const cached = transpositionTable.get(hash);
@@ -91,12 +312,15 @@ export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
 
   let bestMove = null;
   let bestScore = -1000;
-  const moves = getMovesOptimized(player, otherPlayer);
+  
+  // At depth 0, filter forbidden moves if AI is Black
+  const currentIsBlack = depth % 2 === 0 ? isBlack : !isBlack;
+  const moves = getMovesOptimized(player, otherPlayer, currentIsBlack);
 
   for (const move of moves) {
     player.push(move); // Temporarily add move
     
-    let score = attack(otherPlayer, player, depth + 1, maxDepth, -beta, -Math.max(alpha, bestScore));
+    let score = attack(otherPlayer, player, depth + 1, maxDepth, -beta, -Math.max(alpha, bestScore), isBlack);
     if (typeof score === 'object') score = score.score;
     score = -score;
 
@@ -121,7 +345,8 @@ export function attack(player, otherPlayer, depth, maxDepth, alpha, beta) {
 
 // Async version that reports candidates being considered
 // Returns: { candidates, bestMove }
-export async function attackWithVisualization(player, otherPlayer, maxDepth, onCandidateEvaluated) {
+// isBlack: whether the AI (at depth 0) is playing Black (for Renju rules)
+export async function attackWithVisualization(player, otherPlayer, maxDepth, onCandidateEvaluated, isBlack = false) {
   const candidates = [];
   let finalBestMove = null;
   
@@ -134,7 +359,9 @@ export async function attackWithVisualization(player, otherPlayer, maxDepth, onC
 
     let bestMove = null;
     let bestScore = -1000;
-    const moves = getMovesOptimized(playerArr, otherArr);
+    // Apply Renju rules: at depth 0, AI is Black; at depth 1, opponent; alternates
+    const currentIsBlack = depth % 2 === 0 ? isBlack : !isBlack;
+    const moves = getMovesOptimized(playerArr, otherArr, currentIsBlack);
 
     for (const move of moves) {
       // At depth 0, report the candidate being evaluated
@@ -199,10 +426,11 @@ function isGameOverFast(playerSet, player) {
 }
 
 // Optimized move generation with partial sorting
-function getMovesOptimized(player1, player2) {
+// isBlack: if true, filter out forbidden moves for Black player (Renju rules)
+function getMovesOptimized(player1, player2, isBlack = false) {
   const usedSet = createPosSet([...player1, ...player2]);
   const moveSet = new Set();
-  const moves = [];
+  let moves = [];
 
   // Generate candidate moves (neighbors of existing pieces)
   for (const [x, y] of [...player1, ...player2]) {
@@ -217,6 +445,19 @@ function getMovesOptimized(player1, player2) {
         moves.push([nx, ny]);
       }
     }
+  }
+
+  // Filter out forbidden moves if playing as Black (Renju rules)
+  if (isBlack) {
+    const legalMoves = moves.filter(move => {
+      const result = isForbiddenMove(player1, player2, move, true);
+      return !result.forbidden;
+    });
+    // Fallback: if all moves are forbidden, use original moves to avoid getting stuck
+    if (legalMoves.length > 0) {
+      moves = legalMoves;
+    }
+    // If legalMoves is empty, keep original moves (AI must play something)
   }
 
   // Quick score estimation for move ordering (avoid full evaluation)

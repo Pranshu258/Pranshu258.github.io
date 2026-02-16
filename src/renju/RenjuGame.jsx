@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import RenjuBoard from './RenjuBoard';
-import { attack, attackWithVisualization, checkWin, getWinningLine, clearTranspositionTable } from './ai';
+import { attack, attackWithVisualization, checkWin, checkWinRenju, getWinningLine, clearTranspositionTable } from './ai';
 import { 
   snapToGrid, 
   isValidMove, 
@@ -175,6 +175,8 @@ function RenjuGame() {
         if (thinkingMode) {
           // Use visualization mode
           setCandidateMoves([]);
+          // AI is Black if user chose White
+          const aiIsBlack = userColor === 'white';
           const result = await attackWithVisualization(
             newComputerMoves,
             humanMoves,
@@ -192,7 +194,8 @@ function RenjuGame() {
                 }
                 return [...prev, { move, status, score }];
               });
-            }
+            },
+            aiIsBlack
           );
           // Add the best move to our array
           if (result.bestMove) {
@@ -204,7 +207,9 @@ function RenjuGame() {
           setCandidateMoves([]);
         } else {
           // Use regular fast attack
-          const result = attack(newComputerMoves, humanMoves, 0, depth, -1000, 1000);
+          // AI is Black if user chose White
+          const aiIsBlack = userColor === 'white';
+          const result = attack(newComputerMoves, humanMoves, 0, depth, -1000, 1000, aiIsBlack);
           if (result.bestMove) {
             newComputerMoves.push(result.bestMove);
           }
@@ -218,8 +223,12 @@ function RenjuGame() {
           setLastMove(aiMove);
           if (soundEnabled) playStoneSound(audioContextRef.current);
 
-          // Check win
-          if (checkWin(newComputerMoves, aiMove[0], aiMove[1])) {
+          // Check win - use Renju rules if AI is Black (overline doesn't win)
+          const aiIsBlack = userColor === 'white';
+          const aiWon = aiIsBlack 
+            ? checkWinRenju(newComputerMoves, aiMove[0], aiMove[1], true)
+            : checkWin(newComputerMoves, aiMove[0], aiMove[1]);
+          if (aiWon) {
             setWinningLine(getWinningLine(newComputerMoves, aiMove[0], aiMove[1]));
             setGameState('lost');
             return;
