@@ -79,7 +79,7 @@ function RenjuGame() {
   const [maxDepth, setMaxDepth] = useState(6); // Adaptive difficulty: increases on player win, decreases on loss
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [gameMode, setGameMode] = useState('pvai'); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
-  const [llmConfig, setLlmConfig] = useState({ endpoint: '', deploymentName: 'gpt-4o', apiKey: '', apiVersion: '2024-02-01' });
+  const [llmConfig, setLlmConfig] = useState({ endpoint: '', deploymentName: '', apiKey: '', apiVersion: '2024-02-01' });
   const [llmLog, setLlmLog] = useState([]); // move log for AI vs LLM
   const [llmError, setLlmError] = useState(null);
   const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
@@ -659,7 +659,7 @@ function RenjuGame() {
               {[
                 { key: 'endpoint', label: 'Endpoint', placeholder: 'https://....openai.azure.com' },
                 { key: 'apiKey', label: 'API Key', placeholder: 'your-api-key', type: 'password' },
-                { key: 'deploymentName', label: 'Deployment', placeholder: 'gpt-4o' },
+                { key: 'deploymentName', label: 'Deployment', placeholder: 'deployment' },
               ].map(({ key, label, placeholder, type }) => (
                 <div key={key} style={{ marginBottom: '8px' }}>
                   <div style={{ fontSize: '0.75em', opacity: 0.7, marginBottom: '3px' }}>{label}</div>
