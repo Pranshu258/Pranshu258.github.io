@@ -7,6 +7,7 @@ import {
   saveGame, 
   loadGame
 } from './gameLogic';
+import { getLLMMove, toNotation } from './llm';
 
 // Sound effects using Web Audio API
 const createAudioContext = () => {
@@ -77,6 +78,12 @@ function RenjuGame() {
   const [currentDepth, setCurrentDepth] = useState(null);
   const [maxDepth, setMaxDepth] = useState(6); // Adaptive difficulty: increases on player win, decreases on loss
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [gameMode, setGameMode] = useState('pvai'); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
+  const [llmConfig, setLlmConfig] = useState({ endpoint: '', deploymentName: 'gpt-4o', apiKey: '', apiVersion: '2024-02-01' });
+  const [llmLog, setLlmLog] = useState([]); // move log for AI vs LLM
+  const [llmError, setLlmError] = useState(null);
+  const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
+  const aiVsLlmCancelRef = useRef(false);
   const audioContextRef = useRef(null);
 
   // Initialize audio context on first user interaction
@@ -93,17 +100,25 @@ function RenjuGame() {
   };
 
   // Adjust difficulty based on game outcome
+  // In pvai: won = player won → harder, lost = AI won → easier
+  // In aivsllm: LLM replaces human, so won = local AI won → easier, lost = LLM won → harder
   useEffect(() => {
     if (gameState === 'won') {
-      // Player won - increase difficulty (cap at 10)
-      setMaxDepth(prev => Math.min(prev + 1, 10));
+      if (gameMode === 'aivsllm') {
+        setMaxDepth(prev => Math.max(prev - 1, 2));
+      } else {
+        setMaxDepth(prev => Math.min(prev + 1, 10));
+      }
       if (soundEnabled) playWinSound(audioContextRef.current);
     } else if (gameState === 'lost') {
-      // Player lost - decrease difficulty (floor at 2)
-      setMaxDepth(prev => Math.max(prev - 1, 2));
+      if (gameMode === 'aivsllm') {
+        setMaxDepth(prev => Math.min(prev + 1, 10));
+      } else {
+        setMaxDepth(prev => Math.max(prev - 1, 2));
+      }
       if (soundEnabled) playLoseSound(audioContextRef.current);
     }
-  }, [gameState, soundEnabled]);
+  }, [gameState, soundEnabled, gameMode]);
 
   const handleStartGame = (color) => {
     ensureAudioContext();
@@ -160,7 +175,7 @@ function RenjuGame() {
 
   // AI move effect
   useEffect(() => {
-    if (gameState === 'playing' && currentTurn === 'computer') {
+    if (gameMode !== 'aivsllm' && gameState === 'playing' && currentTurn === 'computer') {
       let cancelled = false;
 
       const runAI = async () => {
@@ -246,10 +261,142 @@ function RenjuGame() {
   }, [currentTurn, gameState, computerMoves, humanMoves, moveCount, thinkingMode]);
 
   const handleRestart = () => {
-    handleStartGame(userColor);
+    if (gameMode === 'aivsllm') {
+      handleStartAiVsLlm();
+    } else {
+      handleStartGame(userColor);
+    }
+  };
+
+  // ============================================================
+  // AI vs LLM Mode
+  // ============================================================
+  const handleStartAiVsLlm = () => {
+    ensureAudioContext();
+    aiVsLlmCancelRef.current = false;
+    setGameMode('aivsllm');
+    setGameState('playing');
+    setHumanMoves([]); // repurposed: Black moves (local AI)
+    setComputerMoves([]); // repurposed: White moves (LLM)
+    setMoveCount(1);
+    setLastMove(null);
+    setWinningLine(null);
+    setCurrentDepth(null);
+    setLlmLog([]);
+    setLlmError(null);
+    setAiVsLlmRunning(true);
+    clearTranspositionTable();
+
+    // Black (local AI) opens at center
+    const centerPos = 280;
+    setHumanMoves([[centerPos, centerPos]]);
+    setLastMove([centerPos, centerPos]);
+    setLlmLog([{ turn: 1, player: 'AI (Black)', notation: toNotation(centerPos, centerPos) }]);
+    setCurrentTurn('computer'); // LLM's turn next
+  };
+
+  // Auto-play loop for AI vs LLM
+  useEffect(() => {
+    if (gameMode !== 'aivsllm' || gameState !== 'playing' || !aiVsLlmRunning) return;
+
+    let cancelled = false;
+    aiVsLlmCancelRef.current = false;
+
+    const runLoop = async () => {
+      let blackMoves = [...humanMoves];
+      let whiteMoves = [...computerMoves];
+      let turn = currentTurn; // 'human' = AI-Black, 'computer' = LLM-White
+      let moves = moveCount;
+
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        if (cancelled || aiVsLlmCancelRef.current) return;
+        await new Promise(r => setTimeout(r, 600));
+        if (cancelled || aiVsLlmCancelRef.current) return;
+
+        if (turn === 'computer') {
+          // LLM (White) turn
+          setCurrentTurn('computer');
+          const allMoves = [...blackMoves, ...whiteMoves];
+          const result = await getLLMMove(llmConfig, blackMoves, whiteMoves, 'white', allMoves);
+
+          if (cancelled || aiVsLlmCancelRef.current) return;
+
+          if (!result.move) {
+            setLlmError(result.error || 'LLM failed to produce a valid move');
+            setAiVsLlmRunning(false);
+            return;
+          }
+
+          whiteMoves = [...whiteMoves, result.move];
+          setComputerMoves([...whiteMoves]);
+          setLastMove(result.move);
+          if (soundEnabled) playStoneSound(audioContextRef.current);
+          setLlmLog(prev => [...prev, { turn: moves, player: 'LLM (White)', notation: toNotation(...result.move), raw: result.raw }]);
+
+          if (checkWin(whiteMoves, result.move[0], result.move[1])) {
+            setWinningLine(getWinningLine(whiteMoves, result.move[0], result.move[1]));
+            setGameState('lost'); // LLM won
+            setAiVsLlmRunning(false);
+            return;
+          }
+
+          moves++;
+          setMoveCount(moves);
+          turn = 'human';
+        } else {
+          // Local AI (Black) turn
+          setCurrentTurn('human');
+          const depth = Math.floor(Math.random() * maxDepth) + 1;
+          setCurrentDepth(depth);
+
+          const result = attack([...blackMoves], [...whiteMoves], 0, depth, -1000, 1000, true);
+
+          if (cancelled || aiVsLlmCancelRef.current) return;
+
+          if (!result.bestMove) {
+            setLlmError('Local AI failed to find a move');
+            setAiVsLlmRunning(false);
+            return;
+          }
+
+          blackMoves = [...blackMoves, result.bestMove];
+          setHumanMoves([...blackMoves]);
+          setLastMove(result.bestMove);
+          if (soundEnabled) playStoneSound(audioContextRef.current);
+          setLlmLog(prev => [...prev, { turn: moves, player: 'AI (Black)', notation: toNotation(...result.bestMove) }]);
+
+          const aiWon = checkWinRenju(blackMoves, result.bestMove[0], result.bestMove[1], true);
+          if (aiWon) {
+            setWinningLine(getWinningLine(blackMoves, result.bestMove[0], result.bestMove[1]));
+            setGameState('won'); // Local AI won
+            setAiVsLlmRunning(false);
+            return;
+          }
+
+          moves++;
+          setMoveCount(moves);
+          turn = 'computer';
+        }
+      }
+    };
+
+    runLoop();
+
+    return () => {
+      cancelled = true;
+      aiVsLlmCancelRef.current = true;
+    };
+  }, [aiVsLlmRunning]); // Only re-run when aiVsLlmRunning changes
+
+  const handleStopAiVsLlm = () => {
+    aiVsLlmCancelRef.current = true;
+    setAiVsLlmRunning(false);
   };
 
   const handleNewColor = () => {
+    aiVsLlmCancelRef.current = true;
+    setAiVsLlmRunning(false);
     setGameState('setup');
   };
 
@@ -331,9 +478,9 @@ function RenjuGame() {
                 <span>Choose your side to begin</span>
               </div>
               
-              <div style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <button
-                  onClick={() => handleStartGame('black')}
+                  onClick={() => { setGameMode('pvai'); handleStartGame('black'); }}
                   style={{
                     padding: '20px 32px',
                     background: '#1a1a1a',
@@ -370,7 +517,7 @@ function RenjuGame() {
                   </div>
                 </button>
                 <button
-                  onClick={() => handleStartGame('white')}
+                  onClick={() => { setGameMode('pvai'); handleStartGame('white'); }}
                   style={{
                     padding: '20px 32px',
                     background: '#f5f5f5',
@@ -410,13 +557,15 @@ function RenjuGame() {
             </div>
           </div>
 
-          {/* Right Setup Panel - Simplified */}
+          {/* Right Setup Panel */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'space-between',
             gap: '12px',
-            width: '180px',
-            flexShrink: 0
+            width: '220px',
+            flexShrink: 0,
+            alignSelf: 'stretch'
           }}>
             {/* Game Info Card */}
             <div style={{ 
@@ -457,6 +606,93 @@ function RenjuGame() {
                 </div>
               </div>
             </div>
+
+            {/* Azure AI Config Card */}
+            <div style={{ 
+              color: 'var(--surface-text-color)',
+              padding: '18px',
+              background: 'var(--blog-surface-background)',
+              borderRadius: '12px',
+              border: '1px solid var(--blog-surface-border, #333)',
+              marginTop: 'auto'
+            }}>
+              <div style={{ 
+                fontWeight: '600', 
+                fontSize: '0.95em', 
+                marginBottom: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <span>☁️</span> Azure AI Config
+              </div>
+              <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
+                Required for AI vs LLM mode
+              </div>
+              {[
+                { key: 'endpoint', label: 'Endpoint', placeholder: 'https://....openai.azure.com' },
+                { key: 'apiKey', label: 'API Key', placeholder: 'your-api-key', type: 'password' },
+                { key: 'deploymentName', label: 'Deployment', placeholder: 'gpt-4o' },
+              ].map(({ key, label, placeholder, type }) => (
+                <div key={key} style={{ marginBottom: '8px' }}>
+                  <div style={{ fontSize: '0.75em', opacity: 0.7, marginBottom: '3px' }}>{label}</div>
+                  <input
+                    type={type || 'text'}
+                    value={llmConfig[key]}
+                    onChange={(e) => setLlmConfig(prev => ({ ...prev, [key]: e.target.value }))}
+                    placeholder={placeholder}
+                    style={{
+                      width: '100%',
+                      padding: '6px 8px',
+                      fontSize: '0.8em',
+                      borderRadius: '6px',
+                      border: '1px solid var(--blog-surface-border, #444)',
+                      background: 'var(--blog-surface-background, #1a1a1a)',
+                      color: 'var(--surface-text-color)',
+                      boxSizing: 'border-box',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+              ))}
+              <button
+                onClick={() => {
+                  if (!llmConfig.endpoint || !llmConfig.apiKey) {
+                    setLlmError('Enter endpoint & API key above');
+                    return;
+                  }
+                  setLlmError(null);
+                  handleStartAiVsLlm();
+                }}
+                style={{
+                  marginTop: '6px',
+                  padding: '10px 14px',
+                  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                  border: 'none',
+                  borderRadius: '10px',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontSize: '0.85em',
+                  fontWeight: '600',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  minHeight: '40px'
+                }}
+              >
+                <span>🤖</span><span>Start AI vs LLM</span>
+              </button>
+              {llmError && (
+                <div style={{ marginTop: '8px', color: '#f87171', fontSize: '0.75em' }}>
+                  {llmError}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -479,9 +715,9 @@ function RenjuGame() {
           <RenjuBoard
             humanMoves={humanMoves}
             computerMoves={computerMoves}
-            userColor={userColor}
+            userColor={gameMode === 'aivsllm' ? 'black' : userColor}
             onMove={handleMove}
-            disabled={gameState !== 'playing' || currentTurn !== 'human'}
+            disabled={gameMode === 'aivsllm' || gameState !== 'playing' || currentTurn !== 'human'}
             lastMove={lastMove}
             candidateMoves={candidateMoves}
             winningLine={winningLine}
@@ -505,20 +741,39 @@ function RenjuGame() {
             borderRadius: '10px',
             border: '1px solid var(--blog-surface-border, #333)'
           }}>
-            <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Playing as</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.8em' }}>{userColor === 'black' ? '⚫' : '⚪'}</span>
-              <span style={{ fontWeight: '600', fontSize: '1.1em' }}>{userColor === 'black' ? 'Black' : 'White'}</span>
-            </div>
+            {gameMode === 'aivsllm' ? (
+              <>
+                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Mode</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.95em' }}>
+                  <span>🤖</span>
+                  <span style={{ fontWeight: '600' }}>AI</span>
+                  <span style={{ opacity: 0.5 }}>vs</span>
+                  <span style={{ fontWeight: '600' }}>LLM</span>
+                  <span>☁️</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Playing as</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '1.8em' }}>{userColor === 'black' ? '⚫' : '⚪'}</span>
+                  <span style={{ fontWeight: '600', fontSize: '1.1em' }}>{userColor === 'black' ? 'Black' : 'White'}</span>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Turn Status */}
           {gameState === 'playing' && (
             <div style={{ 
               padding: '12px 15px',
-              background: currentTurn === 'human' 
-                ? 'linear-gradient(135deg, #6366f1, #4f46e5)' 
-                : 'linear-gradient(135deg, #f59e0b, #d97706)',
+              background: gameMode === 'aivsllm'
+                ? (currentTurn === 'human'
+                    ? 'linear-gradient(135deg, #1a1a1a, #333)'
+                    : 'linear-gradient(135deg, #6366f1, #4f46e5)')
+                : (currentTurn === 'human' 
+                    ? 'linear-gradient(135deg, #6366f1, #4f46e5)' 
+                    : 'linear-gradient(135deg, #f59e0b, #d97706)'),
               borderRadius: '10px',
               color: '#fff',
               fontWeight: '600',
@@ -528,7 +783,9 @@ function RenjuGame() {
                 ? '0 4px 14px rgba(99, 102, 241, 0.35)'
                 : '0 4px 14px rgba(245, 158, 11, 0.35)'
             }}>
-              {currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...'}
+              {gameMode === 'aivsllm'
+                ? (currentTurn === 'human' ? '⚫ AI thinking...' : '☁️ LLM thinking...')
+                : (currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...')}
             </div>
           )}
 
@@ -553,13 +810,57 @@ function RenjuGame() {
                 fontWeight: '600',
                 fontSize: '1em'
               }}>
-                {gameState === 'won' ? 'You Won!' : 'AI Won'}
+                {gameMode === 'aivsllm'
+                  ? (gameState === 'won' ? 'AI (Black) Won!' : 'LLM (White) Won!')
+                  : (gameState === 'won' ? 'You Won!' : 'AI Won')}
               </div>
+            </div>
+          )}
+
+          {/* LLM Error */}
+          {llmError && gameMode === 'aivsllm' && (
+            <div style={{
+              padding: '10px 14px',
+              background: 'rgba(239, 68, 68, 0.15)',
+              border: '1px solid rgba(239, 68, 68, 0.4)',
+              borderRadius: '10px',
+              color: '#f87171',
+              fontSize: '0.78em',
+              wordBreak: 'break-word'
+            }}>
+              {llmError}
             </div>
           )}
 
           {/* Action Buttons - Bottom aligned */}
           <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {/* Stop button for AI vs LLM */}
+          {gameMode === 'aivsllm' && aiVsLlmRunning && (
+            <button
+              onClick={handleStopAiVsLlm}
+              style={{
+                padding: '12px 15px',
+                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                border: 'none',
+                borderRadius: '10px',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: '0.9em',
+                fontWeight: '500',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 14px rgba(239, 68, 68, 0.35)',
+                width: '100%',
+                boxSizing: 'border-box',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                minHeight: '44px'
+              }}
+            >
+              <span>⏹️</span><span>Stop</span>
+            </button>
+          )}
           <button
             onClick={handleRestart}
             style={{
