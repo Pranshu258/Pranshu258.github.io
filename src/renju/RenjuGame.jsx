@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import RenjuBoard from './RenjuBoard';
 import { attack, attackWithVisualization, checkWin, getWinningLine, clearTranspositionTable } from './ai';
 import { 
@@ -7,6 +7,61 @@ import {
   saveGame, 
   loadGame
 } from './gameLogic';
+
+// Sound effects using Web Audio API
+const createAudioContext = () => {
+  return new (window.AudioContext || window.webkitAudioContext)();
+};
+
+const playStoneSound = (audioContext) => {
+  if (!audioContext) return;
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  oscillator.frequency.value = 800;
+  oscillator.type = 'sine';
+  gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.1);
+};
+
+const playWinSound = (audioContext) => {
+  if (!audioContext) return;
+  const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
+  notes.forEach((freq, i) => {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    oscillator.frequency.value = freq;
+    oscillator.type = 'sine';
+    const startTime = audioContext.currentTime + i * 0.12;
+    gainNode.gain.setValueAtTime(0.2, startTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 0.3);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 0.3);
+  });
+};
+
+const playLoseSound = (audioContext) => {
+  if (!audioContext) return;
+  const notes = [392, 330, 262]; // G4, E4, C4
+  notes.forEach((freq, i) => {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    oscillator.frequency.value = freq;
+    oscillator.type = 'sine';
+    const startTime = audioContext.currentTime + i * 0.2;
+    gainNode.gain.setValueAtTime(0.2, startTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 0.4);
+  });
+};
 
 function RenjuGame() {
   const [gameState, setGameState] = useState('setup'); // 'setup', 'playing', 'won', 'lost'
@@ -21,6 +76,16 @@ function RenjuGame() {
   const [winningLine, setWinningLine] = useState(null);
   const [currentDepth, setCurrentDepth] = useState(null);
   const [maxDepth, setMaxDepth] = useState(6); // Adaptive difficulty: increases on player win, decreases on loss
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const audioContextRef = useRef(null);
+
+  // Initialize audio context on first user interaction
+  const ensureAudioContext = useCallback(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = createAudioContext();
+    }
+    return audioContextRef.current;
+  }, []);
 
   // Random depth for each AI move (1 to maxDepth)
   const getRandomDepth = () => {
@@ -32,13 +97,16 @@ function RenjuGame() {
     if (gameState === 'won') {
       // Player won - increase difficulty (cap at 10)
       setMaxDepth(prev => Math.min(prev + 1, 10));
+      if (soundEnabled) playWinSound(audioContextRef.current);
     } else if (gameState === 'lost') {
       // Player lost - decrease difficulty (floor at 2)
       setMaxDepth(prev => Math.max(prev - 1, 2));
+      if (soundEnabled) playLoseSound(audioContextRef.current);
     }
-  }, [gameState]);
+  }, [gameState, soundEnabled]);
 
   const handleStartGame = (color) => {
+    ensureAudioContext();
     setUserColor(color);
     setGameState('playing');
     setHumanMoves([]);
@@ -77,6 +145,7 @@ function RenjuGame() {
     const newHumanMoves = [...humanMoves, [gridX, gridY]];
     setHumanMoves(newHumanMoves);
     setLastMove([gridX, gridY]);
+    if (soundEnabled) playStoneSound(audioContextRef.current);
 
     // Check win
     if (checkWin(newHumanMoves, gridX, gridY)) {
@@ -147,6 +216,7 @@ function RenjuGame() {
           const aiMove = newComputerMoves[newComputerMoves.length - 1];
           setComputerMoves(newComputerMoves);
           setLastMove(aiMove);
+          if (soundEnabled) playStoneSound(audioContextRef.current);
 
           // Check win
           if (checkWin(newComputerMoves, aiMove[0], aiMove[1])) {
@@ -446,6 +516,54 @@ function RenjuGame() {
               }} />
             </div>
             <span>Visualize AI Analysis</span>
+          </label>
+
+          {/* Sound Toggle */}
+          <label style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            gap: '10px',
+            cursor: 'pointer',
+            color: 'var(--surface-text-color)',
+            fontSize: '0.85em',
+            padding: '12px 15px',
+            background: soundEnabled ? 'rgba(34, 197, 94, 0.12)' : 'var(--blog-surface-background)',
+            borderRadius: '10px',
+            border: soundEnabled ? '1px solid rgba(34, 197, 94, 0.4)' : '1px solid var(--blog-surface-border, #333)',
+            transition: 'all 0.2s',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}>
+            <input
+              type="checkbox"
+              checked={soundEnabled}
+              onChange={(e) => setSoundEnabled(e.target.checked)}
+              style={{ display: 'none' }}
+            />
+            <div style={{
+              width: '36px',
+              height: '20px',
+              background: soundEnabled ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 'var(--blog-surface-border, #555)',
+              borderRadius: '10px',
+              position: 'relative',
+              transition: 'all 0.2s',
+              flexShrink: 0,
+              boxShadow: soundEnabled ? '0 2px 8px rgba(34, 197, 94, 0.3)' : 'none'
+            }}>
+              <div style={{
+                width: '16px',
+                height: '16px',
+                background: '#fff',
+                borderRadius: '50%',
+                position: 'absolute',
+                top: '2px',
+                left: soundEnabled ? '18px' : '2px',
+                transition: 'all 0.2s',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+              }} />
+            </div>
+            <span>{soundEnabled ? '🔊' : '🔇'} Sound</span>
           </label>
 
           {/* Action Buttons */}
