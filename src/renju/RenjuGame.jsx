@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import RenjuBoard from './RenjuBoard';
-import { attack, attackWithVisualization, checkWin, checkWinRenju, getWinningLine, clearTranspositionTable } from './ai';
+import { attack, attackWithVisualization, checkWin, checkWinRenju, getWinningLine, clearTranspositionTable, getMovesOptimized } from './ai';
 import { 
   snapToGrid, 
   isValidMove, 
@@ -64,6 +64,13 @@ const playLoseSound = (audioContext) => {
   });
 };
 
+const DIFFICULTY_PRESETS = {
+  easy: { depth: 1, mistakeRate: 0.4, label: 'Easy', emoji: '🌱' },
+  medium: { depth: 2, mistakeRate: 0.15, label: 'Medium', emoji: '⚔️' },
+  hard: { depth: 4, mistakeRate: 0, label: 'Hard', emoji: '🔥' },
+  adaptive: { depth: 1, mistakeRate: 0, label: 'Adaptive', emoji: '🧠', adaptive: true },
+};
+
 function RenjuGame() {
   const [gameState, setGameState] = useState('setup'); // 'setup', 'playing', 'won', 'lost'
   const [userColor, setUserColor] = useState('black');
@@ -84,6 +91,7 @@ function RenjuGame() {
   const [llmError, setLlmError] = useState(null);
   const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
   const [threatHints, setThreatHints] = useState(true);
+  const [difficulty, setDifficulty] = useState('easy');
   const aiVsLlmCancelRef = useRef(false);
   const audioContextRef = useRef(null);
 
@@ -95,8 +103,12 @@ function RenjuGame() {
     return audioContextRef.current;
   }, []);
 
-  // Random depth for each AI move (1 to maxDepth)
+  // Depth for each AI move based on difficulty
   const getRandomDepth = () => {
+    const preset = DIFFICULTY_PRESETS[difficulty];
+    if (preset && !preset.adaptive) {
+      return preset.depth;
+    }
     return Math.floor(Math.random() * maxDepth) + 1;
   };
 
@@ -107,7 +119,7 @@ function RenjuGame() {
     if (gameState === 'won') {
       if (gameMode === 'aivsllm') {
         setMaxDepth(prev => Math.max(prev - 1, 1));
-      } else {
+      } else if (difficulty === 'adaptive') {
         if (Math.random() < 0.3) {
           setMaxDepth(prev => Math.min(prev + 1, 10));
         }
@@ -116,15 +128,21 @@ function RenjuGame() {
     } else if (gameState === 'lost') {
       if (gameMode === 'aivsllm') {
         setMaxDepth(prev => Math.min(prev + 1, 10));
-      } else {
+      } else if (difficulty === 'adaptive') {
         setMaxDepth(prev => Math.max(prev - 1, 1));
       }
       if (soundEnabled) playLoseSound(audioContextRef.current);
     }
-  }, [gameState, soundEnabled, gameMode]);
+  }, [gameState, soundEnabled, gameMode, difficulty]);
 
   const handleStartGame = (color) => {
     ensureAudioContext();
+    const preset = DIFFICULTY_PRESETS[difficulty];
+    if (preset && !preset.adaptive) {
+      setMaxDepth(preset.depth);
+    } else {
+      setMaxDepth(1);
+    }
     setUserColor(color);
     setGameState('playing');
     setHumanMoves([]);
@@ -228,8 +246,20 @@ function RenjuGame() {
           // AI is Black if user chose White
           const aiIsBlack = userColor === 'white';
           const result = attack(newComputerMoves, humanMoves, 0, depth, -1000, 1000, aiIsBlack);
-          if (result.bestMove) {
-            newComputerMoves.push(result.bestMove);
+          let moveToPlay = result.bestMove;
+
+          // Difficulty-based mistakes: occasionally pick a weaker move
+          const preset = DIFFICULTY_PRESETS[difficulty];
+          if (preset && preset.mistakeRate && moveToPlay && Math.random() < preset.mistakeRate) {
+            const candidates = getMovesOptimized(newComputerMoves, humanMoves, aiIsBlack);
+            if (candidates.length > 2) {
+              const weakerHalf = candidates.slice(Math.floor(candidates.length / 2));
+              moveToPlay = weakerHalf[Math.floor(Math.random() * weakerHalf.length)];
+            }
+          }
+
+          if (moveToPlay) {
+            newComputerMoves.push(moveToPlay);
           }
         }
 
@@ -487,6 +517,41 @@ function RenjuGame() {
                 fontWeight: '500'
               }}>
                 Five in a row wins
+              </div>
+              {/* Difficulty Selector */}
+              <div style={{ 
+                display: 'flex', 
+                gap: '6px', 
+                justifyContent: 'center', 
+                marginBottom: '14px' 
+              }}>
+                {Object.entries(DIFFICULTY_PRESETS).map(([key, preset]) => (
+                  <button
+                    key={key}
+                    onClick={() => setDifficulty(key)}
+                    style={{
+                      padding: '5px 12px',
+                      background: difficulty === key 
+                        ? 'rgba(99, 102, 241, 0.85)' 
+                        : 'rgba(255, 255, 255, 0.08)',
+                      border: difficulty === key 
+                        ? '1px solid rgba(99, 102, 241, 0.9)' 
+                        : '1px solid rgba(255, 255, 255, 0.12)',
+                      borderRadius: '20px',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      fontSize: '0.75em',
+                      fontWeight: difficulty === key ? '600' : '400',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <span>{preset.emoji}</span>
+                    <span>{preset.label}</span>
+                  </button>
+                ))}
               </div>
               <div style={{
                 fontSize: '0.8em',
@@ -1088,6 +1153,10 @@ function RenjuGame() {
           }}>
             <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px' }}>Move #{Math.ceil(moveCount / 2)}</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
+              <span>Difficulty:</span>
+              <span style={{ fontWeight: '500' }}>{DIFFICULTY_PRESETS[difficulty]?.emoji} {DIFFICULTY_PRESETS[difficulty]?.label}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
               <span>Max Depth:</span>
               <span style={{ fontWeight: '500' }}>{maxDepth}</span>
             </div>

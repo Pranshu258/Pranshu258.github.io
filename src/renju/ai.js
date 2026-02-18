@@ -427,7 +427,7 @@ function isGameOverFast(playerSet, player) {
 
 // Optimized move generation with partial sorting
 // isBlack: if true, filter out forbidden moves for Black player (Renju rules)
-function getMovesOptimized(player1, player2, isBlack = false) {
+export function getMovesOptimized(player1, player2, isBlack = false) {
   const usedSet = createPosSet([...player1, ...player2]);
   const moveSet = new Set();
   let moves = [];
