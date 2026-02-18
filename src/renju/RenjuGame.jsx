@@ -120,7 +120,7 @@ function RenjuGame() {
       if (gameMode === 'aivsllm') {
         setMaxDepth(prev => Math.max(prev - 1, 1));
       } else if (difficulty === 'adaptive') {
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.5) {
           setMaxDepth(prev => Math.min(prev + 1, 10));
         }
       }
