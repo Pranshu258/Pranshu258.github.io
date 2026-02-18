@@ -76,7 +76,7 @@ function RenjuGame() {
   const [candidateMoves, setCandidateMoves] = useState([]);
   const [winningLine, setWinningLine] = useState(null);
   const [currentDepth, setCurrentDepth] = useState(null);
-  const [maxDepth, setMaxDepth] = useState(6); // Adaptive difficulty: increases on player win, decreases on loss
+  const [maxDepth, setMaxDepth] = useState(1); // Adaptive difficulty: 30% chance to increase on player win, decreases on loss
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [gameMode, setGameMode] = useState('pvai'); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
   const [llmConfig, setLlmConfig] = useState({ endpoint: '', deploymentName: '', apiKey: '', apiVersion: '2024-02-01' });
@@ -106,16 +106,18 @@ function RenjuGame() {
   useEffect(() => {
     if (gameState === 'won') {
       if (gameMode === 'aivsllm') {
-        setMaxDepth(prev => Math.max(prev - 1, 2));
+        setMaxDepth(prev => Math.max(prev - 1, 1));
       } else {
-        setMaxDepth(prev => Math.min(prev + 1, 10));
+        if (Math.random() < 0.3) {
+          setMaxDepth(prev => Math.min(prev + 1, 10));
+        }
       }
       if (soundEnabled) playWinSound(audioContextRef.current);
     } else if (gameState === 'lost') {
       if (gameMode === 'aivsllm') {
         setMaxDepth(prev => Math.min(prev + 1, 10));
       } else {
-        setMaxDepth(prev => Math.max(prev - 1, 2));
+        setMaxDepth(prev => Math.max(prev - 1, 1));
       }
       if (soundEnabled) playLoseSound(audioContextRef.current);
     }
