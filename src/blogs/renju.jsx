@@ -38,7 +38,7 @@ export default class Renju extends React.Component {
                     <li><b>Turns:</b> Players alternate placing stones, with black always going first</li>
                     <li><b>Victory:</b> Five consecutive stones in any direction (horizontal, vertical, or diagonal) wins</li>
                 </ul>
-                <RenjuGame />
+                <RenjuGame mode="pvai" />
                 <p>
                     The AI uses minimax search with alpha-beta pruning with <b>adaptive difficulty</b> - it learns from each game! If you win, the AI increases its search depth (max 10) to become more challenging. If you lose, it decreases depth (min 2) to give you a better chance. The current and max depth are displayed during gameplay. Choose your stone color and see if you can beat it!
                 </p>
@@ -53,6 +53,7 @@ export default class Renju extends React.Component {
                 <p>
                     To use this mode, you'll need access to an Azure OpenAI deployment. Enter your endpoint, deployment name, and API key in the configuration panel on the right side of the game, then hit <b>Start AI vs LLM</b>. The LLM receives a text representation of the board along with strategic guidance and responds with its next move in algebraic notation (e.g. H8).
                 </p>
+                <RenjuGame mode="aivsllm" />
                 <p>
                     A few things make this mode interesting:
                 </p>

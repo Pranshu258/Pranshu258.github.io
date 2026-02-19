@@ -71,7 +71,7 @@ const DIFFICULTY_PRESETS = {
   adaptive: { depth: 1, mistakeRate: 0, label: 'Adaptive', emoji: '🧠', adaptive: true },
 };
 
-function RenjuGame() {
+function RenjuGame({ mode = 'pvai' }) {
   const [gameState, setGameState] = useState('setup'); // 'setup', 'playing', 'won', 'lost'
   const [userColor, setUserColor] = useState('black');
   const [humanMoves, setHumanMoves] = useState([]);
@@ -85,7 +85,7 @@ function RenjuGame() {
   const [currentDepth, setCurrentDepth] = useState(null);
   const [maxDepth, setMaxDepth] = useState(1); // Adaptive difficulty: 30% chance to increase on player win, decreases on loss
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [gameMode, setGameMode] = useState('pvai'); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
+  const [gameMode, setGameMode] = useState(mode); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
   const [llmConfig, setLlmConfig] = useState({ endpoint: '', deploymentName: '', apiKey: '', apiVersion: '2024-02-01' });
   const [llmLog, setLlmLog] = useState([]); // move log for AI vs LLM
   const [llmError, setLlmError] = useState(null);
@@ -460,16 +460,258 @@ function RenjuGame() {
   };
 
   if (gameState === 'setup') {
+    // Player vs AI setup screen
+    if (mode === 'pvai') {
+      return (
+        <div style={{
+          padding: '20px 0',
+          margin: '20px 0',
+          position: 'relative'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '25px' }}>
+            <div style={{ position: 'relative', width: '600px', flexShrink: 0 }}>
+              <RenjuBoard
+                humanMoves={[]}
+                computerMoves={[]}
+                userColor="black"
+                onMove={() => {}}
+                disabled={true}
+                lastMove={null}
+                candidateMoves={[]}
+              />
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: 0,
+                right: 0,
+                transform: 'translateY(-50%)',
+                background: 'rgba(0, 0, 0, 0.85)',
+                padding: '36px 20px',
+                color: '#fff',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                backdropFilter: 'blur(12px)',
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
+              }}>
+                <div style={{ 
+                  fontSize: '2.2em', 
+                  fontWeight: '600', 
+                  letterSpacing: '8px',
+                  textTransform: 'uppercase',
+                  marginBottom: '8px',
+                  background: 'linear-gradient(135deg, #fff 0%, #94a3b8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>
+                  Renju
+                </div>
+                <div style={{ 
+                  fontSize: '0.85em', 
+                  color: '#94a3b8', 
+                  marginBottom: '16px',
+                  fontWeight: '500'
+                }}>
+                  Five in a row wins
+                </div>
+                {/* Difficulty Selector */}
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '6px', 
+                  justifyContent: 'center', 
+                  marginBottom: '14px' 
+                }}>
+                  {Object.entries(DIFFICULTY_PRESETS).map(([key, preset]) => (
+                    <button
+                      key={key}
+                      onClick={() => setDifficulty(key)}
+                      style={{
+                        padding: '5px 12px',
+                        background: difficulty === key 
+                          ? 'rgba(99, 102, 241, 0.85)' 
+                          : 'rgba(255, 255, 255, 0.08)',
+                        border: difficulty === key 
+                          ? '1px solid rgba(99, 102, 241, 0.9)' 
+                          : '1px solid rgba(255, 255, 255, 0.12)',
+                        borderRadius: '20px',
+                        color: '#fff',
+                        cursor: 'pointer',
+                        fontSize: '0.75em',
+                        fontWeight: difficulty === key ? '600' : '400',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <span>{preset.emoji}</span>
+                      <span>{preset.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <div style={{
+                  fontSize: '0.8em',
+                  color: '#fff',
+                  marginBottom: '20px',
+                  fontWeight: '500',
+                  padding: '8px 16px',
+                  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                  borderRadius: '6px',
+                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                  letterSpacing: '0.3px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}>
+                  <span>👇</span>
+                  <span>Choose your side to begin</span>
+                </div>
+                
+                <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => { setGameMode('pvai'); handleStartGame('black'); }}
+                    style={{
+                      padding: '20px 32px',
+                      background: '#1a1a1a',
+                      border: 'none',
+                      borderRadius: '16px',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '16px',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+                      minWidth: '160px'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-3px)';
+                      e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)';
+                    }}
+                  >
+                    <div style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.3)'
+                    }} />
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontWeight: '600', fontSize: '1em' }}>Black</div>
+                      <div style={{ opacity: 0.5, fontSize: '0.75em' }}>You play first</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setGameMode('pvai'); handleStartGame('white'); }}
+                    style={{
+                      padding: '20px 32px',
+                      background: '#f5f5f5',
+                      border: 'none',
+                      borderRadius: '16px',
+                      color: '#1a1a1a',
+                      cursor: 'pointer',
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '16px',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
+                      minWidth: '160px'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-3px)';
+                      e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)';
+                    }}
+                  >
+                    <div style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(0,0,0,0.05)'
+                    }} />
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontWeight: '600', fontSize: '1em' }}>White</div>
+                      <div style={{ opacity: 0.5, fontSize: '0.75em' }}>AI plays first</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Setup Panel */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: '12px',
+              width: '220px',
+              flexShrink: 0,
+              alignSelf: 'stretch'
+            }}>
+              {/* Game Info Card */}
+              <div style={{ 
+                color: 'var(--surface-text-color)',
+                padding: '18px',
+                background: 'var(--blog-surface-background)',
+                borderRadius: '12px',
+                border: '1px solid var(--blog-surface-border, #333)'
+              }}>
+                <div style={{ 
+                  fontWeight: '600', 
+                  fontSize: '1em', 
+                  marginBottom: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span>📖</span> How to Play
+                </div>
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: '10px',
+                  fontSize: '0.8em',
+                  opacity: 0.8
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ opacity: 0.7 }}>⚫</span>
+                    <span>Black moves first</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ opacity: 0.7 }}>🎯</span>
+                    <span>Get 5 in a row to win</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ opacity: 0.7 }}>🤖</span>
+                    <span>AI adapts to your skill</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // AI vs LLM setup screen
     return (
       <div style={{
         padding: '20px 0',
         margin: '20px 0',
         position: 'relative'
       }}>
-        {/* Main Layout: Board + Setup Panel */}
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '25px' }}>
-          
-          {/* Board Preview */}
           <div style={{ position: 'relative', width: '600px', flexShrink: 0 }}>
             <RenjuBoard
               humanMoves={[]}
@@ -480,7 +722,6 @@ function RenjuGame() {
               lastMove={null}
               candidateMoves={[]}
             />
-            {/* Setup Overlay */}
             <div style={{
               position: 'absolute',
               top: '50%',
@@ -508,55 +749,20 @@ function RenjuGame() {
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}>
-                Renju
+                AI vs LLM
               </div>
               <div style={{ 
                 fontSize: '0.85em', 
                 color: '#94a3b8', 
-                marginBottom: '16px',
+                marginBottom: '20px',
                 fontWeight: '500'
               }}>
-                Five in a row wins
-              </div>
-              {/* Difficulty Selector */}
-              <div style={{ 
-                display: 'flex', 
-                gap: '6px', 
-                justifyContent: 'center', 
-                marginBottom: '14px' 
-              }}>
-                {Object.entries(DIFFICULTY_PRESETS).map(([key, preset]) => (
-                  <button
-                    key={key}
-                    onClick={() => setDifficulty(key)}
-                    style={{
-                      padding: '5px 12px',
-                      background: difficulty === key 
-                        ? 'rgba(99, 102, 241, 0.85)' 
-                        : 'rgba(255, 255, 255, 0.08)',
-                      border: difficulty === key 
-                        ? '1px solid rgba(99, 102, 241, 0.9)' 
-                        : '1px solid rgba(255, 255, 255, 0.12)',
-                      borderRadius: '20px',
-                      color: '#fff',
-                      cursor: 'pointer',
-                      fontSize: '0.75em',
-                      fontWeight: difficulty === key ? '600' : '400',
-                      transition: 'all 0.2s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    <span>{preset.emoji}</span>
-                    <span>{preset.label}</span>
-                  </button>
-                ))}
+                Watch the minimax AI battle a language model
               </div>
               <div style={{
                 fontSize: '0.8em',
                 color: '#fff',
-                marginBottom: '20px',
+                marginBottom: '10px',
                 fontWeight: '500',
                 padding: '8px 16px',
                 background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
@@ -568,90 +774,13 @@ function RenjuGame() {
                 justifyContent: 'center',
                 gap: '8px'
               }}>
-                <span>👇</span>
-                <span>Choose your side to begin</span>
-              </div>
-              
-              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => { setGameMode('pvai'); handleStartGame('black'); }}
-                  style={{
-                    padding: '20px 32px',
-                    background: '#1a1a1a',
-                    border: 'none',
-                    borderRadius: '16px',
-                    color: '#fff',
-                    cursor: 'pointer',
-                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
-                    minWidth: '160px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)';
-                  }}
-                >
-                  <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.3)'
-                  }} />
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontWeight: '600', fontSize: '1em' }}>Black</div>
-                    <div style={{ opacity: 0.5, fontSize: '0.75em' }}>You play first</div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => { setGameMode('pvai'); handleStartGame('white'); }}
-                  style={{
-                    padding: '20px 32px',
-                    background: '#f5f5f5',
-                    border: 'none',
-                    borderRadius: '16px',
-                    color: '#1a1a1a',
-                    cursor: 'pointer',
-                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
-                    minWidth: '160px'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)';
-                  }}
-                >
-                  <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(0,0,0,0.05)'
-                  }} />
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontWeight: '600', fontSize: '1em' }}>White</div>
-                    <div style={{ opacity: 0.5, fontSize: '0.75em' }}>AI plays first</div>
-                  </div>
-                </button>
+                <span>☁️</span>
+                <span>Configure Azure AI to begin</span>
               </div>
             </div>
           </div>
 
-          {/* Right Setup Panel */}
+          {/* Right Setup Panel - Azure Config */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -661,54 +790,12 @@ function RenjuGame() {
             flexShrink: 0,
             alignSelf: 'stretch'
           }}>
-            {/* Game Info Card */}
             <div style={{ 
               color: 'var(--surface-text-color)',
               padding: '18px',
               background: 'var(--blog-surface-background)',
               borderRadius: '12px',
               border: '1px solid var(--blog-surface-border, #333)'
-            }}>
-              <div style={{ 
-                fontWeight: '600', 
-                fontSize: '1em', 
-                marginBottom: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <span>📖</span> How to Play
-              </div>
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '10px',
-                fontSize: '0.8em',
-                opacity: 0.8
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ opacity: 0.7 }}>⚫</span>
-                  <span>Black moves first</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ opacity: 0.7 }}>🎯</span>
-                  <span>Get 5 in a row to win</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ opacity: 0.7 }}>🤖</span>
-                  <span>AI adapts to your skill</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Azure AI Config Card */}
-            <div style={{ 
-              color: 'var(--surface-text-color)',
-              padding: '18px',
-              background: 'var(--blog-surface-background)',
-              borderRadius: '12px',
-              border: '1px solid var(--blog-surface-border, #333)',
-              marginTop: 'auto'
             }}>
               <div style={{ 
                 fontWeight: '600', 
