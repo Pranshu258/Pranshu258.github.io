@@ -7,7 +7,7 @@ import {
   saveGame, 
   loadGame
 } from './gameLogic';
-import { getLLMMove, toNotation } from './llm';
+import { getLLMMove, toNotation, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
 
 // Sound effects using Web Audio API
 const createAudioContext = () => {
@@ -92,6 +92,10 @@ function RenjuGame({ mode = 'pvai' }) {
   const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
   const [threatHints, setThreatHints] = useState(true);
   const [difficulty, setDifficulty] = useState('easy');
+  const [llmProvider, setLlmProvider] = useState('webllm'); // 'azure' or 'webllm'
+  const [webllmModel, setWebllmModel] = useState(WEBLLM_MODELS[0].id);
+  const [webllmLoading, setWebllmLoading] = useState(false);
+  const [webllmProgress, setWebllmProgress] = useState({ text: '', progress: 0 });
   const aiVsLlmCancelRef = useRef(false);
   const audioContextRef = useRef(null);
 
@@ -114,21 +118,16 @@ function RenjuGame({ mode = 'pvai' }) {
 
   // Adjust difficulty based on game outcome
   // In pvai: won = player won → harder, lost = AI won → easier
-  // In aivsllm: LLM replaces human, so won = local AI won → easier, lost = LLM won → harder
   useEffect(() => {
     if (gameState === 'won') {
-      if (gameMode === 'aivsllm') {
-        setMaxDepth(prev => Math.max(prev - 1, 1));
-      } else if (difficulty === 'adaptive') {
+      if (gameMode !== 'aivsllm' && difficulty === 'adaptive') {
         if (Math.random() < 0.5) {
           setMaxDepth(prev => Math.min(prev + 1, 10));
         }
       }
       if (soundEnabled) playWinSound(audioContextRef.current);
     } else if (gameState === 'lost') {
-      if (gameMode === 'aivsllm') {
-        setMaxDepth(prev => Math.min(prev + 1, 10));
-      } else if (difficulty === 'adaptive') {
+      if (gameMode !== 'aivsllm' && difficulty === 'adaptive') {
         setMaxDepth(prev => Math.max(prev - 1, 1));
       }
       if (soundEnabled) playLoseSound(audioContextRef.current);
@@ -309,19 +308,21 @@ function RenjuGame({ mode = 'pvai' }) {
     aiVsLlmCancelRef.current = false;
     setGameMode('aivsllm');
     setGameState('playing');
-    setHumanMoves([]); // repurposed: Black moves (LLM)
+    // Black's first move is always center (standard Renju opening)
+    const centerPos = 280; // 7 * 40 = 280
+    setHumanMoves([[centerPos, centerPos]]); // repurposed: Black moves (LLM)
     setComputerMoves([]); // repurposed: White moves (local AI)
-    setMoveCount(1);
-    setLastMove(null);
+    setMoveCount(2);
+    setLastMove([centerPos, centerPos]);
     setWinningLine(null);
     setCurrentDepth(null);
-    setLlmLog([]);
+    setLlmLog([{ turn: 1, player: 'LLM (Black)', notation: 'H8', raw: 'auto: center opening' }]);
     setLlmError(null);
     setAiVsLlmRunning(true);
     clearTranspositionTable();
 
-    // LLM (Black) goes first — start the loop
-    setCurrentTurn('human'); // LLM's turn first
+    // LLM (Black) already played center — AI (White) goes next
+    setCurrentTurn('computer');
   };
 
   // Auto-play loop for AI vs LLM
@@ -347,7 +348,9 @@ function RenjuGame({ mode = 'pvai' }) {
           // LLM (Black) turn
           setCurrentTurn('human');
           const allMoves = [...blackMoves, ...whiteMoves];
-          const result = await getLLMMove(llmConfig, blackMoves, whiteMoves, 'black', allMoves, 3, threatHints);
+          const result = llmProvider === 'webllm'
+            ? await getWebLLMMove(blackMoves, whiteMoves, 'black', allMoves, 3, threatHints)
+            : await getLLMMove(llmConfig, blackMoves, whiteMoves, 'black', allMoves, 3, threatHints);
 
           if (cancelled || aiVsLlmCancelRef.current) return;
 
@@ -376,7 +379,7 @@ function RenjuGame({ mode = 'pvai' }) {
         } else {
           // Local AI (White) turn
           setCurrentTurn('computer');
-          const depth = Math.floor(Math.random() * maxDepth) + 1;
+          const depth = 1; // Easy mode for AI vs LLM
           setCurrentDepth(depth);
 
           let bestMove = null;
@@ -759,6 +762,47 @@ function RenjuGame({ mode = 'pvai' }) {
               }}>
                 Watch the minimax AI battle a language model
               </div>
+              {/* Provider toggle pills */}
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '14px' }}>
+                <button
+                  onClick={() => setLlmProvider('webllm')}
+                  style={{
+                    padding: '5px 14px',
+                    background: llmProvider === 'webllm' ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
+                    border: llmProvider === 'webllm' ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
+                    borderRadius: '20px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.78em',
+                    fontWeight: llmProvider === 'webllm' ? '600' : '400',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <span>💻</span> On-Device
+                </button>
+                <button
+                  onClick={() => setLlmProvider('azure')}
+                  style={{
+                    padding: '5px 14px',
+                    background: llmProvider === 'azure' ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
+                    border: llmProvider === 'azure' ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
+                    borderRadius: '20px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.78em',
+                    fontWeight: llmProvider === 'azure' ? '600' : '400',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <span>☁️</span> Azure AI
+                </button>
+              </div>
               <div style={{
                 fontSize: '0.8em',
                 color: '#fff',
@@ -774,13 +818,13 @@ function RenjuGame({ mode = 'pvai' }) {
                 justifyContent: 'center',
                 gap: '8px'
               }}>
-                <span>☁️</span>
-                <span>Configure Azure AI to begin</span>
+                <span>{llmProvider === 'webllm' ? '💻' : '☁️'}</span>
+                <span>{llmProvider === 'webllm' ? 'Select a model and load it' : 'Configure Azure AI to begin'}</span>
               </div>
             </div>
           </div>
 
-          {/* Right Setup Panel - Azure Config */}
+          {/* Right Setup Panel - Provider Config */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -797,77 +841,199 @@ function RenjuGame({ mode = 'pvai' }) {
               borderRadius: '12px',
               border: '1px solid var(--blog-surface-border, #333)'
             }}>
-              <div style={{ 
-                fontWeight: '600', 
-                fontSize: '0.95em', 
-                marginBottom: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <span>☁️</span> Azure AI Config
-              </div>
-              <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
-                Required for AI vs LLM mode
-              </div>
-              {[
-                { key: 'endpoint', label: 'Endpoint', placeholder: 'https://....openai.azure.com' },
-                { key: 'apiKey', label: 'API Key', placeholder: 'your-api-key', type: 'password' },
-                { key: 'deploymentName', label: 'Deployment', placeholder: 'deployment' },
-              ].map(({ key, label, placeholder, type }) => (
-                <div key={key} style={{ marginBottom: '8px' }}>
-                  <div style={{ fontSize: '0.75em', opacity: 0.7, marginBottom: '3px' }}>{label}</div>
-                  <input
-                    type={type || 'text'}
-                    value={llmConfig[key]}
-                    onChange={(e) => setLlmConfig(prev => ({ ...prev, [key]: e.target.value }))}
-                    placeholder={placeholder}
-                    style={{
-                      width: '100%',
-                      padding: '6px 8px',
-                      fontSize: '0.8em',
-                      borderRadius: '6px',
-                      border: '1px solid var(--blog-surface-border, #444)',
-                      background: 'var(--blog-surface-background, #1a1a1a)',
-                      color: 'var(--surface-text-color)',
-                      boxSizing: 'border-box',
-                      outline: 'none'
+              {llmProvider === 'webllm' ? (
+                <>
+                  <div style={{ 
+                    fontWeight: '600', 
+                    fontSize: '0.95em', 
+                    marginBottom: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <span>💻</span> On-Device Model
+                  </div>
+                  <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
+                    Runs in your browser via WebGPU
+                  </div>
+                  <div style={{ marginBottom: '10px' }}>
+                    <div style={{ fontSize: '0.75em', opacity: 0.7, marginBottom: '3px' }}>Model</div>
+                    <select
+                      value={webllmModel}
+                      onChange={(e) => setWebllmModel(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        fontSize: '0.8em',
+                        borderRadius: '6px',
+                        border: '1px solid var(--blog-surface-border, #444)',
+                        background: 'var(--blog-surface-background, #1a1a1a)',
+                        color: 'var(--surface-text-color)',
+                        boxSizing: 'border-box',
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {WEBLLM_MODELS.map(m => (
+                        <option key={m.id} value={m.id}>{m.label} ({m.size})</option>
+                      ))}
+                    </select>
+                  </div>
+                  {/* Load / Progress */}
+                  {webllmLoading ? (
+                    <div style={{ marginBottom: '8px' }}>
+                      <div style={{
+                        fontSize: '0.72em',
+                        opacity: 0.8,
+                        marginBottom: '6px',
+                        wordBreak: 'break-word',
+                        lineHeight: '1.4'
+                      }}>
+                        {webllmProgress.text || 'Initializing...'}
+                      </div>
+                      <div style={{
+                        width: '100%',
+                        height: '6px',
+                        background: 'var(--blog-surface-border, #333)',
+                        borderRadius: '3px',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          width: `${Math.round(webllmProgress.progress * 100)}%`,
+                          height: '100%',
+                          background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                          borderRadius: '3px',
+                          transition: 'width 0.3s'
+                        }} />
+                      </div>
+                    </div>
+                  ) : isWebLLMLoaded() ? (
+                    <div style={{
+                      fontSize: '0.75em',
+                      color: '#22c55e',
+                      marginBottom: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      <span>✓</span> Model ready
+                    </div>
+                  ) : null}
+                  <button
+                    disabled={webllmLoading}
+                    onClick={async () => {
+                      setWebllmLoading(true);
+                      setWebllmProgress({ text: '', progress: 0 });
+                      setLlmError(null);
+                      try {
+                        await loadWebLLMModel(webllmModel, (p) => setWebllmProgress(p));
+                        setWebllmLoading(false);
+                        handleStartAiVsLlm();
+                      } catch (err) {
+                        setWebllmLoading(false);
+                        setLlmError('Failed to load model: ' + err.message);
+                      }
                     }}
-                  />
-                </div>
-              ))}
-              <button
-                onClick={() => {
-                  if (!llmConfig.endpoint || !llmConfig.apiKey) {
-                    setLlmError('Enter endpoint & API key above');
-                    return;
-                  }
-                  setLlmError(null);
-                  handleStartAiVsLlm();
-                }}
-                style={{
-                  marginTop: '6px',
-                  padding: '10px 14px',
-                  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                  border: 'none',
-                  borderRadius: '10px',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '0.85em',
-                  fontWeight: '600',
-                  transition: 'all 0.2s',
-                  boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  minHeight: '40px'
-                }}
-              >
-                <span>🤖</span><span>Start AI vs LLM</span>
-              </button>
+                    style={{
+                      marginTop: '6px',
+                      padding: '10px 14px',
+                      background: webllmLoading ? '#555' : 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                      border: 'none',
+                      borderRadius: '10px',
+                      color: '#fff',
+                      cursor: webllmLoading ? 'not-allowed' : 'pointer',
+                      fontSize: '0.85em',
+                      fontWeight: '600',
+                      transition: 'all 0.2s',
+                      boxShadow: webllmLoading ? 'none' : '0 4px 14px rgba(99, 102, 241, 0.35)',
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      minHeight: '40px'
+                    }}
+                  >
+                    <span>🤖</span>
+                    <span>{webllmLoading ? 'Loading...' : (isWebLLMLoaded() && getWebLLMLoadedModel() === webllmModel) ? 'Start AI vs LLM' : 'Load Model & Start'}</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div style={{ 
+                    fontWeight: '600', 
+                    fontSize: '0.95em', 
+                    marginBottom: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <span>☁️</span> Azure AI Config
+                  </div>
+                  <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
+                    Requires an Azure OpenAI deployment
+                  </div>
+                  {[
+                    { key: 'endpoint', label: 'Endpoint', placeholder: 'https://....openai.azure.com' },
+                    { key: 'apiKey', label: 'API Key', placeholder: 'your-api-key', type: 'password' },
+                    { key: 'deploymentName', label: 'Deployment', placeholder: 'deployment' },
+                  ].map(({ key, label, placeholder, type }) => (
+                    <div key={key} style={{ marginBottom: '8px' }}>
+                      <div style={{ fontSize: '0.75em', opacity: 0.7, marginBottom: '3px' }}>{label}</div>
+                      <input
+                        type={type || 'text'}
+                        value={llmConfig[key]}
+                        onChange={(e) => setLlmConfig(prev => ({ ...prev, [key]: e.target.value }))}
+                        placeholder={placeholder}
+                        style={{
+                          width: '100%',
+                          padding: '6px 8px',
+                          fontSize: '0.8em',
+                          borderRadius: '6px',
+                          border: '1px solid var(--blog-surface-border, #444)',
+                          background: 'var(--blog-surface-background, #1a1a1a)',
+                          color: 'var(--surface-text-color)',
+                          boxSizing: 'border-box',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      if (!llmConfig.endpoint || !llmConfig.apiKey) {
+                        setLlmError('Enter endpoint & API key above');
+                        return;
+                      }
+                      setLlmError(null);
+                      handleStartAiVsLlm();
+                    }}
+                    style={{
+                      marginTop: '6px',
+                      padding: '10px 14px',
+                      background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                      border: 'none',
+                      borderRadius: '10px',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      fontSize: '0.85em',
+                      fontWeight: '600',
+                      transition: 'all 0.2s',
+                      boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      minHeight: '40px'
+                    }}
+                  >
+                    <span>🤖</span><span>Start AI vs LLM</span>
+                  </button>
+                </>
+              )}
               {llmError && !aiVsLlmRunning && gameState === 'setup' && (
                 <div style={{ marginTop: '8px', color: '#f87171', fontSize: '0.75em' }}>
                   {llmError}
@@ -1239,10 +1405,12 @@ function RenjuGame({ mode = 'pvai' }) {
             fontSize: '0.85em'
           }}>
             <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px' }}>Move #{Math.ceil(moveCount / 2)}</div>
+            {gameMode !== 'aivsllm' && (
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
               <span>Difficulty:</span>
               <span style={{ fontWeight: '500' }}>{DIFFICULTY_PRESETS[difficulty]?.emoji} {DIFFICULTY_PRESETS[difficulty]?.label}</span>
             </div>
+            )}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
               <span>Max Depth:</span>
               <span style={{ fontWeight: '500' }}>{maxDepth}</span>

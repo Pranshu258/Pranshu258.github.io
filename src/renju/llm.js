@@ -1,5 +1,14 @@
-// Azure OpenAI LLM integration for Renju
+// LLM integration for Renju (Azure OpenAI + WebLLM on-device)
 // Sends board state to an LLM and parses its move response
+
+// WebLLM is lazily imported to avoid bundling ~6MB upfront
+let webllmModule = null;
+async function getWebLLMLib() {
+  if (!webllmModule) {
+    webllmModule = await import('@mlc-ai/web-llm');
+  }
+  return webllmModule;
+}
 
 const GRID_SIZE = 40;
 const COL_LABELS = 'ABCDEFGHIJKLMNO';
@@ -330,4 +339,111 @@ export async function getLLMMove(config, blackMoves, whiteMoves, llmColor, allMo
   return { move: null, raw: '', error: 'Failed to get a valid move after retries' };
 }
 
-export { toNotation, fromNotation, boardToText };
+// ============================================================
+// WebLLM (on-device) support
+// ============================================================
+
+const WEBLLM_MODELS = [
+  { id: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', label: 'Qwen2.5 1.5B (fast)', size: '~1 GB' },
+  { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC', label: 'Llama 3.2 3B', size: '~2 GB' },
+  { id: 'Phi-3.5-mini-instruct-q4f16_1-MLC', label: 'Phi-3.5 Mini 3.8B', size: '~2.5 GB' },
+  { id: 'SmolLM2-1.7B-Instruct-q4f16_1-MLC', label: 'SmolLM2 1.7B (tiny)', size: '~1 GB' },
+];
+
+let webllmEngine = null;
+let webllmLoadedModel = null;
+
+/**
+ * Load a WebLLM model. Calls onProgress with { text, progress } during download/init.
+ * Returns true on success.
+ */
+async function loadWebLLMModel(modelId, onProgress) {
+  if (webllmEngine && webllmLoadedModel === modelId) {
+    return true; // Already loaded
+  }
+
+  // Unload previous engine if different model
+  if (webllmEngine) {
+    webllmEngine = null;
+    webllmLoadedModel = null;
+  }
+
+  try {
+    const webllm = await getWebLLMLib();
+    webllmEngine = await webllm.CreateMLCEngine(modelId, {
+      initProgressCallback: (report) => {
+        if (onProgress) {
+          onProgress({ text: report.text, progress: report.progress });
+        }
+      },
+    });
+    webllmLoadedModel = modelId;
+    return true;
+  } catch (err) {
+    console.error('[WebLLM] Failed to load model:', err);
+    webllmEngine = null;
+    webllmLoadedModel = null;
+    throw err;
+  }
+}
+
+/**
+ * Query the on-device WebLLM model for a move.
+ * Same interface as getLLMMove.
+ */
+async function getWebLLMMove(blackMoves, whiteMoves, llmColor, allMoves, maxRetries = 3, threatHints = true) {
+  if (!webllmEngine) {
+    return { move: null, raw: '', error: 'WebLLM model not loaded' };
+  }
+
+  const { system, user } = buildPrompt(blackMoves, whiteMoves, llmColor, threatHints);
+  console.log(`[WebLLM] System prompt:\n${system}`);
+  console.log(`[WebLLM] User prompt:\n${user}`);
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const reply = await webllmEngine.chat.completions.create({
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user },
+        ],
+        max_tokens: 32,
+        temperature: 0.3,
+      });
+
+      const raw = reply.choices?.[0]?.message?.content ?? '';
+      console.log(`[WebLLM] Response (attempt ${attempt + 1}):`, raw);
+
+      const move = parseLLMMove(raw);
+      if (!move) {
+        console.warn(`[WebLLM] Attempt ${attempt + 1}: Could not parse move from "${raw}"`);
+        continue;
+      }
+
+      const isOccupied = allMoves.some(([mx, my]) => mx === move[0] && my === move[1]);
+      if (isOccupied) {
+        console.warn(`[WebLLM] Attempt ${attempt + 1}: Move ${raw} is already occupied`);
+        continue;
+      }
+
+      return { move, raw };
+    } catch (err) {
+      console.error(`[WebLLM] Attempt ${attempt + 1} error:`, err);
+      if (attempt === maxRetries - 1) {
+        return { move: null, raw: '', error: err.message };
+      }
+    }
+  }
+
+  return { move: null, raw: '', error: 'Failed to get a valid move after retries' };
+}
+
+function isWebLLMLoaded() {
+  return webllmEngine !== null;
+}
+
+function getWebLLMLoadedModel() {
+  return webllmLoadedModel;
+}
+
+export { toNotation, fromNotation, boardToText, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel };
