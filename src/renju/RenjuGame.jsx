@@ -7,7 +7,7 @@ import {
   saveGame, 
   loadGame
 } from './gameLogic';
-import { getLLMMove, toNotation, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
+import { getAPIMove, toNotation, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
 import { TbMessageChatbot } from 'react-icons/tb';
 
 // Sound effects using Web Audio API
@@ -87,13 +87,13 @@ function RenjuGame({ mode = 'pvai' }) {
   const [maxDepth, setMaxDepth] = useState(1); // Adaptive difficulty: 30% chance to increase on player win, decreases on loss
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [gameMode, setGameMode] = useState(mode); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
-  const [llmConfig, setLlmConfig] = useState({ endpoint: '', deploymentName: '', apiKey: '', apiVersion: '2024-02-01' });
+  const [apiConfig, setApiConfig] = useState({ endpoint: 'http://localhost:12434/engines/llama.cpp/v1/chat/completions', model: 'ai/mistral', apiKey: '' });
   const [llmLog, setLlmLog] = useState([]); // move log for AI vs LLM
   const [llmError, setLlmError] = useState(null);
   const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
 
   const [difficulty, setDifficulty] = useState('easy');
-  const [llmProvider, setLlmProvider] = useState('webllm'); // 'azure' or 'webllm'
+  const [llmProvider, setLlmProvider] = useState('webllm'); // 'webllm' or 'api'
   const [webllmModel, setWebllmModel] = useState(WEBLLM_MODELS[0].id);
   const [webllmLoading, setWebllmLoading] = useState(false);
   const [webllmProgress, setWebllmProgress] = useState({ text: '', progress: 0 });
@@ -351,7 +351,7 @@ function RenjuGame({ mode = 'pvai' }) {
           const allMoves = [...blackMoves, ...whiteMoves];
           const result = llmProvider === 'webllm'
             ? await getWebLLMMove(blackMoves, whiteMoves, 'black', allMoves, 3, true)
-            : await getLLMMove(llmConfig, blackMoves, whiteMoves, 'black', allMoves, 3, true);
+            : await getAPIMove(apiConfig, blackMoves, whiteMoves, 'black', allMoves, 3, true);
 
           if (cancelled || aiVsLlmCancelRef.current) return;
 
@@ -785,23 +785,23 @@ function RenjuGame({ mode = 'pvai' }) {
                   <span>💻</span> On-Device
                 </button>
                 <button
-                  onClick={() => setLlmProvider('azure')}
+                  onClick={() => setLlmProvider('api')}
                   style={{
                     padding: '5px 14px',
-                    background: llmProvider === 'azure' ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
-                    border: llmProvider === 'azure' ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
+                    background: llmProvider === 'api' ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
+                    border: llmProvider === 'api' ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
                     borderRadius: '20px',
                     color: '#fff',
                     cursor: 'pointer',
                     fontSize: '0.78em',
-                    fontWeight: llmProvider === 'azure' ? '600' : '400',
+                    fontWeight: llmProvider === 'api' ? '600' : '400',
                     transition: 'all 0.2s',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '5px'
                   }}
                 >
-                  <span>☁️</span> Azure AI
+                  <span>🔌</span> API
                 </button>
               </div>
               <div style={{
@@ -819,8 +819,8 @@ function RenjuGame({ mode = 'pvai' }) {
                 justifyContent: 'center',
                 gap: '8px'
               }}>
-                <span>{llmProvider === 'webllm' ? '💻' : '☁️'}</span>
-                <span>{llmProvider === 'webllm' ? 'Select a model and load it' : 'Configure Azure AI to begin'}</span>
+                <span>{llmProvider === 'webllm' ? '💻' : '🔌'}</span>
+                <span>{llmProvider === 'webllm' ? 'Select a model and load it' : 'Provide an endpoint to begin'}</span>
               </div>
             </div>
           </div>
@@ -970,22 +970,22 @@ function RenjuGame({ mode = 'pvai' }) {
                     alignItems: 'center',
                     gap: '8px'
                   }}>
-                    <span>☁️</span> Azure AI Config
+                    <span>🔌</span> API Endpoint
                   </div>
                   <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
-                    Requires an Azure OpenAI deployment
+                    Any OpenAI-compatible endpoint (Docker Model Runner, Ollama, Azure, etc.)
                   </div>
                   {[
-                    { key: 'endpoint', label: 'Endpoint', placeholder: 'https://....openai.azure.com' },
-                    { key: 'apiKey', label: 'API Key', placeholder: 'your-api-key', type: 'password' },
-                    { key: 'deploymentName', label: 'Deployment', placeholder: 'deployment' },
+                    { key: 'endpoint', label: 'Endpoint', placeholder: 'http://localhost:12434/engines/llama.cpp/v1/chat/completions' },
+                    { key: 'model', label: 'Model (optional)', placeholder: 'ai/mistral' },
+                    { key: 'apiKey', label: 'API Key (optional)', placeholder: 'your-api-key', type: 'password' },
                   ].map(({ key, label, placeholder, type }) => (
                     <div key={key} style={{ marginBottom: '8px' }}>
                       <div style={{ fontSize: '0.75em', opacity: 0.7, marginBottom: '3px' }}>{label}</div>
                       <input
                         type={type || 'text'}
-                        value={llmConfig[key]}
-                        onChange={(e) => setLlmConfig(prev => ({ ...prev, [key]: e.target.value }))}
+                        value={apiConfig[key]}
+                        onChange={(e) => setApiConfig(prev => ({ ...prev, [key]: e.target.value }))}
                         placeholder={placeholder}
                         style={{
                           width: '100%',
@@ -1003,8 +1003,8 @@ function RenjuGame({ mode = 'pvai' }) {
                   ))}
                   <button
                     onClick={() => {
-                      if (!llmConfig.endpoint || !llmConfig.apiKey) {
-                        setLlmError('Enter endpoint & API key above');
+                      if (!apiConfig.endpoint) {
+                        setLlmError('Enter an endpoint URL above');
                         return;
                       }
                       setLlmError(null);
@@ -1108,7 +1108,7 @@ function RenjuGame({ mode = 'pvai' }) {
                   <span style={{ fontWeight: '500', opacity: 0.9 }}>
                     {llmProvider === 'webllm'
                       ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel)
-                      : `Azure: ${llmConfig.deploymentName || '—'}`}
+                      : (apiConfig.model || 'API')}
                   </span>
                 </div>
               </>
@@ -1148,7 +1148,7 @@ function RenjuGame({ mode = 'pvai' }) {
                     : '0 4px 14px rgba(245, 158, 11, 0.35)')
             }}>
               {gameMode === 'aivsllm'
-                ? (currentTurn === 'human' ? '⚫ LLM thinking...' : '⚪ AI thinking...')
+                ? (currentTurn === 'human' ? `⚫ ${llmProvider === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || 'LLM') : (apiConfig.model || 'LLM')} thinking...` : '⚪ Minimax thinking...')
                 : (currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...')}
             </div>
           )}
@@ -1177,7 +1177,9 @@ function RenjuGame({ mode = 'pvai' }) {
                 fontSize: '1em'
               }}>
                 {gameMode === 'aivsllm'
-                  ? (gameState === 'won' ? 'Local AI Won!' : 'LLM Won!')
+                  ? (gameState === 'won'
+                    ? 'Minimax Won!'
+                    : `${llmProvider === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel) : (apiConfig.model || 'API')} Won!`)
                   : (gameState === 'won' ? 'You Won!' : 'AI Won')}
               </div>
             </div>

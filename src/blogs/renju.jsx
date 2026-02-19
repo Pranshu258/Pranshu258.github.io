@@ -46,24 +46,67 @@ export default class Renju extends React.Component {
                     While the rules are simple, mastering Renju requires thinking several moves ahead, recognizing patterns, and understanding both offensive and defensive strategies.
                 </p>
 
-                <h3 style={{ color: '#f6ad55', marginTop: '30px' }}>🤖 AI vs LLM Mode</h3>
+                <hr style={{ backgroundColor: "white" }}></hr>
+                <h2 className="headings">AI vs LLM</h2>
                 <p>
-                    Beyond playing against the AI yourself, you can also pit the local minimax AI against a large language model (LLM) and watch them battle it out. In this mode, the LLM plays as Black (first move) and the local AI plays as White. The game runs automatically - you just sit back and observe.
-                </p>
-                <p>
-                    To use this mode, you'll need access to an Azure OpenAI deployment. Enter your endpoint, deployment name, and API key in the configuration panel on the right side of the game, then hit <b>Start AI vs LLM</b>. The LLM receives a text representation of the board along with strategic guidance and responds with its next move in algebraic notation (e.g. H8).
+                    Pit the minimax AI against a language model and watch them battle it out. The LLM plays Black, the minimax AI plays White, and the game runs automatically.
                 </p>
                 <RenjuGame mode="aivsllm" />
+
+                <h3 className="headings">Connecting an LLM</h3>
                 <p>
-                    A few things make this mode interesting:
+                    There are two ways to bring an LLM into the game:
                 </p>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '16px',
+                    marginTop: '16px',
+                    marginBottom: '20px'
+                }}>
+                    <div style={{
+                        background: 'var(--blog-surface-background)',
+                        border: '1px solid var(--blog-surface-border, #333)',
+                        borderRadius: '10px',
+                        padding: '18px'
+                    }}>
+                        <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '8px' }}>💻 On-Device</div>
+                        <p style={{ fontSize: '0.9em', opacity: 0.8, marginBottom: '10px' }}>
+                            Runs entirely in your browser via <a href="https://webllm.mlc.ai/" target="_blank" rel="noopener noreferrer">WebLLM</a> + WebGPU. No server needed. Pick a model, click load, and play. Weights are cached after first download. Requires Chrome/Edge with WebGPU support.
+                        </p>
+                    </div>
+                    <div style={{
+                        background: 'var(--blog-surface-background)',
+                        border: '1px solid var(--blog-surface-border, #333)',
+                        borderRadius: '10px',
+                        padding: '18px'
+                    }}>
+                        <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '8px' }}>🔌 API</div>
+                        <p style={{ fontSize: '0.9em', opacity: 0.8, marginBottom: '10px' }}>
+                            Connects to any OpenAI-compatible chat completions endpoint — local or cloud. Works with any model you've pulled locally, or any cloud provider. Just paste the full URL, add a model name and API key if needed.
+                        </p>
+                    </div>
+                </div>
+
+                <details style={{ marginBottom: '20px' }}>
+                    <summary style={{ cursor: 'pointer', fontWeight: '600', fontSize: '0.95em', opacity: 0.9 }}>Example API endpoints</summary>
+                    <ul style={{ marginTop: '10px' }}>
+                        <li><b>Docker Model Runner:</b> <code>http://localhost:12434/engines/llama.cpp/v1/chat/completions</code> · model: <code>ai/mistral</code></li>
+                        <li><b>Ollama:</b> <code>http://localhost:11434/v1/chat/completions</code> · model: <code>llama3</code></li>
+                        <li><b>LM Studio:</b> <code>http://localhost:1234/v1/chat/completions</code></li>
+                        <li><b>Azure OpenAI:</b> <code>https://&lt;resource&gt;.openai.azure.com/openai/deployments/&lt;model&gt;/chat/completions?api-version=2024-02-01</code> + API key</li>
+                        <li><b>OpenAI:</b> <code>https://api.openai.com/v1/chat/completions</code> + API key</li>
+                    </ul>
+                </details>
+
+                <h3 className="headings">What to Watch For</h3>
                 <ul>
-                    <li><b>Threat Hints:</b> You can toggle whether the LLM receives pre-computed threat analysis in its prompt. With hints enabled, the prompt includes specific blocking coordinates for the opponent's open threes and fours - without them, the LLM must figure out threats on its own from the raw board state.</li>
-                    <li><b>Adaptive Difficulty (reversed):</b> The difficulty adjustment works in reverse here. When the local AI wins, its search depth <i>decreases</i> to give the LLM a better chance. When the LLM wins, the AI gets harder. This creates an interesting dynamic where the AI calibrates itself to the LLM's skill level.</li>
-                    <li><b>Visualize AI:</b> You can enable the "Visualize AI" toggle to watch the minimax algorithm explore candidate moves in real time during the local AI's turn.</li>
+                    <li><b>Threat Hints:</b> Toggle whether the LLM receives pre-computed threat analysis. With hints, the prompt includes specific blocking coordinates — without them, the LLM must reason about threats from the raw board state.</li>
+                    <li><b>Adaptive Difficulty:</b> Works in reverse here — when the minimax AI wins, its depth <i>decreases</i> to give the LLM a better chance. When the LLM wins, the AI gets harder.</li>
+                    <li><b>Visualize AI:</b> Watch the minimax algorithm explore candidate moves in real time.</li>
                 </ul>
                 <p>
-                    It's a fun way to see how a general-purpose language model stacks up against a purpose-built game-playing algorithm - and spoiler: the minimax AI usually wins, but the LLM can occasionally pull off surprising moves!
+                    Spoiler: the minimax AI usually wins, but LLMs can occasionally pull off surprising moves!
                 </p>
 
                 <div style={{

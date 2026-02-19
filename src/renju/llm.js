@@ -385,83 +385,7 @@ function parseLLMMove(responseText) {
   return lastValid;
 }
 
-/**
- * Query Azure OpenAI for a move.
- *
- * @param {Object} config - { endpoint, deploymentName, apiKey }
- * @param {Array} blackMoves  - [[x,y], ...]
- * @param {Array} whiteMoves  - [[x,y], ...]
- * @param {string} llmColor   - 'black' | 'white'
- * @param {Array} allMoves    - all occupied positions (for validation)
- * @param {number} maxRetries - retry count on invalid moves
- * @returns {Promise<{move: [number,number]|null, raw: string, error?: string}>}
- */
-export async function getLLMMove(config, blackMoves, whiteMoves, llmColor, allMoves, maxRetries = 3, threatHints = true) {
-  const { endpoint, deploymentName, apiKey, apiVersion } = config;
-  const url = `${endpoint.replace(/\/+$/, '')}/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion || '2024-02-01'}`;
 
-  const { system, user } = buildPrompt(blackMoves, whiteMoves, llmColor, threatHints);
-  console.log(`[LLM] User prompt:\n${user}`);
-
-  // Build conversation with feedback on failed attempts
-  const messages = [
-    { role: 'developer', content: system },
-    { role: 'user', content: user },
-  ];
-
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': apiKey,
-        },
-        body: JSON.stringify({
-          messages,
-          max_completion_tokens: 32,
-        }),
-      });
-
-      if (!res.ok) {
-        const errBody = await res.text();
-        console.error(`[LLM] Azure API error ${res.status}:`, errBody);
-        throw new Error(`LLM call failed (${res.status})`);
-      }
-
-      const data = await res.json();
-      const raw = data.choices?.[0]?.message?.content ?? '';
-      console.log(`[LLM] Response (attempt ${attempt + 1}):`, raw);
-      const move = parseLLMMove(raw);
-
-      if (!move) {
-        console.warn(`[LLM] Attempt ${attempt + 1}: Could not parse move from "${raw}"`);
-        messages.push({ role: 'assistant', content: raw });
-        messages.push({ role: 'user', content: `Invalid. Reply with ONLY a coordinate like H8 (column A-O, row 1-15). Nothing else.` });
-        continue;
-      }
-
-      // Validate the move is on an empty intersection
-      const isOccupied = allMoves.some(([mx, my]) => mx === move[0] && my === move[1]);
-      if (isOccupied) {
-        const notation = toNotation(move[0], move[1]);
-        console.warn(`[LLM] Attempt ${attempt + 1}: Move ${notation} is already occupied`);
-        messages.push({ role: 'assistant', content: raw });
-        messages.push({ role: 'user', content: `${notation} is occupied. Occupied: ${allMoves.map(([x, y]) => toNotation(x, y)).join(', ')}. Pick a DIFFERENT empty square.` });
-        continue;
-      }
-
-      return { move, raw };
-    } catch (err) {
-      console.error(`[LLM] Attempt ${attempt + 1} error:`, err);
-      if (attempt === maxRetries - 1) {
-        return { move: null, raw: '', error: err.message };
-      }
-    }
-  }
-
-  return { move: null, raw: '', error: 'Failed to get a valid move after retries' };
-}
 
 // ============================================================
 // WebLLM (on-device) support
@@ -588,6 +512,93 @@ function isWebLLMLoaded() {
 
 function getWebLLMLoadedModel() {
   return webllmLoadedModel;
+}
+
+// ============================================================
+// API endpoint (Azure OpenAI, Docker Model Runner, Ollama, LM Studio, etc.)
+// ============================================================
+
+/**
+ * Query any chat-completions API for a move.
+ * User provides the full endpoint URL and optional api-key.
+ *
+ * @param {Object} config - { endpoint, apiKey? }
+ *   endpoint: full URL ending in /chat/completions
+ *     e.g. "http://localhost:12434/engines/llama.cpp/v1/chat/completions"
+ *     e.g. "https://myresource.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-02-01"
+ *   apiKey: optional — sent as `api-key` header when provided
+ * @param {Array} blackMoves  - [[x,y], ...]
+ * @param {Array} whiteMoves  - [[x,y], ...]
+ * @param {string} llmColor   - 'black' | 'white'
+ * @param {Array} allMoves    - all occupied positions
+ * @param {number} maxRetries
+ * @param {boolean} threatHints
+ */
+export async function getAPIMove(config, blackMoves, whiteMoves, llmColor, allMoves, maxRetries = 3, threatHints = true) {
+  const { endpoint, model, apiKey } = config;
+  const url = endpoint.replace(/\/+$/, '');
+
+  const { system, user } = buildPrompt(blackMoves, whiteMoves, llmColor, threatHints);
+  console.log(`[API] User prompt:\n${user}`);
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (apiKey) {
+    headers['api-key'] = apiKey;
+  }
+
+  const messages = [
+    { role: 'system', content: system },
+    { role: 'user', content: user },
+  ];
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const body = { messages, max_tokens: 32 };
+      if (model) body.model = model;
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errBody = await res.text();
+        console.error(`[API] Error ${res.status}:`, errBody);
+        throw new Error(`API call failed (${res.status})`);
+      }
+
+      const data = await res.json();
+      const raw = data.choices?.[0]?.message?.content ?? '';
+      console.log(`[API] Response (attempt ${attempt + 1}):`, raw);
+      const move = parseLLMMove(raw);
+
+      if (!move) {
+        console.warn(`[API] Attempt ${attempt + 1}: Could not parse move from "${raw}"`);
+        messages.push({ role: 'assistant', content: raw });
+        messages.push({ role: 'user', content: `Invalid. Reply with ONLY a coordinate like H8 (column A-O, row 1-15). Nothing else.` });
+        continue;
+      }
+
+      const isOccupied = allMoves.some(([mx, my]) => mx === move[0] && my === move[1]);
+      if (isOccupied) {
+        const notation = toNotation(move[0], move[1]);
+        console.warn(`[API] Attempt ${attempt + 1}: Move ${notation} is already occupied`);
+        messages.push({ role: 'assistant', content: raw });
+        messages.push({ role: 'user', content: `${notation} is occupied. Occupied: ${allMoves.map(([x, y]) => toNotation(x, y)).join(', ')}. Pick a DIFFERENT empty square.` });
+        continue;
+      }
+
+      return { move, raw };
+    } catch (err) {
+      console.error(`[API] Attempt ${attempt + 1} error:`, err);
+      if (attempt === maxRetries - 1) {
+        return { move: null, raw: '', error: err.message };
+      }
+    }
+  }
+
+  return { move: null, raw: '', error: 'Failed to get a valid move after retries' };
 }
 
 export { toNotation, fromNotation, boardToText, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel };
