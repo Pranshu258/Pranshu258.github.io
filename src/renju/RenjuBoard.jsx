@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { GRID_SIZE, BOARD_SIZE, BOARD_OFFSET } from './gameLogic';
 
+const COL_LABELS = 'ABCDEFGHIJKLMNO';
+
 const RenjuBoard = ({ 
   humanMoves, 
   computerMoves, 
@@ -63,6 +65,24 @@ const RenjuBoard = ({
       ctx.moveTo(BOARD_OFFSET, pos);
       ctx.lineTo(lastLinePos, pos);
       ctx.stroke();
+    }
+
+    // Draw coordinate labels — subtle, blending into the wood
+    ctx.fillStyle = 'rgba(80, 50, 20, 0.55)';
+    ctx.font = '9px sans-serif';
+
+    // Column labels (A-O) along the top edge
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    for (let i = 0; i < 15; i++) {
+      ctx.fillText(COL_LABELS[i], BOARD_OFFSET + i * GRID_SIZE, BOARD_OFFSET - 5);
+    }
+
+    // Row labels (1-15) along the left edge
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < 15; i++) {
+      ctx.fillText(String(i + 1), BOARD_OFFSET - 5, BOARD_OFFSET + i * GRID_SIZE);
     }
     
     // Draw star points (decorative dots)

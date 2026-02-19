@@ -90,7 +90,7 @@ function RenjuGame({ mode = 'pvai' }) {
   const [llmLog, setLlmLog] = useState([]); // move log for AI vs LLM
   const [llmError, setLlmError] = useState(null);
   const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
-  const [threatHints, setThreatHints] = useState(true);
+
   const [difficulty, setDifficulty] = useState('easy');
   const [llmProvider, setLlmProvider] = useState('webllm'); // 'azure' or 'webllm'
   const [webllmModel, setWebllmModel] = useState(WEBLLM_MODELS[0].id);
@@ -349,8 +349,8 @@ function RenjuGame({ mode = 'pvai' }) {
           setCurrentTurn('human');
           const allMoves = [...blackMoves, ...whiteMoves];
           const result = llmProvider === 'webllm'
-            ? await getWebLLMMove(blackMoves, whiteMoves, 'black', allMoves, 3, threatHints)
-            : await getLLMMove(llmConfig, blackMoves, whiteMoves, 'black', allMoves, 3, threatHints);
+            ? await getWebLLMMove(blackMoves, whiteMoves, 'black', allMoves, 3, true)
+            : await getLLMMove(llmConfig, blackMoves, whiteMoves, 'black', allMoves, 3, true);
 
           if (cancelled || aiVsLlmCancelRef.current) return;
 
@@ -1091,9 +1091,9 @@ function RenjuGame({ mode = 'pvai' }) {
             {gameMode === 'aivsllm' ? (
               <>
                 <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Mode</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9em' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85em', marginBottom: '10px' }}>
                   <div style={{
-                    width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0,
+                    width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0,
                     background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
                     boxShadow: '0 1px 4px rgba(0,0,0,0.2)'
                   }} />
@@ -1101,10 +1101,16 @@ function RenjuGame({ mode = 'pvai' }) {
                   <span style={{ opacity: 0.4, fontSize: '0.85em' }}>vs</span>
                   <span style={{ fontWeight: '600' }}>LLM</span>
                   <div style={{
-                    width: '22px', height: '22px', borderRadius: '50%', flexShrink: 0,
+                    width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0,
                     background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
                     boxShadow: '0 1px 4px rgba(0,0,0,0.4)'
                   }} />
+                </div>
+                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>LLM Model</div>
+                <div style={{ fontSize: '0.8em', fontWeight: '500', opacity: 0.9 }}>
+                  {llmProvider === 'webllm'
+                    ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel)
+                    : `Azure: ${llmConfig.deploymentName || '—'}`}
                 </div>
               </>
             ) : (
@@ -1125,21 +1131,25 @@ function RenjuGame({ mode = 'pvai' }) {
               background: gameMode === 'aivsllm'
                 ? (currentTurn === 'human'
                     ? 'linear-gradient(135deg, #1a1a1a, #333)'
-                    : 'linear-gradient(135deg, #6366f1, #4f46e5)')
+                    : 'linear-gradient(135deg, #e8e8e8, #d4d4d4)')
                 : (currentTurn === 'human' 
                     ? 'linear-gradient(135deg, #6366f1, #4f46e5)' 
                     : 'linear-gradient(135deg, #f59e0b, #d97706)'),
               borderRadius: '10px',
-              color: '#fff',
+              color: gameMode === 'aivsllm' && currentTurn !== 'human' ? '#333' : '#fff',
               fontWeight: '600',
               fontSize: '0.9em',
               textAlign: 'center',
-              boxShadow: currentTurn === 'human' 
-                ? '0 4px 14px rgba(99, 102, 241, 0.35)'
-                : '0 4px 14px rgba(245, 158, 11, 0.35)'
+              boxShadow: gameMode === 'aivsllm'
+                ? (currentTurn === 'human'
+                    ? '0 4px 14px rgba(0, 0, 0, 0.3)'
+                    : '0 4px 14px rgba(0, 0, 0, 0.15)')
+                : (currentTurn === 'human' 
+                    ? '0 4px 14px rgba(99, 102, 241, 0.35)'
+                    : '0 4px 14px rgba(245, 158, 11, 0.35)')
             }}>
               {gameMode === 'aivsllm'
-                ? (currentTurn === 'human' ? '☁️ LLM thinking...' : '⚫ AI thinking...')
+                ? (currentTurn === 'human' ? '⚫ LLM thinking...' : '⚪ AI thinking...')
                 : (currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...')}
             </div>
           )}
@@ -1342,57 +1352,7 @@ function RenjuGame({ mode = 'pvai' }) {
             <span style={{ lineHeight: '1.3' }}>Visualize AI</span>
           </label>
 
-          {/* Threat Hints Toggle (AI vs LLM only) */}
-          {gameMode === 'aivsllm' && (
-          <label style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'flex-start',
-            gap: '6px',
-            cursor: 'pointer',
-            color: 'var(--surface-text-color)',
-            fontSize: '0.85em',
-            padding: '12px 15px',
-            margin: 0,
-            background: threatHints ? 'rgba(245, 158, 11, 0.12)' : 'var(--blog-surface-background)',
-            borderRadius: '10px',
-            border: threatHints ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid var(--blog-surface-border, #333)',
-            transition: 'all 0.2s',
-            width: '100%',
-            boxSizing: 'border-box',
-            minHeight: '44px'
-          }}>
-            <input
-              type="checkbox"
-              checked={threatHints}
-              onChange={(e) => setThreatHints(e.target.checked)}
-              style={{ display: 'none' }}
-            />
-            <div style={{
-              width: '36px',
-              height: '20px',
-              background: threatHints ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'var(--blog-surface-border, #555)',
-              borderRadius: '10px',
-              position: 'relative',
-              transition: 'all 0.2s',
-              flexShrink: 0,
-              boxShadow: threatHints ? '0 2px 8px rgba(245, 158, 11, 0.3)' : 'none'
-            }}>
-              <div style={{
-                width: '16px',
-                height: '16px',
-                background: '#fff',
-                borderRadius: '50%',
-                position: 'absolute',
-                top: '2px',
-                left: threatHints ? '18px' : '2px',
-                transition: 'all 0.2s',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
-              }} />
-            </div>
-            <span style={{ lineHeight: '1.3' }}>Threat Hints</span>
-          </label>
-          )}
+
           </div>
 
           {/* Game Info */}
@@ -1404,7 +1364,19 @@ function RenjuGame({ mode = 'pvai' }) {
             border: '1px solid var(--blog-surface-border, #333)',
             fontSize: '0.85em'
           }}>
-            <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px' }}>Move #{Math.ceil(moveCount / 2)}</div>
+            <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <div style={{
+                width: '14px', height: '14px', borderRadius: '50%', flexShrink: 0,
+                background: moveCount % 2 === 1
+                  ? 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)'
+                  : 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
+                boxShadow: moveCount % 2 === 1
+                  ? '0 1px 3px rgba(0,0,0,0.4)'
+                  : '0 1px 3px rgba(0,0,0,0.2)',
+                border: moveCount % 2 === 0 ? '1px solid #ccc' : 'none'
+              }} />
+              <span>Move #{Math.ceil(moveCount / 2)}</span>
+            </div>
             {gameMode !== 'aivsllm' && (
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
               <span>Difficulty:</span>
