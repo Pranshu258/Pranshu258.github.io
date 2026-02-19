@@ -40,16 +40,43 @@ export default class Renju extends React.Component {
                 </ul>
                 <RenjuGame mode="pvai" />
                 <p>
-                    The AI uses minimax search with alpha-beta pruning with <b>adaptive difficulty</b> - it learns from each game! If you win, the AI increases its search depth (max 10) to become more challenging. If you lose, it decreases depth (min 2) to give you a better chance. The current and max depth are displayed during gameplay. Choose your stone color and see if you can beat it!
+                    The AI uses minimax search with alpha-beta pruning and comes with four difficulty levels:
+                </p>
+                <ul>
+                    <li><b>Easy:</b> Shallow search with occasional mistakes — a good starting point.</li>
+                    <li><b>Medium:</b> Deeper search with fewer errors.</li>
+                    <li><b>Hard:</b> Full strength, no mistakes.</li>
+                    <li><b>Adaptive:</b> Learns from each game! If you win, the AI has a chance to increase its search depth (up to 10). If you lose, it dials back down.</li>
+                </ul>
+                <p>
+                    The current depth is displayed during gameplay. Choose your stone color and difficulty, and see if you can beat it!
                 </p>
                 <p>
                     While the rules are simple, mastering Renju requires thinking several moves ahead, recognizing patterns, and understanding both offensive and defensive strategies.
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
+                <h2 className="headings">The Minimax Algorithm</h2>
+                <p>
+                    The AI opponent is powered by the <b>minimax algorithm with alpha-beta pruning</b>, a classic game-tree search technique. At each turn, the AI simulates possible sequences of moves — alternating between its own best moves and the opponent's best responses — and picks the move that leads to the best guaranteed outcome, even if the opponent plays optimally.
+                </p>
+                <p>
+                    <b>Alpha-beta pruning</b> makes this practical by cutting off branches of the search tree that can't possibly influence the final decision. If the AI discovers that a branch is already worse than a previously explored option, it skips the rest of that subtree entirely, dramatically reducing the number of positions evaluated.
+                </p>
+                <p>
+                    Several optimizations keep the AI responsive even at higher search depths:
+                </p>
+                <ul>
+                    <li><b>Transposition Table:</b> A hash map caches previously evaluated board positions to avoid redundant work when different move orderings lead to the same state.</li>
+                    <li><b>Move Ordering:</b> Candidate moves are scored with a quick heuristic and sorted before the full search begins. Good move ordering triggers more alpha-beta cutoffs, making the search significantly faster.</li>
+                    <li><b>Pattern-Based Evaluation:</b> The evaluation function recognizes tactical patterns — open fours, broken fours, double threes, jump threes — and assigns calibrated scores to each. It also detects powerful combinations like four-three or double-four that force a win.</li>
+                    <li><b>Renju Forbidden Moves:</b> The AI enforces Renju-specific rules for Black: overlines (6+ in a row), double-fours, and double-threes are detected and filtered from the candidate move list.</li>
+                </ul>
+
+                <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">AI vs LLM</h2>
                 <p>
-                    Pit the minimax AI against a language model and watch them battle it out. The LLM plays Black, the minimax AI plays White, and the game runs automatically.
+                    Beyond playing against the AI yourself, you can also pit the local minimax AI against a large language model (LLM) and watch them battle it out. In this mode, the LLM plays as Black (first move) and the local AI plays as White. The game runs automatically — you just sit back and observe.
                 </p>
                 <RenjuGame mode="aivsllm" />
 
@@ -83,7 +110,7 @@ export default class Renju extends React.Component {
                     }}>
                         <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '8px' }}>🔌 API</div>
                         <p style={{ fontSize: '0.9em', opacity: 0.8, marginBottom: '10px' }}>
-                            Connects to any OpenAI-compatible chat completions endpoint — local or cloud. Works with any model you've pulled locally, or any cloud provider. Just paste the full URL, add a model name and API key if needed.
+                            Connects to any OpenAI-compatible chat completions endpoint — local or cloud. Works with Docker Model Runner, Ollama, LM Studio, Azure OpenAI, OpenAI, and more. Just paste the full URL, add a model name and API key if needed.
                         </p>
                     </div>
                 </div>
@@ -99,14 +126,16 @@ export default class Renju extends React.Component {
                     </ul>
                 </details>
 
-                <h3 className="headings">What to Watch For</h3>
+                <p>
+                    The LLM receives a text representation of the board along with strategic guidance and responds with its next move in algebraic notation (e.g. H8). A few things make this mode interesting:
+                </p>
                 <ul>
-                    <li><b>Threat Hints:</b> Toggle whether the LLM receives pre-computed threat analysis. With hints, the prompt includes specific blocking coordinates — without them, the LLM must reason about threats from the raw board state.</li>
-                    <li><b>Adaptive Difficulty:</b> Works in reverse here — when the minimax AI wins, its depth <i>decreases</i> to give the LLM a better chance. When the LLM wins, the AI gets harder.</li>
-                    <li><b>Visualize AI:</b> Watch the minimax algorithm explore candidate moves in real time.</li>
+                    <li><b>Threat Hints:</b> You can toggle whether the LLM receives pre-computed threat analysis in its prompt. With hints enabled, the prompt includes specific blocking coordinates for the opponent's open threes and fours — without them, the LLM must figure out threats on its own from the raw board state.</li>
+                    <li><b>Adaptive Difficulty (reversed):</b> The difficulty adjustment works in reverse here. When the local AI wins, its search depth <i>decreases</i> to give the LLM a better chance. When the LLM wins, the AI gets harder. This creates an interesting dynamic where the AI calibrates itself to the LLM's skill level.</li>
+                    <li><b>Visualize AI:</b> You can enable the "Visualize AI" toggle to watch the minimax algorithm explore candidate moves in real time during the local AI's turn.</li>
                 </ul>
                 <p>
-                    Spoiler: the minimax AI usually wins, but LLMs can occasionally pull off surprising moves!
+                    It's a fun way to see how a general-purpose language model stacks up against a purpose-built game-playing algorithm — and spoiler: the minimax AI usually wins, but the LLM can occasionally pull off surprising moves!
                 </p>
 
                 <div style={{
