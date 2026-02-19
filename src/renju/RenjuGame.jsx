@@ -8,6 +8,7 @@ import {
   loadGame
 } from './gameLogic';
 import { getLLMMove, toNotation, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
+import { TbMessageChatbot } from 'react-icons/tb';
 
 // Sound effects using Web Audio API
 const createAudioContext = () => {
@@ -1090,27 +1091,25 @@ function RenjuGame({ mode = 'pvai' }) {
           }}>
             {gameMode === 'aivsllm' ? (
               <>
-                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Mode</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85em', marginBottom: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9em', marginBottom: '8px' }}>
                   <div style={{
                     width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0,
                     background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
                     boxShadow: '0 1px 4px rgba(0,0,0,0.2)'
                   }} />
-                  <span style={{ fontWeight: '600' }}>AI</span>
-                  <span style={{ opacity: 0.4, fontSize: '0.85em' }}>vs</span>
-                  <span style={{ fontWeight: '600' }}>LLM</span>
+                  <span style={{ fontWeight: '600' }}>Minimax</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9em' }}>
                   <div style={{
                     width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0,
                     background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
                     boxShadow: '0 1px 4px rgba(0,0,0,0.4)'
                   }} />
-                </div>
-                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>LLM Model</div>
-                <div style={{ fontSize: '0.8em', fontWeight: '500', opacity: 0.9 }}>
-                  {llmProvider === 'webllm'
-                    ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel)
-                    : `Azure: ${llmConfig.deploymentName || '—'}`}
+                  <span style={{ fontWeight: '500', opacity: 0.9 }}>
+                    {llmProvider === 'webllm'
+                      ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel)
+                      : `Azure: ${llmConfig.deploymentName || '—'}`}
+                  </span>
                 </div>
               </>
             ) : (
@@ -1167,8 +1166,10 @@ function RenjuGame({ mode = 'pvai' }) {
                 ? '0 4px 14px rgba(16, 185, 129, 0.35)'
                 : '0 4px 14px rgba(239, 68, 68, 0.35)'
             }}>
-              <div style={{ fontSize: '1.5em', marginBottom: '6px' }}>
-                {gameState === 'won' ? '🎉' : '😔'}
+              <div style={{ fontSize: '1.5em', marginBottom: '6px', color: '#fff' }}>
+                {gameMode === 'aivsllm'
+                  ? (gameState === 'won' ? '🤖' : <TbMessageChatbot style={{ color: '#fff' }} />)
+                  : (gameState === 'won' ? '🎉' : '🤖')}
               </div>
               <div style={{
                 color: '#fff',
@@ -1365,16 +1366,22 @@ function RenjuGame({ mode = 'pvai' }) {
             fontSize: '0.85em'
           }}>
             <div style={{ fontWeight: '500', textAlign: 'center', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <div style={{
-                width: '14px', height: '14px', borderRadius: '50%', flexShrink: 0,
-                background: moveCount % 2 === 1
-                  ? 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)'
-                  : 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
-                boxShadow: moveCount % 2 === 1
-                  ? '0 1px 3px rgba(0,0,0,0.4)'
-                  : '0 1px 3px rgba(0,0,0,0.2)',
-                border: moveCount % 2 === 0 ? '1px solid #ccc' : 'none'
-              }} />
+              {(() => {
+                // Determine if current move is black: odd moveCount = black's turn, even = white's
+                const isBlack = moveCount % 2 === 1;
+                return (
+                  <div style={{
+                    width: '14px', height: '14px', borderRadius: '50%', flexShrink: 0,
+                    background: isBlack
+                      ? 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)'
+                      : 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
+                    boxShadow: isBlack
+                      ? '0 1px 3px rgba(0,0,0,0.4)'
+                      : '0 1px 3px rgba(0,0,0,0.2)',
+                    border: !isBlack ? '1px solid #ccc' : 'none'
+                  }} />
+                );
+              })()}
               <span>Move #{Math.ceil(moveCount / 2)}</span>
             </div>
             {gameMode !== 'aivsllm' && (
