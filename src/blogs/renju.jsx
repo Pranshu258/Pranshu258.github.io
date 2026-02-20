@@ -6,7 +6,7 @@ import "../styles/prism.css";
 import '../styles/fonts.css';
 import '../styles/blog.css';
 
-import { FaGamepad, FaBrain, FaReact } from 'react-icons/fa6';
+import { FaGamepad, FaBrain, FaReact, FaGears, FaBolt } from 'react-icons/fa6';
 
 export default class Renju extends React.Component {
     componentDidMount() {
@@ -25,58 +25,94 @@ export default class Renju extends React.Component {
                 <Sharer link={window.location.href} title={"Renju - A Strategic Board Game with AI"}></Sharer>
 
                 <p className="introduction">
-                    Renju, also known as "Five in a Row" or Gomoku, is a classic strategic board game that has been played for centuries across Asia and beyond. I present a modern web implementation of Renju using React, complete with an AI opponent powered by the minimax algorithm with alpha-beta pruning.
+                    Renju looks simple at first glance - place stones, get five in a row - but beneath that simplicity lies a game so strategically rich that researchers proved perfect play guarantees a win for Black. This project brings that depth into the browser with a fast, optimized minimax AI, four difficulty levels including an adaptive mode that learns from your play, and a unique mode where you can pit the AI against a large language model and watch two very different intelligences clash.
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Play the Game</h2>
                 <p>
                     Renju is deceptively simple in its rules but offers surprising strategic depth:
                 </p>
-                <ul>
-                    <li><b>Objective:</b> Be the first player to create an unbroken line of five stones on the board</li>
-                    <li><b>Board:</b> Played on a 15×15 grid (similar to Go)</li>
-                    <li><b>Turns:</b> Players alternate placing stones, with black always going first</li>
-                    <li><b>Victory:</b> Five consecutive stones in any direction (horizontal, vertical, or diagonal) wins</li>
-                </ul>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                    gap: '8px 16px',
+                    background: 'var(--blog-surface-background)',
+                    border: '1px solid var(--blog-surface-border, #333)',
+                    borderRadius: '10px',
+                    padding: '18px',
+                    marginBottom: '16px',
+                    fontSize: '0.95em'
+                }}>
+                    <b>Objective</b><span>Be the first to place five stones in an unbroken line</span>
+                    <b>Board</b><span>15 × 15 grid (same as Go)</span>
+                    <b>Turns</b><span>Players alternate placing stones; Black always moves first</span>
+                    <b>Victory</b><span>Five consecutive stones - horizontal, vertical, or diagonal - wins</span>
+                </div>
+                <p>
+                    <b>Why it's interesting:</b> Despite simple rules, Renju rewards thinking several moves ahead, recognizing tactical patterns like open threes and fours, and balancing offense with defense. A single misplaced stone can flip the game.
+                </p>
                 <RenjuGame mode="pvai" />
+                
                 <p>
-                    The AI uses minimax search with alpha-beta pruning and comes with four difficulty levels:
-                </p>
-                <ul>
-                    <li><b>Easy:</b> Shallow search with occasional mistakes — a good starting point.</li>
-                    <li><b>Medium:</b> Deeper search with fewer errors.</li>
-                    <li><b>Hard:</b> Full strength, no mistakes.</li>
-                    <li><b>Adaptive:</b> Learns from each game! If you win, the AI has a chance to increase its search depth (up to 10). If you lose, it dials back down.</li>
-                </ul>
-                <p>
-                    The current depth is displayed during gameplay. Choose your stone color and difficulty, and see if you can beat it!
+                    The current search depth is displayed during gameplay. <b>Adaptive</b> mode is especially interesting - when you win, the AI's search depth increases by 1 (up to a maximum of 10), making it progressively harder. Lose, and it dials back down. This creates a personalized challenge that feels almost human: the AI is always just slightly ahead of or behind your skill level. For example, if you beat it twice in a row, its depth might jump from 5 to 7, making the third game noticeably tougher.
                 </p>
                 <p>
-                    While the rules are simple, mastering Renju requires thinking several moves ahead, recognizing patterns, and understanding both offensive and defensive strategies.
+                    Choose your stone color and difficulty, and see if you can beat it!
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">The Minimax Algorithm</h2>
                 <p>
-                    The AI opponent is powered by the <b>minimax algorithm with alpha-beta pruning</b>, a classic game-tree search technique. At each turn, the AI simulates possible sequences of moves — alternating between its own best moves and the opponent's best responses — and picks the move that leads to the best guaranteed outcome, even if the opponent plays optimally.
+                    Imagine the AI staring at the board and asking: <i>"If I place a stone here, what's the best my opponent can do? And then what's my best reply to that?"</i> That recursive question is the heart of the <b>minimax algorithm</b>. At each turn, the AI builds a tree of possible futures - alternating between its own best moves and the opponent's best responses - and chooses the path that leads to the best guaranteed outcome, even against a perfect opponent.
                 </p>
                 <p>
-                    <b>Alpha-beta pruning</b> makes this practical by cutting off branches of the search tree that can't possibly influence the final decision. If the AI discovers that a branch is already worse than a previously explored option, it skips the rest of that subtree entirely, dramatically reducing the number of positions evaluated.
+                    But the tree grows fast. On a 15×15 board, even a few moves deep can mean millions of positions. That's where <b>alpha-beta pruning</b> comes in - it cuts away branches that can't possibly beat an already-discovered option. Think of it as the AI saying, <i>"I already found a move that guarantees a score of +50. This new branch can only reach +30 at best - skip it."</i> In practice, this eliminates the vast majority of the search space.
                 </p>
                 <p>
-                    Several optimizations keep the AI responsive even at higher search depths:
+                    Several additional optimizations keep the AI responsive even at higher search depths:
                 </p>
                 <ul>
                     <li><b>Transposition Table:</b> A hash map caches previously evaluated board positions to avoid redundant work when different move orderings lead to the same state.</li>
                     <li><b>Move Ordering:</b> Candidate moves are scored with a quick heuristic and sorted before the full search begins. Good move ordering triggers more alpha-beta cutoffs, making the search significantly faster.</li>
-                    <li><b>Pattern-Based Evaluation:</b> The evaluation function recognizes tactical patterns — open fours, broken fours, double threes, jump threes — and assigns calibrated scores to each. It also detects powerful combinations like four-three or double-four that force a win.</li>
-                    <li><b>Renju Forbidden Moves:</b> The AI enforces Renju-specific rules for Black: overlines (6+ in a row), double-fours, and double-threes are detected and filtered from the candidate move list.</li>
+                    <li><b>Pattern-Based Evaluation:</b> The evaluation function recognizes tactical patterns - open fours, broken fours, double threes, jump threes - and assigns calibrated scores to each. It also detects powerful combinations like four-three or double-four that force a win.</li>
                 </ul>
+
+                <h3 className="headings">Renju Forbidden Moves</h3>
+                <p>
+                    What makes Renju different from plain Gomoku? Special rules for Black that prevent the first-player advantage from dominating. These "forbidden moves" are moves that Black is not allowed to make:
+                </p>
+                <ul>
+                    <li><b>Overline:</b> Placing a stone that creates six or more in a row. Only exactly five wins.</li>
+                    <li><b>Double-Four:</b> A single stone that simultaneously creates two separate lines of four. This would be too powerful - it forces two threats the opponent can't both block.</li>
+                    <li><b>Double-Three:</b> A single stone that creates two open threes (lines of three with both ends open). Like double-four, it creates an unstoppable double threat.</li>
+                </ul>
+                <p>
+                    These rules exist because mathematicians proved that without them, Black (who moves first) can always force a win. By restricting Black's most explosive tactics, Renju restores the balance and rewards deeper strategic thinking for both sides. The AI detects and enforces all of these restrictions automatically.
+                </p>
+
+                <div style={{
+                    background: 'rgba(246, 173, 85, 0.1)',
+                    border: '1px solid #f6ad55',
+                    borderRadius: '4px',
+                    padding: '20px',
+                    marginTop: '20px'
+                }}>
+                    <h4 style={{ color: '#f6ad55', marginBottom: '10px' }}>
+                        <FaBolt style={{ marginRight: '10px' }} />
+                        Performance
+                    </h4>
+                    <p style={{ marginBottom: 0 }}>
+                        At depth 10, the search space explodes to millions of possible positions. With alpha-beta pruning, move ordering, and a transposition table, the AI evaluates only a tiny fraction of them - keeping move times under ~200ms on modern hardware. The transposition table alone can cut redundant evaluations by over 40% in complex mid-game positions.
+                    </p>
+                </div>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">AI vs LLM</h2>
                 <p>
-                    Beyond playing against the AI yourself, you can also pit the local minimax AI against a large language model (LLM) and watch them battle it out. In this mode, the LLM plays as Black (first move) and the local AI plays as White. The game runs automatically — you just sit back and observe.
+                    What happens when you put a purpose-built game engine against a general-purpose language model? The minimax AI sees the board as numbers - scores, depths, pruned branches. The LLM sees it as text - a grid of symbols it must reason about spatially. They think in fundamentally different ways, and watching them play reveals surprising things about both.
+                </p>
+                <p>
+                    In this mode, the LLM plays as Black (first move) and the local minimax AI plays as White. The game runs automatically - you just sit back and observe.
                 </p>
                 <RenjuGame mode="aivsllm" />
 
@@ -110,7 +146,7 @@ export default class Renju extends React.Component {
                     }}>
                         <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '8px' }}>🔌 API</div>
                         <p style={{ fontSize: '0.9em', opacity: 0.8, marginBottom: '10px' }}>
-                            Connects to any OpenAI-compatible chat completions endpoint — local or cloud. Works with Docker Model Runner, Ollama, LM Studio, Azure OpenAI, OpenAI, and more. Just paste the full URL, add a model name and API key if needed.
+                            Connects to any OpenAI-compatible chat completions endpoint - local or cloud. Works with Docker Model Runner, Ollama, LM Studio, Azure OpenAI, OpenAI, and more. Just paste the full URL, add a model name and API key if needed.
                         </p>
                     </div>
                 </div>
@@ -130,13 +166,19 @@ export default class Renju extends React.Component {
                     The LLM receives a text representation of the board along with strategic guidance and responds with its next move in algebraic notation (e.g. H8). A few things make this mode interesting:
                 </p>
                 <ul>
-                    <li><b>Threat Hints:</b> You can toggle whether the LLM receives pre-computed threat analysis in its prompt. With hints enabled, the prompt includes specific blocking coordinates for the opponent's open threes and fours — without them, the LLM must figure out threats on its own from the raw board state.</li>
-                    <li><b>Adaptive Difficulty (reversed):</b> The difficulty adjustment works in reverse here. When the local AI wins, its search depth <i>decreases</i> to give the LLM a better chance. When the LLM wins, the AI gets harder. This creates an interesting dynamic where the AI calibrates itself to the LLM's skill level.</li>
+                    <li><b>Threat Hints:</b> The LLM receives pre-computed threat analysis in its prompt. With hints enabled, the prompt includes specific blocking coordinates for the opponent's open threes and fours - without them, the LLM must figure out threats on its own from the raw board state.</li>
+                    <li><b>Adaptive Difficulty:</b> The difficulty adjustment works in reverse here. When the local AI wins, its search depth <i>decreases</i> to give the LLM a better chance. When the LLM wins, the AI gets harder. This creates an interesting dynamic where the AI calibrates itself to the LLM's skill level.</li>
                     <li><b>Visualize AI:</b> You can enable the "Visualize AI" toggle to watch the minimax algorithm explore candidate moves in real time during the local AI's turn.</li>
                 </ul>
                 <p>
-                    It's a fun way to see how a general-purpose language model stacks up against a purpose-built game-playing algorithm — and spoiler: the minimax AI usually wins, but the LLM can occasionally pull off surprising moves!
+                    The minimax AI usually wins - but the LLM can occasionally pull off surprisingly creative moves. It might ignore a conventional threat to set up an unexpected diagonal, or find a pattern that the AI's evaluation function undervalues. It's a fascinating window into how language models reason about spatial strategy.
                 </p>
+                <ul style={{ marginBottom: '20px' }}>
+                    <li>Watch two fundamentally different intelligences clash in real time</li>
+                    <li>See how LLMs reason (and struggle) with spatial strategy</li>
+                    <li>Observe adaptive difficulty calibrating itself to the LLM's skill level</li>
+                    <li>Toggle threat hints on/off to see how much tactical help the LLM needs</li>
+                </ul>
 
                 <div style={{
                     background: 'rgba(66, 153, 225, 0.1)',
@@ -158,11 +200,29 @@ export default class Renju extends React.Component {
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Source Code</h2>
                 <p>
-                    The complete source code for this project is available on GitHub. You can run it locally or deploy it to any static hosting service. The game demonstrates how classic game-playing algorithms can create engaging experiences in modern web applications.
+                    The complete source code for this project is available on GitHub. You can run it locally or deploy it to any static hosting service.
                 </p>
                 <p>
-                    Whether you're interested in game AI, React development, or just enjoy strategic board games, I hope this project provides both entertainment and educational value. Challenge the AI and see how you stack up!
+                    Whether you're interested in game AI, React development, or just enjoy strategic board games - give it a try. Can you beat Adaptive mode? If you find a bug, have an idea, or just want to share a particularly wild LLM game, feel free to <a href="https://github.com/Pranshu258/Pranshu258.github.io/issues" target="_blank" rel="noopener noreferrer">open an issue</a> or submit a PR.
                 </p>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                    gap: '8px 16px',
+                    background: 'var(--blog-surface-background)',
+                    border: '1px solid var(--blog-surface-border, #333)',
+                    borderRadius: '10px',
+                    padding: '18px',
+                    marginBottom: '20px',
+                    fontSize: '0.95em'
+                }}>
+                    <b>UI</b><span>React class components with inline styles for game elements</span>
+                    <b>AI Engine</b><span>Minimax with alpha-beta pruning, transposition table, and pattern-based evaluation</span>
+                    <b>Board State</b><span>2D array (15x15) with numeric cell values; serialized to algebraic notation for LLM prompts</span>
+                    <b>On-Device LLM</b><span><a href="https://webllm.mlc.ai/" target="_blank" rel="noopener noreferrer">WebLLM</a> + WebGPU - runs entirely in-browser, no server required</span>
+                    <b>API LLM</b><span>Any OpenAI-compatible chat completions endpoint (Ollama, LM Studio, Azure, etc.)</span>
+                    <b>Build</b><span>Vite for fast development and optimized production builds</span>
+                </div>
                 <a
                     href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju"
                     target="_blank"

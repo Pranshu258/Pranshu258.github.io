@@ -85,6 +85,7 @@ function RenjuGame({ mode = 'pvai' }) {
   const [winningLine, setWinningLine] = useState(null);
   const [currentDepth, setCurrentDepth] = useState(null);
   const [maxDepth, setMaxDepth] = useState(1); // Adaptive difficulty: 30% chance to increase on player win, decreases on loss
+  const [llmMaxDepth, setLlmMaxDepth] = useState(1); // Adaptive difficulty for AI vs LLM: increases when LLM wins, decreases when AI wins
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [gameMode, setGameMode] = useState(mode); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
   const [apiConfig, setApiConfig] = useState({ endpoint: 'http://localhost:12434/engines/llama.cpp/v1/chat/completions', model: 'ai/mistral', apiKey: '' });
@@ -121,14 +122,20 @@ function RenjuGame({ mode = 'pvai' }) {
   // In pvai: won = player won → harder, lost = AI won → easier
   useEffect(() => {
     if (gameState === 'won') {
-      if (gameMode !== 'aivsllm' && difficulty === 'adaptive') {
+      if (gameMode === 'aivsllm') {
+        // AI won — decrease depth to give LLM a better chance
+        setLlmMaxDepth(prev => Math.max(prev - 1, 1));
+      } else if (difficulty === 'adaptive') {
         if (Math.random() < 0.5) {
           setMaxDepth(prev => Math.min(prev + 1, 10));
         }
       }
       if (soundEnabled) playWinSound(audioContextRef.current);
     } else if (gameState === 'lost') {
-      if (gameMode !== 'aivsllm' && difficulty === 'adaptive') {
+      if (gameMode === 'aivsllm') {
+        // LLM won — increase depth to make AI harder
+        setLlmMaxDepth(prev => Math.min(prev + 1, 10));
+      } else if (difficulty === 'adaptive') {
         setMaxDepth(prev => Math.max(prev - 1, 1));
       }
       if (soundEnabled) playLoseSound(audioContextRef.current);
@@ -380,7 +387,7 @@ function RenjuGame({ mode = 'pvai' }) {
         } else {
           // Local AI (White) turn
           setCurrentTurn('computer');
-          const depth = 1; // Easy mode for AI vs LLM
+          const depth = Math.floor(Math.random() * llmMaxDepth) + 1; // Adaptive depth for AI vs LLM
           setCurrentDepth(depth);
 
           let bestMove = null;
@@ -1394,7 +1401,7 @@ function RenjuGame({ mode = 'pvai' }) {
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
               <span>Max Depth:</span>
-              <span style={{ fontWeight: '500' }}>{maxDepth}</span>
+              <span style={{ fontWeight: '500' }}>{gameMode === 'aivsllm' ? llmMaxDepth : maxDepth}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
               <span>Current Depth:</span>
