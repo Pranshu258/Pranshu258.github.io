@@ -289,6 +289,7 @@ export default function AntColonyVisualization() {
                     <span className={`aco-panel-chevron${panelOpen ? ' open' : ''}`}>&#8964;</span>
                 </button>
                 <div className={`aco-panel-body${panelOpen ? ' open' : ''}`}>
+                    <div className="aco-panel-inner">
                     <div className="aco-params-grid">
                     <div className="control-group">
                         <label>Cities <span className="value">{numCities}</span></label>
@@ -327,6 +328,7 @@ export default function AntColonyVisualization() {
                             disabled={isRunning} className="slider" />
                     </div>
                 </div>
+                    </div>
             </div>
             </div>
         </div>

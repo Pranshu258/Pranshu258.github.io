@@ -273,9 +273,7 @@
 }
 
 .aco-panel-header:focus-visible {
-    outline: 2px solid #d4d4d8;
-    outline-offset: -2px;
-    border-radius: 10px;
+    outline: none;
 }
 
 .aco-panel-chevron {
@@ -301,7 +299,7 @@
     grid-template-rows: 1fr;
 }
 
-.aco-panel-body > .aco-params-grid {
+.aco-panel-body > .aco-panel-inner {
     overflow: hidden;
 }
 
