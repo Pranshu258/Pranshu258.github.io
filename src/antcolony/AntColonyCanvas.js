@@ -19,17 +19,17 @@ export class ACOVisualizer {
         this.trailAlpha = 0.3;
         this.antAlpha = 0.8;
         
-        // Color scheme
+        // Color scheme — modern light
         this.colors = {
-            cityFill: '#FF6B6B',
-            cityStroke: '#C92A2A',
-            antFill: '#4ECDC4',
-            antStroke: '#1B8A8A',
-            trail: '#FFD93D',
-            bestPath: '#6BCB77',
-            background: '#F8F9FA',
-            grid: '#E8E8E8',
-            pheromone: '#A8E6CF'
+            cityFill: '#2563eb',
+            cityStroke: '#1d4ed8',
+            antFill: '#0d9488',    // teal — ant paths
+            antStroke: '#0f766e',
+            trail: '#0d9488',
+            bestPath: '#d97706',   // amber — best path
+            background: '#ffffff',
+            grid: 'rgba(0, 0, 0, 0.04)',
+            pheromone: '#f59e0b'   // warm amber — pheromone scent
         };
         
         this.cities = [];
@@ -193,14 +193,7 @@ export class ACOVisualizer {
             this.ctx.lineWidth = 2;
             this.ctx.stroke();
             
-            // City number (if available)
-            if (city.id !== undefined) {
-                this.ctx.fillStyle = this.colors.cityStroke;
-                this.ctx.font = 'bold 10px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText(city.id, city.x, city.y);
-            }
+
         }
     }
 

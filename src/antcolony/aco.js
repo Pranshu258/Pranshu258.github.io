@@ -193,22 +193,48 @@ export class AntColonyOptimization {
 }
 
 /**
- * Generate random cities in a 2D space
+ * Generate random cities in a 2D space with a minimum distance between each pair.
  */
-export function generateRandomCities(count, width, height, seed = null) {
+export function generateRandomCities(count, width, height, seed = null, padding = 30, minDist = 48) {
     const cities = [];
-    
+    const usableW = width - padding * 2;
+    const usableH = height - padding * 2;
+
+    // Lower minDist automatically if the canvas is too small to fit all cities
+    const area = usableW * usableH;
+    const maxPossible = Math.floor(area / (Math.PI * (minDist / 2) ** 2));
+    const effectiveMinDist = count > maxPossible ? Math.sqrt(area / (count * Math.PI)) * 0.9 : minDist;
+
     // Use seed for reproducibility if provided
     let rng = seed !== null ? mulberry32(seed) : Math.random;
-    
+
+    const maxAttempts = 1000;
+
     for (let i = 0; i < count; i++) {
-        cities.push({
-            x: rng() * width,
-            y: rng() * height,
-            id: i
-        });
+        let placed = false;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const x = padding + rng() * usableW;
+            const y = padding + rng() * usableH;
+            const tooClose = cities.some(c => {
+                const dx = c.x - x, dy = c.y - y;
+                return Math.sqrt(dx * dx + dy * dy) < effectiveMinDist;
+            });
+            if (!tooClose) {
+                cities.push({ x, y, id: i });
+                placed = true;
+                break;
+            }
+        }
+        // Fallback: place anywhere if no valid spot found after maxAttempts
+        if (!placed) {
+            cities.push({
+                x: padding + rng() * usableW,
+                y: padding + rng() * usableH,
+                id: i
+            });
+        }
     }
-    
+
     return cities;
 }
 

@@ -10,7 +10,9 @@ export default function AntColonyVisualization() {
     const visualizerRef = useRef(null);
     const isPausedRef = useRef(false);
     const isRunningRef = useRef(false);
-    const speedRef = useRef(3);
+    const speedRef = useRef(1);
+    const progressPipRef = useRef(null);
+    const iterTextRef = useRef(null);
 
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
@@ -28,12 +30,13 @@ export default function AntColonyVisualization() {
     const [evaporationRate, setEvaporationRate] = useState(0.5);
     const [alpha, setAlpha] = useState(1);
     const [beta, setBeta] = useState(2);
-    const [speed, setSpeed] = useState(3);
+
 
     // Visualization options
     const [showPheromones, setShowPheromones] = useState(true);
     const [showTrails, setShowTrails] = useState(true);
     const [showBestPath, setShowBestPath] = useState(true);
+    const [panelOpen, setPanelOpen] = useState(true);
 
     // Refs to avoid stale closures inside rAF loop
     const showPheromonesRef = useRef(true);
@@ -47,9 +50,6 @@ export default function AntColonyVisualization() {
         }
         return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current); };
     }, []);
-
-    // Keep speed ref in sync
-    useEffect(() => { speedRef.current = speed; }, [speed]);
 
     // Sync display toggle refs and re-render
     useEffect(() => {
@@ -72,7 +72,7 @@ export default function AntColonyVisualization() {
         a = alpha,
         b = beta
     ) => {
-        const cities = generateRandomCities(citiesCount, 760, 480);
+        const cities = generateRandomCities(citiesCount, 800, 520);
         const aco = new AntColonyOptimization(cities, antsCount, iterationsCount, evap, a, b);
         acoRef.current = aco;
 
@@ -97,6 +97,12 @@ export default function AntColonyVisualization() {
         isPausedRef.current = false;
         setIsRunning(true);
         setIsPaused(false);
+
+        // Always show trails during the run
+        setShowPheromones(true);
+        setShowTrails(true);
+        showPheromonesRef.current = true;
+        showTrailsRef.current = true;
 
         const totalIterations = aco.numIterations;
         const antsCount = aco.numAnts;
@@ -138,11 +144,16 @@ export default function AntColonyVisualization() {
                     pheromones: aco.pheromones
                 });
 
+                // Update progress pip and iter text directly — bypasses React batching
+                const pct = (frame / totalIterations) * 100;
+                if (progressPipRef.current) progressPipRef.current.style.width = pct + '%';
+                if (iterTextRef.current) iterTextRef.current.textContent = frame;
+
                 setStats({
                     iteration: frame,
                     bestCost: aco.bestCost === Infinity ? 0 : Math.round(aco.bestCost),
                     currentCost: Math.round(ants[0]?.cost || 0),
-                    progress: (frame / totalIterations) * 100
+                    progress: pct
                 });
             }
 
@@ -153,6 +164,14 @@ export default function AntColonyVisualization() {
             } else {
                 isRunningRef.current = false;
                 setIsRunning(false);
+                // Hide trails so only the best path is shown
+                setShowPheromones(false);
+                setShowTrails(false);
+                showPheromonesRef.current = false;
+                showTrailsRef.current = false;
+                viz.setShowPheromones(false);
+                viz.setShowTrails(false);
+                viz.render();
             }
         };
 
@@ -188,6 +207,8 @@ export default function AntColonyVisualization() {
         setIsRunning(false);
         setIsPaused(false);
         if (animationRef.current) cancelAnimationFrame(animationRef.current);
+        if (progressPipRef.current) progressPipRef.current.style.width = '0%';
+        if (iterTextRef.current) iterTextRef.current.textContent = '0';
         setTimeout(() => initializeACO(), 20);
     };
 
@@ -197,24 +218,53 @@ export default function AntColonyVisualization() {
             {/* ── Canvas ──────────────────────────────────────────── */}
             <div className="antcolony-canvas-wrap">
                 <canvas ref={canvasRef} className="antcolony-canvas" width={800} height={520} />
+            </div>
 
-                {/* live stat pills overlaid at the bottom of the canvas */}
+            {/* ── Stats + Legend ───────────────────────────────── */}
+            <div className="aco-meta-row">
                 <div className="antcolony-stat-bar">
-                    <span className="stat-pill">
-                        Iter <strong>{stats.iteration}</strong>/{numIterations}
+                    <span className="stat-pill stat-pill-progress">
+                        <span className="progress-pip" ref={progressPipRef} style={{ width: '0%' }} />
+                        <span className="progress-pip-text">Iter <strong ref={iterTextRef}>0</strong>/{numIterations}</span>
                     </span>
                     <span className="stat-pill">
                         Best <strong>{stats.bestCost || '—'}</strong>
-                    </span>
-                    <span className="stat-pill stat-pill-progress">
-                        <span className="progress-pip" style={{ width: `${stats.progress}%` }} />
-                        <span className="progress-pip-text">{Math.round(stats.progress)}%</span>
                     </span>
                     <span className="stat-pill">
                         Cities <strong>{numCities}</strong>
                     </span>
                     <span className="stat-pill">
                         Ants <strong>{numAnts}</strong>
+                    </span>
+                </div>
+                <div className="aco-legend">
+                    <span
+                        className={`aco-legend-item aco-legend-toggle${showPheromones ? '' : ' aco-legend-off'}`}
+                        onClick={() => setShowPheromones(v => !v)}
+                        title="Toggle pheromone trails"
+                    >
+                        <span className="aco-legend-swatch" style={{ background: '#fde68a', border: '1.5px solid #f59e0b' }} />
+                        Pheromone trails
+                    </span>
+                    <span
+                        className={`aco-legend-item aco-legend-toggle${showTrails ? '' : ' aco-legend-off'}`}
+                        onClick={() => setShowTrails(v => !v)}
+                        title="Toggle ant paths"
+                    >
+                        <span className="aco-legend-swatch" style={{ background: '#5eead4', border: '1.5px solid #0d9488' }} />
+                        Ant paths
+                    </span>
+                    <span
+                        className={`aco-legend-item aco-legend-toggle${showBestPath ? '' : ' aco-legend-off'}`}
+                        onClick={() => setShowBestPath(v => !v)}
+                        title="Toggle best path"
+                    >
+                        <span className="aco-legend-swatch" style={{ background: '#d97706' }} />
+                        Best path
+                    </span>
+                    <span className="aco-legend-item">
+                        <span className="aco-legend-swatch aco-legend-city" style={{ background: '#2563eb', borderRadius: '50%' }} />
+                        Cities
                     </span>
                 </div>
             </div>
@@ -234,7 +284,12 @@ export default function AntColonyVisualization() {
 
             {/* ── Compact parameter panel ─────────────────────────── */}
             <div className="antcolony-info-panel">
-                <div className="aco-params-grid">
+                <button className="aco-panel-header" onClick={() => setPanelOpen(v => !v)}>
+                    <span>Parameters</span>
+                    <span className={`aco-panel-chevron${panelOpen ? ' open' : ''}`}>&#8964;</span>
+                </button>
+                <div className={`aco-panel-body${panelOpen ? ' open' : ''}`}>
+                    <div className="aco-params-grid">
                     <div className="control-group">
                         <label>Cities <span className="value">{numCities}</span></label>
                         <input type="range" min="5" max="40" value={numCities}
@@ -271,35 +326,9 @@ export default function AntColonyVisualization() {
                             onChange={(e) => setBeta(parseFloat(e.target.value))}
                             disabled={isRunning} className="slider" />
                     </div>
-                    <div className="control-group">
-                        <label>Speed <span className="value">{speed}</span></label>
-                        <input type="range" min="1" max="20" value={speed}
-                            onChange={(e) => setSpeed(parseInt(e.target.value))}
-                            className="slider" />
-                    </div>
-                    <div className="control-group aco-toggles">
-                        <label>Show</label>
-                        <div className="aco-toggle-row">
-                            <label className="aco-toggle">
-                                <input type="checkbox" checked={showPheromones}
-                                    onChange={(e) => setShowPheromones(e.target.checked)} />
-                                Pheromones
-                            </label>
-                            <label className="aco-toggle">
-                                <input type="checkbox" checked={showTrails}
-                                    onChange={(e) => setShowTrails(e.target.checked)} />
-                                Ant paths
-                            </label>
-                            <label className="aco-toggle">
-                                <input type="checkbox" checked={showBestPath}
-                                    onChange={(e) => setShowBestPath(e.target.checked)} />
-                                Best path
-                            </label>
-                        </div>
-                    </div>
                 </div>
             </div>
-
+            </div>
         </div>
     );
 }
