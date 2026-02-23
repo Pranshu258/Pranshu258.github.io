@@ -279,12 +279,11 @@
 }
 
 .aco-panel-chevron {
-    font-size: 1rem;
-    line-height: 1;
     color: #a1a1aa;
-    transition: transform 0.2s ease;
+    transition: transform 0.25s ease;
     display: inline-block;
     transform: rotate(-90deg);
+    flex-shrink: 0;
 }
 
 .aco-panel-chevron.open {
