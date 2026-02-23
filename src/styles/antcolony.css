@@ -272,8 +272,10 @@
     color: #18181b;
 }
 
+.aco-panel-header:focus,
 .aco-panel-header:focus-visible {
     outline: none;
+    box-shadow: none;
 }
 
 .aco-panel-chevron {
