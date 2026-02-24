@@ -78,6 +78,10 @@
 .stat-pill strong {
     color: #18181b;
     font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    display: inline-block;
+    min-width: 2.5ch;
+    text-align: right;
 }
 
 /* Progress pill */
@@ -106,6 +110,12 @@
 
 .progress-pip-text strong {
     color: #1d4ed8;
+    font-weight: 600;
+}
+
+/* Queen health pill */
+.stat-pill.stat-pill-queen .progress-pip-text {
+    color: #6d28d9;
     font-weight: 600;
 }
 

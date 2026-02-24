@@ -21,7 +21,7 @@ const SEPARATION_DIST = 8;  // minimum centre-to-centre distance between ants (p
 // ─── Ant ─────────────────────────────────────────────────────────────────────
 
 class Ant {
-    constructor(x, y) {
+    constructor(x, y, lifespan = 0) {
         this.x = x;
         this.y = y;
         this.angle = Math.random() * Math.PI * 2;
@@ -30,6 +30,13 @@ class Ant {
         // Accumulated steps while searching — used to weight pheromone deposit.
         // Fewer steps → shorter path → more pheromone (like 1/L in classic ACO).
         this.stepsSinceFood = 0;
+        // Starvation counter — resets only when food is actually collected.
+        // Unlike stepsSinceFood this is NOT reset at the nest.
+        this.starvationTimer = 0;
+        // Age: how many ticks this ant has lived.  Compared against `lifespan`.
+        this.age      = 0;
+        this.lifespan = lifespan; // set by simulation at spawn time
+        this.dead     = false;
     }
 }
 
@@ -68,12 +75,20 @@ export class AntForagingSimulation {
         this.maxFoodRadius    = params.maxFoodRadius    ?? 20;    // px
         this.waterLevel       = params.waterLevel       ?? 0.22;  // elevation threshold — cells below are water
         this.slopeEffect      = params.slopeEffect      ?? 0.55;  // 0=flat, 1=strong terrain influence
+        this.deathThreshold         = params.deathThreshold         ?? 6000;  // starvation ticks before an ant dies
+        this.maxAge                  = params.maxAge                  ?? 20000; // ticks — ±30 % jitter applied per-ant
+        this.antBirthInterval        = params.antBirthInterval        ?? 250;   // ticks between new ants born at nest
+        this.queenStarvationThreshold = params.queenStarvationThreshold ?? 15000; // delivery drought that kills the queen
 
         // ── State ────────────────────────────────────────────────────────────
         this.pheromones    = new Float32Array(this.gw * this.gh); // 0–255 range
-        this.foodCollected = 0;
-        this.tick          = 0;
+        this.foodCollected    = 0;
+        this.antsDied         = 0;
+        this.queenHungerTimer = 0;  // ticks since last food was delivered to the nest
+        this.queenDead        = false;
+        this.tick             = 0;
         this.nextFoodSpawnTick = 0;
+        this.nextBirthTick     = 0;
 
         this._init();
     }
@@ -208,21 +223,34 @@ export class AntForagingSimulation {
         const cy = this.nest.y;
         const radius = this.minFoodRadius + Math.random() * (this.maxFoodRadius - this.minFoodRadius);
         const amount = Math.round(this.minFoodAmount + Math.random() * (this.maxFoodAmount - this.minFoodAmount));
-        // Retry until the food source lands on dry land (above waterLevel)
-        for (let t = 0; t < 40; t++) {
-            const angle  = Math.random() * Math.PI * 2;
-            const dist   = 120 + Math.random() * 150;
-            const x = Math.max(30, Math.min(this.width  - 30, cx + Math.cos(angle) * dist));
-            const y = Math.max(30, Math.min(this.height - 30, cy + Math.sin(angle) * dist));
+        // Retry with fully random positions across the whole canvas.
+        // Enforce a minimum clearance from the nest so food isn't spawned on top of it.
+        const nestClearance = this.nest.radius + 40;
+        for (let t = 0; t < 80; t++) {
+            const x = 30 + Math.random() * (this.width  - 60);
+            const y = 30 + Math.random() * (this.height - 60);
+            const dx = x - cx, dy = y - cy;
+            if (dx * dx + dy * dy < nestClearance * nestClearance) continue;
             if (this._sampleHeight(x, y) >= this.waterLevel) {
                 return { x, y, amount, maxAmount: amount, radius, shapeRadii: this._randomBlobRadii(9, 0.30) };
             }
         }
-        // Fallback: place at nest perimeter (guaranteed dry)
-        const angle = Math.random() * Math.PI * 2;
-        const x = cx + Math.cos(angle) * (this.nest.radius + 30);
-        const y = cy + Math.sin(angle) * (this.nest.radius + 30);
-        return { x, y, amount, maxAmount: amount, radius, shapeRadii: this._randomBlobRadii(9, 0.30) };
+        // Fallback: scan a coarse grid and pick any dry cell outside nest clearance
+        const step = 30;
+        for (let fy = step; fy < this.height - step; fy += step) {
+            for (let fx = step; fx < this.width - step; fx += step) {
+                if (this._sampleHeight(fx, fy) < this.waterLevel) continue;
+                const dx = fx - cx, dy = fy - cy;
+                if (dx * dx + dy * dy < nestClearance * nestClearance) continue;
+                return { x: fx, y: fy, amount, maxAmount: amount, radius, shapeRadii: this._randomBlobRadii(9, 0.30) };
+            }
+        }
+        return { x: cx + nestClearance, y: cy, amount, maxAmount: amount, radius, shapeRadii: this._randomBlobRadii(9, 0.30) };
+    }
+
+    /** Return a lifespan with ±30 % random variation so ants die gradually. */
+    _randomLifespan() {
+        return Math.round(this.maxAge * (0.70 + Math.random() * 0.60));
     }
 
     /** Possibly spawn a new food source at a random time. */
@@ -246,9 +274,12 @@ export class AntForagingSimulation {
             // Phyllotaxis (sunflower) packing — uniformly fills the circle
             const r     = radius * Math.sqrt((i + 0.5) / this.numAnts);
             const theta = i * goldenAngle;
-            const ant   = new Ant(x + r * Math.cos(theta), y + r * Math.sin(theta));
+            const ant   = new Ant(x + r * Math.cos(theta), y + r * Math.sin(theta), this._randomLifespan());
+            // Stagger initial ages across the full lifespan so the first wave
+            // doesn't die all at once — simulates a pre-existing workforce.
+            ant.age   = Math.floor(Math.random() * ant.lifespan * 0.6);
             // Point outward from centre so ants immediately disperse
-            ant.angle   = theta + (Math.random() - 0.5) * 0.8;
+            ant.angle = theta + (Math.random() - 0.5) * 0.8;
             return ant;
         });
     }
@@ -283,8 +314,11 @@ export class AntForagingSimulation {
             slopeEffect:       params.slopeEffect       ?? this.slopeEffect,
         });
         this.pheromones.fill(0);
-        this.foodCollected = 0;
-        this.tick          = 0;
+        this.foodCollected    = 0;
+        this.antsDied         = 0;
+        this.queenHungerTimer = 0;
+        this.queenDead        = false;
+        this.tick             = 0;
         this._init();
     }
 
@@ -299,8 +333,12 @@ export class AntForagingSimulation {
             heightmap:     this.heightmap,
             gw:            this.gw,
             gh:            this.gh,
-            foodCollected: this.foodCollected,
-            tick:          this.tick,
+            foodCollected:    this.foodCollected,
+            antsDied:         this.antsDied,
+            queenDead:        this.queenDead,
+            queenHungerTimer: this.queenHungerTimer,
+            queenStarvationThreshold: this.queenStarvationThreshold,
+            tick:             this.tick,
         };
     }
 
@@ -320,6 +358,33 @@ export class AntForagingSimulation {
         this._maybeSpawnFood();
         const spatialGrid = this._buildSpatialGrid();
         for (const ant of this.ants) this._updateAnt(ant, spatialGrid);
+
+        // Remove dead ants
+        const before = this.ants.length;
+        this.ants = this.ants.filter(a => !a.dead);
+        this.antsDied += before - this.ants.length;
+
+        // Queen hunger: count every tick; reset when food is delivered (see _updateAnt)
+        if (!this.queenDead) {
+            this.queenHungerTimer++;
+            if (this.queenHungerTimer >= this.queenStarvationThreshold) {
+                this.queenDead = true; // colony collapses — no more births
+            }
+        }
+
+        // Slowly replenish from the nest (queen keeps laying eggs, unless she has died)
+        if (!this.queenDead && this.tick >= this.nextBirthTick && this.ants.length < this.numAnts) {
+            const { x, y, radius } = this.nest;
+            const exitAngle = Math.random() * Math.PI * 2;
+            const newAnt    = new Ant(
+                x + Math.cos(exitAngle) * (radius + SEPARATION_DIST),
+                y + Math.sin(exitAngle) * (radius + SEPARATION_DIST)
+            );
+            newAnt.angle = exitAngle;
+            newAnt.lifespan = this._randomLifespan();
+            this.ants.push(newAnt);
+            this.nextBirthTick = this.tick + this.antBirthInterval;
+        }
     }
 
     // Build a spatial hash mapping cell keys → arrays of ants.
@@ -365,6 +430,20 @@ export class AntForagingSimulation {
 
     _updateAnt(ant, spatialGrid) {
         const { nest, antSpeed, turnSpeed, randomTurn, sensorDist, sensorAngle } = this;
+
+        // Starvation check — ant dies if it hasn't eaten in too long
+        if (!ant.hasFood) ant.starvationTimer++;
+        if (ant.starvationTimer >= this.deathThreshold) {
+            ant.dead = true;
+            return;
+        }
+
+        // Age check — ant dies of old age
+        ant.age++;
+        if (ant.age >= ant.lifespan) {
+            ant.dead = true;
+            return;
+        }
 
         if (ant.state === 'SEARCHING') {
             ant.stepsSinceFood++;
@@ -657,6 +736,7 @@ export class AntForagingSimulation {
                     this.foodCollected++;
                     ant.state          = 'RETURNING';
                     ant.hasFood        = true;
+                    ant.starvationTimer = 0; // fed — reset starvation clock
                     ant.angle         += Math.PI; // turn around
                     // stepsSinceFood stays — used to weight deposit on the way back
                     break;
@@ -666,6 +746,8 @@ export class AntForagingSimulation {
             // Check if ant reached the nest
             const dx = nest.x - ant.x, dy = nest.y - ant.y;
             if (dx * dx + dy * dy < nest.radius * nest.radius) {
+                // If the ant was carrying food, it just fed the queen
+                if (ant.hasFood) this.queenHungerTimer = 0;
                 ant.state          = 'SEARCHING';
                 ant.hasFood        = false;
                 ant.stepsSinceFood = 0; // reset frustration on each nest visit

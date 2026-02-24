@@ -103,85 +103,6 @@ function drawBlobPath(ctx, x, y, baseRadius, shapeRadii, extra = 0) {
     ctx.closePath();
 }
 
-/**
- * Draw a single ant at (x, y) oriented along `angle` (radians, 0 = right).
- * The ant is drawn in local space (head points up), then rotated so the head
- * faces the direction of travel.
- */
-function drawAnt(ctx, x, y, angle, isReturning, frustration = 0) {
-    let body, border, legs;
-    if (isReturning) {
-        body   = '#1c1c1c';
-        border = '#ef4444';
-        legs   = '#ef4444';
-    } else if (frustration > 0) {
-        // black (#111) → gray (#71717a) as frustration 0→1
-        const r = Math.round(17 + (113 - 17) * frustration);
-        const g = Math.round(17 + (113 - 17) * frustration);
-        const b = Math.round(17 + (122 - 17) * frustration);
-        body   = `rgb(${r},${g},${b})`;
-        border = body;
-        legs   = body;
-    } else {
-        body   = '#111111';
-        border = '#3f3f46';
-        legs   = '#52525b';
-    }
-
-    ctx.save();
-    ctx.translate(x, y);
-    // ant is drawn head-up (head at −y); rotate so head points toward ant.angle
-    ctx.rotate(angle + Math.PI / 2);
-
-    // ── Abdomen ───────────────────────────────────────────────────────
-    ctx.globalAlpha = 0.92;
-    ctx.fillStyle   = body;
-    ctx.strokeStyle = border;
-    ctx.lineWidth   = 0.7;
-    ctx.beginPath();
-    ctx.ellipse(0, 5.5, 2.4, 3.4, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    // ── Thorax ─────────────────────────────────────────────────────────
-    ctx.beginPath();
-    ctx.arc(0, 1.2, 1.7, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    // ── Head ───────────────────────────────────────────────────────────
-    ctx.beginPath();
-    ctx.arc(0, -2.3, 1.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    // ── Legs (3 pairs, attached to thorax) ────────────────────────────
-    ctx.strokeStyle = legs;
-    ctx.lineWidth   = 0.65;
-
-    // front pair — angle forward
-    ctx.globalAlpha = 0.75;
-    ctx.beginPath(); ctx.moveTo(-0.5, 0.2); ctx.lineTo(-5.5, -2);   ctx.stroke();
-    ctx.beginPath(); ctx.moveTo( 0.5, 0.2); ctx.lineTo( 5.5, -2);   ctx.stroke();
-
-    // middle pair — horizontal
-    ctx.beginPath(); ctx.moveTo(-0.5, 1.2); ctx.lineTo(-6,    0.5); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo( 0.5, 1.2); ctx.lineTo( 6,    0.5); ctx.stroke();
-
-    // back pair — angle backward
-    ctx.beginPath(); ctx.moveTo(-0.5, 2.2); ctx.lineTo(-5.5,  4.5); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo( 0.5, 2.2); ctx.lineTo( 5.5,  4.5); ctx.stroke();
-
-    // ── Antennae ───────────────────────────────────────────────────────
-    ctx.strokeStyle = border;
-    ctx.lineWidth   = 0.6;
-    ctx.globalAlpha = 0.8;
-    ctx.beginPath(); ctx.moveTo(-0.7, -3.6); ctx.lineTo(-3.8, -7.5); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo( 0.7, -3.6); ctx.lineTo( 3.8, -7.5); ctx.stroke();
-
-    ctx.restore();
-}
-
 function drawCircle(ctx, x, y, angle, isReturning, frustration = 0) {
     let fill, stroke;
     if (isReturning) {
@@ -237,6 +158,10 @@ export default function AntForagingVisualization() {
     const tickLabelRef    = useRef(null);
     const searchingRef    = useRef(null);
     const returningRef    = useRef(null);
+    const diedLabelRef    = useRef(null);
+    const populationRef   = useRef(null);
+    const queenBarRef     = useRef(null);  // inner fill of queen health bar
+    const queenStatusRef  = useRef(null);  // text label for queen state
     const progressPipRef  = useRef(null);
 
     // Parameters
@@ -252,8 +177,7 @@ export default function AntForagingVisualization() {
     const [showPheromone, setShowPheromone] = useState(true);
     const showPheromoneRef = useRef(true);
 
-    const [antShape, setAntShape] = useState('circle'); // 'ant' | 'circle'
-    const antShapeRef = useRef('circle');
+
 
     // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -307,7 +231,7 @@ export default function AntForagingVisualization() {
         if (!canvas || !off || !sim) return;
 
         const ctx = canvas.getContext('2d');
-        const { ants, nest, foodSources, waterLevel, heightmap, pheromones, gw, gh } = sim.getState();
+        const { ants, nest, foodSources, waterLevel, heightmap, pheromones, gw, gh, queenDead } = sim.getState();
 
         // ── Background ──────────────────────────────────────────────────────
         ctx.fillStyle = '#ffffff';
@@ -423,29 +347,32 @@ export default function AntForagingVisualization() {
 
         // ── Nest ─────────────────────────────────────────────────────────────
         const { x: nx, y: ny, radius: nr } = nest;
+        const nestFill   = queenDead ? '#374151' : '#92400e';
+        const nestStroke = queenDead ? '#1f2937' : '#78350f';
+        const nestGlow   = queenDead ? 'rgba(55,65,81,0.30)' : 'rgba(146,64,14,0.25)';
 
         // Glow ring
         const nestGrd = ctx.createRadialGradient(nx, ny, 0, nx, ny, nr + 10);
-        nestGrd.addColorStop(0,   'rgba(146, 64, 14, 0.25)');
-        nestGrd.addColorStop(1,   'rgba(146, 64, 14, 0)');
+        nestGrd.addColorStop(0, nestGlow);
+        nestGrd.addColorStop(1, queenDead ? 'rgba(55,65,81,0)' : 'rgba(146,64,14,0)');
         ctx.fillStyle = nestGrd;
         drawBlobPath(ctx, nx, ny, nr, nest.shapeRadii, 10);
         ctx.fill();
 
         // Nest fill
-        ctx.fillStyle   = '#92400e';
-        ctx.strokeStyle = '#78350f';
+        ctx.fillStyle   = nestFill;
+        ctx.strokeStyle = nestStroke;
         ctx.lineWidth   = 2.5;
         drawBlobPath(ctx, nx, ny, nr, nest.shapeRadii);
         ctx.fill();
         ctx.stroke();
 
         // Nest label
-        ctx.fillStyle    = '#fef3c7';
+        ctx.fillStyle    = queenDead ? '#9ca3af' : '#fef3c7';
         ctx.font         = 'bold 11px -apple-system, sans-serif';
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('Nest', nx, ny);
+        ctx.fillText(queenDead ? '\u2620 Nest' : 'Nest', nx, ny);
 
         // ── Ants ─────────────────────────────────────────────────────────────
         let searching = 0, returning = 0;
@@ -456,16 +383,12 @@ export default function AntForagingVisualization() {
             const frustration = !ant.hasFood
                 ? Math.max(0, Math.min(1, (ant.stepsSinceFood - 1200) / 1200))
                 : 0;
-            if (antShapeRef.current === 'ant') {
-                drawAnt(ctx, ant.x, ant.y, ant.angle, isReturning && ant.hasFood, frustration);
-            } else {
-                drawCircle(ctx, ant.x, ant.y, ant.angle, isReturning && ant.hasFood, frustration);
-            }
+            drawCircle(ctx, ant.x, ant.y, ant.angle, isReturning && ant.hasFood, frustration);
         }
         ctx.globalAlpha = 1;
 
         // ── Update live DOM stats ─────────────────────────────────────────────
-        const { foodCollected, tick } = sim.getState();
+        const { foodCollected, tick, antsDied, queenHungerTimer, queenStarvationThreshold } = sim.getState();
         // Show how depleted the current visible food sources are (fills as ants harvest them).
         const totalOnScreen  = foodSources.reduce((s, f) => s + f.maxAmount, 0);
         const remainOnScreen = foodSources.reduce((s, f) => s + f.amount,    0);
@@ -474,6 +397,17 @@ export default function AntForagingVisualization() {
         if (tickLabelRef.current)   tickLabelRef.current.textContent   = tick;
         if (searchingRef.current)   searchingRef.current.textContent   = searching;
         if (returningRef.current)   returningRef.current.textContent   = returning;
+        if (diedLabelRef.current)   diedLabelRef.current.textContent   = antsDied;
+        if (populationRef.current)  populationRef.current.textContent  = ants.length;
+        if (queenBarRef.current) {
+            const health = queenDead ? 0 : Math.max(0, 1 - queenHungerTimer / queenStarvationThreshold);
+            queenBarRef.current.style.width = Math.round(health * 100) + '%';
+            queenBarRef.current.style.background = health > 0.5 ? 'rgba(168,85,247,0.2)' : health > 0.25 ? 'rgba(249,115,22,0.22)' : 'rgba(239,68,68,0.22)';
+        }
+        if (queenStatusRef.current) {
+            queenStatusRef.current.textContent = queenDead ? '☠ Queen dead' : 'Queen';
+            queenStatusRef.current.style.color = queenDead ? '#ef4444' : '';
+        }
         if (progressPipRef.current) {
             progressPipRef.current.style.width = depletedPct + '%';
         }
@@ -584,6 +518,18 @@ export default function AntForagingVisualization() {
                         <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#ef4444', marginRight: 4 }} />
                         Returning <strong ref={returningRef}>0</strong>
                     </span>
+                    <span className="stat-pill">
+                        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#6b7280', marginRight: 4 }} />
+                        Died <strong ref={diedLabelRef}>0</strong>
+                    </span>
+                    <span className="stat-pill">
+                        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#3b82f6', marginRight: 4 }} />
+                        Population <strong ref={populationRef}>0</strong>
+                    </span>
+                    <span className="stat-pill stat-pill-progress stat-pill-queen" style={{ minWidth: 120 }}>
+                        <span className="progress-pip" ref={queenBarRef} style={{ width: '100%', background: 'rgba(168,85,247,0.2)' }} />
+                        <span className="progress-pip-text" ref={queenStatusRef}>Queen</span>
+                    </span>
                 </div>
 
                 <div className="aco-legend">
@@ -624,18 +570,6 @@ export default function AntForagingVisualization() {
                 </button>
                 <button onClick={handleReset} className="aco-btn aco-btn-reset">
                     ↺ Reset
-                </button>
-                <button
-                    onClick={() => setAntShape(v => {
-                        const next = v === 'ant' ? 'circle' : 'ant';
-                        antShapeRef.current = next;
-                        if (!isRunningRef.current || isPausedRef.current) render();
-                        return next;
-                    })}
-                    className="aco-btn"
-                    title={antShape === 'ant' ? 'Switch to dots (bug-free mode)' : 'Switch to ant shapes'}
-                >
-                    {antShape === 'ant' ? '● Dots' : '🐜 Ants'}
                 </button>
             </div>
 
