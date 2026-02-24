@@ -7,7 +7,47 @@ const W = 800;
 const H = 520;
 
 // ── Pheromone colour (amber) as RGB ────────────────────────────────────────
-const PHERO_R = 245, PHERO_G = 158, PHERO_B = 11;
+ const PHERO_R = 245, PHERO_G = 158, PHERO_B = 11;
+
+// ── Terrain ImageData renderer ─────────────────────────────────────────
+// Cells below waterLevel are coloured as water (depth-shaded blue);
+// cells above use a green → tan → brown elevation ramp.
+function buildTerrainImageData(heightmap, gw, gh, waterLevel) {
+    const data = new Uint8ClampedArray(gw * gh * 4);
+    for (let i = 0; i < gw * gh; i++) {
+        const t = heightmap[i];
+        let r, g, b, a;
+        if (t < waterLevel) {
+            // Water: deeper = darker and more opaque
+            const depth = 1 - t / waterLevel; // 0 = shore, 1 = deepest
+            r = Math.round(30  + (70  - 30)  * (1 - depth));
+            g = Math.round(100 + (170 - 100) * (1 - depth));
+            b = Math.round(200 + (240 - 200) * (1 - depth));
+            a = Math.round(160 + depth * 80); // 160 → 240
+        } else {
+            // Land: normalise position above waterLevel to 0–1
+            const tn = (t - waterLevel) / (1 - waterLevel);
+            if (tn < 0.5) {
+                const s = tn * 2;
+                r = Math.round(134 + (210 - 134) * s);
+                g = Math.round(239 + (200 - 239) * s);
+                b = Math.round(172 + (150 - 172) * s);
+                a = Math.round(30  + (55  - 30)  * s);
+            } else {
+                const s = (tn - 0.5) * 2;
+                r = Math.round(210 + (170 - 210) * s);
+                g = Math.round(200 + (120 - 200) * s);
+                b = Math.round(150 + ( 80 - 150) * s);
+                a = Math.round(55  + (80  - 55)  * s);
+            }
+        }
+        data[i * 4    ] = r;
+        data[i * 4 + 1] = g;
+        data[i * 4 + 2] = b;
+        data[i * 4 + 3] = a;
+    }
+    return new ImageData(data, gw, gh);
+}
 
 // ── Pheromone ImageData renderer ───────────────────────────────────────────
 // Writes directly into a gw×gh ImageData, then drawn stretched to the canvas.
@@ -29,6 +69,39 @@ function buildPheromoneImageData(pheromones, gw, gh) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Trace a smooth organic blob path into `ctx`.
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} x          centre x
+ * @param {number} y          centre y
+ * @param {number} baseRadius base radius in px
+ * @param {number[]} shapeRadii  per-point radius multipliers (length = N)
+ * @param {number} [extra=0]  uniform extra px added to every radius (for glows)
+ */
+function drawBlobPath(ctx, x, y, baseRadius, shapeRadii, extra = 0) {
+    const n    = shapeRadii.length;
+    const step = (Math.PI * 2) / n;
+    const pts  = shapeRadii.map((r, i) => ({
+        x: x + Math.cos(i * step) * (baseRadius * r + extra),
+        y: y + Math.sin(i * step) * (baseRadius * r + extra),
+    }));
+    // Smooth closed curve: move to midpoint between last and first,
+    // then quadratic-bezier through each vertex to the next midpoint.
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+        const curr = pts[i];
+        const next = pts[(i + 1) % n];
+        const mx   = (curr.x + next.x) / 2;
+        const my   = (curr.y + next.y) / 2;
+        if (i === 0) {
+            const prev = pts[n - 1];
+            ctx.moveTo((prev.x + curr.x) / 2, (prev.y + curr.y) / 2);
+        }
+        ctx.quadraticCurveTo(curr.x, curr.y, mx, my);
+    }
+    ctx.closePath();
+}
 
 /**
  * Draw a single ant at (x, y) oriented along `angle` (radians, 0 = right).
@@ -146,6 +219,8 @@ function drawCircle(ctx, x, y, angle, isReturning, frustration = 0) {
 export default function AntForagingVisualization() {
     const canvasRef      = useRef(null);
     const offscreenRef   = useRef(null);   // off-screen canvas for ImageData blitting
+    const terrainOffRef  = useRef(null);   // off-screen canvas for terrain layer
+    const terrainStaleRef = useRef(true);  // true → rebuild terrain on next render
     const simRef         = useRef(null);   // AntForagingSimulation instance
     const rafRef         = useRef(null);   // requestAnimationFrame id
     const isRunningRef   = useRef(false);
@@ -199,10 +274,17 @@ export default function AntForagingVisualization() {
         off.width     = Math.ceil(W / GRID_RES);
         off.height    = Math.ceil(H / GRID_RES);
         offscreenRef.current = off;
+
+        // Off-screen canvas for terrain layer (same grid resolution)
+        const terrOff     = document.createElement('canvas');
+        terrOff.width     = Math.ceil(W / GRID_RES);
+        terrOff.height    = Math.ceil(H / GRID_RES);
+        terrainOffRef.current = terrOff;
     }, []);
 
     // Build / rebuild the simulation
     const buildSim = useCallback((params = {}) => {
+        terrainStaleRef.current = true; // new sim → new heightmap → redraw terrain
         const sim = new AntForagingSimulation(W, H, {
             numAnts:           params.numAnts           ?? numAnts,
             maxFoodSources:    params.maxFoodSources    ?? maxFoodSources,
@@ -218,20 +300,79 @@ export default function AntForagingVisualization() {
     // ── Rendering ─────────────────────────────────────────────────────────────
 
     const render = useCallback(() => {
-        const canvas = canvasRef.current;
-        const off    = offscreenRef.current;
-        const sim    = simRef.current;
+        const canvas  = canvasRef.current;
+        const off     = offscreenRef.current;
+        const terrOff = terrainOffRef.current;
+        const sim     = simRef.current;
         if (!canvas || !off || !sim) return;
 
-        const ctx               = canvas.getContext('2d');
-        const { ants, nest, foodSources, pheromones, gw, gh } = sim.getState();
+        const ctx = canvas.getContext('2d');
+        const { ants, nest, foodSources, waterLevel, heightmap, pheromones, gw, gh } = sim.getState();
 
         // ── Background ──────────────────────────────────────────────────────
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, W, H);
 
-        // ── Subtle grid ──────────────────────────────────────────────────────
-        ctx.strokeStyle = 'rgba(0,0,0,0.04)';
+        // ── Terrain layer ─────────────────────────────────────────────
+        if (terrOff && heightmap) {
+            if (terrainStaleRef.current) {
+                const terrCtx = terrOff.getContext('2d');
+                terrCtx.putImageData(buildTerrainImageData(heightmap, gw, gh, waterLevel ?? 0.22), 0, 0);
+                terrainStaleRef.current = false;
+            }
+            ctx.drawImage(terrOff, 0, 0, W, H);
+
+            // Shore line at the water boundary
+            const wl = waterLevel ?? 0.22;
+            ctx.save();
+            ctx.strokeStyle = 'rgba(14,165,233,0.55)';
+            ctx.lineWidth   = 1.0;
+            ctx.beginPath();
+            for (let gy = 0; gy < gh - 1; gy++) {
+                for (let gx = 0; gx < gw - 1; gx++) {
+                    const h00 = heightmap[ gy      * gw + gx    ];
+                    const h10 = heightmap[ gy      * gw + gx + 1];
+                    const h01 = heightmap[(gy + 1) * gw + gx    ];
+                    const cross = (h00 < wl) !== (h10 < wl)
+                               || (h00 < wl) !== (h01 < wl);
+                    if (!cross) continue;
+                    const px = gx * GRID_RES, py = gy * GRID_RES;
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(px + GRID_RES, py + GRID_RES);
+                }
+            }
+            ctx.stroke();
+
+            // Elevation contour lines on dry land only
+            const CONTOUR_LEVELS = [0.35, 0.55, 0.72, 0.88];
+            ctx.lineWidth = 0.6;
+            for (const level of CONTOUR_LEVELS) {
+                ctx.strokeStyle = level > 0.65
+                    ? 'rgba(120,80,40,0.18)'
+                    : 'rgba(60,120,60,0.14)';
+                ctx.beginPath();
+                for (let gy = 0; gy < gh - 1; gy++) {
+                    for (let gx = 0; gx < gw - 1; gx++) {
+                        const h00 = heightmap[ gy      * gw + gx    ];
+                        const h10 = heightmap[ gy      * gw + gx + 1];
+                        const h01 = heightmap[(gy + 1) * gw + gx    ];
+                        // Skip cells that are fully underwater
+                        if (h00 < wl && h10 < wl && h01 < wl) continue;
+                        const cross = (h00 < level) !== (h10 < level)
+                                   || (h00 < level) !== (h01 < level);
+                        if (!cross) continue;
+                        const px = gx * GRID_RES, py = gy * GRID_RES;
+                        ctx.moveTo(px, py);
+                        ctx.lineTo(px + GRID_RES, py + GRID_RES);
+                    }
+                }
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        // ── Subtle grid ────────────────────────────────────────────────
+        ctx.strokeStyle = 'rgba(0,0,0,0.03)';
         ctx.lineWidth   = 1;
         for (let x = 0; x < W; x += 50) {
             ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
@@ -259,16 +400,14 @@ export default function AntForagingVisualization() {
             grd.addColorStop(0,   'rgba(34,197,94,0.25)');
             grd.addColorStop(1,   'rgba(34,197,94,0)');
             ctx.fillStyle = grd;
-            ctx.beginPath();
-            ctx.arc(food.x, food.y, radius + 6, 0, Math.PI * 2);
+            drawBlobPath(ctx, food.x, food.y, radius, food.shapeRadii, 6);
             ctx.fill();
 
-            // Food circle fill (fades as food depletes)
+            // Food blob fill (fades as food depletes)
             ctx.fillStyle   = `rgba(34,197,94,${0.3 + 0.7 * ratio})`;
             ctx.strokeStyle = '#16a34a';
             ctx.lineWidth   = 2;
-            ctx.beginPath();
-            ctx.arc(food.x, food.y, radius, 0, Math.PI * 2);
+            drawBlobPath(ctx, food.x, food.y, radius, food.shapeRadii);
             ctx.fill();
             ctx.stroke();
 
@@ -290,16 +429,14 @@ export default function AntForagingVisualization() {
         nestGrd.addColorStop(0,   'rgba(146, 64, 14, 0.25)');
         nestGrd.addColorStop(1,   'rgba(146, 64, 14, 0)');
         ctx.fillStyle = nestGrd;
-        ctx.beginPath();
-        ctx.arc(nx, ny, nr + 10, 0, Math.PI * 2);
+        drawBlobPath(ctx, nx, ny, nr, nest.shapeRadii, 10);
         ctx.fill();
 
         // Nest fill
         ctx.fillStyle   = '#92400e';
         ctx.strokeStyle = '#78350f';
         ctx.lineWidth   = 2.5;
-        ctx.beginPath();
-        ctx.arc(nx, ny, nr, 0, Math.PI * 2);
+        drawBlobPath(ctx, nx, ny, nr, nest.shapeRadii);
         ctx.fill();
         ctx.stroke();
 
@@ -358,7 +495,7 @@ export default function AntForagingVisualization() {
 
     const handleStart = () => {
         if (isRunningRef.current) return;
-        buildSim();
+        if (!simRef.current) buildSim();
         isRunningRef.current = true;
         isPausedRef.current  = false;
         setIsRunning(true);

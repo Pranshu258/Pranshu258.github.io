@@ -66,6 +66,8 @@ export class AntForagingSimulation {
         this.maxFoodAmount    = params.maxFoodAmount    ?? 120;   // largest food patch capacity
         this.minFoodRadius    = params.minFoodRadius    ?? 9;     // px
         this.maxFoodRadius    = params.maxFoodRadius    ?? 20;    // px
+        this.waterLevel       = params.waterLevel       ?? 0.22;  // elevation threshold — cells below are water
+        this.slopeEffect      = params.slopeEffect      ?? 0.55;  // 0=flat, 1=strong terrain influence
 
         // ── State ────────────────────────────────────────────────────────────
         this.pheromones    = new Float32Array(this.gw * this.gh); // 0–255 range
@@ -82,12 +84,29 @@ export class AntForagingSimulation {
         // Nest radius scaled to hold all ants without overlap:
         // hex-packing area per ant ≈ SEPARATION_DIST², so r ∝ √numAnts
         const nestRadius = Math.max(22, Math.round(Math.sqrt(this.numAnts) * 3));
+
+        // Generate raw heightmap first so we can pick the best (highest) nest site.
+        const rawMap = this._generateRawHeightmap();
+
+        // Find the highest grid cell, keeping a margin away from canvas edges.
+        const marginCells = Math.ceil(60 / GRID_RES);
+        let bestVal = -Infinity, peakGX = Math.floor(this.gw / 2), peakGY = Math.floor(this.gh / 2);
+        for (let gy = marginCells; gy < this.gh - marginCells; gy++) {
+            for (let gx = marginCells; gx < this.gw - marginCells; gx++) {
+                const v = rawMap[gy * this.gw + gx];
+                if (v > bestVal) { bestVal = v; peakGX = gx; peakGY = gy; }
+            }
+        }
+
         this.nest = {
-            x: this.width  / 2,
-            y: this.height / 2,
+            x: peakGX * GRID_RES + GRID_RES / 2,
+            y: peakGY * GRID_RES + GRID_RES / 2,
             radius: nestRadius,
+            shapeRadii: this._randomBlobRadii(11, 0.18),
         };
 
+        // Blend the nest area to guaranteed dry land and store the finished map.
+        this.heightmap = this._applyNestBlend(rawMap);
         // Start with a single food source; more will appear at random times during the sim.
         this.foodSources = [this._createRandomFoodSource()];
         // Schedule the first additional spawn after a short warm-up period.
@@ -95,17 +114,115 @@ export class AntForagingSimulation {
         this.ants = this._createAnts();
     }
 
+    /**
+     * Generate a raw elevation heightmap using overlapping sine waves.
+     * Values are normalised to 0–1. No nest blending is applied here;
+     * call _applyNestBlend() separately once the nest position is known.
+     */
+    _generateRawHeightmap() {
+        const { gw, gh } = this;
+        const h = new Float32Array(gw * gh);
+
+        // Multiple octaves at different scales and orientations → organic hills
+        const waves = [
+            { scale: 0.008, angle: 0.30, amp: 1.000 },
+            { scale: 0.015, angle: 1.10, amp: 0.500 },
+            { scale: 0.025, angle: 2.40, amp: 0.250 },
+            { scale: 0.042, angle: 0.80, amp: 0.125 },
+        ];
+        const phases = waves.map(() => Math.random() * Math.PI * 2);
+
+        let minH = Infinity, maxH = -Infinity;
+        for (let gy = 0; gy < gh; gy++) {
+            for (let gx = 0; gx < gw; gx++) {
+                const px = gx * GRID_RES, py = gy * GRID_RES;
+                let val = 0;
+                for (let i = 0; i < waves.length; i++) {
+                    const w = waves[i];
+                    val += Math.sin(w.scale * (px * Math.cos(w.angle) + py * Math.sin(w.angle)) + phases[i]) * w.amp;
+                }
+                h[gy * gw + gx] = val;
+                if (val < minH) minH = val;
+                if (val > maxH) maxH = val;
+            }
+        }
+        // Normalise to 0–1
+        const range = maxH - minH || 1;
+        for (let i = 0; i < h.length; i++) h[i] = (h[i] - minH) / range;
+        return h;
+    }
+
+    /**
+     * Blend the nest area of an existing heightmap toward a guaranteed dry-land
+     * floor.  Since the nest is always at the terrain peak, the blend mostly
+     * just smooths the immediate surroundings rather than lifting the height.
+     */
+    _applyNestBlend(h) {
+        const { gw, gh } = this;
+        const nestGX   = this.nest.x / GRID_RES;
+        const nestGY   = this.nest.y / GRID_RES;
+        const flatR    = (this.nest.radius + 50) / GRID_RES;
+        const dryFloor = this.waterLevel + 0.15; // guaranteed dry land at the nest
+        for (let gy = 0; gy < gh; gy++) {
+            for (let gx = 0; gx < gw; gx++) {
+                const dx = gx - nestGX, dy = gy - nestGY;
+                const t = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / flatR);
+                // Ensure floor, but never lower the terrain (nest is already high)
+                const blended = h[gy * gw + gx] * (1 - t * t) + dryFloor * (t * t);
+                h[gy * gw + gx] = Math.max(h[gy * gw + gx], blended);
+            }
+        }
+        return h;
+    }
+
+    // Water is now defined by the waterLevel threshold on the heightmap alone.
+    // No discrete puddle circles or depression are needed.
+
+    /**
+     * Generate N radius multipliers for an organic blob shape.
+     * Each multiplier is in [1-spread, 1+spread], with a smooth low-frequency
+     * variation so adjacent points don't jitter wildly.
+     */
+    _randomBlobRadii(n, spread) {
+        // Generate raw random offsets, then smooth them with a simple circular
+        // moving average so the blob has gentle undulations instead of spikes.
+        const raw = Array.from({ length: n }, () => (Math.random() - 0.5) * 2 * spread);
+        return raw.map((_, i) => {
+            const prev = raw[(i - 1 + n) % n];
+            const next = raw[(i + 1)     % n];
+            return 1 + (prev * 0.25 + raw[i] * 0.5 + next * 0.25);
+        });
+    }
+
+    /** Sample the heightmap at pixel coordinates. */
+    _sampleHeight(x, y) {
+        const gx = Math.floor(x / GRID_RES);
+        const gy = Math.floor(y / GRID_RES);
+        if (gx < 0 || gx >= this.gw || gy < 0 || gy >= this.gh) return 0;
+        return this.heightmap[gy * this.gw + gx];
+    }
+
     /** Create a food source at a random location with a random size. */
     _createRandomFoodSource() {
-        const cx = this.width  / 2;
-        const cy = this.height / 2;
-        const angle  = Math.random() * Math.PI * 2;
-        const dist   = 120 + Math.random() * 150;
-        const x = Math.max(30, Math.min(this.width  - 30, cx + Math.cos(angle) * dist));
-        const y = Math.max(30, Math.min(this.height - 30, cy + Math.sin(angle) * dist));
+        const cx = this.nest.x;
+        const cy = this.nest.y;
         const radius = this.minFoodRadius + Math.random() * (this.maxFoodRadius - this.minFoodRadius);
         const amount = Math.round(this.minFoodAmount + Math.random() * (this.maxFoodAmount - this.minFoodAmount));
-        return { x, y, amount, maxAmount: amount, radius };
+        // Retry until the food source lands on dry land (above waterLevel)
+        for (let t = 0; t < 40; t++) {
+            const angle  = Math.random() * Math.PI * 2;
+            const dist   = 120 + Math.random() * 150;
+            const x = Math.max(30, Math.min(this.width  - 30, cx + Math.cos(angle) * dist));
+            const y = Math.max(30, Math.min(this.height - 30, cy + Math.sin(angle) * dist));
+            if (this._sampleHeight(x, y) >= this.waterLevel) {
+                return { x, y, amount, maxAmount: amount, radius, shapeRadii: this._randomBlobRadii(9, 0.30) };
+            }
+        }
+        // Fallback: place at nest perimeter (guaranteed dry)
+        const angle = Math.random() * Math.PI * 2;
+        const x = cx + Math.cos(angle) * (this.nest.radius + 30);
+        const y = cy + Math.sin(angle) * (this.nest.radius + 30);
+        return { x, y, amount, maxAmount: amount, radius, shapeRadii: this._randomBlobRadii(9, 0.30) };
     }
 
     /** Possibly spawn a new food source at a random time. */
@@ -162,6 +279,8 @@ export class AntForagingSimulation {
             maxFoodAmount:     params.maxFoodAmount     ?? this.maxFoodAmount,
             minFoodRadius:     params.minFoodRadius     ?? this.minFoodRadius,
             maxFoodRadius:     params.maxFoodRadius     ?? this.maxFoodRadius,
+            waterLevel:        params.waterLevel        ?? this.waterLevel,
+            slopeEffect:       params.slopeEffect       ?? this.slopeEffect,
         });
         this.pheromones.fill(0);
         this.foodCollected = 0;
@@ -175,7 +294,9 @@ export class AntForagingSimulation {
             ants:          this.ants,
             nest:          this.nest,
             foodSources:   this.foodSources,
+            waterLevel:    this.waterLevel,
             pheromones:    this.pheromones,
+            heightmap:     this.heightmap,
             gw:            this.gw,
             gh:            this.gh,
             foodCollected: this.foodCollected,
@@ -417,9 +538,108 @@ export class AntForagingSimulation {
             }
         }
 
-        // ── Move ──────────────────────────────────────────────────────────────
-        ant.x += Math.cos(ant.angle) * antSpeed;
-        ant.y += Math.sin(ant.angle) * antSpeed;
+        // ── Terrain: slope-based speed modifier + contour-following nudge ─────
+        const SLOPE_LOOKAHEAD = 6; // px ahead to sample for gradient
+        const hHere  = this._sampleHeight(ant.x, ant.y);
+        const hAhead = this._sampleHeight(
+            ant.x + Math.cos(ant.angle) * SLOPE_LOOKAHEAD,
+            ant.y + Math.sin(ant.angle) * SLOPE_LOOKAHEAD
+        );
+        const slope = hAhead - hHere; // positive = going uphill
+        // Uphill slows, downhill speeds; clamped to keep things fun
+        const slopeScale = Math.max(0.35, Math.min(1.5, 1 - slope * this.slopeEffect * 10));
+        const effectiveSpeed = antSpeed * slopeScale;
+
+        // Gentle contour-following: sample left/right at 45° — steer slightly
+        // toward the lower neighbour so ants prefer ridgelines and valleys.
+        // Clamp to waterLevel so ants are never nudged toward water.
+        const hLeft  = Math.max(this.waterLevel, this._sampleHeight(
+            ant.x + Math.cos(ant.angle - Math.PI / 4) * SLOPE_LOOKAHEAD,
+            ant.y + Math.sin(ant.angle - Math.PI / 4) * SLOPE_LOOKAHEAD
+        ));
+        const hRight = Math.max(this.waterLevel, this._sampleHeight(
+            ant.x + Math.cos(ant.angle + Math.PI / 4) * SLOPE_LOOKAHEAD,
+            ant.y + Math.sin(ant.angle + Math.PI / 4) * SLOPE_LOOKAHEAD
+        ));
+        const lateralDiff = hRight - hLeft; // +ve → right is higher → nudge left
+        ant.angle += lateralDiff * this.slopeEffect * 0.25;
+
+        // ── Pre-emptive water avoidance: steer away before hitting the edge ──
+        // Sample a bit further ahead; if water is approaching, bias toward the
+        // uphill (shore-away) direction so ants curve around puddles smoothly.
+        // Skip when heading toward the nest so returning ants are never diverted.
+        const _dxNest = nest.x - ant.x, _dyNest = nest.y - ant.y;
+        const _distNest = Math.sqrt(_dxNest * _dxNest + _dyNest * _dyNest);
+        const _nearNest = _distNest < nest.radius * 2.5;
+        {
+            const WL = 14; // lookahead px
+            const hFwd = this._sampleHeight(
+                ant.x + Math.cos(ant.angle) * WL,
+                ant.y + Math.sin(ant.angle) * WL
+            );
+            if (!_nearNest && hFwd < this.waterLevel + 0.04) {
+                const SW = GRID_RES * 3;
+                const gwX = this._sampleHeight(ant.x + SW, ant.y) - this._sampleHeight(ant.x - SW, ant.y);
+                const gwY = this._sampleHeight(ant.x, ant.y + SW) - this._sampleHeight(ant.x, ant.y - SW);
+                const gwLen = Math.sqrt(gwX * gwX + gwY * gwY);
+                if (gwLen > 0.001) {
+                    const avoidAngle = Math.atan2(gwY, gwX); // uphill = away from water
+                    let dA = avoidAngle - ant.angle;
+                    while (dA >  Math.PI) dA -= 2 * Math.PI;
+                    while (dA < -Math.PI) dA += 2 * Math.PI;
+                    ant.angle += dA * 0.4;
+                }
+            }
+        }
+
+        // ── Move (with water-terrain collision) ──────────────────────────────
+        const newX = ant.x + Math.cos(ant.angle) * effectiveSpeed;
+        const newY = ant.y + Math.sin(ant.angle) * effectiveSpeed;
+
+        // Check if destination is inside (or on the edge of) the nest.
+        // The nest area is always dry land, so allow the move unconditionally.
+        const _dxNew = newX - nest.x, _dyNew = newY - nest.y;
+        const _destInNest = _dxNew * _dxNew + _dyNew * _dyNew < nest.radius * nest.radius;
+
+        if (!_destInNest && this._sampleHeight(newX, newY) < this.waterLevel) {
+            // Compute terrain gradient with a wider sample for reliable shore normals.
+            const S = GRID_RES * 3;
+            const gxGrad = this._sampleHeight(ant.x + S, ant.y) - this._sampleHeight(ant.x - S, ant.y);
+            const gyGrad = this._sampleHeight(ant.x, ant.y + S) - this._sampleHeight(ant.x, ant.y - S);
+            const gLen   = Math.sqrt(gxGrad * gxGrad + gyGrad * gyGrad);
+
+            let moved = false;
+            if (gLen > 0.001) {
+                // Shore tangent — two candidate directions (±90° from uphill normal)
+                const tanA = Math.atan2(gxGrad, -gyGrad);
+                const tanB = tanA + Math.PI;
+                // Pick the tangent closer to the current heading so ants slide
+                // naturally around the puddle rather than reversing abruptly.
+                const dA = Math.abs(Math.atan2(Math.sin(tanA - ant.angle), Math.cos(tanA - ant.angle)));
+                const dB = Math.abs(Math.atan2(Math.sin(tanB - ant.angle), Math.cos(tanB - ant.angle)));
+                const slideAngle = dA <= dB ? tanA : tanB;
+                const sx = ant.x + Math.cos(slideAngle) * effectiveSpeed;
+                const sy = ant.y + Math.sin(slideAngle) * effectiveSpeed;
+                if (this._sampleHeight(sx, sy) >= this.waterLevel) {
+                    ant.x     = sx;
+                    ant.y     = sy;
+                    ant.angle = slideAngle + (Math.random() - 0.5) * 0.25;
+                    moved     = true;
+                }
+            }
+
+            if (!moved) {
+                // Last resort: turn directly uphill (away from water centre)
+                if (gLen > 0.001) {
+                    ant.angle = Math.atan2(gyGrad, gxGrad) + (Math.random() - 0.5) * 0.5;
+                } else {
+                    ant.angle += Math.PI + (Math.random() - 0.5) * 0.5;
+                }
+            }
+        } else {
+            ant.x = newX;
+            ant.y = newY;
+        }
 
         // ── Boundary: reflect off walls ───────────────────────────────────────
         if (ant.x < 0)            { ant.x = 0;            ant.angle = Math.PI - ant.angle; }
