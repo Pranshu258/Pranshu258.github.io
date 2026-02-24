@@ -217,7 +217,7 @@ export default function AntColonyVisualization() {
 
             {/* ── Canvas ──────────────────────────────────────────── */}
             <div className="antcolony-canvas-wrap">
-                <canvas ref={canvasRef} className="antcolony-canvas" width={800} height={520} />
+                <canvas ref={canvasRef} className="antcolony-canvas" />
             </div>
 
             {/* ── Stats + Legend ───────────────────────────────── */}

@@ -9,8 +9,13 @@ export class ACOVisualizer {
         this.ctx = canvas.getContext('2d');
         this.width = width;
         this.height = height;
-        this.canvas.width = width;
-        this.canvas.height = height;
+
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        this.ctx.scale(dpr, dpr);
         
         // Visual parameters
         this.cityRadius = 6;
