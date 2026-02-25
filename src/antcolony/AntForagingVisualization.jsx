@@ -121,7 +121,7 @@ function drawBlobPath(ctx, x, y, baseRadius, shapeRadii, extra = 0) {
     ctx.closePath();
 }
 
-function drawCircle(ctx, x, y, angle, isReturning, frustration = 0) {
+function drawCircle(ctx, x, y, angle, isReturning, frustration = 0, isScout = false) {
     let fill, stroke;
     if (isReturning) {
         fill   = '#ef4444';
@@ -137,8 +137,10 @@ function drawCircle(ctx, x, y, angle, isReturning, frustration = 0) {
         fill   = '#27272a';
         stroke = '#52525b';
     }
-    const w = isReturning ? 7 : 6;   // length along travel direction
-    const h = isReturning ? 3.5 : 3; // width
+    // Scouts are slightly larger than workers (1.4×) but otherwise identical
+    const sizeScale = isScout ? 1.4 : 1.0;
+    const w = (isReturning ? 7 : 6)   * sizeScale;   // length along travel direction
+    const h = (isReturning ? 3.5 : 3) * sizeScale;   // width
     const r = h / 2;
     ctx.save();
     ctx.translate(x, y);
@@ -447,7 +449,7 @@ export default function AntForagingVisualization() {
             const frustration = !ant.hasFood
                 ? Math.max(0, Math.min(1, (ant.stepsSinceFood - 1200) / 1200))
                 : 0;
-            drawCircle(ctx, ant.x, ant.y, ant.angle, isReturning && ant.hasFood, frustration);
+            drawCircle(ctx, ant.x, ant.y, ant.angle, isReturning && ant.hasFood, frustration, ant.isScout);
         }
         ctx.globalAlpha = 1;
 

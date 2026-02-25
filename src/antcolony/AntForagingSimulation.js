@@ -37,6 +37,9 @@ class Ant {
         this.age      = 0;
         this.lifespan = lifespan; // set by simulation at spawn time
         this.dead     = false;
+        // Scouts persist far longer, ignore pheromone trails, and deposit a
+        // strong recruitment signal when they finally return with food.
+        this.isScout  = false;
     }
 }
 
@@ -318,6 +321,8 @@ export class AntForagingSimulation {
             ant.stepsSinceFood = Math.floor(Math.random() * 2400);
             // Point outward from centre so ants immediately disperse
             ant.angle = theta + (Math.random() - 0.5) * 0.8;
+            // ~15 % of the initial workforce are scouts
+            ant.isScout = Math.random() < 0.15;
             return ant;
         });
     }
@@ -432,8 +437,7 @@ export class AntForagingSimulation {
                 y + Math.sin(exitAngle) * (radius + SEPARATION_DIST)
             );
             newAnt.angle = exitAngle;
-            newAnt.lifespan = this._randomLifespan();
-            this.ants.push(newAnt);
+            newAnt.lifespan = this._randomLifespan();            newAnt.isScout  = Math.random() < 0.15;            this.ants.push(newAnt);
             this.nextBirthTick = this.tick + this.antBirthInterval;
         }
     }
@@ -503,7 +507,8 @@ export class AntForagingSimulation {
             // Biologically: scouts that fail to find food return to recruit or reset.
             // Triggered at the frustration cap — the ant has already been wandering
             // randomly for a while and clearly isn't finding anything.
-            const GIVE_UP_THRESHOLD = 2400;
+            // Scouts are far more persistent: they keep going 3× longer before giving up.
+            const GIVE_UP_THRESHOLD = ant.isScout ? 7200 : 2400;
             if (ant.stepsSinceFood >= GIVE_UP_THRESHOLD) {
                 ant.state = 'RETURNING';
                 // stepsSinceFood intentionally kept high so deposit weight = minimum
@@ -524,8 +529,8 @@ export class AntForagingSimulation {
             // likely looping on a pheromone trail.  Progressively suppress trail
             // following and inject random rotation so it breaks out.
             // Threshold = ~1 full diagonal of the canvas at current speed.
-            const frustrationThreshold = 1200;
-            const frustrationCap       = 2400;
+            const frustrationThreshold = ant.isScout ? 3600 : 1200;
+            const frustrationCap       = ant.isScout ? 7200 : 2400;
             const frustration = Math.max(0, Math.min(1,
                 (ant.stepsSinceFood - frustrationThreshold) / (frustrationCap - frustrationThreshold)
             ));
@@ -535,13 +540,16 @@ export class AntForagingSimulation {
             // Lévy-flight reorientation: occasionally take a moderate random turn,
             // breaking the current run and starting a new direction.
             // Arc capped at ±72° so the heading change is visible but not a violent reversal.
-            if (Math.random() < this.levyRate) {
+            // Scouts use a 0.4× rate — much less frequent flips = longer straight runs
+            // that actually cover new ground rather than circling the same area.
+            if (Math.random() < this.levyRate * (ant.isScout ? 0.4 : 1.0)) {
                 ant.angle += (Math.random() - 0.5) * Math.PI * 0.8;
             }
 
             if (sensitivity <= 0 || frustration >= 1) {
                 // Inside nest scent-shadow, or fully frustrated — pure random walk
-                ant.angle += (Math.random() - 0.5) * randomTurn * (1 + frustration * 1.5);
+                // Scouts keep a tighter wobble even when frustrated so they stay on course longer
+                ant.angle += (Math.random() - 0.5) * randomTurn * (ant.isScout ? 0.5 : 1) * (1 + frustration * 1.5);
             } else {
                 // ── Short-range food smell (overrides trail following) ─────
                 // Smell range scales with patch size: larger/fuller patches emit
@@ -597,7 +605,9 @@ export class AntForagingSimulation {
                 // it's ≈ explorationRate.  This preserves exploitation on proven routes
                 // while keeping scouts genuinely free to roam on faint/new trails.
                 const maxPhe = Math.max(pheL, pheC, pheR);
-                const exploring = Math.random() < this.explorationRate * Math.exp(-maxPhe / 30);
+                // Scouts always explore freely — they never follow existing trails.
+                // Their job is to range into unexplored territory and recruit workers.
+                const exploring = ant.isScout || Math.random() < this.explorationRate * Math.exp(-maxPhe / 30);
                 const anyPheromone = !exploring
                                      && (pheL > PHERO_THRESHOLD || pheC > PHERO_THRESHOLD || pheR > PHERO_THRESHOLD)
                                      && effectiveSensitivity > 0;
@@ -619,7 +629,8 @@ export class AntForagingSimulation {
                     }
                 } else {
                     // No trail detected — random walk
-                    ant.angle += (Math.random() - 0.5) * randomTurn * 2 * (1 + frustration);
+                    // Scouts have less per-step noise so their runs stay straight and go far
+                    ant.angle += (Math.random() - 0.5) * randomTurn * 2 * (ant.isScout ? 0.4 : 1) * (1 + frustration);
                 }
                 } // end food-smell else
             }
@@ -645,10 +656,16 @@ export class AntForagingSimulation {
             // ── Deposit pheromone (stop near nest; skip if gave up without food) ──
             const ndx2 = ant.x - nest.x, ndy2 = ant.y - nest.y;
             const stopRadius = nest.radius * 1.5;
-            const gaveUp = ant.stepsSinceFood >= 2400;
+            // Use the same per-ant threshold so scouts (give-up at 7200) aren't
+            // wrongly treated as having given up when stepsSinceFood > 2400.
+            const gaveUpThreshold = ant.isScout ? 7200 : 2400;
+            const gaveUp = ant.stepsSinceFood >= gaveUpThreshold;
             if (!gaveUp && ndx2 * ndx2 + ndy2 * ndy2 > stopRadius * stopRadius) {
                 const bonus   = Math.max(0.1, Math.min(2, 500 / Math.max(1, ant.stepsSinceFood)));
-                const deposit = this.depositAmount * bonus;
+                // Scouts that found food deposit a strong recruitment signal (3×)
+                // to pull workers toward the newly discovered source quickly.
+                const scoutBoost = (ant.isScout && ant.hasFood) ? 3.0 : 1.0;
+                const deposit = this.depositAmount * bonus * scoutBoost;
                 const gx = Math.floor(ant.x / GRID_RES);
                 const gy = Math.floor(ant.y / GRID_RES);
                 if (gx >= 0 && gx < this.gw && gy >= 0 && gy < this.gh) {
