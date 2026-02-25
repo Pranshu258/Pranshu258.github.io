@@ -82,15 +82,21 @@ export class AntForagingSimulation {
         this.maxFoodRadius    = params.maxFoodRadius    ?? 20;    // px
         this.waterLevel       = params.waterLevel       ?? 0.22;  // elevation threshold — cells below are water
         this.slopeEffect      = params.slopeEffect      ?? 0.55;  // 0=flat, 1=strong terrain influence
-        this.deathThreshold         = params.deathThreshold         ?? 6000;  // starvation ticks before an ant dies
+        this.deathThreshold         = params.deathThreshold         ?? 10000; // starvation ticks before an ant dies
         this.maxAge                  = params.maxAge                  ?? 20000; // ticks — ±30 % jitter applied per-ant
-        this.antBirthInterval        = params.antBirthInterval        ?? 250;   // ticks between new ants born at nest
+        this.antBirthInterval        = params.antBirthInterval        ?? 150;   // ticks between new ants born at nest
         this.queenStarvationThreshold = params.queenStarvationThreshold ?? 15000; // delivery drought that kills the queen
+        // Nest food store: foragers deposit here; trophallaxis and passive metabolism draw from here.
+        // Colony consumption rate ≈ 0.003 units/ant/tick — matched so a single active forager
+        // can sustain ~30 ants; a full colony of 150 needs ~10+ foragers delivering regularly.
+        this.nestFoodConsumptionRate = params.nestFoodConsumptionRate ?? 0.003;
+        this.nestFoodStoreMax        = params.nestFoodStoreMax        ?? 500;
 
         // ── State ────────────────────────────────────────────────────────────
         this.pheromones    = new Float32Array(this.gw * this.gh); // 0–255 range
         this.foodCollected    = 0;
         this.antsDied         = 0;
+        this.nestFoodStore    = 50;  // small starting buffer so the colony isn't starving from tick 1
         this.queenHungerTimer = 0;  // ticks since last food was delivered to the nest
         this.queenDead        = false;
         this.tick             = 0;
@@ -321,10 +327,13 @@ export class AntForagingSimulation {
             maxFoodRadius:     params.maxFoodRadius     ?? this.maxFoodRadius,
             waterLevel:        params.waterLevel        ?? this.waterLevel,
             slopeEffect:       params.slopeEffect       ?? this.slopeEffect,
+            nestFoodConsumptionRate: params.nestFoodConsumptionRate ?? this.nestFoodConsumptionRate,
+            nestFoodStoreMax:        params.nestFoodStoreMax        ?? this.nestFoodStoreMax,
         });
         this.pheromones.fill(0);
         this.foodCollected    = 0;
         this.antsDied         = 0;
+        this.nestFoodStore    = 50;
         this.queenHungerTimer = 0;
         this.queenDead        = false;
         this.tick             = 0;
@@ -344,6 +353,8 @@ export class AntForagingSimulation {
             gh:            this.gh,
             foodCollected:    this.foodCollected,
             antsDied:         this.antsDied,
+            nestFoodStore:    this.nestFoodStore,
+            nestFoodStoreMax: this.nestFoodStoreMax,
             queenDead:        this.queenDead,
             queenHungerTimer: this.queenHungerTimer,
             queenStarvationThreshold: this.queenStarvationThreshold,
@@ -365,6 +376,12 @@ export class AntForagingSimulation {
         this.tick++;
         this._evaporateAndDiffuse();
         this._maybeSpawnFood();
+
+        // Passive colony metabolism: each ant consumes from the nest food store each tick.
+        // Models background energy use (heating, queen feeding, larval care).
+        this.nestFoodStore = Math.max(0,
+            this.nestFoodStore - this.ants.length * this.nestFoodConsumptionRate
+        );
         const spatialGrid = this._buildSpatialGrid();
         for (const ant of this.ants) this._updateAnt(ant, spatialGrid);
 
@@ -781,8 +798,16 @@ export class AntForagingSimulation {
             // Check if ant reached the nest
             const dx = nest.x - ant.x, dy = nest.y - ant.y;
             if (dx * dx + dy * dy < nest.radius * nest.radius) {
-                // If the ant was carrying food, it just fed the queen
-                if (ant.hasFood) this.queenHungerTimer = 0;
+                // If the ant was carrying food, deposit it into the nest store and reset queen drought timer.
+                if (ant.hasFood) {
+                    this.queenHungerTimer = 0;
+                    this.nestFoodStore = Math.min(this.nestFoodStoreMax, this.nestFoodStore + 1);
+                }
+                // Trophallaxis: nestmates share stored food with the returning ant.
+                // Only resets starvation if the store actually has food to give.
+                if (this.nestFoodStore > 0) {
+                    ant.starvationTimer = 0;
+                }
                 ant.state          = 'SEARCHING';
                 ant.hasFood        = false;
                 ant.stepsSinceFood = 0; // reset frustration on each nest visit
