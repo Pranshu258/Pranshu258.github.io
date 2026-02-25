@@ -261,6 +261,28 @@ export class AntForagingSimulation {
         return { x: cx + nestClearance, y: cy, amount, maxAmount: amount, radius, shapeRadii: this._randomBlobRadii(9, 0.30) };
     }
 
+    /**
+     * Place a food source at the given pixel coordinates (user interaction).
+     * `scale` multiplies both radius and amount (1 = base, up to 4 = max).
+     * Silently ignored if the point is underwater or inside the nest.
+     * Returns true if a source was placed.
+     */
+    addFoodAt(x, y, scale = 1) {
+        if (this._sampleHeight(x, y) < this.waterLevel) return false;
+        const { x: nx, y: ny, radius: nr } = this.nest;
+        const dx = x - nx, dy = y - ny;
+        if (dx * dx + dy * dy < (nr + 10) * (nr + 10)) return false;
+        const baseRadius = this.minFoodRadius + Math.random() * (this.maxFoodRadius - this.minFoodRadius);
+        const baseAmount = Math.round(this.minFoodAmount + Math.random() * (this.maxFoodAmount - this.minFoodAmount));
+        const radius = baseRadius * scale;
+        const amount = Math.round(baseAmount * scale);
+        this.foodSources.push({
+            x, y, amount, maxAmount: amount, radius,
+            shapeRadii: this._randomBlobRadii(9, 0.30),
+        });
+        return true;
+    }
+
     /** Return a lifespan with ±30 % random variation so ants die gradually. */
     _randomLifespan() {
         return Math.round(this.maxAge * (0.70 + Math.random() * 0.60));

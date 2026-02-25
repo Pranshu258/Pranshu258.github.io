@@ -171,10 +171,12 @@ export default function AntForagingVisualization() {
     const terrainOffRef  = useRef(null);   // off-screen canvas for terrain layer
     const terrainStaleRef = useRef(true);  // true → rebuild terrain on next render
     const simRef         = useRef(null);   // AntForagingSimulation instance
-    const rafRef         = useRef(null);   // requestAnimationFrame id
-    const isRunningRef   = useRef(false);
-    const isPausedRef    = useRef(false);
-    const speedRef       = useRef(3);
+    const rafRef           = useRef(null);   // requestAnimationFrame id
+    const isRunningRef     = useRef(false);
+    const isPausedRef      = useRef(false);
+    const speedRef         = useRef(3);
+    const pressingRef      = useRef(null);   // { x, y, downTime } while pointer held, else null
+    const previewRafRef    = useRef(null);   // rAF id for preview animation while idle/paused
 
     // React state for UI
     const [isRunning, setIsRunning]   = useState(false);
@@ -449,6 +451,38 @@ export default function AntForagingVisualization() {
         }
         ctx.globalAlpha = 1;
 
+        // ── Placement preview (while pointer held) ───────────────────────────
+        const press = pressingRef.current;
+        if (press) {
+            const pressElapsed = performance.now() - press.downTime;
+            const scale = Math.min(4, 1 + (pressElapsed / 2000) * 3);
+            const previewR = 14 * scale; // 14 px ≈ midpoint of min/max food radius
+            // Outer glow ring
+            const pgrd = ctx.createRadialGradient(press.x, press.y, previewR * 0.5, press.x, press.y, previewR + 10);
+            pgrd.addColorStop(0, 'rgba(34,197,94,0.18)');
+            pgrd.addColorStop(1, 'rgba(34,197,94,0)');
+            ctx.fillStyle = pgrd;
+            ctx.beginPath();
+            ctx.arc(press.x, press.y, previewR + 10, 0, Math.PI * 2);
+            ctx.fill();
+            // Dashed border circle
+            ctx.save();
+            ctx.setLineDash([4, 3]);
+            ctx.strokeStyle = 'rgba(34,197,94,0.75)';
+            ctx.lineWidth   = 1.5;
+            ctx.beginPath();
+            ctx.arc(press.x, press.y, previewR, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+            // Label showing approx food amount
+            const approxAmount = Math.round(80 * scale); // 80 = midpoint of 40-120
+            ctx.fillStyle    = 'rgba(20,83,45,0.85)';
+            ctx.font         = 'bold 10px -apple-system, sans-serif';
+            ctx.textAlign    = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`+${approxAmount}`, press.x, press.y);
+        }
+
         // ── Update live DOM stats ─────────────────────────────────────────────
         const { antsDied, tick, queenHungerTimer, queenStarvationThreshold } = sim.getState();
         // Elapsed wall-clock duration
@@ -564,6 +598,57 @@ export default function AntForagingVisualization() {
         }, 20);
     };
 
+    // ── Canvas food-placement interaction ─────────────────────────────────────
+    const canvasToSim = useCallback((e) => {
+        const rect = canvasRef.current.getBoundingClientRect();
+        return {
+            x: (e.clientX - rect.left) * (W / rect.width),
+            y: (e.clientY - rect.top)  * (H / rect.height),
+        };
+    }, []);
+
+    // Preview rAF loop — runs only while pointer is held and sim is idle/paused
+    const runPreviewLoop = useCallback(() => {
+        if (!pressingRef.current) return;
+        render();
+        previewRafRef.current = requestAnimationFrame(runPreviewLoop);
+    }, [render]);
+
+    const stopPress = useCallback(() => {
+        pressingRef.current = null;
+        if (previewRafRef.current) {
+            cancelAnimationFrame(previewRafRef.current);
+            previewRafRef.current = null;
+        }
+    }, []);
+
+    const handleCanvasPointerDown = useCallback((e) => {
+        const { x, y } = canvasToSim(e);
+        pressingRef.current = { x, y, downTime: performance.now() };
+        canvasRef.current?.setPointerCapture(e.pointerId);
+        // Start preview loop if sim is not actively ticking
+        if (!isRunningRef.current || isPausedRef.current) {
+            previewRafRef.current = requestAnimationFrame(runPreviewLoop);
+        }
+    }, [canvasToSim, runPreviewLoop]);
+
+    const handleCanvasPointerMove = useCallback((e) => {
+        if (!pressingRef.current) return;
+        const { x, y } = canvasToSim(e);
+        pressingRef.current = { ...pressingRef.current, x, y };
+    }, [canvasToSim]);
+
+    const handleCanvasPointerUp = useCallback(() => {
+        const press = pressingRef.current;
+        if (!press) return;
+        const pressElapsed = performance.now() - press.downTime;
+        const scale = Math.min(4, 1 + (pressElapsed / 2000) * 3);
+        stopPress();
+        if (!simRef.current) return;
+        const placed = simRef.current.addFoodAt(press.x, press.y, scale);
+        if (placed && (!isRunningRef.current || isPausedRef.current)) render();
+    }, [stopPress, render]);
+
     // Sync show-pheromone ref
     const handleTogglePheromone = () => {
         setShowPheromone(v => {
@@ -580,6 +665,7 @@ export default function AntForagingVisualization() {
         setTimeout(() => render(), 30);
         return () => {
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            if (previewRafRef.current) cancelAnimationFrame(previewRafRef.current);
         };
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -596,7 +682,16 @@ export default function AntForagingVisualization() {
 
             {/* ── Canvas ──────────────────────────────────────────────────── */}
             <div className="antcolony-canvas-wrap">
-                <canvas ref={canvasRef} className="antcolony-canvas" />
+                <canvas
+                    ref={canvasRef}
+                    className="antcolony-canvas"
+                    style={{ cursor: 'crosshair' }}
+                    onPointerDown={handleCanvasPointerDown}
+                    onPointerMove={handleCanvasPointerMove}
+                    onPointerUp={handleCanvasPointerUp}
+                    onPointerLeave={handleCanvasPointerUp}
+                    onPointerCancel={handleCanvasPointerUp}
+                />
             </div>
 
             {/* ── Stats + Legend row ──────────────────────────────────────── */}
