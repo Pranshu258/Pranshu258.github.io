@@ -427,6 +427,9 @@ export default function AntForagingVisualization() {
         for (const ant of ants) {
             const isReturning = ant.state === 'RETURNING';
             if (isReturning) returning++; else searching++;
+            // Don't render ants that are still inside the nest
+            const adx = ant.x - nest.x, ady = ant.y - nest.y;
+            if (adx * adx + ady * ady < nest.radius * nest.radius) continue;
             // Frustrated = searching too long OR gave up (returning without food)
             const frustration = !ant.hasFood
                 ? Math.max(0, Math.min(1, (ant.stepsSinceFood - 1200) / 1200))

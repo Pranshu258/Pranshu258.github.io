@@ -291,6 +291,9 @@ export class AntForagingSimulation {
             // Stagger initial ages across the full lifespan so the first wave
             // doesn't die all at once — simulates a pre-existing workforce.
             ant.age   = Math.floor(Math.random() * ant.lifespan * 0.6);
+            // Stagger stepsSinceFood so ants don't all hit the give-up threshold
+            // (2400) simultaneously and cause a mass convergence on the nest.
+            ant.stepsSinceFood = Math.floor(Math.random() * 2400);
             // Point outward from centre so ants immediately disperse
             ant.angle = theta + (Math.random() - 0.5) * 0.8;
             return ant;
