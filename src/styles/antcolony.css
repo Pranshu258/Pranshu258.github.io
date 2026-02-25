@@ -424,3 +424,49 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ── Food & Population chart ────────────────────────────────────────────────── */
+
+.aco-chart-wrap {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 10px;
+    padding: 12px 8px 2px;
+    background: #f9f9fb;
+    box-sizing: border-box;
+}
+
+.aco-chart-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #71717a;
+    margin: 0;
+    letter-spacing: 0.01em;
+}
+
+.aco-chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 4px 44px;
+}
+
+.aco-chart-legend {
+    display: flex;
+    gap: 14px;
+}
+
+.aco-chart-tooltip {
+    background: #ffffff;
+    border: 1px solid #e4e4e7;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    color: #18181b;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    white-space: nowrap;
+}
+
+.aco-chart-tooltip strong {
+    font-variant-numeric: tabular-nums;
+}

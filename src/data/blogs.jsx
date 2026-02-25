@@ -10,7 +10,7 @@ const createBlogEntry = ({ name, description, tags, loader }) => ({
 
 export const blogList = [
     createBlogEntry({
-        name: "Ant Colony Optimization: Swarm Intelligence Solving TSP",
+        name: "Ant Colony Optimization",
         description: "An interactive visualization of the Ant Colony Optimization algorithm, a swarm intelligence technique inspired by the foraging behavior of real ants. Watch virtual ants collaborate through pheromone trails to solve the Traveling Salesman Problem. Features real-time visualization, adjustable parameters, and convergence tracking. Experiment with different parameter combinations to understand how emergent behavior arises from simple local interactions.",
         tags: [
             "Swarm Intelligence",

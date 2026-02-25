@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AntForagingSimulation, GRID_RES } from './AntForagingSimulation';
+import { ResponsiveLine } from '@nivo/line';
 import '../styles/antcolony.css';
 
 // ── Canvas width / height (logical pixels) ─────────────────────────────────
@@ -176,6 +177,15 @@ export default function AntForagingVisualization() {
     // Toggles
     const [showPheromone, setShowPheromone] = useState(true);
     const showPheromoneRef = useRef(true);
+
+    // Chart data
+    const CHART_SERIES_INIT = [
+        { id: 'Food', color: '#22c55e', data: [] },
+        { id: 'Population', color: '#3b82f6', data: [] },
+    ];
+    const [chartData, setChartData] = useState(CHART_SERIES_INIT);
+    const chartDataRef    = useRef(CHART_SERIES_INIT.map(s => ({ ...s, data: [] })));
+    const lastChartTickRef = useRef(-1);
 
 
 
@@ -411,6 +421,19 @@ export default function AntForagingVisualization() {
         if (progressPipRef.current) {
             progressPipRef.current.style.width = depletedPct + '%';
         }
+
+        // ── Chart sampling (every 100 sim-ticks) ─────────────────────────────
+        const CHART_SAMPLE = 100;
+        if (tick > 0 && tick - lastChartTickRef.current >= CHART_SAMPLE) {
+            lastChartTickRef.current = tick;
+            const newFood = [...chartDataRef.current[0].data, { x: tick, y: Math.round(remainOnScreen) }];
+            const newPop  = [...chartDataRef.current[1].data, { x: tick, y: ants.length }];
+            chartDataRef.current = [
+                { ...chartDataRef.current[0], data: newFood },
+                { ...chartDataRef.current[1], data: newPop  },
+            ];
+            setChartData([...chartDataRef.current]);
+        }
     }, []);
 
     // ── Animation loop ─────────────────────────────────────────────────────────
@@ -422,6 +445,15 @@ export default function AntForagingVisualization() {
             simRef.current?.step(stepsPerFrame);
         }
         render();
+
+        // Stop automatically once the queen is dead and all ants have died
+        const state = simRef.current?.getState();
+        if (state && state.queenDead && state.ants.length === 0) {
+            isRunningRef.current = false;
+            setIsRunning(false);
+            return;
+        }
+
         rafRef.current = requestAnimationFrame(animate);
     }, [render]);
 
@@ -451,6 +483,14 @@ export default function AntForagingVisualization() {
         setIsRunning(false);
         setIsPaused(false);
         if (progressPipRef.current) progressPipRef.current.style.width = '0%';
+        // Reset chart
+        const empty = [
+            { id: 'Food',       color: '#22c55e', data: [] },
+            { id: 'Population', color: '#3b82f6', data: [] },
+        ];
+        chartDataRef.current   = empty.map(s => ({ ...s }));
+        lastChartTickRef.current = -1;
+        setChartData([...empty]);
         setTimeout(() => {
             buildSim();
             render();
@@ -572,6 +612,69 @@ export default function AntForagingVisualization() {
                     ↺ Reset
                 </button>
             </div>
+
+            {/* ── Population & Food chart ──────────────────────────────── */}
+            {chartData[0].data.length > 1 && (
+                <div className="aco-chart-wrap">
+                    <div className="aco-chart-header">
+                        <p className="aco-chart-title">Food available &amp; Population over time</p>
+                        <div className="aco-chart-legend">
+                            {chartData.map(s => (
+                                <span key={s.id} className="aco-legend-item">
+                                    <span className="aco-legend-swatch" style={{ background: s.color }} />
+                                    {s.id}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                    <div style={{ height: 180 }}>
+                        <ResponsiveLine
+                            data={chartData}
+                            margin={{ top: 8, right: 16, bottom: 44, left: 48 }}
+                            xScale={{ type: 'linear', min: 'auto', max: 'auto' }}
+                            yScale={{ type: 'linear', min: 0, max: 'auto', stacked: false }}
+                            axisTop={null}
+                            axisRight={null}
+                            axisBottom={{
+                                tickSize: 4,
+                                tickPadding: 4,
+                                tickValues: 6,
+                                legend: 'Tick',
+                                legendOffset: 34,
+                                legendPosition: 'middle',
+                                format: v => v.toLocaleString(),
+                            }}
+                            axisLeft={{
+                                tickSize: 4,
+                                tickPadding: 4,
+                                tickValues: 5,
+                            }}
+                            colors={d => d.color}
+                            lineWidth={1.5}
+                            enablePoints={false}
+                            enableGridX={false}
+                            enableArea={true}
+                            areaOpacity={0.07}
+                            useMesh={true}
+                            enableTouchCrosshair={true}
+                            theme={{
+                                axis: {
+                                    ticks: { text: { fontSize: 10, fill: '#71717a' } },
+                                    legend: { text: { fontSize: 10, fill: '#71717a' } },
+                                },
+                                grid: { line: { stroke: '#e4e4e7', strokeWidth: 1 } },
+                            }}
+                            tooltip={({ point }) => (
+                                <div className="aco-chart-tooltip">
+                                    <span style={{ color: point.color }}>&#9632;</span>{' '}
+                                    {point.serieId}: <strong>{point.data.y}</strong>
+                                    <span style={{ color: '#a1a1aa', marginLeft: 6 }}>tick {point.data.x}</span>
+                                </div>
+                            )}
+                        />
+                    </div>
+                </div>
+            )}
 
             {/* ── Parameter panel ─────────────────────────────────────────── */}
             <div className="antcolony-info-panel">

@@ -63,8 +63,15 @@ export class AntForagingSimulation {
         this.antSpeed      = params.antSpeed      ?? 0.35;   // px/tick — real ~1 cm/s at 2px/mm, 60fps
         this.sensorDist    = params.sensorDist    ?? 8;      // px — real 2–5 mm ≈ 1 body length
         this.sensorAngle   = params.sensorAngle   ?? Math.PI / 5; // radians between sensors
-        this.turnSpeed     = params.turnSpeed     ?? 0.35;   // radians of max steer per tick
-        this.randomTurn    = params.randomTurn    ?? 0.22;   // random walk noise
+        this.turnSpeed      = params.turnSpeed      ?? 0.35;   // radians of max steer per tick
+        this.randomTurn     = params.randomTurn     ?? 0.12;   // per-step noise — kept small so Lévy runs stay straight
+        // Base exploration probability — decays exponentially with trail strength so
+        // strong trails are nearly always exploited while faint ones are freely explored.
+        this.explorationRate = params.explorationRate ?? 0.25;
+        // Lévy-flight reorientation: probability per tick of a large random heading change.
+        // Small value keeps runs long (high persistence) while still preventing ants from
+        // marching off the canvas indefinitely.
+        this.levyRate       = params.levyRate       ?? 0.012;
         this.numAnts          = params.numAnts          ?? 150;   // real colony 5k–15k, rendered at 1:100
         this.maxFoodSources   = params.maxFoodSources   ?? 6;    // max simultaneous food patches
         this.foodSpawnInterval = params.foodSpawnInterval ?? 700;  // base ticks between new spawns
@@ -302,6 +309,8 @@ export class AntForagingSimulation {
             sensorAngle:       params.sensorAngle       ?? this.sensorAngle,
             turnSpeed:         params.turnSpeed         ?? this.turnSpeed,
             randomTurn:        params.randomTurn        ?? this.randomTurn,
+            explorationRate:   params.explorationRate   ?? this.explorationRate,
+            levyRate:          params.levyRate          ?? this.levyRate,
             numAnts:           params.numAnts           ?? this.numAnts,
             maxFoodSources:    params.maxFoodSources    ?? this.maxFoodSources,
             foodSpawnInterval: params.foodSpawnInterval ?? this.foodSpawnInterval,
@@ -465,7 +474,7 @@ export class AntForagingSimulation {
             const ndx = ant.x - nest.x, ndy = ant.y - nest.y;
             const distToNest = Math.sqrt(ndx * ndx + ndy * ndy);
             const rampStart  = nest.radius;
-            const rampEnd    = nest.radius * 3;
+            const rampEnd    = nest.radius * 5; // extended so ants travel further before trails can capture them
             const sensitivity = Math.max(0, Math.min(1, (distToNest - rampStart) / (rampEnd - rampStart)));
 
             // ── Frustration escape ─────────────────────────────────────────
@@ -481,22 +490,36 @@ export class AntForagingSimulation {
             // Effective sensitivity: reduce toward 0 as frustration rises
             const effectiveSensitivity = sensitivity * (1 - frustration);
 
+            // Lévy-flight reorientation: occasionally take a moderate random turn,
+            // breaking the current run and starting a new direction.
+            // Arc capped at ±72° so the heading change is visible but not a violent reversal.
+            if (Math.random() < this.levyRate) {
+                ant.angle += (Math.random() - 0.5) * Math.PI * 0.8;
+            }
+
             if (sensitivity <= 0 || frustration >= 1) {
                 // Inside nest scent-shadow, or fully frustrated — pure random walk
-                ant.angle += (Math.random() - 0.5) * randomTurn * (1 + frustration * 4);
+                ant.angle += (Math.random() - 0.5) * randomTurn * (1 + frustration * 1.5);
             } else {
                 // ── Short-range food smell (overrides trail following) ─────
-                // Real Lasius niger can detect food volatiles from ~2–3 cm.
-                // At 2px/mm that's ~40–60px; we use 28px as a conservative value.
-                const SMELL_RANGE = 28;
+                // Smell range scales with patch size: larger/fuller patches emit
+                // stronger volatiles and can be detected from further away.
+                // Formula: BASE + food.radius × 1.4 × (amount / maxAmount)
+                //   small full patch  (~9 px): 14 + 13  = ~27 px
+                //   large full patch (~20 px): 14 + 28  = ~42 px
+                //   depleting patch           : decays toward BASE (14 px)
+                const SMELL_BASE = 28;
                 let foodSmellX = 0, foodSmellY = 0;
                 for (const food of this.foodSources) {
                     if (food.amount <= 0) continue;
+                    const depletion  = food.amount / food.maxAmount;
+                    const smellRange = SMELL_BASE + food.radius * 1.4 * depletion;
                     const fx = food.x - ant.x, fy = food.y - ant.y;
                     const fd2 = fx * fx + fy * fy;
-                    if (fd2 < SMELL_RANGE * SMELL_RANGE && fd2 > 0) {
-                        // Weight by inverse distance so closer = stronger pull
-                        const inv = 1 / Math.sqrt(fd2);
+                    if (fd2 < smellRange * smellRange && fd2 > 0) {
+                        // Weight by inverse distance so closer = stronger pull,
+                        // further scaled by depletion so a half-empty patch pulls less
+                        const inv = depletion / Math.sqrt(fd2);
                         foodSmellX += fx * inv;
                         foodSmellY += fy * inv;
                     }
@@ -508,7 +531,7 @@ export class AntForagingSimulation {
                     let diff = smellAngle - ant.angle;
                     while (diff >  Math.PI) diff -= 2 * Math.PI;
                     while (diff < -Math.PI) diff += 2 * Math.PI;
-                    ant.angle += diff * 0.5 + (Math.random() - 0.5) * 0.1;
+                    ant.angle += diff * 0.18 + (Math.random() - 0.5) * 0.06;
                 } else {
                 // ── Sense pheromone with 3 forward-facing sensors ──────────
                 // Key insight: pheromone is deposited food→nest, so its mere
@@ -526,8 +549,15 @@ export class AntForagingSimulation {
                 const pheC = this._samplePheromone(ant.x, ant.y, ant.angle,   sensorDist);
                 const pheR = this._samplePheromone(ant.x, ant.y, angleR,      sensorDist);
 
-                const PHERO_THRESHOLD = 0.5; // treat anything below this as "no trail"
-                const anyPheromone = (pheL > PHERO_THRESHOLD || pheC > PHERO_THRESHOLD || pheR > PHERO_THRESHOLD)
+                const PHERO_THRESHOLD = 1.5; // treat anything below this as "no trail"
+                // Strength-adaptive exploration: P(explore) falls off exponentially as
+                // trail strength rises.  At max pheromone (~255) it's ≈0; at threshold
+                // it's ≈ explorationRate.  This preserves exploitation on proven routes
+                // while keeping scouts genuinely free to roam on faint/new trails.
+                const maxPhe = Math.max(pheL, pheC, pheR);
+                const exploring = Math.random() < this.explorationRate * Math.exp(-maxPhe / 30);
+                const anyPheromone = !exploring
+                                     && (pheL > PHERO_THRESHOLD || pheC > PHERO_THRESHOLD || pheR > PHERO_THRESHOLD)
                                      && effectiveSensitivity > 0;
 
                 if (anyPheromone) {
@@ -727,7 +757,10 @@ export class AntForagingSimulation {
         else if (ant.y > this.height) { ant.y = this.height; ant.angle = -ant.angle; }
 
         // ── State transitions ─────────────────────────────────────────────────
-        if (ant.state === 'SEARCHING') {
+        // Searching ants pick up food; gave-up returning ants also grab food
+        // opportunistically — it would be wrong for an ant to walk through food
+        // and ignore it just because it had already decided to head home.
+        if (ant.state === 'SEARCHING' || (ant.state === 'RETURNING' && !ant.hasFood)) {
             for (const food of this.foodSources) {
                 if (food.amount <= 0) continue;
                 const dx = food.x - ant.x, dy = food.y - ant.y;
@@ -737,12 +770,14 @@ export class AntForagingSimulation {
                     ant.state          = 'RETURNING';
                     ant.hasFood        = true;
                     ant.starvationTimer = 0; // fed — reset starvation clock
+                    // stepsSinceFood intentionally kept: encodes path length for deposit weighting
+                    // (gave-up ants will have a high value → low bonus, which is correct)
                     ant.angle         += Math.PI; // turn around
-                    // stepsSinceFood stays — used to weight deposit on the way back
                     break;
                 }
             }
-        } else {
+        }
+        if (ant.state === 'RETURNING') {
             // Check if ant reached the nest
             const dx = nest.x - ant.x, dy = nest.y - ant.y;
             if (dx * dx + dy * dy < nest.radius * nest.radius) {
