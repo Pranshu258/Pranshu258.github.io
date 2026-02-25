@@ -740,12 +740,12 @@ export class AntForagingSimulation {
         const _distNest = Math.sqrt(_dxNest * _dxNest + _dyNest * _dyNest);
         const _nearNest = _distNest < nest.radius * 2.5;
         {
-            const WL = 14; // lookahead px
+            const WL = 6; // lookahead px — kept short so ants walk right up to the shore
             const hFwd = this._sampleHeight(
                 ant.x + Math.cos(ant.angle) * WL,
                 ant.y + Math.sin(ant.angle) * WL
             );
-            if (!_nearNest && hFwd < this.waterLevel + 0.04) {
+            if (!_nearNest && hFwd < this.waterLevel) {
                 const SW = GRID_RES * 3;
                 const gwX = this._sampleHeight(ant.x + SW, ant.y) - this._sampleHeight(ant.x - SW, ant.y);
                 const gwY = this._sampleHeight(ant.x, ant.y + SW) - this._sampleHeight(ant.x, ant.y - SW);
