@@ -65,23 +65,92 @@
 .stat-pill {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    background: #f3f4f6;
+    gap: 5px;
+    background: #f4f4f5;
     border: 1px solid #e4e4e7;
-    border-radius: 6px;
-    padding: 3px 10px;
+    border-radius: 8px;
+    padding: 4px 11px;
     font-size: 0.72rem;
     color: #71717a;
     white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: border-color 0.15s;
+}
+
+.pill-label {
+    color: #a1a1aa;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
 }
 
 .stat-pill strong {
     color: #18181b;
-    font-weight: 600;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
     display: inline-block;
-    min-width: 2.5ch;
+    min-width: 2.8ch;
     text-align: right;
+    font-size: 0.8rem;
+    letter-spacing: -0.01em;
+}
+
+/* Status dot */
+.pill-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Per-type accents */
+.stat-pill-tick {
+    background: #f4f4f5;
+}
+.stat-pill-tick strong {
+    color: #3f3f46;
+    min-width: 4.5ch;
+}
+
+.stat-pill-searching {
+    background: #fafafa;
+}
+.stat-pill-searching .pill-dot {
+    background: #27272a;
+    box-shadow: 0 0 0 2px rgba(39,39,42,0.12);
+}
+
+.stat-pill-returning {
+    background: #fff5f5;
+    border-color: #fecaca;
+}
+.stat-pill-returning .pill-dot {
+    background: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239,68,68,0.15);
+}
+.stat-pill-returning strong {
+    color: #dc2626;
+}
+
+.stat-pill-died {
+    background: #fafafa;
+}
+.stat-pill-died .pill-dot {
+    background: #9ca3af;
+    box-shadow: 0 0 0 2px rgba(107,114,128,0.12);
+}
+
+.stat-pill-population {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+.stat-pill-population .pill-dot {
+    background: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+}
+.stat-pill-population strong {
+    color: #2563eb;
 }
 
 /* Progress pill */
@@ -89,7 +158,7 @@
     position: relative;
     min-width: 100px;
     overflow: hidden;
-    padding: 3px 10px;
+    padding: 4px 11px;
 }
 
 .progress-pip {
@@ -97,25 +166,29 @@
     left: 0;
     top: 0;
     bottom: 0;
-    background: rgba(37, 99, 235, 0.12);
+    background: rgba(37, 99, 235, 0.1);
+    transition: width 0.1s linear;
 }
 
 .progress-pip-text {
     position: relative;
     z-index: 1;
     font-size: 0.72rem;
-    color: #2563eb;
     font-weight: 500;
-}
-
-.progress-pip-text strong {
-    color: #1d4ed8;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 /* Queen health pill */
-.stat-pill.stat-pill-queen .progress-pip-text {
-    color: #6d28d9;
+.stat-pill-queen {
+    min-width: 120px;
+}
+.stat-pill-queen .progress-pip {
+    background: rgba(168, 85, 247, 0.15);
+}
+.stat-pill-queen .progress-pip-text {
+    color: #7c3aed;
     font-weight: 600;
 }
 
@@ -415,7 +488,15 @@
 
     .stat-pill {
         font-size: 0.65rem;
-        padding: 2px 7px;
+        padding: 3px 8px;
+    }
+
+    .pill-label {
+        font-size: 0.63rem;
+    }
+
+    .stat-pill strong {
+        font-size: 0.72rem;
     }
 }
 

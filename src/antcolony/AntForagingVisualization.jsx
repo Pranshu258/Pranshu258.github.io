@@ -155,6 +155,16 @@ function drawCircle(ctx, x, y, angle, isReturning, frustration = 0) {
     ctx.globalAlpha = 1;
 }
 
+// ── Wall-clock duration formatter (ms → m:ss or h:mm:ss) ──────────────────
+function formatDuration(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    return `${m}:${String(s).padStart(2, '0')}`;
+}
+
 export default function AntForagingVisualization() {
     const canvasRef      = useRef(null);
     const offscreenRef   = useRef(null);   // off-screen canvas for ImageData blitting
@@ -169,10 +179,8 @@ export default function AntForagingVisualization() {
     // React state for UI
     const [isRunning, setIsRunning]   = useState(false);
     const [isPaused,  setIsPaused]    = useState(false);
-    const [panelOpen, setPanelOpen]   = useState(true);
 
     // Live stats (updated via ref tricks to avoid batching lag)
-    const foodLabelRef    = useRef(null);
     const tickLabelRef    = useRef(null);
     const searchingRef    = useRef(null);
     const returningRef    = useRef(null);
@@ -180,16 +188,19 @@ export default function AntForagingVisualization() {
     const populationRef   = useRef(null);
     const queenBarRef     = useRef(null);  // inner fill of queen health bar
     const queenStatusRef  = useRef(null);  // text label for queen state
-    const progressPipRef  = useRef(null);
+
+    // Elapsed wall-clock time tracking (pauses correctly)
+    const lastResumeRef   = useRef(null);  // performance.now() at last resume
+    const elapsedMsRef    = useRef(0);     // accumulated ms across pauses
 
     // Parameters
-    const [numAnts,           setNumAnts]           = useState(150);  // real colony at 1:100 scale
-    const [maxFoodSources,    setMaxFoodSources]    = useState(6);    // simultaneous food patches
-    const [foodSpawnInterval, setFoodSpawnInterval] = useState(700);  // ticks between new spawns
-    const [evapRate,     setEvapRate]     = useState(0.004); // real half-life 10–30 min, compressed
-    const [diffuseRate,  setDiffuseRate]  = useState(0.08);
-    const [sensorDist,   setSensorDist]   = useState(8);     // real 2–5 mm ≈ 1 body length
-    const [speed,        setSpeed]        = useState(3);
+    const numAnts           = 150;
+    const maxFoodSources    = 6;
+    const foodSpawnInterval = 700;
+    const evapRate          = 0.004;
+    const diffuseRate       = 0.08;
+    const sensorDist        = 8;
+
 
     // Toggles
     const [showPheromone, setShowPheromone] = useState(true);
@@ -439,13 +450,14 @@ export default function AntForagingVisualization() {
         ctx.globalAlpha = 1;
 
         // ── Update live DOM stats ─────────────────────────────────────────────
-        const { foodCollected, tick, antsDied, queenHungerTimer, queenStarvationThreshold } = sim.getState();
-        // Show how depleted the current visible food sources are (fills as ants harvest them).
-        const totalOnScreen  = foodSources.reduce((s, f) => s + f.maxAmount, 0);
-        const remainOnScreen = foodSources.reduce((s, f) => s + f.amount,    0);
-        const depletedPct = totalOnScreen > 0 ? Math.round((1 - remainOnScreen / totalOnScreen) * 100) : 0;
-        if (foodLabelRef.current)   foodLabelRef.current.textContent   = foodCollected;
-        if (tickLabelRef.current)   tickLabelRef.current.textContent   = tick;
+        const { antsDied, tick, queenHungerTimer, queenStarvationThreshold } = sim.getState();
+        // Elapsed wall-clock duration
+        const elapsed = elapsedMsRef.current + (
+            (lastResumeRef.current !== null && !isPausedRef.current)
+                ? performance.now() - lastResumeRef.current
+                : 0
+        );
+        if (tickLabelRef.current) tickLabelRef.current.textContent = formatDuration(elapsed);
         if (searchingRef.current)   searchingRef.current.textContent   = searching;
         if (returningRef.current)   returningRef.current.textContent   = returning;
         if (diedLabelRef.current)   diedLabelRef.current.textContent   = antsDied;
@@ -456,19 +468,22 @@ export default function AntForagingVisualization() {
             queenBarRef.current.style.background = health > 0.5 ? 'rgba(168,85,247,0.2)' : health > 0.25 ? 'rgba(249,115,22,0.22)' : 'rgba(239,68,68,0.22)';
         }
         if (queenStatusRef.current) {
-            queenStatusRef.current.textContent = queenDead ? '☠ Queen dead' : 'Queen';
-            queenStatusRef.current.style.color = queenDead ? '#ef4444' : '';
+            const health = queenDead ? 0 : Math.max(0, 1 - queenHungerTimer / queenStarvationThreshold);
+            const status = queenDead
+                ? '☠ Queen dead'
+                : health > 0.6 ? 'Queen · Healthy'
+                : health > 0.3 ? 'Queen · Hungry'
+                : 'Queen · Critical';
+            queenStatusRef.current.textContent = status;
+            queenStatusRef.current.style.color = queenDead ? '#ef4444' : health <= 0.3 ? '#ea580c' : '';
         }
-        if (progressPipRef.current) {
-            progressPipRef.current.style.width = depletedPct + '%';
-        }
-
         // ── Chart sampling (every 100 sim-ticks) ─────────────────────────────
+        const remainOnScreen = foodSources.reduce((s, f) => s + f.amount, 0);
         const CHART_SAMPLE = 100;
         if (tick > 0 && tick - lastChartTickRef.current >= CHART_SAMPLE) {
             lastChartTickRef.current = tick;
-            const newFood = [...chartDataRef.current[0].data, { x: tick, y: Math.round(remainOnScreen) }];
-            const newPop  = [...chartDataRef.current[1].data, { x: tick, y: ants.length }];
+            const newFood = [...chartDataRef.current[0].data, { x: elapsed, y: Math.round(remainOnScreen) }];
+            const newPop  = [...chartDataRef.current[1].data, { x: elapsed, y: ants.length }];
             chartDataRef.current = [
                 { ...chartDataRef.current[0], data: newFood },
                 { ...chartDataRef.current[1], data: newPop  },
@@ -503,8 +518,9 @@ export default function AntForagingVisualization() {
     const handleStart = () => {
         if (isRunningRef.current) return;
         if (!simRef.current) buildSim();
-        isRunningRef.current = true;
-        isPausedRef.current  = false;
+        isRunningRef.current  = true;
+        isPausedRef.current   = false;
+        lastResumeRef.current = performance.now();
         setIsRunning(true);
         setIsPaused(false);
         rafRef.current = requestAnimationFrame(animate);
@@ -513,17 +529,27 @@ export default function AntForagingVisualization() {
     const handlePause = () => {
         if (!isRunningRef.current) return;
         const nowPaused = !isPausedRef.current;
+        if (nowPaused) {
+            // accumulate elapsed before pausing
+            elapsedMsRef.current += performance.now() - (lastResumeRef.current ?? performance.now());
+            lastResumeRef.current = null;
+        } else {
+            // resuming
+            lastResumeRef.current = performance.now();
+        }
         isPausedRef.current = nowPaused;
         setIsPaused(nowPaused);
     };
 
     const handleReset = () => {
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
-        isRunningRef.current = false;
-        isPausedRef.current  = false;
+        isRunningRef.current  = false;
+        isPausedRef.current   = false;
+        elapsedMsRef.current  = 0;
+        lastResumeRef.current = null;
+        if (tickLabelRef.current) tickLabelRef.current.textContent = '0:00';
         setIsRunning(false);
         setIsPaused(false);
-        if (progressPipRef.current) progressPipRef.current.style.width = '0%';
         // Reset chart
         const empty = [
             { id: 'Food',       color: '#22c55e', data: [] },
@@ -536,12 +562,6 @@ export default function AntForagingVisualization() {
             buildSim();
             render();
         }, 20);
-    };
-
-    // Sync speed ref
-    const handleSpeedChange = (v) => {
-        setSpeed(v);
-        speedRef.current = v;
     };
 
     // Sync show-pheromone ref
@@ -582,34 +602,33 @@ export default function AntForagingVisualization() {
             {/* ── Stats + Legend row ──────────────────────────────────────── */}
             <div className="aco-meta-row">
                 <div className="antcolony-stat-bar">
-                    <span className="stat-pill stat-pill-progress">
-                        <span className="progress-pip" ref={progressPipRef} style={{ width: '0%' }} />
-                        <span className="progress-pip-text">
-                            Food <strong ref={foodLabelRef}>0</strong>
-                        </span>
+                    <span className="stat-pill stat-pill-tick">
+                        <span className="pill-label">Time</span>
+                        <strong ref={tickLabelRef} style={{ minWidth: '3.5ch' }}>0:00</strong>
                     </span>
-                    <span className="stat-pill">
-                        Tick <strong ref={tickLabelRef}>0</strong>
+                    <span className="stat-pill stat-pill-searching">
+                        <span className="pill-dot" />
+                        <span className="pill-label">Searching</span>
+                        <strong ref={searchingRef}>0</strong>
                     </span>
-                    <span className="stat-pill">
-                        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#27272a', marginRight: 4 }} />
-                        Searching <strong ref={searchingRef}>0</strong>
+                    <span className="stat-pill stat-pill-returning">
+                        <span className="pill-dot" />
+                        <span className="pill-label">Returning</span>
+                        <strong ref={returningRef}>0</strong>
                     </span>
-                    <span className="stat-pill">
-                        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#ef4444', marginRight: 4 }} />
-                        Returning <strong ref={returningRef}>0</strong>
+                    <span className="stat-pill stat-pill-died">
+                        <span className="pill-dot" />
+                        <span className="pill-label">Died</span>
+                        <strong ref={diedLabelRef}>0</strong>
                     </span>
-                    <span className="stat-pill">
-                        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#6b7280', marginRight: 4 }} />
-                        Died <strong ref={diedLabelRef}>0</strong>
+                    <span className="stat-pill stat-pill-population">
+                        <span className="pill-dot" />
+                        <span className="pill-label">Population</span>
+                        <strong ref={populationRef}>0</strong>
                     </span>
-                    <span className="stat-pill">
-                        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#3b82f6', marginRight: 4 }} />
-                        Population <strong ref={populationRef}>0</strong>
-                    </span>
-                    <span className="stat-pill stat-pill-progress stat-pill-queen" style={{ minWidth: 120 }}>
-                        <span className="progress-pip" ref={queenBarRef} style={{ width: '100%', background: 'rgba(168,85,247,0.2)' }} />
-                        <span className="progress-pip-text" ref={queenStatusRef}>Queen</span>
+                    <span className="stat-pill stat-pill-progress stat-pill-queen">
+                        <span className="progress-pip" ref={queenBarRef} style={{ width: '100%' }} />
+                        <span className="progress-pip-text" ref={queenStatusRef}>Queen · Healthy</span>
                     </span>
                 </div>
 
@@ -680,10 +699,10 @@ export default function AntForagingVisualization() {
                                 tickSize: 4,
                                 tickPadding: 4,
                                 tickValues: 6,
-                                legend: 'Tick',
+                                legend: 'Time',
                                 legendOffset: 34,
                                 legendPosition: 'middle',
-                                format: v => v.toLocaleString(),
+                                format: v => formatDuration(v),
                             }}
                             axisLeft={{
                                 tickSize: 4,
@@ -694,8 +713,7 @@ export default function AntForagingVisualization() {
                             lineWidth={1.5}
                             enablePoints={false}
                             enableGridX={false}
-                            enableArea={true}
-                            areaOpacity={0.07}
+                            enableArea={false}
                             useMesh={true}
                             enableTouchCrosshair={true}
                             theme={{
@@ -709,7 +727,7 @@ export default function AntForagingVisualization() {
                                 <div className="aco-chart-tooltip">
                                     <span style={{ color: point.color }}>&#9632;</span>{' '}
                                     {point.serieId}: <strong>{point.data.y}</strong>
-                                    <span style={{ color: '#a1a1aa', marginLeft: 6 }}>tick {point.data.x}</span>
+                                    <span style={{ color: '#a1a1aa', marginLeft: 6 }}>{formatDuration(point.data.xFormatted ?? point.data.x)}</span>
                                 </div>
                             )}
                         />
@@ -717,71 +735,7 @@ export default function AntForagingVisualization() {
                 </div>
             )}
 
-            {/* ── Parameter panel ─────────────────────────────────────────── */}
-            <div className="antcolony-info-panel">
-                <button className="aco-panel-header" onClick={() => setPanelOpen(v => !v)}>
-                    <span>Parameters</span>
-                    <svg className={`aco-panel-chevron${panelOpen ? ' open' : ''}`} width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </button>
-                <div className={`aco-panel-body${panelOpen ? ' open' : ''}`}>
-                    <div className="aco-panel-inner">
-                        <div className="aco-params-grid">
 
-                            <div className="control-group">
-                                <label>Ants <span className="value">{numAnts}</span></label>
-                                <input type="range" min="20" max="300" value={numAnts}
-                                    onChange={e => setNumAnts(+e.target.value)}
-                                    disabled={isRunning} className="slider" />
-                            </div>
-
-                            <div className="control-group">
-                                <label>Max food patches <span className="value">{maxFoodSources}</span></label>
-                                <input type="range" min="1" max="12" value={maxFoodSources}
-                                    onChange={e => setMaxFoodSources(+e.target.value)}
-                                    disabled={isRunning} className="slider" />
-                            </div>
-
-                            <div className="control-group">
-                                <label>Spawn interval <span className="value">{foodSpawnInterval} ticks</span></label>
-                                <input type="range" min="200" max="2000" step="50" value={foodSpawnInterval}
-                                    onChange={e => setFoodSpawnInterval(+e.target.value)}
-                                    disabled={isRunning} className="slider" />
-                            </div>
-
-                            <div className="control-group">
-                                <label>Evaporation <span className="value">{evapRate.toFixed(3)}</span></label>
-                                <input type="range" min="0.001" max="0.06" step="0.001" value={evapRate}
-                                    onChange={e => setEvapRate(+e.target.value)}
-                                    disabled={isRunning} className="slider" />
-                            </div>
-
-                            <div className="control-group">
-                                <label>Diffusion <span className="value">{diffuseRate.toFixed(2)}</span></label>
-                                <input type="range" min="0" max="0.4" step="0.01" value={diffuseRate}
-                                    onChange={e => setDiffuseRate(+e.target.value)}
-                                    disabled={isRunning} className="slider" />
-                            </div>
-
-                            <div className="control-group">
-                                <label>Sensor distance <span className="value">{sensorDist}px</span></label>
-                                <input type="range" min="6" max="40" value={sensorDist}
-                                    onChange={e => setSensorDist(+e.target.value)}
-                                    disabled={isRunning} className="slider" />
-                            </div>
-
-                            <div className="control-group">
-                                <label>Sim speed <span className="value">{speed}×</span></label>
-                                <input type="range" min="1" max="12" value={speed}
-                                    onChange={e => handleSpeedChange(+e.target.value)}
-                                    className="slider" />
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </div>
     );

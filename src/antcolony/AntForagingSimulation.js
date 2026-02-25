@@ -402,7 +402,7 @@ export class AntForagingSimulation {
         }
 
         // Slowly replenish from the nest (queen keeps laying eggs, unless she has died)
-        if (!this.queenDead && this.tick >= this.nextBirthTick && this.ants.length < this.numAnts) {
+        if (!this.queenDead && this.tick >= this.nextBirthTick) {
             const { x, y, radius } = this.nest;
             const exitAngle = Math.random() * Math.PI * 2;
             const newAnt    = new Ant(
