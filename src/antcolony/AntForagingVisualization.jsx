@@ -13,41 +13,58 @@ const H = 520;
 // ── Terrain ImageData renderer ─────────────────────────────────────────
 // Cells below waterLevel are coloured as water (depth-shaded blue);
 // cells above use a green → tan → brown elevation ramp.
-function buildTerrainImageData(heightmap, gw, gh, waterLevel) {
-    const data = new Uint8ClampedArray(gw * gh * 4);
-    for (let i = 0; i < gw * gh; i++) {
-        const t = heightmap[i];
-        let r, g, b, a;
-        if (t < waterLevel) {
-            // Water: deeper = darker and more opaque
-            const depth = 1 - t / waterLevel; // 0 = shore, 1 = deepest
-            r = Math.round(30  + (70  - 30)  * (1 - depth));
-            g = Math.round(100 + (170 - 100) * (1 - depth));
-            b = Math.round(200 + (240 - 200) * (1 - depth));
-            a = Math.round(160 + depth * 80); // 160 → 240
-        } else {
-            // Land: normalise position above waterLevel to 0–1
-            const tn = (t - waterLevel) / (1 - waterLevel);
-            if (tn < 0.5) {
-                const s = tn * 2;
-                r = Math.round(134 + (210 - 134) * s);
-                g = Math.round(239 + (200 - 239) * s);
-                b = Math.round(172 + (150 - 172) * s);
-                a = Math.round(30  + (55  - 30)  * s);
+function buildTerrainImageData(heightmap, gw, gh, waterLevel, width, height) {
+    // Render at full canvas resolution by bilinearly sampling the heightmap.
+    // This keeps the water/land boundary pixel-precise — no bleed from upscaling.
+    const data = new Uint8ClampedArray(width * height * 4);
+    for (let py = 0; py < height; py++) {
+        for (let px = 0; px < width; px++) {
+            // Map canvas pixel to fractional heightmap coordinates
+            // Use px/GRID_RES (not normalised) so this matches the marching-squares
+            // contour which places grid cell gx at pixel gx*GRID_RES exactly.
+            const fx = px / GRID_RES;
+            const fy = py / GRID_RES;
+            const x0 = Math.floor(fx), x1 = Math.min(x0 + 1, gw - 1);
+            const y0 = Math.floor(fy), y1 = Math.min(y0 + 1, gh - 1);
+            const tx = fx - x0, ty = fy - y0;
+            // Bilinear interpolation of elevation
+            const t = heightmap[y0 * gw + x0] * (1 - tx) * (1 - ty)
+                    + heightmap[y0 * gw + x1] *      tx  * (1 - ty)
+                    + heightmap[y1 * gw + x0] * (1 - tx) *      ty
+                    + heightmap[y1 * gw + x1] *      tx  *      ty;
+
+            let r, g, b, a;
+            if (t < waterLevel) {
+                const depth = 1 - t / waterLevel; // 0 = shore, 1 = deepest
+                r = Math.round(186 + (59  - 186) * depth);
+                g = Math.round(230 + (130 - 230) * depth);
+                b = Math.round(253 + (246 - 253) * depth);
+                a = 230;
             } else {
-                const s = (tn - 0.5) * 2;
-                r = Math.round(210 + (170 - 210) * s);
-                g = Math.round(200 + (120 - 200) * s);
-                b = Math.round(150 + ( 80 - 150) * s);
-                a = Math.round(55  + (80  - 55)  * s);
+                const tn = (t - waterLevel) / (1 - waterLevel);
+                if (tn < 0.5) {
+                    const s = tn * 2;
+                    r = Math.round(134 + (210 - 134) * s);
+                    g = Math.round(239 + (200 - 239) * s);
+                    b = Math.round(172 + (150 - 172) * s);
+                    a = Math.round(30  + (55  - 30)  * s);
+                } else {
+                    const s = (tn - 0.5) * 2;
+                    r = Math.round(210 + (170 - 210) * s);
+                    g = Math.round(200 + (120 - 200) * s);
+                    b = Math.round(150 + ( 80 - 150) * s);
+                    a = Math.round(55  + (80  - 55)  * s);
+                }
             }
+
+            const i = py * width + px;
+            data[i * 4    ] = r;
+            data[i * 4 + 1] = g;
+            data[i * 4 + 2] = b;
+            data[i * 4 + 3] = a;
         }
-        data[i * 4    ] = r;
-        data[i * 4 + 1] = g;
-        data[i * 4 + 2] = b;
-        data[i * 4 + 3] = a;
     }
-    return new ImageData(data, gw, gh);
+    return new ImageData(data, width, height);
 }
 
 // ── Pheromone ImageData renderer ───────────────────────────────────────────
@@ -209,10 +226,11 @@ export default function AntForagingVisualization() {
         off.height    = Math.ceil(H / GRID_RES);
         offscreenRef.current = off;
 
-        // Off-screen canvas for terrain layer (same grid resolution)
+        // Off-screen canvas for terrain layer — full canvas resolution so
+        // the water boundary is pixel-precise with no upscale bleed.
         const terrOff     = document.createElement('canvas');
-        terrOff.width     = Math.ceil(W / GRID_RES);
-        terrOff.height    = Math.ceil(H / GRID_RES);
+        terrOff.width     = W;
+        terrOff.height    = H;
         terrainOffRef.current = terrOff;
     }, []);
 
@@ -251,31 +269,64 @@ export default function AntForagingVisualization() {
         if (terrOff && heightmap) {
             if (terrainStaleRef.current) {
                 const terrCtx = terrOff.getContext('2d');
-                terrCtx.putImageData(buildTerrainImageData(heightmap, gw, gh, waterLevel ?? 0.22), 0, 0);
+                terrCtx.putImageData(buildTerrainImageData(heightmap, gw, gh, waterLevel ?? 0.22, W, H), 0, 0);
                 terrainStaleRef.current = false;
             }
-            ctx.drawImage(terrOff, 0, 0, W, H);
+            ctx.drawImage(terrOff, 0, 0); // 1:1 — no upscaling needed
+
+            // ── Smooth marching-squares contour helper ──────────────────────
+            // For each grid cell, linearly interpolates the exact crossing position
+            // on each edge so contour lines are smooth instead of blocky diagonals.
+            const drawContour = (level) => {
+                ctx.beginPath();
+                for (let gy = 0; gy < gh - 1; gy++) {
+                    for (let gx = 0; gx < gw - 1; gx++) {
+                        const h00 = heightmap[ gy      * gw + gx    ];
+                        const h10 = heightmap[ gy      * gw + gx + 1];
+                        const h01 = heightmap[(gy + 1) * gw + gx    ];
+                        const h11 = heightmap[(gy + 1) * gw + gx + 1];
+
+                        // Marching-squares case index (bits: TL=8, TR=4, BR=2, BL=1)
+                        const idx = ((h00 >= level) ? 8 : 0)
+                                  | ((h10 >= level) ? 4 : 0)
+                                  | ((h11 >= level) ? 2 : 0)
+                                  | ((h01 >= level) ? 1 : 0);
+                        if (idx === 0 || idx === 15) continue;
+
+                        const x0 = gx * GRID_RES, x1 = (gx + 1) * GRID_RES;
+                        const y0 = gy * GRID_RES, y1 = (gy + 1) * GRID_RES;
+
+                        // Linear interpolation along an edge
+                        const lerpX = (ha, hb) => x0 + ((level - ha) / (hb - ha)) * (x1 - x0);
+                        const lerpY = (ha, hb) => y0 + ((level - ha) / (hb - ha)) * (y1 - y0);
+
+                        // Collect interpolated crossing points for each cell edge
+                        const pts = [];
+                        if ((h00 >= level) !== (h10 >= level)) pts.push([lerpX(h00, h10), y0]); // top
+                        if ((h10 >= level) !== (h11 >= level)) pts.push([x1, lerpY(h10, h11)]); // right
+                        if ((h01 >= level) !== (h11 >= level)) pts.push([lerpX(h01, h11), y1]); // bottom
+                        if ((h00 >= level) !== (h01 >= level)) pts.push([x0, lerpY(h00, h01)]); // left
+
+                        if (pts.length >= 2) {
+                            ctx.moveTo(pts[0][0], pts[0][1]);
+                            ctx.lineTo(pts[1][0], pts[1][1]);
+                        }
+                        // Saddle case (4 crossings) — draw the second segment too
+                        if (pts.length === 4) {
+                            ctx.moveTo(pts[2][0], pts[2][1]);
+                            ctx.lineTo(pts[3][0], pts[3][1]);
+                        }
+                    }
+                }
+                ctx.stroke();
+            };
 
             // Shore line at the water boundary
             const wl = waterLevel ?? 0.22;
             ctx.save();
-            ctx.strokeStyle = 'rgba(14,165,233,0.55)';
-            ctx.lineWidth   = 1.0;
-            ctx.beginPath();
-            for (let gy = 0; gy < gh - 1; gy++) {
-                for (let gx = 0; gx < gw - 1; gx++) {
-                    const h00 = heightmap[ gy      * gw + gx    ];
-                    const h10 = heightmap[ gy      * gw + gx + 1];
-                    const h01 = heightmap[(gy + 1) * gw + gx    ];
-                    const cross = (h00 < wl) !== (h10 < wl)
-                               || (h00 < wl) !== (h01 < wl);
-                    if (!cross) continue;
-                    const px = gx * GRID_RES, py = gy * GRID_RES;
-                    ctx.moveTo(px, py);
-                    ctx.lineTo(px + GRID_RES, py + GRID_RES);
-                }
-            }
-            ctx.stroke();
+            ctx.strokeStyle = 'rgba(56,189,248,0.55)'; // sky-400
+            ctx.lineWidth   = 1.2;
+            drawContour(wl);
 
             // Elevation contour lines on dry land only
             const CONTOUR_LEVELS = [0.35, 0.55, 0.72, 0.88];
@@ -284,23 +335,7 @@ export default function AntForagingVisualization() {
                 ctx.strokeStyle = level > 0.65
                     ? 'rgba(120,80,40,0.18)'
                     : 'rgba(60,120,60,0.14)';
-                ctx.beginPath();
-                for (let gy = 0; gy < gh - 1; gy++) {
-                    for (let gx = 0; gx < gw - 1; gx++) {
-                        const h00 = heightmap[ gy      * gw + gx    ];
-                        const h10 = heightmap[ gy      * gw + gx + 1];
-                        const h01 = heightmap[(gy + 1) * gw + gx    ];
-                        // Skip cells that are fully underwater
-                        if (h00 < wl && h10 < wl && h01 < wl) continue;
-                        const cross = (h00 < level) !== (h10 < level)
-                                   || (h00 < level) !== (h01 < level);
-                        if (!cross) continue;
-                        const px = gx * GRID_RES, py = gy * GRID_RES;
-                        ctx.moveTo(px, py);
-                        ctx.lineTo(px + GRID_RES, py + GRID_RES);
-                    }
-                }
-                ctx.stroke();
+                drawContour(level);
             }
             ctx.restore();
         }
@@ -320,7 +355,10 @@ export default function AntForagingVisualization() {
             const offCtx  = off.getContext('2d');
             const imgData = buildPheromoneImageData(pheromones, gw, gh);
             offCtx.putImageData(imgData, 0, 0);
-            ctx.drawImage(off, 0, 0, W, H); // stretch to full canvas
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(off, 0, 0, W, H); // stretch to full canvas with smoothing
+            ctx.imageSmoothingEnabled = false;
         }
 
         // ── Food sources ─────────────────────────────────────────────────────
