@@ -656,10 +656,10 @@ export class AntForagingSimulation {
             // ── Deposit pheromone (stop near nest; skip if gave up without food) ──
             const ndx2 = ant.x - nest.x, ndy2 = ant.y - nest.y;
             const stopRadius = nest.radius * 1.5;
-            // Use the same per-ant threshold so scouts (give-up at 7200) aren't
-            // wrongly treated as having given up when stepsSinceFood > 2400.
-            const gaveUpThreshold = ant.isScout ? 7200 : 2400;
-            const gaveUp = ant.stepsSinceFood >= gaveUpThreshold;
+            // An ant "gave up" only when it is returning empty-handed — stepsSinceFood
+            // alone is not a reliable signal because it is intentionally kept high even
+            // after food is picked up (to weight the deposit bonus by path length).
+            const gaveUp = !ant.hasFood;
             if (!gaveUp && ndx2 * ndx2 + ndy2 * ndy2 > stopRadius * stopRadius) {
                 const bonus   = Math.max(0.1, Math.min(2, 500 / Math.max(1, ant.stepsSinceFood)));
                 // Scouts that found food deposit a strong recruitment signal (3×)
