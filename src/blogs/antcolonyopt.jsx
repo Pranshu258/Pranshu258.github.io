@@ -2,7 +2,7 @@ import React from 'react';
 import Sharer from '../sharer';
 import AntColonyVisualization from '../antcolony/AntColonyVisualization';
 import AntForagingVisualization from '../antcolony/AntForagingVisualization';
-import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaBugs, FaCode, FaChevronDown, FaHeart } from 'react-icons/fa6';
+import { FaBugs, FaCode, FaChevronDown, FaHeart } from 'react-icons/fa6';
 import { SiClaude } from 'react-icons/si';
 import Prism from 'prismjs';
 import katex from 'katex';
@@ -23,6 +23,7 @@ function Eq({ tex, display = false }) {
 function CodeBlock({ label, children }) {
     const [open, setOpen] = React.useState(false);
     const highlightedRef = React.useRef(false);
+    const panelId = React.useId();
     React.useEffect(() => {
         if (open && !highlightedRef.current) {
             setTimeout(() => Prism.highlightAll(), 0);
@@ -32,7 +33,10 @@ function CodeBlock({ label, children }) {
     return (
         <div style={{ margin: '20px 0 36px 0' }}>
             <button
+                type="button"
                 onClick={() => setOpen(o => !o)}
+                aria-expanded={open}
+                aria-controls={panelId}
                 style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -48,7 +52,7 @@ function CodeBlock({ label, children }) {
                     transition: 'color 0.18s, background 0.18s',
                     letterSpacing: '0.4px',
                     userSelect: 'none',
-                    opacity: open ? 1 : 0.55,
+                    opacity: open ? 1 : 0.78,
                 }}
             >
                 <FaCode style={{ fontSize: '12px' }} />
@@ -61,7 +65,7 @@ function CodeBlock({ label, children }) {
                 }} />
             </button>
             {/* grid-template-rows trick: animates from 0fr → 1fr without knowing height */}
-            <div style={{
+            <div id={panelId} style={{
                 display: 'grid',
                 gridTemplateRows: open ? '1fr' : '0fr',
                 transition: 'grid-template-rows 0.28s ease',
@@ -91,13 +95,11 @@ export default class AntColonyOptimizationBlog extends React.Component {
                 <p>Pranshu Gupta, February 25, 2026</p>
                 <Sharer className="sharer" link={window.location.href} title={"Ant Colony Optimization"}></Sharer>
                 <p className="introduction">
-                    Nature is known to be the best optimizer. Natural processes most often than not reach an
-                    optimal equilibrium. Scientists have always strived to understand and model such processes.
-                    Thus, many algorithms exist today that are inspired by nature. Many of these algorithms
-                    and heuristics can be used to solve problems for which no polynomial time algorithms exist,
-                    such as the travelling salesman problem and many other combinatorial optimization problems.
-                    Ant Colony Optimization (ACO) is one such algorithm, inspired by the foraging behavior of
-                    real ants, where simple agents collectively find efficient paths through stigmergic communication.
+                    Nature is often the best optimizer. Many natural systems converge to efficient equilibria,
+                    and computer scientists have long tried to model those dynamics algorithmically. Ant Colony
+                    Optimization (ACO) is one such family of methods: simple agents exchange indirect signals and
+                    collectively discover high-quality paths. These ideas are especially useful for hard combinatorial
+                    problems, including the Traveling Salesman Problem.
                 </p>
                 <hr style={{ backgroundColor: "white" }} />
 
@@ -110,11 +112,15 @@ export default class AntColonyOptimizationBlog extends React.Component {
                     awareness collectively establish efficient trails between the nest and food sources purely
                     through pheromone communication.
                 </p>
+                <ul>
+                    <li>Look for faint trails that gradually strengthen as more ants reuse them.</li>
+                    <li>Notice how dead-end paths fade as pheromone evaporates over time.</li>
+                    <li>Watch scouts discover food, then recruit the colony through stronger return trails.</li>
+                </ul>
                 <div style={{ marginTop: '30px', marginBottom: '30px' }}>
                     <AntForagingVisualization />
                 </div>
-                <br></br>
-                <h3 className="headings">How the Simulation Works</h3>
+                <h3 className="headings" style={{ marginTop: '10px' }}>How the Simulation Works</h3>
                 <p>
                     Each ant in the simulation exists in one of two states: <b>SEARCHING</b> or <b>RETURNING</b>.
                     A searching ant wanders the terrain looking for a food source, while a returning ant heads
@@ -249,15 +255,20 @@ if (dotC >= dotL && dotC >= dotR) {
                 <hr style={{ backgroundColor: "white" }} />
                 <br></br>
                 {/* ── TSP Solver ─────────────────────────────────────── */}
-                <h2 className="headings">Travelling Salesman Problem</h2>
+                <h2 className="headings">Traveling Salesman Problem</h2>
                 <p>
-                    The Travelling Salesman Problem (TSP) asks: given a list of cities and the distances
+                    The Traveling Salesman Problem (TSP) asks: given a list of cities and the distances
                     between them, what is the shortest route that visits every city exactly once and returns
                     to the starting city? TSP is NP-hard — no known polynomial time algorithm exists for
                     finding the optimal solution in the general case. ACO is one of the most effective and
                     well-studied metaheuristics for approximating TSP solutions. The interactive visualizer
                     below runs ACO on a randomly generated set of cities in real time.
                 </p>
+                <ul>
+                    <li>In early iterations, ants spread broadly and explore many candidate tours.</li>
+                    <li>As pheromone accumulates, paths become more concentrated around promising edges.</li>
+                    <li>Compare your final best tour as you adjust α, β, and evaporation.</li>
+                </ul>
                 <div style={{ marginTop: '30px', marginBottom: '30px' }}>
                     <AntColonyVisualization />
                 </div>
@@ -279,7 +290,7 @@ if (dotC >= dotL && dotC >= dotR) {
                     city <i>j</i>. The probability of choosing city <i>j</i> is given by:
                 </p>
                 <blockquote>
-                    <p style={{ textAlign: 'center', margin: '18px 0' }}>
+                    <p style={{ textAlign: 'center', margin: '18px 0', overflowX: 'auto' }}>
                         <Eq display={true} tex={String.raw`P(i \to j) = \frac{[\tau(i,j)]^{\alpha} \cdot [\eta(i,j)]^{\beta}}{\displaystyle\sum_{k \notin \text{visited}} [\tau(i,k)]^{\alpha} \cdot [\eta(i,k)]^{\beta}}`} />
                     </p>
                     <p>
@@ -377,16 +388,15 @@ if (dotC >= dotL && dotC >= dotR) {
                 </p>
 
                 <hr style={{ backgroundColor: "white" }} />
-                <br />
-                <h2 className="headings">References</h2>
+                <h2 className="headings" style={{ marginTop: '18px' }}>References</h2>
                 <ol>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://ieeexplore.ieee.org/document/585892">Dorigo, M., &amp; Gambardella, L. M. (1997). Ant colony system: A cooperative learning approach to the traveling salesman problem. <i>IEEE Transactions on Evolutionary Computation, 1(1)</i>, 53–66.</a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://ieeexplore.ieee.org/document/1597059">Dorigo, M., Birattari, M., &amp; Stutzle, T. (2006). Ant colony optimization — artificial ants as a computational intelligence technique. <i>IEEE Computational Intelligence Magazine, 1(4)</i>, 28–39.</a></li>
-                    <li><a target="_blank" rel="noopener noreferrer" href="https://global.oup.com/academic/product/swarm-intelligence-9780195136746">Bonabeau, E., Dorigo, M., &amp; Theraulaz, G. (1999). <i>Swarm Intelligence: From Natural to Artificial Systems</i>. Oxford University Press.</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://books.google.com/books?vid=ISBN9780195131598">Bonabeau, E., Dorigo, M., &amp; Theraulaz, G. (1999). <i>Swarm Intelligence: From Natural to Artificial Systems</i>. Oxford University Press.</a></li>
                     <li><a target="_blank" rel="noopener noreferrer" href="https://arxiv.org/abs/1903.01893">Gupta, P. (2019). Algorithms inspired by nature: A survey. <i>arXiv:1903.01893 [cs.NE]</i>.</a></li>
                 </ol>
                 <hr style={{ backgroundColor: "white" }} />
-                <p style={{ textAlign: 'center', opacity: 0.45, fontSize: '13px', letterSpacing: '0.5px', marginTop: '8px' }}>
+                <p style={{ textAlign: 'center', opacity: 0.62, fontSize: '13px', letterSpacing: '0.5px', marginTop: '8px' }}>
                     written with <FaHeart style={{ color: '#e05', verticalAlign: 'middle', fontSize: '11px', margin: '0 2px' }} /> and <SiClaude style={{ verticalAlign: 'middle', fontSize: '13px', margin: '0 3px 0 2px', color: '#D97757' }} /> claude sonnet
                 </p>
             </div>
