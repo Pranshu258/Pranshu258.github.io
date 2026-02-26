@@ -2,7 +2,8 @@ import React from 'react';
 import Sharer from '../sharer';
 import AntColonyVisualization from '../antcolony/AntColonyVisualization';
 import AntForagingVisualization from '../antcolony/AntForagingVisualization';
-import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaBugs, FaCode, FaChevronDown } from 'react-icons/fa6';
+import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaBugs, FaCode, FaChevronDown, FaHeart } from 'react-icons/fa6';
+import { SiClaude } from 'react-icons/si';
 import Prism from 'prismjs';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
@@ -385,6 +386,9 @@ if (dotC >= dotL && dotC >= dotR) {
                     <li><a target="_blank" rel="noopener noreferrer" href="https://arxiv.org/abs/1903.01893">Gupta, P. (2019). Algorithms inspired by nature: A survey. <i>arXiv:1903.01893 [cs.NE]</i>.</a></li>
                 </ol>
                 <hr style={{ backgroundColor: "white" }} />
+                <p style={{ textAlign: 'center', opacity: 0.45, fontSize: '13px', letterSpacing: '0.5px', marginTop: '8px' }}>
+                    written with <FaHeart style={{ color: '#e05', verticalAlign: 'middle', fontSize: '11px', margin: '0 2px' }} /> and <SiClaude style={{ verticalAlign: 'middle', fontSize: '13px', margin: '0 3px 0 2px', color: '#D97757' }} /> claude sonnet
+                </p>
             </div>
         );
     }
