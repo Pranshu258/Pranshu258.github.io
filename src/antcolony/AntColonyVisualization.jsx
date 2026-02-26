@@ -178,12 +178,56 @@ export default function AntColonyVisualization() {
         animationRef.current = requestAnimationFrame(animate);
     }, []);
 
-    // Draw initial cities on mount
+    // Run ACO to completion on mount so we start with a solved state
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (visualizerRef.current && !acoRef.current) {
-                initializeACO();
+            if (!visualizerRef.current || acoRef.current) return;
+
+            const aco = initializeACO();
+            if (!aco) return;
+
+            // Run all iterations synchronously
+            for (let frame = 0; frame < aco.numIterations; frame++) {
+                const ants = [];
+                for (let j = 0; j < aco.numAnts; j++) {
+                    const path = aco.constructAntPath();
+                    const cost = aco.calculatePathCost(path);
+                    ants.push({ path, cost });
+                    if (cost < aco.bestCost) {
+                        aco.bestCost = cost;
+                        aco.bestPath = [...path];
+                    }
+                }
+                aco.updatePheromones(ants);
             }
+
+            // Display only the best path (no pheromone/ant trails)
+            const viz = visualizerRef.current;
+            viz.setShowPheromones(false);
+            viz.setShowTrails(false);
+            viz.setShowBestPath(true);
+            viz.update({
+                cities: aco.cities,
+                currentAnts: [],
+                bestPath: aco.bestPath,
+                pheromones: aco.pheromones
+            });
+            viz.render();
+
+            // Sync toggle state
+            setShowPheromones(false);
+            setShowTrails(false);
+
+            // Update stats UI
+            const finalCost = aco.bestCost === Infinity ? 0 : Math.round(aco.bestCost);
+            if (progressPipRef.current) progressPipRef.current.style.width = '100%';
+            if (iterTextRef.current) iterTextRef.current.textContent = aco.numIterations;
+            setStats({
+                iteration: aco.numIterations,
+                bestCost: finalCost,
+                currentCost: finalCost,
+                progress: 100
+            });
         }, 50);
         return () => clearTimeout(timer);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
