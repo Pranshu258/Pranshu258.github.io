@@ -125,7 +125,7 @@ export default class AntColonyOptimizationBlog extends React.Component {
 
                 <h4 className="headings">Pheromone Mechanics</h4>
                 <p>
-                    The pheromone layer is stored as a flat <b>Float32Array</b> grid where each cell
+                    The pheromone layer is stored as a grid where each cell
                     covers a 4×4 pixel region of the canvas. On every simulation tick, two processes happen
                     simultaneously: evaporation reduces every cell's value by a constant factor, and diffusion
                     spreads a small fraction of each cell's value to its four neighbours. Evaporation ensures
