@@ -13,6 +13,7 @@ export default function AntColonyVisualization() {
     const speedRef = useRef(1);
     const progressPipRef = useRef(null);
     const iterTextRef = useRef(null);
+    const citiesRef = useRef([]);
 
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
@@ -73,6 +74,7 @@ export default function AntColonyVisualization() {
         b = beta
     ) => {
         const cities = generateRandomCities(citiesCount, 800, 520);
+        citiesRef.current = cities;
         const aco = new AntColonyOptimization(cities, antsCount, iterationsCount, evap, a, b);
         acoRef.current = aco;
 
@@ -88,6 +90,34 @@ export default function AntColonyVisualization() {
         setStats({ iteration: 0, bestCost: 0, currentCost: 0, progress: 0 });
         return aco;
     }, [numCities, numAnts, numIterations, evaporationRate, alpha, beta]);
+
+    const initializeACOFromCurrentCities = useCallback((
+        antsCount = numAnts,
+        iterationsCount = numIterations,
+        evap = evaporationRate,
+        a = alpha,
+        b = beta
+    ) => {
+        if (!citiesRef.current || citiesRef.current.length === 0) {
+            return initializeACO(numCities, antsCount, iterationsCount, evap, a, b);
+        }
+
+        const cities = [...citiesRef.current];
+        const aco = new AntColonyOptimization(cities, antsCount, iterationsCount, evap, a, b);
+        acoRef.current = aco;
+
+        const viz = visualizerRef.current;
+        if (viz) {
+            viz.cities = cities;
+            viz.bestPath = [];
+            viz.currentAnts = [];
+            viz.pheromones = [];
+            viz.render();
+        }
+
+        setStats({ iteration: 0, bestCost: 0, currentCost: 0, progress: 0 });
+        return aco;
+    }, [numCities, numAnts, numIterations, evaporationRate, alpha, beta, initializeACO]);
 
     const runACO = useCallback((aco) => {
         const viz = visualizerRef.current;
@@ -234,7 +264,7 @@ export default function AntColonyVisualization() {
 
     const handleStart = () => {
         if (isRunningRef.current) return;
-        const aco = initializeACO();
+        const aco = initializeACOFromCurrentCities();
         runACO(aco);
     };
 
