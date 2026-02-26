@@ -4,8 +4,20 @@ import AntColonyVisualization from '../antcolony/AntColonyVisualization';
 import AntForagingVisualization from '../antcolony/AntForagingVisualization';
 import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaBugs, FaCode, FaChevronDown } from 'react-icons/fa6';
 import Prism from 'prismjs';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import '../styles/prism.css';
 import '../styles/blog.css';
+
+function Eq({ tex, display = false }) {
+    return (
+        <span
+            dangerouslySetInnerHTML={{
+                __html: katex.renderToString(tex, { displayMode: display, throwOnError: false })
+            }}
+        />
+    );
+}
 
 function CodeBlock({ label, children }) {
     const [open, setOpen] = React.useState(false);
@@ -266,8 +278,8 @@ if (dotC >= dotL && dotC >= dotR) {
                     city <i>j</i>. The probability of choosing city <i>j</i> is given by:
                 </p>
                 <blockquote>
-                    <p>
-                        <b>P(i → j) = [τ(i,j)]^α · [η(i,j)]^β / Σ [τ(i,k)]^α · [η(i,k)]^β</b>
+                    <p style={{ textAlign: 'center', margin: '18px 0' }}>
+                        <Eq display={true} tex={String.raw`P(i \to j) = \frac{[\tau(i,j)]^{\alpha} \cdot [\eta(i,j)]^{\beta}}{\displaystyle\sum_{k \notin \text{visited}} [\tau(i,k)]^{\alpha} \cdot [\eta(i,k)]^{\beta}}`} />
                     </p>
                     <p>
                         where the sum in the denominator runs over all unvisited cities <i>k</i>, <b>α</b> controls
@@ -367,13 +379,12 @@ if (dotC >= dotL && dotC >= dotR) {
                 <br />
                 <h2 className="headings">References</h2>
                 <ol>
-                    <li>Dorigo, M., &amp; Gambardella, L. M. (1997). Ant colony system: A cooperative learning approach to the traveling salesman problem. <i>IEEE Transactions on Evolutionary Computation, 1(1)</i>, 53–66.</li>
-                    <li>Dorigo, M., Birattari, M., &amp; Stutzle, T. (2006). Ant colony optimization — artificial ants as a computational intelligence technique. <i>IEEE Computational Intelligence Magazine, 1(4)</i>, 28–39.</li>
-                    <li>Bonabeau, E., Dorigo, M., &amp; Theraulaz, G. (1999). <i>Swarm Intelligence: From Natural to Artificial Systems</i>. Oxford University Press.</li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://ieeexplore.ieee.org/document/585892">Dorigo, M., &amp; Gambardella, L. M. (1997). Ant colony system: A cooperative learning approach to the traveling salesman problem. <i>IEEE Transactions on Evolutionary Computation, 1(1)</i>, 53–66.</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://ieeexplore.ieee.org/document/1597059">Dorigo, M., Birattari, M., &amp; Stutzle, T. (2006). Ant colony optimization — artificial ants as a computational intelligence technique. <i>IEEE Computational Intelligence Magazine, 1(4)</i>, 28–39.</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://global.oup.com/academic/product/swarm-intelligence-9780195136746">Bonabeau, E., Dorigo, M., &amp; Theraulaz, G. (1999). <i>Swarm Intelligence: From Natural to Artificial Systems</i>. Oxford University Press.</a></li>
+                    <li><a target="_blank" rel="noopener noreferrer" href="https://arxiv.org/abs/1903.01893">Gupta, P. (2019). Algorithms inspired by nature: A survey. <i>arXiv:1903.01893 [cs.NE]</i>.</a></li>
                 </ol>
-                <a target="_blank" rel="noopener noreferrer" href="https://arxiv.org/pdf/1903.01893.pdf">
-                    <button className="btn btn-danger">Survey Paper &nbsp;<FaExternalLinkAlt /></button>
-                </a>
+                <hr style={{ backgroundColor: "white" }} />
             </div>
         );
     }
