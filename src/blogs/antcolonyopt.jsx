@@ -2,13 +2,70 @@ import React from 'react';
 import Sharer from '../sharer';
 import AntColonyVisualization from '../antcolony/AntColonyVisualization';
 import AntForagingVisualization from '../antcolony/AntForagingVisualization';
-import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaBugs } from 'react-icons/fa6';
+import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaBugs, FaCode, FaChevronDown } from 'react-icons/fa6';
+import Prism from 'prismjs';
+import '../styles/prism.css';
 import '../styles/blog.css';
+
+function CodeBlock({ label, children }) {
+    const [open, setOpen] = React.useState(false);
+    const highlightedRef = React.useRef(false);
+    React.useEffect(() => {
+        if (open && !highlightedRef.current) {
+            setTimeout(() => Prism.highlightAll(), 0);
+            highlightedRef.current = true;
+        }
+    }, [open]);
+    return (
+        <div style={{ margin: '20px 0 36px 0' }}>
+            <button
+                onClick={() => setOpen(o => !o)}
+                style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    background: open ? 'var(--surface-text-color)' : 'transparent',
+                    border: '1px solid var(--surface-text-color)',
+                    borderRadius: '6px',
+                    color: open ? 'var(--blog-surface-background)' : 'var(--surface-text-color)',
+                    fontFamily: 'monospace',
+                    fontSize: '13px',
+                    padding: '7px 14px',
+                    cursor: 'pointer',
+                    transition: 'color 0.18s, background 0.18s',
+                    letterSpacing: '0.4px',
+                    userSelect: 'none',
+                    opacity: open ? 1 : 0.55,
+                }}
+            >
+                <FaCode style={{ fontSize: '12px' }} />
+                <span>{label}</span>
+                <FaChevronDown style={{
+                    fontSize: '10px',
+                    marginLeft: '2px',
+                    transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.25s ease',
+                }} />
+            </button>
+            {/* grid-template-rows trick: animates from 0fr → 1fr without knowing height */}
+            <div style={{
+                display: 'grid',
+                gridTemplateRows: open ? '1fr' : '0fr',
+                transition: 'grid-template-rows 0.28s ease',
+            }}>
+                <div style={{ overflow: 'hidden', minHeight: 0 }}>
+                    <div style={{ marginTop: '8px' }}>{children}</div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default class AntColonyOptimizationBlog extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
         document.title = "Ant Colony Optimization | blog by Pranshu Gupta";
+        setTimeout(() => Prism.highlightAll(), 0);
     }
 
     render() {
@@ -43,7 +100,7 @@ export default class AntColonyOptimizationBlog extends React.Component {
                 <div style={{ marginTop: '30px', marginBottom: '30px' }}>
                     <AntForagingVisualization />
                 </div>
-
+                <br></br>
                 <h3 className="headings">How the Simulation Works</h3>
                 <p>
                     Each ant in the simulation exists in one of two states: <b>SEARCHING</b> or <b>RETURNING</b>.
@@ -69,6 +126,35 @@ export default class AntColonyOptimizationBlog extends React.Component {
                     feedback loop of ACO: better paths attract more ants, which lay more pheromone, which
                     attract even more ants.
                 </p>
+                <CodeBlock label="_evaporateAndDiffuse()">
+                <pre><code className="language-javascript">{`_evaporateAndDiffuse() {
+    const { gw, gh, evapRate, diffuseRate, pheromones } = this;
+
+    // Diffuse: spread pheromone to 4 neighbours (stable read via copy)
+    if (diffuseRate > 0) {
+        const tmp = new Float32Array(pheromones);
+        for (let y = 1; y < gh - 1; y++) {
+            for (let x = 1; x < gw - 1; x++) {
+                const idx = y * gw + x;
+                const neighbourAvg = (
+                    tmp[(y - 1) * gw + x] +
+                    tmp[(y + 1) * gw + x] +
+                    tmp[y * gw + x - 1]   +
+                    tmp[y * gw + x + 1]
+                ) * 0.25;
+                pheromones[idx] =
+                    tmp[idx] * (1 - diffuseRate) + neighbourAvg * diffuseRate;
+            }
+        }
+    }
+
+    // Evaporate: decay all cells by evapRate per tick
+    for (let i = 0; i < pheromones.length; i++) {
+        pheromones[i] *= (1 - evapRate);
+        if (pheromones[i] < 0.002) pheromones[i] = 0;
+    }
+}`}</code></pre>
+                </CodeBlock>
 
                 <h4 className="headings">Sensing and Steering</h4>
                 <p>
@@ -87,6 +173,30 @@ export default class AntColonyOptimizationBlog extends React.Component {
                     chemical signals emitted by the food itself. The smell radius scales with patch size and
                     current depletion level, so a large, full patch is detectable from further away.
                 </p>
+                <CodeBlock label="pheromone sensor steering">
+                <pre><code className="language-javascript">{`// Three forward-facing sensors: left, centre, right
+const angleL = ant.angle - sensorAngle;
+const angleR = ant.angle + sensorAngle;
+
+const pheL = this._samplePheromone(ant.x, ant.y, angleL,    sensorDist);
+const pheC = this._samplePheromone(ant.x, ant.y, ant.angle, sensorDist);
+const pheR = this._samplePheromone(ant.x, ant.y, angleR,    sensorDist);
+
+// Among sensors that detect pheromone, prefer the one pointing
+// most away from the nest — since pheromone is laid food→nest,
+// food lies in the away-from-nest direction.
+const dotL = pheL > THRESHOLD ? Math.cos(angleL) * awayUX + Math.sin(angleL) * awayUY : -Infinity;
+const dotC = pheC > THRESHOLD ? Math.cos(ant.angle) * awayUX + Math.sin(ant.angle) * awayUY : -Infinity;
+const dotR = pheR > THRESHOLD ? Math.cos(angleR) * awayUX + Math.sin(angleR) * awayUY : -Infinity;
+
+if (dotC >= dotL && dotC >= dotR) {
+    ant.angle += (Math.random() - 0.5) * randomTurn; // centre is best: slight wobble
+} else if (dotL >= dotR) {
+    ant.angle -= turnSpeed * (Math.random() * 0.5 + 0.5); // turn left
+} else {
+    ant.angle += turnSpeed * (Math.random() * 0.5 + 0.5); // turn right
+}`}</code></pre>
+                </CodeBlock>
 
                 <h4 className="headings">Lévy Flights and Exploration</h4>
                 <p>
@@ -123,9 +233,8 @@ export default class AntColonyOptimizationBlog extends React.Component {
                     elevation on the map, and food sources are constrained to spawn on dry land away from
                     the nest. You can click anywhere on the canvas to manually plant a food source.
                 </p>
-
                 <hr style={{ backgroundColor: "white" }} />
-
+                <br></br>
                 {/* ── TSP Solver ─────────────────────────────────────── */}
                 <h2 className="headings">Travelling Salesman Problem</h2>
                 <p>
@@ -173,6 +282,34 @@ export default class AntColonyOptimizationBlog extends React.Component {
                     each iteration even with identical pheromone levels, which is essential for avoiding
                     premature convergence on a locally optimal but globally suboptimal tour.
                 </p>
+                <CodeBlock label="selectNextCity()">
+                <pre><code className="language-javascript">{`selectNextCity(current, visited) {
+    const probabilities = [];
+    let sum = 0;
+
+    for (let j = 0; j < this.numCities; j++) {
+        if (visited.has(j)) {
+            probabilities.push(0);
+        } else {
+            // P(i→j) ∝ τ[i][j]^α · η[i][j]^β
+            const pheromone = Math.pow(this.pheromones[current][j], this.alpha);
+            const heuristic = Math.pow(1 / this.distances[current][j], this.beta);
+            const probability = pheromone * heuristic;
+            probabilities.push(probability);
+            sum += probability;
+        }
+    }
+
+    // Roulette wheel selection: draw r ∈ [0, Σ] and scan cumulative sum
+    const r = Math.random() * sum;
+    let cumulative = 0;
+    for (let j = 0; j < this.numCities; j++) {
+        cumulative += probabilities[j];
+        if (r <= cumulative) return j;
+    }
+    return probabilities.indexOf(Math.max(...probabilities));
+}`}</code></pre>
+                </CodeBlock>
 
                 <h4 className="headings">Pheromone Update</h4>
                 <p>
@@ -184,6 +321,28 @@ export default class AntColonyOptimizationBlog extends React.Component {
                     the tour. Shorter tours therefore receive more pheromone, making them more attractive
                     to future ants. The update is symmetric — pheromone is added to both τ[i][j] and τ[j][i].
                 </p>
+                <CodeBlock label="updatePheromones()">
+                <pre><code className="language-javascript">{`updatePheromones(ants) {
+    // Evaporation: every edge loses a fraction of its pheromone each iteration
+    for (let i = 0; i < this.numCities; i++) {
+        for (let j = 0; j < this.numCities; j++) {
+            this.pheromones[i][j] *= (1 - this.evaporationRate);
+        }
+    }
+
+    // Deposition: each ant reinforces the edges it used, weighted by tour quality
+    // Shorter tour → larger delta → stronger reinforcement
+    for (const ant of ants) {
+        const delta = this.q / ant.cost;
+        for (let i = 0; i < ant.path.length; i++) {
+            const from = ant.path[i];
+            const to   = ant.path[(i + 1) % ant.path.length];
+            this.pheromones[from][to] += delta;
+            this.pheromones[to][from] += delta; // symmetric matrix
+        }
+    }
+}`}</code></pre>
+                </CodeBlock>
 
                 <h4 className="headings">Convergence</h4>
                 <p>
@@ -205,6 +364,7 @@ export default class AntColonyOptimizationBlog extends React.Component {
                 </p>
 
                 <hr style={{ backgroundColor: "white" }} />
+                <br />
                 <h2 className="headings">References</h2>
                 <ol>
                     <li>Dorigo, M., &amp; Gambardella, L. M. (1997). Ant colony system: A cooperative learning approach to the traveling salesman problem. <i>IEEE Transactions on Evolutionary Computation, 1(1)</i>, 53–66.</li>
