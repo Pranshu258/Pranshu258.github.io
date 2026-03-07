@@ -14,25 +14,6 @@ Always use the design-system CSS variables defined in `src/styles/body.css`. Nev
 | Brand accent (hover indicators etc.) | `var(--brand-100)` |
 | Nav background | `var(--nav-background)` |
 
-### `<hr>` elements
-
-**Never** write `<hr style={{ backgroundColor: 'white' }}>` or any hardcoded colour.
-Use a CSS class:
-
-```css
-.my-divider {
-    border: none;
-    border-top: 1px solid var(--surface-text-color);
-    opacity: 0.15;
-}
-```
-
-Or simply use a plain `<hr />` — `blog.css` defines a global `hr` rule that applies the correct subtle style automatically.
-
-```jsx
-<hr className="my-divider" />
-```
-
 ## Hover / transition interactions
 
 Do **not** animate `padding`, `margin`, or any layout-shifting property on hover — this causes text jitter.
