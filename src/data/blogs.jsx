@@ -1,14 +1,25 @@
 const toSlug = (name) => name.replace(/\s+/g, '-').toLowerCase();
 
-const createBlogEntry = ({ name, description, tags, loader }) => ({
+const createBlogEntry = ({ name, description, tags, date, loader }) => ({
     name,
     slug: toSlug(name),
     description,
     tags,
+    date,
     loader
 });
 
 export const blogList = [
+    createBlogEntry({
+        name: "Runtime optimizations for LLMs",
+        description: "Large Language Models (LLMs) are a class of deep learning models that have gained significant attention in recent years due to their ability to generate human-like text. In this article, we explore runtime optimizations that are used to improve performance and reduce resource consumption in production.",
+        tags: [
+            "Large Language Models",
+            "Performance Optimization",
+        ],
+        date: "Nov 30, 2024",
+        loader: () => import('../blogs/llmoptimizations')
+    }),
     createBlogEntry({
         name: "Ant Colony Optimization",
         description: "An interactive visualization of the Ant Colony Optimization algorithm, a swarm intelligence technique inspired by the foraging behavior of real ants. Watch virtual ants collaborate through pheromone trails to solve the Traveling Salesman Problem.",
@@ -16,6 +27,7 @@ export const blogList = [
             "Swarm Intelligence",
             "Optimization",
         ],
+        date: "February 25, 2026",
         loader: () => import('../blogs/antcolonyopt')
     }),
     createBlogEntry({
@@ -25,6 +37,7 @@ export const blogList = [
             "Game Development",
             "Artificial Intelligence",
         ],
+        date: "February 15, 2026",
         loader: () => import('../blogs/renju')
     }),
     createBlogEntry({
@@ -34,6 +47,7 @@ export const blogList = [
             "Distributed Systems",
             "Load Balancing"
         ],
+        date: "September 14, 2025",
         loader: () => import('../blogs/openprequal')
     }),
     createBlogEntry({
@@ -44,6 +58,7 @@ export const blogList = [
             "Healthcare",
             "Data Visualization"
         ],
+        date: "Dec 5, 2024",
         loader: () => import('../blogs/cancerviz')
     }),
     createBlogEntry({
@@ -53,6 +68,7 @@ export const blogList = [
             "Database Systems",
             "Transactions"
         ],
+        date: "Nov 30, 2024",
         loader: () => import('../blogs/transisol')
     }),
     createBlogEntry({
@@ -62,6 +78,7 @@ export const blogList = [
             "Distributed Systems",
             "MapReduce"
         ],
+        date: "Nov 29, 2024",
         loader: () => import('../blogs/distribcomp')
     }),
     createBlogEntry({
@@ -71,6 +88,7 @@ export const blogList = [
             "Computer Networks",
             "DNS"
         ],
+        date: "Oct 13, 2024",
         loader: () => import('../blogs/dns')
     }),
     createBlogEntry({
@@ -80,6 +98,7 @@ export const blogList = [
             "Data Visualization",
             "Python"
         ],
+        date: "May 12, 2020",
         loader: () => import('../blogs/gitviz')
     }),
     createBlogEntry({
@@ -89,6 +108,7 @@ export const blogList = [
             "Data Visualization",
             "Python"
         ],
+        date: "May 2, 2020",
         loader: () => import('../blogs/applemusic')
     }),
     createBlogEntry({
@@ -98,6 +118,7 @@ export const blogList = [
             "Machine Learning",
             "Python"
         ],
+        date: "November 18, 2019",
         loader: () => import('../blogs/avatoom')
     }),
     createBlogEntry({
@@ -107,6 +128,7 @@ export const blogList = [
             "Artificial Intelligence",
             "Evolutionary Computing"
         ],
+        date: "Feb 22, 2019",
         loader: () => import('../blogs/aibn')
     }),
     createBlogEntry({
@@ -116,6 +138,7 @@ export const blogList = [
             "Cloud Computing",
             "Virtualization"
         ],
+        date: "Feb 20, 2019",
         loader: () => import('../blogs/ovac')
     }),
     createBlogEntry({
@@ -125,6 +148,7 @@ export const blogList = [
             "Programming Languages",
             "Web Development"
         ],
+        date: "June 5, 2017",
         loader: () => import('../blogs/qoj')
     }),
     createBlogEntry({
@@ -134,6 +158,7 @@ export const blogList = [
             "Human Psychology",
             "Psycholinguistics"
         ],
+        date: "May 5, 2017",
         loader: () => import('../blogs/eohl')
     })
 ];
