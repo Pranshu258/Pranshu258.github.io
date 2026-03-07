@@ -149,7 +149,7 @@ export default class Body extends React.Component {
                             <div style={{ paddingLeft: "5px" }}>
                                 {
                                     publicationList.map((object, i) =>
-                                        <div key={object.name} style={{ marginBottom: i < publicationList.length - 1 ? '36px' : 0 }}>
+                                        <div key={object.name} style={{ marginBottom: i < publicationList.length - 1 ? '20px' : 0 }}>
                                             <div className="featuredText pub-card">
                                                 <div className="pub-venue-row">
                                                     <span className="pub-venue">{object.venue}</span>
@@ -190,7 +190,7 @@ export default class Body extends React.Component {
                                     currentBlogs.map((object, i) =>
                                         <div
                                             key={object.name}
-                                            style={{ marginBottom: i < currentBlogs.length - 1 ? '36px' : 0 }}
+                                            style={{ marginBottom: i < currentBlogs.length - 1 ? '20px' : 0 }}
                                             onMouseEnter={() => this.handleBlogLinkHover(object)}
                                             onTouchStart={() => this.handleBlogLinkHover(object)}
                                         >
@@ -235,7 +235,7 @@ export default class Body extends React.Component {
                             <br></br><br></br>
                             <div style={{ paddingLeft: '5px' }}>
                                 {projectList.map((object, i) =>
-                                    <div key={object.name} className="pub-card project-card" style={{ marginBottom: i < projectList.length - 1 ? '36px' : 0 }}>
+                                    <div key={object.name} className="pub-card project-card" style={{ marginBottom: i < projectList.length - 1 ? '20px' : 0 }}>
                                         <div className="pub-venue-row">{object.tags.map((tag, j) => <span key={j} className="blog-tag">#{tag}</span>)}</div>
                                         <h3 className="roboto">{object.name}</h3>
                                         <p>{object.description}</p>
