@@ -8,7 +8,7 @@ export const blogMeta = [
         name: "Runtime optimizations for LLMs",
         description: "Large Language Models (LLMs) are a class of deep learning models that have gained significant attention in recent years due to their ability to generate human-like text. In this article, we explore runtime optimizations that are used to improve performance and reduce resource consumption in production.",
         tags: ["Large Language Models", "Performance Optimization"],
-        date: "Nov 30, 2024",
+        date: "March 10, 2026",
     },
     {
         name: "Ant Colony Optimization",
