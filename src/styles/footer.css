@@ -2,11 +2,11 @@ footer {
     padding: 10px;
     color: var(--footer-text-color);
     background-image: var(--footer-background);
+    border-top: 1px solid rgba(32, 125, 66, 0.2);
 }
 
-
 .socialIcon {
-    font-size: 200%;
+    font-size: 1.35rem;
 }
 
 #footerContent {
@@ -23,8 +23,8 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 36px;
-    margin: 50px 0;
+    gap: 28px;
+    margin: 28px 0;
     padding: 0;
     list-style: none;
 }
@@ -43,10 +43,13 @@ footer {
     border: none;
     padding: 0;
     margin: 0;
+    opacity: 0.6;
+    transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 .footerTrigger:hover {
-    color: var(--footer-text-color);
+    color: #4ab870;
+    opacity: 1;
     text-decoration: none;
 }
 
