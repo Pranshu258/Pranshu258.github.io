@@ -7,6 +7,8 @@ import Body from './body';
 import Footer from './footer';
 import Blog from './blog';
 import Artworks from './artworks';
+import CookieBanner from './cookiebanner';
+import CookiePolicy from './cookiepolicy';
 
 import './styles/app.css';
 
@@ -90,9 +92,11 @@ export default class App extends React.Component {
                         <Route exact path="/" element={<Body/>} />
                         <Route path="/blog/*" element={<Blog/>} />
                         <Route path="/artworks" element={<Artworks/>} />
+                        <Route path="/cookies-policy" element={<CookiePolicy/>} />
                     </Routes>
                     <Footer />
                 </Router>
+                <CookieBanner />
             </div>
         );
     }

@@ -103,7 +103,7 @@ export default class Nav extends Component {
     }
 
     handleCrossPageNav(section) {
-        if (window.location.href.split('/').length > 4) {
+        if (window.location.pathname !== '/') {
             window.location ="/#" + section;
         }
         this.closeMenu();
