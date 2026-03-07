@@ -61,7 +61,8 @@ export default class Footer extends React.Component {
                                 </a>
                             </li>
                         </ul>
-                        <small className="montserrat">© Copyright {year}, Pranshu Gupta</small><br></br>
+                        <div className="footer-icon-divider"></div>
+                        <small className="montserrat footer-copyright">© {year} Pranshu Gupta</small>
                     </div>
                     <div className="col-sm-2"></div>
                 </div>

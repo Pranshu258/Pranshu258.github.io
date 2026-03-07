@@ -1,5 +1,5 @@
 footer {
-    padding: 10px;
+    padding: 0;
     color: var(--footer-text-color);
     background-image: var(--footer-background);
     border-top: 1px solid rgba(32, 125, 66, 0.2);
@@ -8,21 +8,34 @@ footer {
 .footer-nav {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 28px;
-    padding-top: 8px;
-    margin-bottom: -28px;
+    padding-top: 44px;
+    margin-bottom: 0;
 }
 
 .footer-nav-link {
     font-family: 'Raleway', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--footer-text-color);
     opacity: 0.45;
     text-decoration: none;
+    position: relative;
     transition: opacity 0.2s ease;
+}
+
+.footer-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--brand-100);
+    transition: width 0.25s ease;
 }
 
 .footer-nav-link:hover {
@@ -31,7 +44,25 @@ footer {
     color: var(--footer-text-color);
 }
 
+.footer-nav-link:hover::after {
+    width: 100%;
+}
 
+.footer-icon-divider {
+    width: 36px;
+    height: 1px;
+    background: rgba(32, 125, 66, 0.4);
+    margin: 0 auto;
+}
+
+.footer-copyright {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    padding-bottom: 36px;
+    display: block;
+    margin-top: 8px;
+}
 
 .socialIcon {
     font-size: 200%;
@@ -40,8 +71,6 @@ footer {
 #footerContent {
     margin: 0;
     padding: 0;
-    padding-top: 32px;
-    padding-bottom: 32px;
     display: flex;
     flex-direction: row;
     text-align: center;
@@ -51,8 +80,9 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 36px;
-    margin: 50px 0;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 24px 0 20px;
     padding: 0;
     list-style: none;
 }
@@ -69,9 +99,10 @@ footer {
     text-decoration: none;
     background: none;
     border: none;
-    padding: 0;
+    padding: 8px;
     margin: 0;
-    opacity: 0.6;
+    border-radius: 8px;
+    opacity: 0.5;
     transition: opacity 0.2s ease;
 }
 
@@ -84,5 +115,5 @@ footer {
 .footerTrigger:focus-visible {
     outline: 2px solid var(--toggle-focus-ring);
     outline-offset: 4px;
-    border-radius: 4px;
+    border-radius: 8px;
 }
