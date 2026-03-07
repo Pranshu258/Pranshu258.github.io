@@ -21,7 +21,7 @@ export default class Renju extends React.Component {
                     <FaGamepad className="bigger gt1" />
                 </div>
                 <h1 className="title">Renju - A Strategic Board Game with AI</h1>
-                <p>Pranshu Gupta, February 15, 2026</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer link={window.location.href} title={"Renju - A Strategic Board Game with AI"}></Sharer>
 
                 <p className="introduction">

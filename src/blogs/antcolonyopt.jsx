@@ -92,7 +92,7 @@ export default class AntColonyOptimizationBlog extends React.Component {
                     <FaBugs className="bigger gt1" />
                 </div>
                 <h1 className="title">Ant Colony Optimization</h1>
-                <p>Pranshu Gupta, February 25, 2026</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer className="sharer" link={window.location.href} title={"Ant Colony Optimization"}></Sharer>
                 <p className="introduction">
                     Nature is often the best optimizer. Many natural systems converge to efficient equilibria,

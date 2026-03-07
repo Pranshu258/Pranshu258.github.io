@@ -4,7 +4,7 @@ import '../styles/fonts.css';
 import '../styles/blog.css';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { FaDatabase } from 'react-icons/fa6';
+import { PiRobotDuotone } from "react-icons/pi";
 
 const markdown = `
 ## Packed Tensors
@@ -25,24 +25,23 @@ The masked multi-head attention kernel in the TensorRT-LLM library has a special
 
 ## Flash Attention
 
-
 `;
 
-export default class TransIsol extends React.Component {
+export default class LLmOpt extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
-        document.title = "Large Language Model Runtime Optimizations | blog by Pranshu Gupta";
+        document.title = "Runtime optimizations for LLMs | blog by Pranshu Gupta";
     }
 
     render() {
         return (
             <div>
                 <div className="row bhead">
-                    <FaDatabase className="bigger gt1" />
+                    <PiRobotDuotone className="bigger gt1" />
                 </div>
-                <h1 className="title">Large Language Model Runtime Optimizations</h1>
-                <p>Pranshu Gupta, Nov 30, 2024</p>
-                <Sharer className="sharer" link={window.location.href} title={"Large Language Model Runtime Optimizations"}></Sharer>
+                <h1 className="title">Runtime optimizations for Large Language Models</h1>
+                <p>Pranshu Gupta, {this.props.date}</p>
+                <Sharer className="sharer" link={window.location.href} title={"Runtime optimizations for LLMs"}></Sharer>
                 <p className="introduction">
                     Large Language Models (LLMs) are a class of deep learning models that have gained significant attention in recent years due to their ability to generate human-like text. However, the computational resources required to train and deploy these models can be substantial. In this article, we will explore some of the runtime optimizations that can be applied to LLMs to improve their performance and reduce their resource consumption.<br></br>
                     <br></br>

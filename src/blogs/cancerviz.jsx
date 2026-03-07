@@ -218,7 +218,7 @@ export default class CancerViz extends React.Component {
                     <FaStaffSnake className="bigger gt1" />
                 </div>
                 <h1 className="title">Statistical insights on Cancer in America</h1>
-                <p>Pranshu Gupta, Dec 5, 2024</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer className="sharer" link={window.location.href} title={"Statistical insights on Cancer in America"}></Sharer>
                 <p className="introduction">
                     Cancer is a group of diseases characterized by abnormal and uncontrolled growth of cells, that can invade and spread to other parts of the body. The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the country. In this article we will analyse the data to find trends and patterns in cancer incidences for leading cancer sites in the human body.

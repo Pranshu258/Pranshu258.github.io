@@ -20,7 +20,7 @@ export default class Ovac extends React.Component {
                     <FaServer className="bigger gt1" />
                 </div>
                 <h1 className="title">On Virtualization and Containers</h1>
-                <p>Pranshu Gupta, Feb 20, 2019</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer link={window.location.href} title={"On Virtualization and Containers"}></Sharer>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h3 className="roboto">Virtualization</h3>

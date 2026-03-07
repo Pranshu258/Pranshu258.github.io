@@ -17,7 +17,7 @@ export default class Aibn extends React.Component {
                     <FaBugs className="bigger gt1" />
                 </div>
                 <h1 className="title">Algorithms Inspired by Nature</h1>
-                <p>Pranshu Gupta, Feb 22, 2019</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer link={window.location.href} title={"Algorithms Inspired by Nature"}></Sharer>
                 <p className="introduction">
                     Nature is known to be the best optimizer. Natural processes most often than not reach an

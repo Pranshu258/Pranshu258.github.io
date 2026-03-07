@@ -61,7 +61,7 @@ export default class Avatoom extends React.Component {
                     <a style={{ textDecoration: "none" }} href="https://www.linkedin.com/in/shubhangi-upasani-1b3419182/"> Shubhangi Upasani</a>,
                     <a style={{ textDecoration: "none" }} href="https://www.linkedin.com/in/yuliliu97/"> Yuli Liu</a>
                     <br></br>
-                    November 18, 2019
+                    {this.props.date}
                 </p>
                 <Sharer link={window.location.href} title={"A voyage across the Ocean of Music"}></Sharer>
                 <p className="introduction">

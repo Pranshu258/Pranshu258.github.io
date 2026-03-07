@@ -29,7 +29,7 @@ export default class OpenPrequalBlog extends React.Component {
                     <TbLoadBalancer className="bigger gt1" />
                 </div>
                 <h1 className="title">Coding YouTube's load balancer using GitHub Copilot</h1>
-                <p>Pranshu Gupta, September 14, 2025</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer className="sharer" link={window.location.href} title={"Coding YouTube's load balancer using GitHub Copilot"}></Sharer>
 
                 <h2>Introduction</h2>

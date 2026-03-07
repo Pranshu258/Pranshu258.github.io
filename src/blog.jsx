@@ -49,7 +49,7 @@ export default class Blog extends React.Component {
                                                                 </div>
                                                             }>
                                                                 <div className="blog-article-content">
-                                                                    <BlogComponent />
+                                                                    <BlogComponent date={object.date} />
                                                                     <br></br>
                                                                     <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
                                                                     <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>

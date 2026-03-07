@@ -79,7 +79,7 @@ export default class TransIsol extends React.Component {
                     <FaDatabase className="bigger gt1" />
                 </div>
                 <h1 className="title">Transaction Isolation in Database Systems</h1>
-                <p>Pranshu Gupta, Nov 30, 2024</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer className="sharer" link={window.location.href} title={"Transaction Isolation in Database Systems"}></Sharer>
                 <p className="introduction">
                     Transactional database systems allow different isolation levels. An isolation level specifies how and when parts of the transaction can and should become visible to other transactions that are being executed at the same time. This article will explore the different isolation levels and how they affect the transactional behavior of the database system.<br></br>

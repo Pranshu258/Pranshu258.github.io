@@ -16,7 +16,7 @@ export default class Eohl extends React.Component {
                     <FaLanguage className="bigger gt1" />
                 </div>
                 <h1 className="title">Evolution of Human Languages</h1>
-                <p>Pranshu Gupta, May 5, 2017</p>
+                <p>Pranshu Gupta, {this.props.date}</p>
                 <Sharer link={window.location.href} title={"Evolution of Human Languages"}></Sharer>
                 <p className="introduction">
                     Language is an essential part of our existence enabling us to transfer unlimited non-genetic information among individuals. But how, when and why exactly did we evolve to acquire the faculty of language is still unknown. Among the many theories that have been proposed to explain the evolution of language, some notable ones are – Mirror System, Computational, Technological and Cultural Hypothesis.
