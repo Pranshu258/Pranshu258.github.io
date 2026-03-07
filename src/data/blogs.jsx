@@ -2,7 +2,7 @@ import { blogMeta } from './blog-meta.js';
 
 // Map from slug → dynamic import loader (kept here so Vite can bundle them)
 const loaders = {
-    "runtime-optimizations-for-llms":                          () => import('../blogs/llmoptimizations'),
+    "runtime-optimizations-for-llms":                          () => import('../blogs/llmoptimizations/index'),
     "ant-colony-optimization":                                 () => import('../blogs/antcolonyopt'),
     "renju:-a-strategic-board-game-with-ai":                   () => import('../blogs/renju'),
     "coding-youtube's-load-balancer-using-github-copilot":     () => import('../blogs/openprequal'),
@@ -19,7 +19,13 @@ const loaders = {
     "evolution-of-human-languages":                            () => import('../blogs/eohl'),
 };
 
+// Blogs that own sub-routes (url pattern: /blog/<slug>/<sub-slug>)
+const hasSubRoutesMap = {
+    "runtime-optimizations-for-llms": true,
+};
+
 export const blogList = blogMeta.map((entry) => ({
     ...entry,
     loader: loaders[entry.slug],
+    hasSubRoutes: hasSubRoutesMap[entry.slug] || false,
 }));
