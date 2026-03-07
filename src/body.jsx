@@ -129,9 +129,6 @@ export default class Body extends React.Component {
         const blogTotalPages = getTotalPages(blogList.length, blogsPerPage);
         const blogPageNumbers = getPageNumbers(blogTotalPages);
 
-        var bannerStyle = {
-            margin: "20px 0 20px 0"
-        }
 
         return (
             <div className="body content">
@@ -253,64 +250,37 @@ export default class Body extends React.Component {
                     </div>
                     <hr></hr>
                     <div className="row" id="artworks">
-                        <div className="col-sm-12">
-                            <br></br><br></br>
+                        <div className="col-md-3">
+                            <br></br><br></br><br></br>
                             <FaPalette className="big gt3" />
                             <br></br><br></br>
                             <h2 className="roboto">
                                 ARTWORKS
                             </h2>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-sm-12">
-                            <div className="row">
-                                <div className="col-sm-4">
-                                    <img alt="" src={art5} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                                <div className="col-sm-4">
-                                    <img alt="" src={art6} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                                <div className="col-sm-4">
-                                    <img alt="" src={art7} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-3">
-                                    <img alt="" src={art1} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                                <div className="col-sm-3">
-                                    <img alt="" src={art2} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                                <div className="col-sm-3">
-                                    <img alt="" src={art3} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                                <div className="col-sm-3">
-                                    <img alt="" src={art4} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-4">
-                                    <img alt="" src={art8} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                                <div className="col-sm-4">
-                                    <img alt="" src={art9} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                                <div className="col-sm-4">
-                                    <img alt="" src={art10} className="img-fluid" style={bannerStyle}></img>
-                                </div>
-                            </div>
                             <br></br>
-                            <Link to="artworks/">
-                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-warning">
-                                    <b>ARTIST'S BIO</b><FaArrowRight style={{ marginLeft: '10px' }} />
-                                </button>
-                            </Link>
-                            <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/pranshu.paints/">
-                                <button style={{ margin: "0 10px 10px 0" }} className="btn btn-warning">
-                                    <b>FOLLOW ON INSTAGRAM</b> &nbsp;<LuArrowUpRight />
-                                </button>
-                            </a>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
+                                <Link to="artworks/" className="accordion-link">
+                                    Artist's Bio <FaArrowRight style={{ marginLeft: '6px' }} />
+                                </Link>
+                                <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/pranshu.paints/" className="accordion-link">
+                                    Follow on Instagram <LuArrowUpRight style={{ marginLeft: '6px' }} />
+                                </a>
+                            </div>
+                        </div>
+                        <div className="col-md-9">
+                            <br></br><br></br>
+                            <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                                {[[art1,art5,art4],[art6,art8,art2,art10],[art7,art3,art9]].map((col, ci) => (
+                                    <div key={ci} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {col.map((src, i) => (
+                                            <img key={i} alt="" src={src} style={{ width: '100%', display: 'block', borderRadius: '4px', transition: 'opacity 0.25s ease, transform 0.25s ease' }}
+                                                onMouseEnter={e => { e.currentTarget.style.opacity = '0.8'; e.currentTarget.style.transform = 'scale(1.02)'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1)'; }}
+                                            />
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
                             <br></br><br></br><br></br>
                         </div>
                     </div>
