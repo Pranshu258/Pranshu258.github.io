@@ -156,7 +156,7 @@ export default class Body extends React.Component {
                                                     <span className="pub-role">{object.role}</span>
                                                 </div>
                                                 <a target="_blank" rel="noopener noreferrer" className="blogLink" href={object.link}>
-                                                    <h3 className="roboto">{object.name} <LuArrowUpRight style={{ fontSize: '75%', marginLeft: '8px' }} /></h3>
+                                                    <h3 className="roboto">{object.name} <LuArrowUpRight style={{ fontSize: '75%', marginLeft: '8px' }} strokeWidth={3} /></h3>
                                                 </a>
                                                 <p>{object.description}</p>
                                             </div>
@@ -240,7 +240,7 @@ export default class Body extends React.Component {
                                         <h3 className="roboto">{object.name}</h3>
                                         <p>{object.description}</p>
                                         <a href={object.link} target="_blank" rel="noopener noreferrer" className="accordion-link">
-                                            View on GitHub <LuArrowUpRight style={{ marginLeft: '4px' }} />
+                                            View on GitHub <LuArrowUpRight style={{ marginLeft: '4px' }} strokeWidth={3} />
                                         </a>
                                     </div>
                                 )}
@@ -263,7 +263,7 @@ export default class Body extends React.Component {
                                     Artist's Bio <FaArrowRight style={{ marginLeft: '6px' }} />
                                 </Link>
                                 <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/pranshu.paints/" className="accordion-link">
-                                    Follow on Instagram <LuArrowUpRight style={{ marginLeft: '6px' }} />
+                                    Follow on Instagram <LuArrowUpRight style={{ marginLeft: '6px' }} strokeWidth={3} />
                                 </a>
                             </div>
                         </div>
