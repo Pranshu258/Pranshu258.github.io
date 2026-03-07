@@ -10,9 +10,16 @@ import './styles/blog.css';
 import { artList } from './data/artworks'
 
 export default class Artworks extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { mounted: false };
+    }
+
     componentDidMount() {
         window.scrollTo(0, 0);
+        this.setState({ mounted: true });
     }
+
     render() {
         var globalStyle = {
             margin: "50px 0 50px 0",
@@ -34,6 +41,7 @@ export default class Artworks extends React.Component {
                                 </p>
                                 <h2 className='calligraffitti'><b>- Pranshu Gupta</b></h2>
                                 <br></br>
+                                {this.state.mounted && (
                                 <Carousel
                                     showThumbs={true}
                                     showStatus={false}
@@ -56,6 +64,7 @@ export default class Artworks extends React.Component {
                                         )
                                     }
                                 </Carousel>
+                                )}
                             </div>
                             <div className="col-md-4">
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
