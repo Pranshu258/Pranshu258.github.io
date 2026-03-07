@@ -40,7 +40,7 @@ export default class Blog extends React.Component {
                                                 return (
                                                     <Route
                                                         key={object.slug}
-                                                        path={object.slug}
+                                                        path={object.hasSubRoutes ? object.slug + '/*' : object.slug}
                                                         element={
                                                             <Suspense fallback={
                                                                 <div className="blog-loading">
