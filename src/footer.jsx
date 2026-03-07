@@ -13,6 +13,12 @@ export default class Footer extends React.Component {
                     <div className="col-sm-2">
                     </div>
                     <div className="col-sm-8" style={{ color: "var(--footer-text-color)", textAlign: "center" }}>
+                        <nav className="footer-nav">
+                            <a href="/#publications" className="footer-nav-link">Papers</a>
+                            <a href="/#blog" className="footer-nav-link">Blog</a>
+                            <a href="/#projects" className="footer-nav-link">Projects</a>
+                            <a href="/#artworks" className="footer-nav-link">Artworks</a>
+                        </nav>
                         <ul id="footerul">
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.linkedin.com/in/pranshug258" title="LinkedIn">
