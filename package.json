@@ -25,7 +25,8 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "generate-rss": "node scripts/generate-rss.mjs",
+    "build": "npm run generate-rss && vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d build"

@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles/footer.css';
-import { FaFacebook, FaGithub, FaGoodreads, FaInstagram, FaLinkedin, FaSpotify, FaYoutube } from 'react-icons/fa6';
+import { FaFacebook, FaGithub, FaGoodreads, FaInstagram, FaLinkedin, FaRss, FaSpotify, FaYoutube } from 'react-icons/fa6';
 
 // import appleMusic from "./images/apple_music.svg"
 
@@ -53,6 +53,11 @@ export default class Footer extends React.Component {
                             <li>
                                 <a target="_blank" rel="noopener noreferrer" className="footerTrigger" href="https://www.facebook.com/pranshug258" title="Facebook">
                                     <FaFacebook className="socialIcon" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/rss.xml" className="footerTrigger" title="RSS Feed">
+                                    <FaRss className="socialIcon" />
                                 </a>
                             </li>
                         </ul>
