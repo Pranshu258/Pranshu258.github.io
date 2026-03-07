@@ -348,12 +348,6 @@
     break-inside: avoid;
     margin-bottom: 10px;
     border-radius: 4px;
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.art-masonry img:hover {
-    opacity: 0.8;
-    transform: scale(1.02);
 }
 
 @media (max-width: 768px) {

@@ -273,10 +273,7 @@ export default class Body extends React.Component {
                                 {[[art1,art5,art4],[art6,art8,art2,art10],[art7,art3,art9]].map((col, ci) => (
                                     <div key={ci} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                         {col.map((src, i) => (
-                                            <img key={i} alt="" src={src} style={{ width: '100%', display: 'block', borderRadius: '4px', transition: 'opacity 0.25s ease, transform 0.25s ease' }}
-                                                onMouseEnter={e => { e.currentTarget.style.opacity = '0.8'; e.currentTarget.style.transform = 'scale(1.02)'; }}
-                                                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1)'; }}
-                                            />
+                                            <img key={i} alt="" src={src} style={{ width: '100%', display: 'block', borderRadius: '4px' }} />
                                         ))}
                                     </div>
                                 ))}
