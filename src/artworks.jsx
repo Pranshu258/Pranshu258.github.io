@@ -53,11 +53,16 @@ export default class Artworks extends React.Component {
                                     showArrows={false}
                                     transitionTime={0}
                                     interval={6000}
+                                    dynamicHeight={true}
                                 >
                                     {
                                         artList.map((object, i) =>
                                             <div key={i}>
-                                                <img src={object.source} alt={`Thumbnail ${i}`} />
+                                                <img
+                                                    src={object.source}
+                                                    alt={`Thumbnail ${i}`}
+                                                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                                                />
                                                 <br></br><br></br>
                                                 <p style={{ textAlign: 'left' }}>{object.description}</p>
                                             </div>
