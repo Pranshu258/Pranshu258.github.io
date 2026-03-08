@@ -8,7 +8,7 @@ import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-bash';
 import '../../styles/prism.css';
 
-mermaid.initialize({
+const MERMAID_THEME = {
     startOnLoad: false,
     theme: 'base',
     themeVariables: {
@@ -24,10 +24,8 @@ mermaid.initialize({
         clusterBkg: '#181825',
         titleColor: '#cdd6f4',
         edgeLabelBackground: '#f9f6ee',
-        attributeBackgroundColorEven: '#1e1e2e',
-        attributeBackgroundColorOdd: '#181825',
     },
-});
+};
 
 const OFFLOAD_CHART = [
     "flowchart TD",
@@ -56,19 +54,14 @@ const OFFLOAD_CHART = [
 function MermaidDiagram({ chart }) {
     const ref = useRef(null);
     useEffect(() => {
-        if (ref.current) {
-            const id = 'mermaid-' + Math.random().toString(36).slice(2);
-            mermaid.render(id, chart).then(({ svg }) => {
-                // Force edge label text to be dark regardless of theme lineColor
-                const patched = svg.replace(
-                    '</style>',
-                    '.edgeLabel span, .edgeLabel p, .edgeLabel text, .edgeLabel { color: #1a1a1a !important; fill: #1a1a1a !important; }</style>'
-                );
-                ref.current.innerHTML = patched;
-            });
-        }
+        const el = ref.current;
+        if (!el) return;
+        el.removeAttribute('data-processed');
+        el.innerHTML = chart;
+        mermaid.initialize(MERMAID_THEME);
+        mermaid.run({ nodes: [el] });
     }, [chart]);
-    return <div ref={ref} style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center' }} />;
+    return <div ref={ref} className="mermaid" style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center' }} />;
 }
 
 export default function WeightStreaming() {
