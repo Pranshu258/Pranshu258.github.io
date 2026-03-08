@@ -1,36 +1,36 @@
 %%{init: {"theme": "base", "themeVariables": {"primaryColor": "#f0f4f8", "primaryTextColor": "#1e293b", "primaryBorderColor": "#94a3b8", "lineColor": "#475569", "secondaryColor": "#f8fafc", "tertiaryColor": "#f0f4f8", "background": "#f9f6ee", "mainBkg": "#f0f4f8", "nodeBorder": "#94a3b8", "clusterBkg": "#f8fafc", "titleColor": "#1e293b", "edgeLabelBackground": "#f9f6ee", "edgeLabelColor": "#1e293b"}}}%%
 flowchart TD
-    A(["User calls model&#40;input&#41;"]):::start --> B[Wrapped forward triggered]:::process
-    B --> C[pre_forward hook]:::hook
+    A(["model(input) called"]):::start --> B["Accelerate's forward<br/>wrapper intercepts the call"]:::process
+    B --> C["pre_forward hook fires"]:::hook
 
-    C --> D{offload = True?}:::decision
-    D -- No --> E[Send inputs to execution_device]:::process
-    D -- Yes --> F[Iterate module parameters]:::process
+    C --> D{"Offloading<br/>enabled?"}:::decision
+    D -- No --> E["Move inputs to execution device (GPU)"]:::process
+    D -- Yes --> F["Loop over module weights"]:::process
 
-    F --> G["weights_map&#91;name&#93;"]:::lookup
-    G --> H{Source?}:::decision
-    H -- CPU state_dict --> I[Return tensor from RAM]:::cpu
-    H -- safetensors file --> J[safe_open → load tensor]:::cpu
-    H -- .dat memmap --> K[np.memmap → torch.tensor]:::cpu
+    F --> G["Look up weight<br/>in weights_map"]:::lookup
+    G --> H{"Where is the<br/>weight stored?"}:::decision
+    H -- "CPU state dict" --> I["Read tensor<br/>from RAM"]:::cpu
+    H -- "safetensors file" --> J["Memory-map file,<br/>slice tensor"]:::cpu
+    H -- ".dat memmap" --> K["np.memmap →<br/>torch.tensor"]:::cpu
 
-    I & J & K --> L["set_module_tensor_to_device<br/>meta → execution_device"]:::transfer
-    L --> M{More params?}:::decision
+    I & J & K --> L["Copy weight to<br/>execution device (GPU)"]:::transfer
+    L --> M{"More<br/>weights?"}:::decision
     M -- Yes --> F
     M -- No --> E
 
-    E --> N["Original forward&#40;&#41; runs on GPU<br/>all weights resident in VRAM"]:::gpu
+    E --> N["Module forward() executes<br/>All weights resident on execution device (GPU)"]:::gpu
 
-    N --> O[post_forward hook]:::hook
-    O --> P{offload = True?}:::decision
-    P -- Yes --> Q[Iterate module parameters]:::process
-    Q --> R["set_module_tensor_to_device<br/>execution_device → meta<br/>VRAM freed"]:::evict
-    R --> S{More params?}:::decision
+    N --> O["post_forward hook fires"]:::hook
+    O --> P{"Offloading<br/>enabled?"}:::decision
+    P -- Yes --> Q["Loop over module weights"]:::process
+    Q --> R["Replace weight with<br/>meta tensor — memory freed"]:::evict
+    R --> S{"More<br/>weights?"}:::decision
     S -- Yes --> Q
     S -- No --> T
     P -- No --> T
 
-    T{io_same_device?}:::decision
-    T -- Yes --> U["Send output back<br/>to original input device"]:::process
+    T{"Return output to<br/>original device?"}:::decision
+    T -- Yes --> U["Move output to<br/>input's device"]:::process
     T -- No --> V
     U --> V(["Return output"]):::finish
 
