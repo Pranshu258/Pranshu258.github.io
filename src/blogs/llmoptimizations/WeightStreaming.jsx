@@ -74,6 +74,13 @@ python3 examples/summarize.py \\
                 streaming entirely; <code>0.0</code> keeps all streamable weights on CPU and transfers them
                 just-in-time.
             </p>
+            <p>
+                By default, TRT-LLM replaces every
+                matrix-multiply (GEMM) with a custom fused CUDA plugin that delivers better throughput by
+                tiling and fusing operations at the kernel level. The trade-off is that the plugin owns its
+                weight tensors internally — TensorRT has no visibility into them, so they cannot be tagged as
+                streamable and are pinned to the GPU regardless of the budget. That is why we need to disable it using <code>--gemm_plugin disable</code> flag.
+            </p>
             <h2>HuggingFace Accelerate</h2>
             <div className="llm-callout">
                 <p>
