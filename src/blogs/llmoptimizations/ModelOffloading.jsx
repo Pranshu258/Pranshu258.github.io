@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { SiNvidia, SiHuggingface } from 'react-icons/si';
-import mermaid from 'mermaid';
+import offloadChartSvg from './offload-chart.svg?raw';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-c';
@@ -8,60 +8,13 @@ import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-bash';
 import '../../styles/prism.css';
 
-const MERMAID_THEME = {
-    startOnLoad: false,
-    theme: 'base',
-    themeVariables: {
-        primaryColor: '#1e1e2e',
-        primaryTextColor: '#cdd6f4',
-        primaryBorderColor: '#45475a',
-        lineColor: '#6b7fa3',
-        secondaryColor: '#181825',
-        tertiaryColor: '#1e1e2e',
-        background: '#f9f6ee',
-        mainBkg: '#1e1e2e',
-        nodeBorder: '#45475a',
-        clusterBkg: '#181825',
-        titleColor: '#cdd6f4',
-        edgeLabelBackground: '#f9f6ee',
-    },
-};
-
-const OFFLOAD_CHART = [
-    "flowchart TD",
-    "    A([\"Start Inference\"]):::start --> B[Select next layer]:::gpu",
-    "    B --> C{\"Weights in GPU memory?\"}:::decision",
-    "    C -- Yes --> E[\"Run layer forward pass\"]:::gpu",
-    "    C -- No --> F[/Transfer weights over PCIe/]:::transfer",
-    "    D[(\"CPU RAM / mmap safetensors\")]:::cpu",
-    "    D -- pre_forward: fetch --> F",
-    "    F --> E",
-    "    E --> G{\"Budget exceeded?\"}:::decision",
-    "    G -- Yes --> H[\"Evict LRU weights back to meta\"]:::evict",
-    "    H --> I{\"More layers?\"}:::decision",
-    "    G -- No --> I",
-    "    I -- Yes --> B",
-    "    I -- No --> J([\"Output tokens\"]):::finish",
-    "    classDef start    fill:#313244,stroke:#89b4fa,color:#89b4fa,stroke-width:2px",
-    "    classDef finish   fill:#313244,stroke:#a6e3a1,color:#a6e3a1,stroke-width:2px",
-    "    classDef gpu      fill:#1e3a5f,stroke:#89b4fa,color:#cdd6f4,stroke-width:1.5px",
-    "    classDef cpu      fill:#1a3a2a,stroke:#a6e3a1,color:#cdd6f4,stroke-width:1.5px",
-    "    classDef transfer fill:#3a2a00,stroke:#f9e2af,color:#f9e2af,stroke-width:1.5px",
-    "    classDef evict    fill:#3a1a1a,stroke:#f38ba8,color:#f38ba8,stroke-width:1.5px",
-    "    classDef decision fill:#2a1f3d,stroke:#cba6f7,color:#cdd6f4,stroke-width:1.5px"
-].join("\n");
-
-function MermaidDiagram({ chart }) {
-    const ref = useRef(null);
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        el.removeAttribute('data-processed');
-        el.innerHTML = chart;
-        mermaid.initialize(MERMAID_THEME);
-        mermaid.run({ nodes: [el] });
-    }, [chart]);
-    return <div ref={ref} className="mermaid" style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center' }} />;
+function MermaidDiagram({ svg }) {
+    return (
+        <div
+            dangerouslySetInnerHTML={{ __html: svg }}
+            style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center' }}
+        />
+    );
 }
 
 export default function WeightStreaming() {
@@ -158,7 +111,7 @@ python3 examples/summarize.py \\
                 sequence: load, compute, evict. The original forward logic is preserved and called unchanged
                 in the middle &mdash; the module itself has no idea any of this is happening.
             </p>
-            <MermaidDiagram chart={OFFLOAD_CHART} />
+            <MermaidDiagram svg={offloadChartSvg} />
             <p>
                 There are three phases to the hook lifecycle:
             </p>
