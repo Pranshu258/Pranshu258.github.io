@@ -108,13 +108,24 @@ python3 examples/summarize.py \\
                     hardware configurations &mdash; single GPU, multi-GPU, TPU, or CPU &mdash; with minimal code
                     changes. Beyond distributed training, it ships a collection of memory-management utilities:
                     model sharding across devices, mixed-precision helpers, and CPU/disk offloading hooks that
-                    work on <em>any</em> <code>nn.Module</code> without recompilation or a special build step.
+                    work on <em>any</em> PyTorch module without recompilation or a special build step.
                 </p>
             </div>
             <p>
-                HuggingFace Accelerate implements model offloading in pure Python for arbitrary PyTorch models,
-                without requiring a specially compiled engine, which makes the mechanics easier to follow than
-                TRT-LLM&rsquo;s closed-source internals.
+                Unlike TRT-LLM&rsquo;s closed-source streaming internals, Accelerate implements model offloading
+                entirely in pure Python, making the mechanics fully inspectable. The public API &mdash;{' '}
+                <code>cpu_offload</code>, <code>disk_offload</code>, <code>dispatch_model</code> &mdash; sits on
+                top of a hook-attachment layer that walks the module tree and configures each layer. The
+                streaming engine itself is a class called <code>AlignDevicesHook</code>, backed by a lazy
+                mapping object (<code>OffloadedWeightsLoader</code>) that reads from whichever storage tier
+                is in use. A low-level utility, <code>set_module_tensor_to_device</code>, performs the
+                actual tensor moves, handling edge cases like quantised types and shared weight pointers.
+            </p>
+            <p>
+                For each module that needs to stream its weights, Accelerate silently replaces the module&rsquo;s
+                normal <code>forward</code> method with a thin wrapper. The wrapper runs three steps in
+                sequence: load, compute, evict. The original forward logic is preserved and called unchanged
+                in the middle &mdash; the module itself has no idea any of this is happening.
             </p>
             <MermaidDiagram chart={`%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1e2e', 'primaryTextColor': '#cdd6f4', 'primaryBorderColor': '#45475a', 'lineColor': '#6b7fa3', 'secondaryColor': '#181825', 'tertiaryColor': '#1e1e2e', 'background': '#f9f6ee', 'mainBkg': '#1e1e2e', 'nodeBorder': '#45475a', 'clusterBkg': '#181825', 'titleColor': '#cdd6f4', 'edgeLabelBackground': '#f9f6ee', 'attributeBackgroundColorEven': '#1e1e2e', 'attributeBackgroundColorOdd': '#181825'}}}%%
 flowchart TD
@@ -144,124 +155,81 @@ flowchart TD
     classDef evict    fill:#3a1a1a,stroke:#f38ba8,color:#f38ba8,stroke-width:1.5px
     classDef decision fill:#2a1f3d,stroke:#cba6f7,color:#cdd6f4,stroke-width:1.5px`} />
             <p>
-                Accelerate attaches an <code>AlignDevicesHook</code> (with <code>offload=True</code>) to each
-                module via <code>add_hook_to_module</code>, which monkey-patches <code>module.forward</code> to
-                wrap the original call with load and evict steps:
+                There are three phases to the hook lifecycle:
             </p>
-            <pre><code className="language-python">{`# accelerate/hooks.py — patched forward installed by add_hook_to_module
-def new_forward(module, *args, **kwargs):
-    args, kwargs = module._hf_hook.pre_forward(module, *args, **kwargs)  # 1. load weights
-    output = module._old_forward(*args, **kwargs)                         # 2. run layer
-    return module._hf_hook.post_forward(module, output)                  # 3. evict weights`}</code></pre>
-
-            <p>The three phases of the hook lifecycle are:</p>
             <ol>
                 <li>
-                    <strong>Setup (<code>init_hook</code>)</strong> &mdash; each parameter is copied to CPU and
-                    the module&rsquo;s tensors are replaced with zero-size <code>meta</code> placeholders, so
-                    neither GPU nor CPU memory is held during idle periods.
+                    <strong>Initialisation</strong> &mdash; when a hook is first attached, all of the
+                    module&rsquo;s parameters are snapshotted and the live tensors are replaced with{' '}
+                    <em>meta</em> placeholders. A meta tensor is a ghost: it carries the right shape and
+                    data type, but has no backing memory. In its idle state an offloaded module occupies
+                    essentially zero VRAM.
                 </li>
                 <li>
-                    <strong>Pre-forward</strong> &mdash; real tensors are fetched from <code>weights_map</code>{' '}
-                    and materialised on the GPU just before <code>forward</code> runs.
+                    <strong>Pre-forward</strong> &mdash; just before the module runs, the hook fetches
+                    each weight from the store and copies it onto the GPU, replacing the meta placeholder.
+                    Input tensors are moved to the same device. At this point the module has everything it
+                    needs to execute.
                 </li>
                 <li>
-                    <strong>Post-forward</strong> &mdash; weights are immediately swapped back to{' '}
-                    <code>meta</code> tensors, freeing GPU VRAM before the next layer loads.
+                    <strong>Post-forward</strong> &mdash; immediately after the forward returns, every
+                    parameter is swapped back to a meta placeholder and the GPU memory is released.
                 </li>
             </ol>
-            <pre><code className="language-python">{`# accelerate/hooks.py
-
-# init_hook — snapshot weights to CPU, replace live tensors with meta placeholders
-self.weights_map = {name: param.to("cpu") for name, param in named_module_tensors(module, ...)}
-for name, _ in named_module_tensors(module, ...):
-    set_module_tensor_to_device(module, name, "meta")
-
-# pre_forward — materialise weights on GPU just before forward()
-for name, _ in named_module_tensors(module, ...):
-    value = self.weights_map[name]  # CPU RAM, or memory-mapped disk if using disk offload
-    set_module_tensor_to_device(module, name, self.execution_device, value=value)
-
-# post_forward — evict back to meta immediately after forward()
-for name, _ in named_module_tensors(module, ...):
-    set_module_tensor_to_device(module, name, "meta")`}</code></pre>
-
             <p>
-                <code>weights_map</code> can be a plain dict (CPU RAM offload) or a lazy map backed by
-                memory-mapped safetensors files (disk offload), enabling models far larger than system RAM.
+                The weight store is a lazy mapping object that never loads a tensor until it is actually
+                requested. It supports three storage tiers, searched in priority order:
+            </p>
+            <ul>
+                <li>
+                    <strong>In-memory dictionary</strong> &mdash; weights held as plain CPU tensors in a
+                    Python dict. Fast to read back, but still occupies CPU RAM. This is what{' '}
+                    <code>cpu_offload()</code> uses.
+                </li>
+                <li>
+                    <strong>Safetensors files</strong> &mdash; weights loaded on demand from{' '}
+                    <code>.safetensors</code> files on disk. The file format allows reading individual
+                    tensors without de-serialising the whole checkpoint, so only the weights for the layer
+                    currently executing need to be read at any given moment.
+                </li>
+                <li>
+                    <strong>Memory-mapped numpy files</strong> &mdash; weights stored as raw binary{' '}
+                    <code>.dat</code> files on disk, accessed via OS memory-mapping. The OS streams pages
+                    on demand without ever loading the full file into RAM. This is the backing store used by{' '}
+                    <code>disk_offload()</code>, and makes it possible to run models far larger than
+                    available system RAM.
+                </li>
+            </ul>
+            <p>
+                When a module&rsquo;s weights are spread across a deep tree of submodules, each sub-hook
+                receives a <em>prefixed view</em> of the global store so it can look up{' '}
+                <code>"weight"</code> while the backing store transparently maps that to the fully qualified
+                path like <code>"transformer.h.3.mlp.weight"</code>.
             </p>
 
-            <h3>TRT-LLM vs. Accelerate</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>TRT-LLM</th>
-                        <th>HuggingFace Accelerate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Granularity</strong></td>
-                        <td>Budget in bytes; TRT decides which weights to evict</td>
-                        <td>Per-module (all weights of a module move together)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Who manages movement</strong></td>
-                        <td>TensorRT internals (<code>libnvinfer.so</code>)</td>
-                        <td>Python hooks around <code>module.forward</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Overhead</strong></td>
-                        <td>Minimal &mdash; managed inside CUDA execution pipeline</td>
-                        <td>Python-level overhead per layer call</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Flexibility</strong></td>
-                        <td>Requires TensorRT engine with <code>WEIGHT_STREAMING</code> flag</td>
-                        <td>Works on any <code>nn.Module</code> without recompilation</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Storage source</strong></td>
-                        <td>Pinned CPU RAM only</td>
-                        <td>CPU RAM or memory-mapped disk (safetensors)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Tied weights</strong></td>
-                        <td>Handled by TRT internally</td>
-                        <td>Tracked explicitly via <code>tied_params_map</code> to avoid duplication</td>
-                    </tr>
-                </tbody>
-            </table>
-            <br></br>
-            <h2>Tuning</h2>
-            <p><code>gpu_weights_percent</code> is a continuous knob between <code>0.0</code> and <code>1.0</code>:</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Value</th>
-                        <th>Effect</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>1.0</code> (default)</td>
-                        <td>No streaming &mdash; all weights on GPU, full throughput</td>
-                    </tr>
-                    <tr>
-                        <td><code>0.5</code></td>
-                        <td>Half streaming &mdash; moderate memory savings, some latency increase</td>
-                    </tr>
-                    <tr>
-                        <td><code>0.0</code></td>
-                        <td>Maximum streaming &mdash; minimum GPU memory, maximum latency overhead</td>
-                    </tr>
-                </tbody>
-            </table>
+            <h3>The Public API</h3>
             <p>
-                Start from <code>1.0</code> and decrease until the engine fits within the available GPU memory
-                budget. PCIe bandwidth (typically 16&ndash;32 GB/s) is the bottleneck when streaming is active, so
-                very low values will significantly reduce throughput on bandwidth-bound workloads.
+                Accelerate exposes all of this through four entry points. <code>cpu_offload()</code>{' '}
+                streams every module through CPU RAM. <code>disk_offload()</code> first serialises the
+                weights to a directory as memory-mapped files, then streams from there &mdash; useful when
+                the model doesn&rsquo;t fit in RAM. <code>dispatch_model()</code> is the most flexible:
+                it accepts a per-layer device map so some layers can sit resident on GPU while others
+                stream from RAM or disk simultaneously:
+            </p>
+            <pre><code className="language-python">{`from accelerate import dispatch_model
+
+device_map = {
+    "transformer.embed_tokens": "cuda:0",
+    "transformer.h.0":          "cuda:0",  # always resident on GPU
+    "transformer.h.1":          "cpu",     # streamed from CPU RAM
+    "transformer.h.2":          "disk",    # streamed from disk
+    "lm_head":                  "cuda:0",
+}
+model = dispatch_model(model, device_map=device_map)`}</code></pre>
+            <p>
+                Finally, <code>load_checkpoint_and_dispatch()</code> combines loading with dispatch, so
+                weights land directly in their target storage tier without ever materialising the full
+                model in RAM.
             </p>
         </div>
     );
