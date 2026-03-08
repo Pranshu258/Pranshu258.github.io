@@ -12,7 +12,7 @@ function MermaidDiagram({ svg }) {
     return (
         <div
             dangerouslySetInnerHTML={{ __html: svg }}
-            style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center' }}
+            style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center', borderRadius: '0.5rem', padding: '1rem', background: '#181825' }}
         />
     );
 }
