@@ -1,0 +1,37 @@
+%%{init: {"theme": "base", "sequence": {"actorFontSize": 22, "noteFontSize": 20, "messageFontSize": 20, "actorFontWeight": 600, "boxTextMargin": 12, "mirrorActors": false}, "themeVariables": {"primaryColor": "#1e1e2e", "primaryTextColor": "#cdd6f4", "primaryBorderColor": "#45475a", "lineColor": "#89b4fa", "secondaryColor": "#181825", "tertiaryColor": "#313244", "background": "#181825", "mainBkg": "#1e1e2e", "nodeBorder": "#45475a", "clusterBkg": "#181825", "titleColor": "#cdd6f4", "edgeLabelBackground": "#181825", "signalColor": "#89b4fa", "signalTextColor": "#cdd6f4", "labelBoxBkgColor": "#313244", "labelBoxBorderColor": "#45475a", "labelTextColor": "#cdd6f4", "loopTextColor": "#cdd6f4", "noteBorderColor": "#cba6f7", "noteBkgColor": "#2a1f3d", "noteTextColor": "#cdd6f4", "activationBorderColor": "#89b4fa", "activationBkgColor": "#1e3a5f", "sequenceNumberColor": "#cdd6f4"}}}%%
+sequenceDiagram
+    participant User
+    participant Model
+    participant Hook as AlignDevicesHook
+    participant Store as WeightsMap (CPU/Disk)
+    participant GPU
+
+    Note over User,GPU: Setup Phase (once)
+    User->>Model: dispatch_model() / cpu_offload()
+    Model->>Hook: attach_align_device_hook()
+    Hook->>Model: init_hook() — move all params to "meta" device
+    Note right of Model: Module params = meta tensors<br/>(zero VRAM used)
+    Hook->>Store: weights_map holds real tensors<br/>(CPU dict / OffloadedWeightsLoader)
+
+    Note over User,GPU: Inference — Forward Pass per Module
+    User->>Model: model(input)
+    Model->>Hook: pre_forward(module, input)
+    loop For each parameter in module
+        Hook->>Store: weights_map[param_name]
+        Store-->>Hook: tensor (CPU RAM or disk read)
+        Hook->>GPU: set_module_tensor_to_device(meta → cuda)
+    end
+    Hook->>GPU: send_to_device(input → cuda)
+
+    Hook->>Model: call original forward()
+    Model->>GPU: compute (all weights resident)
+    GPU-->>Model: output tensor
+
+    Model->>Hook: post_forward(module, output)
+    loop For each parameter in module
+        Hook->>GPU: set_module_tensor_to_device(cuda → meta)
+        Note right of GPU: VRAM freed
+    end
+    Hook-->>User: output (moved to input device if io_same_device=True)
+
+    Note over User,GPU: Repeat for every module in sequence

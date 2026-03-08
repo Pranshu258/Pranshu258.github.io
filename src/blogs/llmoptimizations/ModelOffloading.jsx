@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { SiNvidia, SiHuggingface } from 'react-icons/si';
-import offloadChartSvg from './offload-chart.svg?raw';
+import offloadFlowSvg from './offload-chart.svg?raw';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-c';
@@ -111,7 +111,7 @@ python3 examples/summarize.py \\
                 sequence: load, compute, evict. The original forward logic is preserved and called unchanged
                 in the middle &mdash; the module itself has no idea any of this is happening.
             </p>
-            <MermaidDiagram svg={offloadChartSvg} />
+            <MermaidDiagram svg={offloadFlowSvg} />
             <p>
                 There are three phases to the hook lifecycle:
             </p>
