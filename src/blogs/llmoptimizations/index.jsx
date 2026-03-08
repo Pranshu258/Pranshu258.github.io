@@ -121,8 +121,20 @@ export default function LLMOpt({ date }) {
             <ol>
                 <li>
                     <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
-                       href="https://github.com/NVIDIA/TensorRT-LLM/blob/b171e879563ff0ba4eb35b94cf0e59a471e13d80/docs/source/advanced/gpt-attention.md#paged-kv-cache">
-                        TensorRT-LLM — GPT Attention: Paged KV Cache
+                       href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/legacy/advanced/weight-streaming.md">
+                        TensorRT LLM - Running With Weight Streaming to Reduce GPU Memory Consumption
+                    </a>
+                </li>
+                <li>
+                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
+                       href="https://github.com/huggingface/accelerate/blob/main/docs/source/concept_guides/big_model_inference.md">
+                        HuggingFace Accelerate - Big Model Inference
+                    </a>
+                </li>
+                <li>
+                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
+                       href="https://github.com/huggingface/accelerate/blob/main/src/accelerate/hooks.py">
+                        HuggingFace Accelerate - Hooks
                     </a>
                 </li>
             </ol>

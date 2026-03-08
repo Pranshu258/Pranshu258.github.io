@@ -53,20 +53,17 @@ export default function WeightStreaming() {
                 budget.
             </p>
             <p>
-                At <strong>build time</strong>, the <code>WEIGHT_STREAMING</code> builder flag is set. This causes TensorRT to annotate eligible weight
-                tensors in the serialised engine as streamable and record their total byte size. Weights belonging
-                to plugin layers are ineligible and always stay resident on the GPU. The flag is exposed as a
-                simple boolean field on <code>BuildConfig</code>.
+                At <strong>build time</strong>, the <code>WEIGHT_STREAMING</code> builder flag is set. This causes TensorRT to annotate eligible weight tensors in the serialised engine as streamable and record their total byte size. The flag is exposed as a simple boolean field on <code>BuildConfig</code>.
             </p>
             <p>
                 By default, TRT-LLM replaces every
                 matrix-multiply (GEMM) with a custom fused CUDA plugin that delivers better throughput by
                 tiling and fusing operations at the kernel level. The trade-off is that the plugin owns its
                 weight tensors internally — TensorRT has no visibility into them, so they cannot be tagged as
-                streamable and are pinned to the GPU regardless of the budget. That is why we need to disable it using <code>--gemm_plugin disable</code> flag.
+                streamable and are pinned to the GPU regardless of the budget. Therefore, in order for the tensors to be streamable, they plugin has to be disabled using <code>--gemm_plugin disable</code> flag.
             </p>
             <p>
-                At <strong>runtime</strong>, TRT-LLM converts a user-supplied percentage (0.0–1.0) into an
+                At <strong>runtime</strong>, TRT-LLM converts a user-supplied percentage <code>(0.0-1.0)</code> into an
                 absolute byte budget and passes it to TensorRT before any execution contexts are created. The
                 C++ and Python paths do exactly the same thing via their respective TensorRT bindings:
             </p>
@@ -94,9 +91,7 @@ python3 examples/summarize.py \\
             </code></pre>
             <br></br>
             <p>
-                Once the budget is set, TensorRT manages streaming transparently, before each layer it checks whether its weights are in GPU memory, if not, it
-                transfers them from pinned CPU RAM over PCIe, and evicts weights from other layers if the
-                budget is exhausted. The implementation of streaming mechanism is not open source and lives inside the propreitary TensorRT library. 
+                Once the budget is set, TensorRT manages streaming transparently, before each layer it checks whether its weights are in GPU memory, if not, it transfers them from pinned CPU RAM over PCIe, and evicts weights from other layers if the budget is exhausted. The implementation of streaming mechanism is not open source and lives inside the propreitary TensorRT library. 
             </p>
             <p>
                 In the next section, we will look at HuggingFace Accelerate (open source) for streaming internals.
@@ -176,6 +171,32 @@ flowchart TD
                     parameter is swapped back to a meta placeholder and the GPU memory is released.
                 </li>
             </ol>
+            <pre>
+                <code className="language-python">
+                    {
+`@_compiler_disable
+def pre_forward(self, module, *args, **kwargs):
+    if self.prev_module_hook is not None and isinstance(self.prev_module_hook, UserCpuOffloadHook):
+        prev_module = self.prev_module_hook.model
+        prev_device = next(prev_module.parameters()).device
+
+        # Only offload the previous module if it is not already on CPU.
+        if prev_device != torch.device("cpu"):
+            self.prev_module_hook.offload()
+            clear_device_cache()
+
+    # If the current device is already the self.execution_device, we can skip the transfer.
+    current_device = next(module.parameters()).device
+    if current_device == self.execution_device:
+        return args, kwargs
+
+    module.to(self.execution_device)
+    return send_to_device(args, self.execution_device), send_to_device(kwargs, self.execution_device)`
+                    }
+                </code>
+            </pre>
+            <small><i>Accelerate's implementation of pre-forward hook</i></small>
+            <br></br><br></br>
             <p>
                 The weight store is a lazy mapping object that never loads a tensor until it is actually
                 requested. It supports three storage tiers, searched in priority order:
@@ -206,8 +227,6 @@ flowchart TD
                 <code>"weight"</code> while the backing store transparently maps that to the fully qualified
                 path like <code>"transformer.h.3.mlp.weight"</code>.
             </p>
-
-            <h3>The Public API</h3>
             <p>
                 Accelerate exposes all of this through four entry points. <code>cpu_offload()</code>{' '}
                 streams every module through CPU RAM. <code>disk_offload()</code> first serialises the
@@ -217,7 +236,6 @@ flowchart TD
                 stream from RAM or disk simultaneously:
             </p>
             <pre><code className="language-python">{`from accelerate import dispatch_model
-
 device_map = {
     "transformer.embed_tokens": "cuda:0",
     "transformer.h.0":          "cuda:0",  # always resident on GPU
@@ -226,10 +244,17 @@ device_map = {
     "lm_head":                  "cuda:0",
 }
 model = dispatch_model(model, device_map=device_map)`}</code></pre>
+            <br></br>
             <p>
                 Finally, <code>load_checkpoint_and_dispatch()</code> combines loading with dispatch, so
                 weights land directly in their target storage tier without ever materialising the full
                 model in RAM.
+            </p>
+            <p>
+                We can also pass <code>device_map="auto"</code>, to tell Accelerate to determine automatically where to put each layer of the model depending on the available resources:
+                - first, it uses the maximum space available on the GPU(s)
+                - if more space is needed, it will store the remaining weights on the CPU
+                - if there is not enough RAM, it stores the remaining weights on the hard drive as memory-mapped tensors
             </p>
         </div>
     );
