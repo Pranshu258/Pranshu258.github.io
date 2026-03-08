@@ -10,7 +10,7 @@ import '../../styles/llmoptimizations.css';
 
 // Each section is its own lazy chunk — only loaded when navigated to
 const sectionComponents = {
-    'weight-streaming':          React.lazy(() => import('./WeightStreaming')),
+    'model-offloading':          React.lazy(() => import('./ModelOffloading')),
     // 'packed-tensors':            React.lazy(() => import('./PackedTensors')),
     // 'multi-block-mode':          React.lazy(() => import('./MultiBlockMode')),
     // 'in-flight-batching':        React.lazy(() => import('./InFlightBatching')),

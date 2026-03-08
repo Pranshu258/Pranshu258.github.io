@@ -35,7 +35,7 @@ export default function WeightStreaming() {
     return (
         <div>
             <p>
-                Large language models frequently exceed what a single GPU can hold in VRAM. Weight streaming &mdash; also called model offloading &mdash; addresses this by keeping parameters in a slower, cheaper storage tier (CPU, RAM, or disk) and pulling them onto the accelerator only for the duration of a module&rsquo;s forward pass. Once the forward pass completes, the weights are evicted and the reclaimed memory is available for the next module. The result is the ability to run models whose total parameter count exceeds VRAM, at the cost of added transfer latency.
+                Large language models frequently exceed what a single GPU can hold in VRAM. Model offloading &mdash; also called weight streaming &mdash; addresses this by keeping parameters in a slower, cheaper storage tier (CPU, RAM, or disk) and pulling them onto the accelerator only for the duration of a module&rsquo;s forward pass. Once the forward pass completes, the weights are evicted and the reclaimed memory is available for the next module. The result is the ability to run models whose total parameter count exceeds VRAM, at the cost of added transfer latency.
             </p>
             <h2><SiNvidia style={{ verticalAlign: 'middle', marginRight: '0.4em', marginBottom: '0.1em' }} />Nvidia TensorRT-LLM</h2>
             <div className="llm-callout">
@@ -112,7 +112,7 @@ python3 examples/summarize.py \\
                 </p>
             </div>
             <p>
-                HuggingFace Accelerate implements the weight streaming in pure Python for arbitrary PyTorch models,
+                HuggingFace Accelerate implements model offloading in pure Python for arbitrary PyTorch models,
                 without requiring a specially compiled engine, which makes the mechanics easier to follow than
                 TRT-LLM&rsquo;s closed-source internals.
             </p>

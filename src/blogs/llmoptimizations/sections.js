@@ -1,7 +1,7 @@
 export const sections = [
     {
-        slug: "weight-streaming",
-        name: "Weight Streaming",
+        slug: "model-offloading",
+        name: "Model Offloading",
         description: "Offload model weights to CPU memory and stream them to the GPU during runtime to run larger models within the same memory budget.",
         date: "March 8, 2026",
     },
