@@ -57,18 +57,6 @@ function SectionView() {
             }>
             <Component />
             </Suspense>
-            <div className="llm-section-nav">
-                {prevSection ? (
-                    <Link to={`../${prevSection.slug}`} relative="path" className="llm-nav-btn llm-nav-prev">
-                        ← {prevSection.name}
-                    </Link>
-                ) : <span />}
-                {nextSection ? (
-                    <Link to={`../${nextSection.slug}`} relative="path" className="llm-nav-btn llm-nav-next">
-                        {nextSection.name} →
-                    </Link>
-                ) : <span />}
-            </div>
         </div>
     );
 }
