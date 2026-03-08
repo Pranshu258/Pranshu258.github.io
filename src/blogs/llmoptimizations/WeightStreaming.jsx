@@ -1,10 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import mermaid from 'mermaid';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-bash';
 import '../../styles/prism.css';
+
+mermaid.initialize({ startOnLoad: false, theme: 'base' });
+
+function MermaidDiagram({ chart }) {
+    const ref = useRef(null);
+    useEffect(() => {
+        if (ref.current) {
+            const id = 'mermaid-' + Math.random().toString(36).slice(2);
+            mermaid.render(id, chart).then(({ svg }) => {
+                ref.current.innerHTML = svg;
+            });
+        }
+    }, [chart]);
+    return <div ref={ref} style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center' }} />;
+}
 
 export default function WeightStreaming() {
     useEffect(() => {
@@ -42,9 +58,21 @@ export default function WeightStreaming() {
                 simple boolean field on <code>BuildConfig</code>.
             </p>
             <p>
+                By default, TRT-LLM replaces every
+                matrix-multiply (GEMM) with a custom fused CUDA plugin that delivers better throughput by
+                tiling and fusing operations at the kernel level. The trade-off is that the plugin owns its
+                weight tensors internally — TensorRT has no visibility into them, so they cannot be tagged as
+                streamable and are pinned to the GPU regardless of the budget. That is why we need to disable it using <code>--gemm_plugin disable</code> flag.
+            </p>
+            <p>
                 At <strong>runtime</strong>, TRT-LLM converts a user-supplied percentage (0.0–1.0) into an
                 absolute byte budget and passes it to TensorRT before any execution contexts are created. The
                 C++ and Python paths do exactly the same thing via their respective TensorRT bindings:
+            </p>
+            <p>
+                Setting <code>gpuWeightsPercent = 1.0</code> (the default) disables
+                streaming entirely; <code>0.0</code> keeps all streamable weights on CPU and transfers them
+                just-in-time.
             </p>
             <pre><code className="language-bash">{`# 1. Build the engine with weight streaming enabled
 trtllm-build \\
@@ -67,19 +95,10 @@ python3 examples/summarize.py \\
             <p>
                 Once the budget is set, TensorRT manages streaming transparently, before each layer it checks whether its weights are in GPU memory, if not, it
                 transfers them from pinned CPU RAM over PCIe, and evicts weights from other layers if the
-                budget is exhausted.
+                budget is exhausted. The implementation of streaming mechanism is not open source and lives inside the propreitary TensorRT library. 
             </p>
             <p>
-                Setting <code>gpuWeightsPercent = 1.0</code> (the default) disables
-                streaming entirely; <code>0.0</code> keeps all streamable weights on CPU and transfers them
-                just-in-time.
-            </p>
-            <p>
-                By default, TRT-LLM replaces every
-                matrix-multiply (GEMM) with a custom fused CUDA plugin that delivers better throughput by
-                tiling and fusing operations at the kernel level. The trade-off is that the plugin owns its
-                weight tensors internally — TensorRT has no visibility into them, so they cannot be tagged as
-                streamable and are pinned to the GPU regardless of the budget. That is why we need to disable it using <code>--gemm_plugin disable</code> flag.
+                In the next section, we will look at HuggingFace Accelerate (open source) for streaming internals.
             </p>
             <h2>HuggingFace Accelerate</h2>
             <div className="llm-callout">
@@ -96,6 +115,33 @@ python3 examples/summarize.py \\
                 without requiring a specially compiled engine, which makes the mechanics easier to follow than
                 TRT-LLM&rsquo;s closed-source internals.
             </p>
+                        <MermaidDiagram chart={`%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1e2e', 'primaryTextColor': '#cdd6f4', 'primaryBorderColor': '#45475a', 'lineColor': '#a6adc8', 'secondaryColor': '#181825', 'tertiaryColor': '#1e1e2e', 'background': '#1e1e2e', 'mainBkg': '#1e1e2e', 'nodeBorder': '#45475a', 'clusterBkg': '#181825', 'titleColor': '#cdd6f4', 'edgeLabelBackground': '#313244', 'attributeBackgroundColorEven': '#1e1e2e', 'attributeBackgroundColorOdd': '#181825'}}}%%
+flowchart TD
+    A([▶ Start Inference]):::start --> B[Select next layer]:::gpu
+
+    B --> C{Weights in\nGPU memory?}:::decision
+    C -- Yes --> E[Run layer\nforward pass]:::gpu
+    C -- No --> F[/Transfer weights\nover PCIe/]:::transfer
+
+    D[(CPU RAM / mmap\nsafetensors)]:::cpu
+    D -- pre_forward: fetch --> F
+    F --> E
+
+    E --> G{Budget\nexceeded?}:::decision
+    G -- Yes --> H[Evict LRU weights\nback to meta]:::evict
+    H --> I{More layers?}:::decision
+    G -- No --> I
+
+    I -- Yes --> B
+    I -- No --> J([◼ Output tokens]):::finish
+
+    classDef start    fill:#313244,stroke:#89b4fa,color:#89b4fa,stroke-width:2px
+    classDef finish   fill:#313244,stroke:#a6e3a1,color:#a6e3a1,stroke-width:2px
+    classDef gpu      fill:#1e3a5f,stroke:#89b4fa,color:#cdd6f4,stroke-width:1.5px
+    classDef cpu      fill:#1a3a2a,stroke:#a6e3a1,color:#cdd6f4,stroke-width:1.5px
+    classDef transfer fill:#3a2a00,stroke:#f9e2af,color:#f9e2af,stroke-width:1.5px
+    classDef evict    fill:#3a1a1a,stroke:#f38ba8,color:#f38ba8,stroke-width:1.5px
+    classDef decision fill:#2a1f3d,stroke:#cba6f7,color:#cdd6f4,stroke-width:1.5px`} />
             <p>
                 Accelerate attaches an <code>AlignDevicesHook</code> (with <code>offload=True</code>) to each
                 module via <code>add_hook_to_module</code>, which monkey-patches <code>module.forward</code> to
