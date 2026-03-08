@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { SiNvidia, SiHuggingface } from 'react-icons/si';
 import mermaid from 'mermaid';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
@@ -15,7 +16,12 @@ function MermaidDiagram({ chart }) {
         if (ref.current) {
             const id = 'mermaid-' + Math.random().toString(36).slice(2);
             mermaid.render(id, chart).then(({ svg }) => {
-                ref.current.innerHTML = svg;
+                // Force edge label text to be dark regardless of theme lineColor
+                const patched = svg.replace(
+                    '</style>',
+                    '.edgeLabel span, .edgeLabel p, .edgeLabel text, .edgeLabel { color: #1a1a1a !important; fill: #1a1a1a !important; }</style>'
+                );
+                ref.current.innerHTML = patched;
             });
         }
     }, [chart]);
@@ -29,14 +35,9 @@ export default function WeightStreaming() {
     return (
         <div>
             <p>
-                Large language models may not fit entirely in GPU VRAM. Weight Streaming reduces GPU memory
-                consumption by keeping only a fraction of model weights in GPU memory and streaming the rest
-                from CPU memory on demand during inference. This trades off memory footprint against inference
-                latency &mdash; the more weights you stream from CPU, the lower the GPU memory usage, but the
-                slower each forward pass becomes due to PCIe bandwidth constraints.
+                Large language models frequently exceed what a single GPU can hold in VRAM. Weight streaming &mdash; also called model offloading &mdash; addresses this by keeping parameters in a slower, cheaper storage tier (CPU, RAM, or disk) and pulling them onto the accelerator only for the duration of a module&rsquo;s forward pass. Once the forward pass completes, the weights are evicted and the reclaimed memory is available for the next module. The result is the ability to run models whose total parameter count exceeds VRAM, at the cost of added transfer latency.
             </p>
-
-            <h2>Nvidia TensorRT-LLM</h2>
+            <h2><SiNvidia style={{ verticalAlign: 'middle', marginRight: '0.4em', marginBottom: '0.1em' }} />Nvidia TensorRT-LLM</h2>
             <div className="llm-callout">
                 <p>
                     TensorRT-LLM is NVIDIA&rsquo;s open-source library for optimising LLM inference on NVIDIA GPUs.
@@ -100,7 +101,7 @@ python3 examples/summarize.py \\
             <p>
                 In the next section, we will look at HuggingFace Accelerate (open source) for streaming internals.
             </p>
-            <h2>HuggingFace Accelerate</h2>
+            <h2><SiHuggingface style={{ verticalAlign: 'middle', marginRight: '0.4em', marginBottom: '0.1em' }} />HuggingFace Accelerate</h2>
             <div className="llm-callout">
                 <p>
                     HuggingFace Accelerate is a lightweight library that makes PyTorch models portable across
@@ -115,7 +116,7 @@ python3 examples/summarize.py \\
                 without requiring a specially compiled engine, which makes the mechanics easier to follow than
                 TRT-LLM&rsquo;s closed-source internals.
             </p>
-                        <MermaidDiagram chart={`%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1e2e', 'primaryTextColor': '#cdd6f4', 'primaryBorderColor': '#45475a', 'lineColor': '#a6adc8', 'secondaryColor': '#181825', 'tertiaryColor': '#1e1e2e', 'background': '#1e1e2e', 'mainBkg': '#1e1e2e', 'nodeBorder': '#45475a', 'clusterBkg': '#181825', 'titleColor': '#cdd6f4', 'edgeLabelBackground': '#313244', 'attributeBackgroundColorEven': '#1e1e2e', 'attributeBackgroundColorOdd': '#181825'}}}%%
+            <MermaidDiagram chart={`%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1e2e', 'primaryTextColor': '#cdd6f4', 'primaryBorderColor': '#45475a', 'lineColor': '#6b7fa3', 'secondaryColor': '#181825', 'tertiaryColor': '#1e1e2e', 'background': '#f9f6ee', 'mainBkg': '#1e1e2e', 'nodeBorder': '#45475a', 'clusterBkg': '#181825', 'titleColor': '#cdd6f4', 'edgeLabelBackground': '#f9f6ee', 'attributeBackgroundColorEven': '#1e1e2e', 'attributeBackgroundColorOdd': '#181825'}}}%%
 flowchart TD
     A([▶ Start Inference]):::start --> B[Select next layer]:::gpu
 
