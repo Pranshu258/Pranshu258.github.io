@@ -55,7 +55,7 @@ function SectionView() {
                     <div className="blog-loading-text">Loading section...</div>
                 </div>
             }>
-                <Component />
+            <Component />
             </Suspense>
             <div className="llm-section-nav">
                 {prevSection ? (
@@ -138,7 +138,6 @@ export default function LLMOpt({ date }) {
                     </a>
                 </li>
             </ol>
-            <br />
         </div>
     );
 }
