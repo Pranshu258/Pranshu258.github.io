@@ -5,12 +5,12 @@ export const sections = [
         description: "Offload model weights to CPU memory and stream them to the GPU during runtime to run larger models within the same memory budget.",
         date: "March 8, 2026",
     },
-    // {
-    //     slug: "packed-tensors",
-    //     name: "Packed Tensors",
-    //     description: "Eliminate padding overhead by storing only valid tokens, improving memory utilization and throughput.",
-    //     date: "",
-    // },
+    {
+        slug: "kv-cache-management",
+        name: "Key Value Cache Management",
+        description: "Cache the key and value tensors from previous tokens so the model avoids redundant recomputation during autoregressive decoding.",
+        date: "March 10, 2026",
+    },
     // {
     //     slug: "multi-block-mode",
     //     name: "Multi Block Mode",
