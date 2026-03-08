@@ -1,4 +1,4 @@
-%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#1e1e2e", "primaryTextColor": "#cdd6f4", "primaryBorderColor": "#45475a", "lineColor": "#89b4fa", "secondaryColor": "#181825", "tertiaryColor": "#1e1e2e", "background": "#181825", "mainBkg": "#1e1e2e", "nodeBorder": "#45475a", "clusterBkg": "#181825", "titleColor": "#cdd6f4", "edgeLabelBackground": "#181825", "edgeLabelColor": "#cdd6f4"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#f0f4f8", "primaryTextColor": "#1e293b", "primaryBorderColor": "#94a3b8", "lineColor": "#475569", "secondaryColor": "#f8fafc", "tertiaryColor": "#f0f4f8", "background": "#f9f6ee", "mainBkg": "#f0f4f8", "nodeBorder": "#94a3b8", "clusterBkg": "#f8fafc", "titleColor": "#1e293b", "edgeLabelBackground": "#f9f6ee", "edgeLabelColor": "#1e293b"}}}%%
 flowchart TD
     A(["User calls model&#40;input&#41;"]):::start --> B[Wrapped forward triggered]:::process
     B --> C[pre_forward hook]:::hook
@@ -34,14 +34,13 @@ flowchart TD
     T -- No --> V
     U --> V(["Return output"]):::finish
 
-    classDef start    fill:#313244,stroke:#89b4fa,color:#89b4fa,stroke-width:2px
-    classDef finish   fill:#313244,stroke:#a6e3a1,color:#a6e3a1,stroke-width:2px
-    classDef process  fill:#1e1e2e,stroke:#45475a,color:#cdd6f4,stroke-width:1.5px
-    classDef hook     fill:#2a1f3d,stroke:#cba6f7,color:#cba6f7,stroke-width:1.5px
-    classDef decision fill:#1e1e2e,stroke:#cba6f7,color:#cdd6f4,stroke-width:1.5px
-    classDef gpu      fill:#1e3a5f,stroke:#89b4fa,color:#cdd6f4,stroke-width:1.5px
-    classDef cpu      fill:#1a3a2a,stroke:#a6e3a1,color:#cdd6f4,stroke-width:1.5px
-    classDef transfer fill:#3a2a00,stroke:#f9e2af,color:#f9e2af,stroke-width:1.5px
-    classDef evict    fill:#3a1a1a,stroke:#f38ba8,color:#f38ba8,stroke-width:1.5px
-    classDef lookup   fill:#181825,stroke:#6c7086,color:#bac2de,stroke-width:1.5px
-
+    classDef start    fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f,stroke-width:2px
+    classDef finish   fill:#dcfce7,stroke:#22c55e,color:#14532d,stroke-width:2px
+    classDef process  fill:#f0f4f8,stroke:#94a3b8,color:#1e293b,stroke-width:1.5px
+    classDef hook     fill:#ede9fe,stroke:#7c3aed,color:#4c1d95,stroke-width:1.5px
+    classDef decision fill:#f8f7f4,stroke:#94a3b8,color:#1e293b,stroke-width:1.5px
+    classDef gpu      fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f,stroke-width:1.5px
+    classDef cpu      fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:1.5px
+    classDef transfer fill:#fef9c3,stroke:#ca8a04,color:#713f12,stroke-width:1.5px
+    classDef evict    fill:#fee2e2,stroke:#ef4444,color:#7f1d1d,stroke-width:1.5px
+    classDef lookup   fill:#f1f5f9,stroke:#94a3b8,color:#334155,stroke-width:1.5px
