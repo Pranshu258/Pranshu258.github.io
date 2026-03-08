@@ -174,3 +174,20 @@
     margin: 10px 0 0 0;
     font-style: italic;
 }
+
+/* ── Section callout ─────────────────────────────────────────────── */
+.llm-callout {
+    border-left: 3px solid var(--brand-100);
+    background-color: rgba(32, 125, 66, 0.07);
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 0 0 1.25rem 0;
+}
+
+.llm-callout p {
+    margin: 0;
+}
+
+[data-theme="dark"] .llm-callout {
+    background-color: rgba(32, 125, 66, 0.1);
+}
