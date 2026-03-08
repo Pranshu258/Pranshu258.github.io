@@ -21,77 +21,31 @@ export default function WeightStreaming() {
             </p>
 
             <h2>Nvidia TensorRT-LLM</h2>
+            <div className="llm-callout">
+                <p>
+                    TensorRT-LLM is NVIDIA&rsquo;s open-source library for optimising LLM inference on NVIDIA GPUs.
+                    It wraps TensorRT to auto-generate fused CUDA kernels, supports tensor and pipeline parallelism,
+                    and exposes high-level Python APIs for compiling a model checkpoint into a serialised inference
+                    engine. The compiled engine is hardware-specific and version-locked, but in return delivers
+                    near-peak GPU throughput with first-class support for quantisation, paged KV-caches, and
+                    in-flight batching.
+                </p>
+            </div>
             <p>
-                In TensorRT-LLM, weight streaming is enabled by setting the <code>WEIGHT_STREAMING</code> builder
-                flag when constructing the TensorRT engine. In TRT-LLM this happens in{' '}
-                <code>Builder.create_builder_config()</code>. When this flag is set, TensorRT annotates the eligible
-                weight tensors in the serialised engine as streamable and records their total size. Weights that
-                belong to plugin layers are ineligible and stay resident on the GPU as normal.
+                In TensorRT-LLM, weight streaming is a two-phase mechanism: a build-time flag and a runtime
+                budget.
             </p>
-
-            <p>The flag is set inside <code>Builder.create_builder_config()</code>:</p>
-            <pre><code className="language-python">{`# tensorrt_llm/builder.py
-if weight_streaming:
-    config.set_flag(trt.BuilderFlag.WEIGHT_STREAMING)`}</code></pre>
-            <p><code>BuildConfig</code> exposes this as a Pydantic field:</p>
-            <pre><code className="language-python">{`# tensorrt_llm/builder.py
-weight_streaming: bool = Field(default=False, ...)`}</code></pre>
-
             <p>
-                At runtime, TRT-LLM computes a byte budget from the user-supplied percentage and hands it to
-                TensorRT. The C++ path lives in <code>tllmRuntime.cpp</code>:
+                At <strong>build time</strong>, the <code>WEIGHT_STREAMING</code> builder flag is set. This causes TensorRT to annotate eligible weight
+                tensors in the serialised engine as streamable and record their total byte size. Weights belonging
+                to plugin layers are ineligible and always stay resident on the GPU. The flag is exposed as a
+                simple boolean field on <code>BuildConfig</code>.
             </p>
-            <pre><code className="language-cpp">{`// cpp/tensorrt_llm/runtime/tllmRuntime.cpp
-void setWeightStreaming(nvinfer1::ICudaEngine& engine, float const gpuWeightsPercent)
-{
-    if (gpuWeightsPercent < 1)
-    {
-        int64_t streamableSize = engine.getStreamableWeightsSize(); // total bytes eligible for streaming
-        int64_t budget = gpuWeightsPercent * streamableSize;        // bytes to keep on GPU
-        engine.setWeightStreamingBudgetV2(budget);                  // pass budget to TensorRT
-    }
-}`}</code></pre>
             <p>
-                This is called immediately after the engine is deserialised inside <code>TllmRuntime</code>&rsquo;s
-                constructor, before any execution contexts are created:
+                At <strong>runtime</strong>, TRT-LLM converts a user-supplied percentage (0.0–1.0) into an
+                absolute byte budget and passes it to TensorRT before any execution contexts are created. The
+                C++ and Python paths do exactly the same thing via their respective TensorRT bindings:
             </p>
-            <pre><code className="language-cpp">{`// cpp/tensorrt_llm/runtime/tllmRuntime.cpp
-mEngine.reset(mRuntime->deserializeCudaEngine(...));
-setWeightStreaming(getEngine(), gpuWeightsPercent);`}</code></pre>
-            <p>The equivalent Python path in <code>session.py</code> uses the Python bindings to the same TensorRT API:</p>
-            <pre><code className="language-python">{`# tensorrt_llm/runtime/session.py
-def _set_weight_streaming(self, gpu_weights_percent):
-    max = self.engine.streamable_weights_size        # total streamable bytes
-    budget = int(gpu_weights_percent * max)
-    self.engine.weight_streaming_budget_v2 = budget  # TensorRT property setter`}</code></pre>
-
-            <p>
-                <code>setWeightStreamingBudgetV2</code> / <code>weight_streaming_budget_v2</code> are TensorRT SDK
-                APIs (closed-source, in <code>libnvinfer.so</code>). Once the budget is set, TensorRT manages the
-                streaming transparently inside each call to <code>executeContext()</code>:
-            </p>
-            <ol>
-                <li>Before a layer executes, TRT checks whether its weights are currently in GPU memory.</li>
-                <li>If not, it transfers them from the pinned CPU buffer over PCIe.</li>
-                <li>
-                    After the layer completes, if the GPU budget is exhausted, TRT may evict weights for other layers
-                    back to CPU to make room.
-                </li>
-            </ol>
-            <p>
-                The <code>gpuWeightsPercent = 0.0</code> extreme means <em>all</em> streamable weights are kept on
-                CPU and transferred just-in-time; <code>gpuWeightsPercent = 1.0</code> (the default) disables
-                streaming entirely &mdash; all weights remain on GPU as normal.
-            </p>
-
-            <ul>
-                <li>
-                    Requires <code>--gemm_plugin disable</code> at build time. Weight Streaming only supports native
-                    (non-plugin) weight tensors; TensorRT plugin-managed weights cannot be streamed.
-                </li>
-                <li>This is a TensorRT-backend feature. It is not available for the PyTorch backend.</li>
-            </ul>
-
             <pre><code className="language-bash">{`# 1. Build the engine with weight streaming enabled
 trtllm-build \\
     --checkpoint_dir /tmp/llama_7b/trt_ckpt/fp16/1-gpu/ \\
@@ -107,73 +61,80 @@ python3 examples/summarize.py \\
     --engine_dir /tmp/llama_7b/trt_engines/fp16/1-gpu/ \\
     --hf_model_dir llama-7b-hf/ \\
     --data_type fp16 \\
-    --gpu_weights_percent 0.2`}</code></pre>
-
-            <pre><code className="language-cpp">{`#include "tensorrt_llm/executor/executor.h"
-
-namespace tle = tensorrt_llm::executor;
-
-// Keep 50% of streamable weights on GPU
-auto executorConfig = tle::ExecutorConfig(/*gpuWeightsPercent=*/0.5f);
-auto executor = tle::Executor(
-    "model_path",
-    tle::ModelType::kDECODER_ONLY,
-    executorConfig
-);`}</code></pre>
+    --gpu_weights_percent 0.2`}
+            </code></pre>
+            <br></br>
             <p>
-                <code>ExecutorConfig</code> also provides <code>setGpuWeightsPercent(float)</code> and{' '}
-                <code>getGpuWeightsPercent()</code> for programmatic configuration after construction.
+                Once the budget is set, TensorRT manages streaming transparently, before each layer it checks whether its weights are in GPU memory, if not, it
+                transfers them from pinned CPU RAM over PCIe, and evicts weights from other layers if the
+                budget is exhausted.
             </p>
-
+            <p>
+                Setting <code>gpuWeightsPercent = 1.0</code> (the default) disables
+                streaming entirely; <code>0.0</code> keeps all streamable weights on CPU and transfers them
+                just-in-time.
+            </p>
             <h2>HuggingFace Accelerate</h2>
+            <div className="llm-callout">
+                <p>
+                    HuggingFace Accelerate is a lightweight library that makes PyTorch models portable across
+                    hardware configurations &mdash; single GPU, multi-GPU, TPU, or CPU &mdash; with minimal code
+                    changes. Beyond distributed training, it ships a collection of memory-management utilities:
+                    model sharding across devices, mixed-precision helpers, and CPU/disk offloading hooks that
+                    work on <em>any</em> <code>nn.Module</code> without recompilation or a special build step.
+                </p>
+            </div>
             <p>
-                HuggingFace Accelerate implements the same concept in pure Python for arbitrary PyTorch models,
-                without requiring a specially compiled engine. Understanding it makes TRT-LLM&rsquo;s approach clearer
-                by contrast.
+                HuggingFace Accelerate implements the weight streaming in pure Python for arbitrary PyTorch models,
+                without requiring a specially compiled engine, which makes the mechanics easier to follow than
+                TRT-LLM&rsquo;s closed-source internals.
             </p>
-
             <p>
-                Accelerate uses <code>AlignDevicesHook</code> with <code>offload=True</code>, attached to each module
-                via <code>add_hook_to_module</code>, which monkey-patches <code>module.forward</code> to inject
-                load/evict calls around the original forward:
+                Accelerate attaches an <code>AlignDevicesHook</code> (with <code>offload=True</code>) to each
+                module via <code>add_hook_to_module</code>, which monkey-patches <code>module.forward</code> to
+                wrap the original call with load and evict steps:
             </p>
             <pre><code className="language-python">{`# accelerate/hooks.py — patched forward installed by add_hook_to_module
 def new_forward(module, *args, **kwargs):
     args, kwargs = module._hf_hook.pre_forward(module, *args, **kwargs)  # 1. load weights
     output = module._old_forward(*args, **kwargs)                         # 2. run layer
     return module._hf_hook.post_forward(module, output)                  # 3. evict weights`}</code></pre>
-            <p>
-                <strong>Setup (<code>init_hook</code>)</strong> &mdash; weight data is copied to CPU and the
-                module&rsquo;s parameters are replaced with zero-byte <code>meta</code> tensors so they occupy no
-                device memory:
-            </p>
-            <pre><code className="language-python">{`# accelerate/hooks.py — AlignDevicesHook.init_hook
-self.weights_map = {
-    name: param.to("cpu")
-    for name, param in named_module_tensors(module, ...)
-}
-# Replace every tensor with a meta (placeholder) tensor — zero GPU/CPU memory used
+
+            <p>The three phases of the hook lifecycle are:</p>
+            <ol>
+                <li>
+                    <strong>Setup (<code>init_hook</code>)</strong> &mdash; each parameter is copied to CPU and
+                    the module&rsquo;s tensors are replaced with zero-size <code>meta</code> placeholders, so
+                    neither GPU nor CPU memory is held during idle periods.
+                </li>
+                <li>
+                    <strong>Pre-forward</strong> &mdash; real tensors are fetched from <code>weights_map</code>{' '}
+                    and materialised on the GPU just before <code>forward</code> runs.
+                </li>
+                <li>
+                    <strong>Post-forward</strong> &mdash; weights are immediately swapped back to{' '}
+                    <code>meta</code> tensors, freeing GPU VRAM before the next layer loads.
+                </li>
+            </ol>
+            <pre><code className="language-python">{`# accelerate/hooks.py
+
+# init_hook — snapshot weights to CPU, replace live tensors with meta placeholders
+self.weights_map = {name: param.to("cpu") for name, param in named_module_tensors(module, ...)}
+for name, _ in named_module_tensors(module, ...):
+    set_module_tensor_to_device(module, name, "meta")
+
+# pre_forward — materialise weights on GPU just before forward()
+for name, _ in named_module_tensors(module, ...):
+    value = self.weights_map[name]  # CPU RAM, or memory-mapped disk if using disk offload
+    set_module_tensor_to_device(module, name, self.execution_device, value=value)
+
+# post_forward — evict back to meta immediately after forward()
 for name, _ in named_module_tensors(module, ...):
     set_module_tensor_to_device(module, name, "meta")`}</code></pre>
+
             <p>
-                <strong>Before each layer (<code>pre_forward</code>)</strong> &mdash; real tensors are fetched from{' '}
-                <code>weights_map</code> and materialised on the execution device (GPU) just before{' '}
-                <code>forward</code> runs:
-            </p>
-            <pre><code className="language-python">{`# accelerate/hooks.py — AlignDevicesHook.pre_forward
-for name, _ in named_module_tensors(module, ...):
-    value = self.weights_map[name]  # real data from CPU (or disk, if using disk offload)
-    set_module_tensor_to_device(module, name, self.execution_device, value=value)`}</code></pre>
-            <p>
-                <strong>After each layer (<code>post_forward</code>)</strong> &mdash; weights are immediately evicted
-                back to <code>meta</code>, freeing GPU VRAM before the next layer loads:
-            </p>
-            <pre><code className="language-python">{`# accelerate/hooks.py — AlignDevicesHook.post_forward
-for name, _ in named_module_tensors(module, ...):
-    set_module_tensor_to_device(module, name, "meta")`}</code></pre>
-            <p>
-                <code>weights_map</code> can be a plain dict (CPU RAM offload) or a lazy map backed by memory-mapped
-                safetensors files (disk offload), enabling models far larger than system RAM.
+                <code>weights_map</code> can be a plain dict (CPU RAM offload) or a lazy map backed by
+                memory-mapped safetensors files (disk offload), enabling models far larger than system RAM.
             </p>
 
             <h3>TRT-LLM vs. Accelerate</h3>
