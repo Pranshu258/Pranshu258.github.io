@@ -34,17 +34,17 @@ export default function WeightStreaming() {
     return (
         <div>
             <p>
-                During autoregressive decoding, a transformer computes <strong>key</strong> and <strong>value</strong> tensors for every token in the sequence at every layer. Without caching, generating token <em>n</em> requires reprocessing all <em>n&nbsp;&minus;&nbsp;1</em> preceding tokens from scratch &mdash; an O(n<sup>2</sup>) cost that grows prohibitively for long sequences. The KV cache solves this by storing the key and value projections for each past token immediately after they are computed and reusing them on every subsequent step. Generation then becomes O(n) in time per step: only the single new token&rsquo;s projections are computed, appended to the cache, and the full set is passed to the attention kernel.
+                Transformers generate text one token at a time. At each step, the model computes an attention score between the new token and every token that came before it &mdash; and that requires the <strong>key</strong> and <strong>value</strong> projections of all prior tokens. Without caching, those projections are recomputed from scratch on every step, making generation quadratic in sequence length. The KV cache eliminates this redundancy: projections are computed once and stored, so each new step only needs to produce one additional row and append it to the cache.
             </p>
             <p>
-                The standard scaled dot-product attention at decode step <Eq tex="t" /> is:
+                Concretely, the scaled dot-product attention at decode step <Eq tex="t" /> is:
             </p>
             <Eq display={true} tex={String.raw`\text{Attention}(\mathbf{q}_t,\, K_{1:t},\, V_{1:t}) = \text{softmax}\!\left(\frac{\mathbf{q}_t \, K_{1:t}^{\top}}{\sqrt{d_k}}\right) V_{1:t}`} />
             <p>
-                where <Eq tex="\mathbf{q}_t \in \mathbb{R}^{d_k}" /> is the query for the current token, <Eq tex="K_{1:t} \in \mathbb{R}^{t \times d_k}" /> and <Eq tex="V_{1:t} \in \mathbb{R}^{t \times d_v}" /> are the accumulated key and value matrices across all <Eq tex="t" /> tokens, and <Eq tex="d_k" /> is the key dimension used for scaling. Without a KV cache, <Eq tex="K_{1:t}" /> and <Eq tex="V_{1:t}" /> must be recomputed from scratch at every step; with caching, only the new row <Eq tex="\mathbf{k}_t" /> and <Eq tex="\mathbf{v}_t" /> are appended to the stored matrices.
+                Here <Eq tex="\mathbf{q}_t" /> is the query for the current token, while <Eq tex="K_{1:t}" /> and <Eq tex="V_{1:t}" /> are matrices whose rows are the keys and values of all tokens up to and including step <Eq tex="t" />. The factor <Eq tex="\sqrt{d_k}" /> keeps the dot products from growing too large as dimension increases. With a KV cache, <Eq tex="K_{1:t-1}" /> and <Eq tex="V_{1:t-1}" /> are already in memory; only the new rows <Eq tex="\mathbf{k}_t" /> and <Eq tex="\mathbf{v}_t" /> need to be computed and appended.
             </p>
             <p>
-                The trade-off is memory. Each cached token occupies <code>2 &times; num_layers &times; num_kv_heads &times; head_dim &times; sizeof(dtype)</code> bytes. For a large model at long context lengths this amounts to several gigabytes, and the cache grows linearly with both batch size and sequence length. Efficient KV cache management &mdash; controlling what is stored, at what precision, and where &mdash; is therefore central to maximising throughput without exhausting VRAM.
+                The cost is memory. Every cached token consumes <code>2 &times; num_layers &times; num_kv_heads &times; head_dim &times; sizeof(dtype)</code> bytes, and that footprint scales with both batch size and sequence length. For a large model serving long contexts, the cache alone can occupy several gigabytes of VRAM. Managing it carefully &mdash; what to keep, at what precision, and where to store it &mdash; is one of the central levers for maximising inference throughput.
             </p>
         </div>
     );
