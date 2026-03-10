@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Sharer from '../sharer';
 import '../styles/fonts.css';
 import '../styles/blog.css';
@@ -8,16 +8,75 @@ import { ResponsivePie } from '@nivo/pie'
 import { schemeDark2 } from 'd3-scale-chromatic';
 import { FaArrowUpRightFromSquare as FaExternalLinkAlt, FaGithub, FaStaffSnake } from 'react-icons/fa6';
 
-const CustomTooltip = ({ point }) => (
-    <div style={{ background: 'white', padding: '5px', border: '1px solid #ccc' }}>
-        <strong>Series:</strong> {point.serieId}<br />
-        <strong>Year:</strong> {point.data.xFormatted}<br />
-        <strong>Count:</strong> {point.data.yFormatted}
-    </div>
-);
+function useDocumentTheme() {
+    const [theme, setTheme] = useState(
+        () => (typeof document !== 'undefined' ? document.documentElement.getAttribute('data-theme') : null) || 'dark'
+    );
+    useEffect(() => {
+        if (typeof document === 'undefined') return;
+        const observer = new MutationObserver(() => {
+            setTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        return () => observer.disconnect();
+    }, []);
+    return theme;
+}
+
+function nivoChartTheme(isDark) {
+    const textColor = isDark ? '#e8e4dc' : '#333333';
+    const gridColor = isDark ? 'rgba(232, 228, 220, 0.08)' : 'rgba(0, 0, 0, 0.07)';
+    return {
+        text: { fill: textColor },
+        axis: {
+            ticks: { text: { fill: textColor } },
+            legend: { text: { fill: textColor } },
+        },
+        legends: { text: { fill: textColor } },
+        grid: {
+            line: {
+                stroke: gridColor,
+                strokeWidth: 1,
+            },
+        },
+    };
+}
+
+const CustomTooltip = ({ point }) => {
+    const isDark = useDocumentTheme() === 'dark';
+    return (
+        <div style={{
+            background: isDark ? '#222' : 'white',
+            padding: '5px',
+            border: `1px solid ${isDark ? '#555' : '#ccc'}`,
+            color: isDark ? '#e8e4dc' : '#333',
+        }}>
+            <strong>Series:</strong> {point.serieId}<br />
+            <strong>Year:</strong> {point.data.xFormatted}<br />
+            <strong>Count:</strong> {point.data.yFormatted}
+        </div>
+    );
+};
+
+const PieTooltip = ({ datum }) => {
+    const isDark = useDocumentTheme() === 'dark';
+    return (
+        <div style={{
+            background: isDark ? '#222' : 'white',
+            padding: '8px 12px',
+            border: `1px solid ${isDark ? '#555' : '#ccc'}`,
+            color: isDark ? '#e8e4dc' : '#333',
+            borderRadius: '4px',
+            fontSize: '13px',
+        }}>
+            <strong>{datum.label}</strong>: {datum.value.toLocaleString()}
+        </div>
+    );
+};
 
 const CancerIncidenceLineChart = ({ data }) => {
     const [selectedSeries, setSelectedSeries] = useState(null);
+    const isDark = useDocumentTheme() === 'dark';
 
     const handleLegendClick = (series) => {
         setSelectedSeries(series.id === selectedSeries ? null : series.id);
@@ -89,74 +148,80 @@ const CancerIncidenceLineChart = ({ data }) => {
                     translateY: 0,
                     itemsSpacing: 0,
                     itemDirection: 'left-to-right',
-                    itemTextColor: '#000',
+                    itemTextColor: isDark ? '#e8e4dc' : '#000',
                     itemWidth: 80,
                     itemHeight: 20,
                     itemOpacity: 1,
                     symbolSize: 12,
                     symbolShape: 'circle',
-                    symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                    symbolBorderColor: isDark ? 'rgba(232, 228, 220, 0.5)' : 'rgba(0, 0, 0, .5)',
                     onClick: handleLegendClick,
                     data: legendData
                 }
             ]}
             tooltip={CustomTooltip}
+            theme={nivoChartTheme(isDark)}
         />
     )
 } 
 
-const CancerIncidencePieChart = ({ data }) => (
-    <ResponsivePie
-        data={data}
-        margin={{ top: 10, right: 80, bottom: 70, left: 0 }}
-        innerRadius={0.5}
-        padAngle={0.7}
-        cornerRadius={3}
-        activeOuterRadiusOffset={8}
-        borderWidth={1}
-        borderColor={{
-            from: 'color',
-            modifiers: [
-                [
-                    'darker',
-                    0.2
+const CancerIncidencePieChart = ({ data }) => {
+    const isDark = useDocumentTheme() === 'dark';
+    return (
+        <ResponsivePie
+            data={data}
+            margin={{ top: 10, right: 80, bottom: 70, left: 0 }}
+            innerRadius={0.5}
+            padAngle={0.7}
+            cornerRadius={3}
+            activeOuterRadiusOffset={8}
+            borderWidth={1}
+            borderColor={{
+                from: 'color',
+                modifiers: [
+                    [
+                        'darker',
+                        0.2
+                    ]
                 ]
-            ]
-        }}
-        arcLinkLabelsSkipAngle={10}
-        arcLinkLabelsTextColor="#333333"
-        arcLinkLabelsThickness={2}
-        arcLinkLabelsColor={{ from: 'color' }}
-        arcLabelsSkipAngle={10}
-        arcLabelsTextColor={{
-            from: 'color',
-            modifiers: [
-                [
-                    'darker',
-                    2
+            }}
+            arcLinkLabelsSkipAngle={10}
+            arcLinkLabelsTextColor={isDark ? '#e8e4dc' : '#333333'}
+            arcLinkLabelsThickness={2}
+            arcLinkLabelsColor={{ from: 'color' }}
+            arcLabelsSkipAngle={10}
+            arcLabelsTextColor={{
+                from: 'color',
+                modifiers: [
+                    [
+                        'darker',
+                        2
+                    ]
                 ]
-            ]
-        }}
-        colors={{ scheme: 'tableau10' }}
-        legends={[
-            {
-                anchor: 'right',
-                direction: 'column',
-                justify: false,
-                translateX: 30,
-                translateY: 0,
-                itemsSpacing: 0,
-                itemWidth: 100,
-                itemHeight: 18,
-                itemTextColor: '#000',
-                itemDirection: 'left-to-right',
-                itemOpacity: 1,
-                symbolSize: 12,
-                symbolShape: 'circle',
-            }
-        ]}
-    />
-)
+            }}
+            colors={{ scheme: 'tableau10' }}
+            tooltip={PieTooltip}
+            legends={[
+                {
+                    anchor: 'right',
+                    direction: 'column',
+                    justify: false,
+                    translateX: 30,
+                    translateY: 0,
+                    itemsSpacing: 0,
+                    itemWidth: 100,
+                    itemHeight: 18,
+                    itemTextColor: isDark ? '#e8e4dc' : '#000',
+                    itemDirection: 'left-to-right',
+                    itemOpacity: 1,
+                    symbolSize: 12,
+                    symbolShape: 'circle',
+                }
+            ]}
+            theme={nivoChartTheme(isDark)}
+        />
+    );
+}
 
 export default class CancerViz extends React.Component {
     constructor(props) {
@@ -224,7 +289,7 @@ export default class CancerViz extends React.Component {
                     Cancer is a group of diseases characterized by abnormal and uncontrolled growth of cells, that can invade and spread to other parts of the body. The United States Cancer Statistics (USCS) online databases in WONDER provide cancer incidence and mortality data for the country. In this article we will analyse the data to find trends and patterns in cancer incidences for leading cancer sites in the human body.
                     <br></br>
                 </p>
-                <p style={{backgroundColor: "pink", padding: '10px', borderRadius: '8px'}}>
+                <p className="blog-callout-note">
                     <b>Note:</b> I am not a medical expert and the information provided in this article is based on publicly available data and research. Please consult a healthcare professional for any medical advice.
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>

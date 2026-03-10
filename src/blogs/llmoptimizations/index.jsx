@@ -112,7 +112,7 @@ export default function LLMOpt({ date }) {
                 runtime optimizations applied by hyperscalers to improve LLM inference performance and reduce resource
                 consumption.
             </p>
-            <hr style={{ backgroundColor: "white" }} />
+            <hr />
             <Routes>
                 <Route index element={<TableOfContents />} />
                 <Route path=":section" element={<SectionView />} />

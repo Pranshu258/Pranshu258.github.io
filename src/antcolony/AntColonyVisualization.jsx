@@ -52,6 +52,25 @@ export default function AntColonyVisualization() {
         return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current); };
     }, []);
 
+    // Apply theme-aware background/grid colours to the canvas
+    useEffect(() => {
+        const darkColors  = { background: '#141414', grid: 'rgba(255, 255, 255, 0.04)' };
+        const lightColors = { background: '#ffffff',  grid: 'rgba(0, 0, 0, 0.04)' };
+
+        const applyTheme = () => {
+            const isDark = (document.documentElement.getAttribute('data-theme') || 'dark') === 'dark';
+            if (visualizerRef.current) {
+                visualizerRef.current.setColors(isDark ? darkColors : lightColors);
+                visualizerRef.current.render();
+            }
+        };
+
+        applyTheme();
+        const observer = new MutationObserver(applyTheme);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        return () => observer.disconnect();
+    }, []);
+
     // Sync display toggle refs and re-render
     useEffect(() => {
         showPheromonesRef.current = showPheromones;

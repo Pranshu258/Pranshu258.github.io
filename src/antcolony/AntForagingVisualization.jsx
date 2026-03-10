@@ -121,21 +121,33 @@ function drawBlobPath(ctx, x, y, baseRadius, shapeRadii, extra = 0) {
     ctx.closePath();
 }
 
-function drawCircle(ctx, x, y, angle, isReturning, frustration = 0, isScout = false) {
+function drawCircle(ctx, x, y, angle, isReturning, frustration = 0, isScout = false, isDark = false) {
     let fill, stroke;
     if (isReturning) {
         fill   = '#ef4444';
         stroke = '#b91c1c';
     } else if (frustration > 0) {
-        // dark gray (#27272a) → gray (#71717a) as frustration 0→1
-        const r = Math.round(39 + (113 - 39) * frustration);
-        const g = Math.round(39 + (113 - 39) * frustration);
-        const b = Math.round(42 + (122 - 42) * frustration);
-        fill   = `rgb(${r},${g},${b})`;
-        stroke = fill;
+        if (isDark) {
+            // light gray → mid-gray as frustration 0→1 (visible on dark bg)
+            const v = Math.round(180 - 60 * frustration);
+            fill   = `rgb(${v},${v},${v})`;
+            stroke = fill;
+        } else {
+            // dark gray (#27272a) → gray (#71717a) as frustration 0→1
+            const r = Math.round(39 + (113 - 39) * frustration);
+            const g = Math.round(39 + (113 - 39) * frustration);
+            const b = Math.round(42 + (122 - 42) * frustration);
+            fill   = `rgb(${r},${g},${b})`;
+            stroke = fill;
+        }
     } else {
-        fill   = '#27272a';
-        stroke = '#52525b';
+        if (isDark) {
+            fill   = '#d4d4d8';  // zinc-300 — clearly visible on #141414
+            stroke = '#a1a1aa';  // zinc-400
+        } else {
+            fill   = '#27272a';
+            stroke = '#52525b';
+        }
     }
     // Scouts are slightly larger than workers (1.4×) but otherwise identical
     const sizeScale = isScout ? 1.4 : 1.0;
@@ -275,7 +287,8 @@ export default function AntForagingVisualization() {
         const { ants, nest, foodSources, waterLevel, heightmap, pheromones, gw, gh, queenDead } = sim.getState();
 
         // ── Background ──────────────────────────────────────────────────────
-        ctx.fillStyle = '#ffffff';
+        const isDark = (document.documentElement.getAttribute('data-theme') || 'dark') === 'dark';
+        ctx.fillStyle = isDark ? '#141414' : '#ffffff';
         ctx.fillRect(0, 0, W, H);
 
         // ── Terrain layer ─────────────────────────────────────────────
@@ -354,7 +367,7 @@ export default function AntForagingVisualization() {
         }
 
         // ── Subtle grid ────────────────────────────────────────────────
-        ctx.strokeStyle = 'rgba(0,0,0,0.03)';
+        ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)';
         ctx.lineWidth   = 1;
         for (let x = 0; x < W; x += 50) {
             ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
@@ -447,7 +460,7 @@ export default function AntForagingVisualization() {
             const frustration = !ant.hasFood
                 ? Math.max(0, Math.min(1, (ant.stepsSinceFood - 1200) / 1200))
                 : 0;
-            drawCircle(ctx, ant.x, ant.y, ant.angle, isReturning && ant.hasFood, frustration, ant.isScout);
+            drawCircle(ctx, ant.x, ant.y, ant.angle, isReturning && ant.hasFood, frustration, ant.isScout, isDark);
         }
         ctx.globalAlpha = 1;
 

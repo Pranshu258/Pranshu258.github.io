@@ -5,8 +5,8 @@
     --brand-700: #0c351b;
     --body-background: linear-gradient(to right, #111111, #222222);
     --body-text-color: #ffffff;
-    --surface-background: #f9f6ee;
-    --surface-text-color: #1f1f1f;
+    --surface-background: #141414;
+    --surface-text-color: #e8e4dc;
     --divider-color: #333333;
     --primary-link-color: #ffffff;
     --primary-link-hover-color: #ffffff;
@@ -21,7 +21,7 @@
     --toggle-icon-color: #ffffff;
     --toggle-focus-ring: rgba(255, 255, 255, 0.4);
     --navbar-toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-    --blog-surface-background: #f9f6ee;
+    --blog-surface-background: #141414;
     --pill-text-color: #ffffff;
 }
 

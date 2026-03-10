@@ -39,7 +39,7 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     Prequal is a load balancer for distributed multi-tenant systems, that aims to minimize real-time request latency in presence of heterogenous server capacities and non-uniform, time-varying antagonist load. In this article, we will explore an AI assisted implementation of this algorithm using Python's FastAPI. FastAPI is a popular web framework for building APIs with Python and has been optimized to be on par with NodeJS and Go (using libraries like Starlette and Pydantic).
                 </p>
-                <p style={{ backgroundColor: "orange", padding: '10px', borderRadius: '5px' }}>
+                <p className="blog-callout-warning">
                     OpenPrequal is an experimental, personal project. FastAPI is very performant, but a Go implementation could still offer lower latency and higher throughput. With additional engineering effort, the Python version here can also be further optimized.
                 </p>
                 <a target="_blank" rel="noopener noreferrer" style={{ color: "black", textDecoration: "none", marginRight: "10px" }} href="https://github.com/Pranshu258/OpenPrequal">
@@ -75,7 +75,7 @@ export default class OpenPrequalBlog extends React.Component {
                     Prequal (Probing to reduce Queueing and Latency) is a load balacing algorithm that actively probes server load to leverage the power of N choices paradigm, extending it with asynchronous and reusable probes. It does not balance CPU load, but selects servers according to estimated latency and active requests in flight instead. Latency on the server side is defined as the time duration between the application logic receiving the request and handing the response back. The request contributes to the number of requests in flight for server during this time duration.
                 </p>
                 <figure>
-                    <img alt="" className="img-fluid" src={openprequal} />
+                    <img alt="" className="img-fluid blog-chart-img" src={openprequal} />
                     <figcaption>OpenPrequal Reverse Proxy and Load Balancer</figcaption>
                 </figure>
                 <p>

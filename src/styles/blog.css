@@ -41,7 +41,7 @@ figcaption {
     text-align: left;
 }
 .bhead .gt1 {
-    color: #0d4523;
+    color: var(--brand-100);
 }
 
 .bhead .gt1 [fill]:not([fill='none']) {
@@ -110,3 +110,105 @@ figcaption {
         transform: translateY(0);
     }
 }
+
+/* ── Dark-mode-aware overrides ─────────────────────────────────────── */
+
+/* Override any inline backgroundColor="white" on <hr> elements */
+.blog-content hr {
+    background-color: color-mix(in srgb, var(--surface-text-color) 25%, transparent) !important;
+    border: none !important;
+    height: 1px;
+}
+
+/* General link colour inside blog surfaces.
+   Excludes anchors that are children of <button> so button text colour is
+   governed by Bootstrap rather than the surface text variable. */
+.blog-content a:not(.llm-accordion-item):not(.llm-back-link):not(.llm-nav-btn):not(button > a) {
+    color: var(--surface-text-color) !important;
+}
+.blog-content a:not(.llm-accordion-item):not(.llm-back-link):not(.llm-nav-btn):not(button > a):hover {
+    color: var(--brand-100) !important;
+    text-decoration: underline;
+}
+/* Anchors nested inside <button> inherit the button's own text colour */
+.blog-content button a {
+    color: inherit;
+}
+
+/* Inline code (not inside prism blocks) */
+.blog-content :not(pre) > code:not([class*="language-"]) {
+    background-color: color-mix(in srgb, var(--surface-text-color) 10%, transparent);
+    color: var(--surface-text-color);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* ── Inline notice / callout boxes ──────────────────────────────────── */
+.blog-callout-warning {
+    background-color: rgba(194, 120, 3, 0.12);
+    border-left: 3px solid #c27803;
+    padding: 10px 14px;
+    border-radius: 0 5px 5px 0;
+    color: var(--surface-text-color);
+}
+[data-theme="dark"] .blog-callout-warning {
+    background-color: rgba(217, 119, 6, 0.18);
+    border-left-color: #f59e0b;
+}
+
+.blog-callout-note {
+    background-color: rgba(190, 24, 93, 0.08);
+    border-left: 3px solid #be185d;
+    padding: 10px 14px;
+    border-radius: 0 5px 5px 0;
+    color: var(--surface-text-color);
+}
+[data-theme="dark"] .blog-callout-note {
+    background-color: rgba(236, 72, 153, 0.15);
+    border-left-color: #f472b6;
+}
+
+/* Mermaid / SVG diagrams: invert colours in dark mode */
+[data-theme="dark"] .mermaid-diagram {
+    filter: invert(1) hue-rotate(180deg);
+    border-radius: 0.5rem;
+}
+
+/* Chart / diagram images: smart-invert in dark mode
+   (white bg → black, colours preserved via hue-rotate) */
+[data-theme="dark"] .blog-chart-img {
+    filter: invert(1) hue-rotate(180deg);
+    border-radius: 4px;
+}
+
+/* Ouch! illustration poster — partial invert so outlines stay soft,
+   desaturate + dim to blend gently with the dark surface */
+[data-theme="dark"] .blog-poster-img {
+    filter: invert(0.88) hue-rotate(180deg) saturate(0.55) brightness(0.88);
+    opacity: 0.88;
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────── */
+.blog-content table {
+    color: var(--surface-text-color);
+}
+
+.blog-content table th,
+.blog-content table td {
+    border-color: color-mix(in srgb, var(--surface-text-color) 25%, transparent) !important;
+    color: var(--surface-text-color);
+}
+
+/* Reset all tr backgrounds — beats inline styles via !important */
+.blog-content table tr {
+    background-color: transparent !important;
+}
+
+/* Alternating row stripe */
+.blog-content table tbody tr:nth-child(even) {
+    background-color: color-mix(in srgb, var(--surface-text-color) 6%, transparent) !important;
+}
+
+/* Header row */
+.blog-content table thead tr {

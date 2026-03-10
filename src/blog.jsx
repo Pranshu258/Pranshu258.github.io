@@ -51,7 +51,7 @@ export default class Blog extends React.Component {
                                                                 <div className="blog-article-content">
                                                                     <BlogComponent date={object.date} />
                                                                     <br></br>
-                                                                    <img alt="" src={blogPoster} className="img-fluid" style={bannerStyle}></img>
+                                                                    <img alt="" src={blogPoster} className="img-fluid blog-poster-img" style={bannerStyle}></img>
                                                                     <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>
                                                                     <small>Illustration by <a href="https://icons8.com/illustrations/author/206397">Pablo Marquez Ouch!</a></small>
                                                                     <div className='row-fluid'>

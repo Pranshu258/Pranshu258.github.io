@@ -15,7 +15,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: black;
+  color: var(--surface-text-color);
   background: none;
   border: none;
   padding: 0;
@@ -25,12 +25,12 @@
 }
 
 .sharerTrigger:hover {
-  color: black;
+  color: var(--brand-100);
   text-decoration: none;
 }
 
 .sharerTrigger:focus-visible {
-  outline: 2px solid #000;
+  outline: 2px solid var(--surface-text-color);
   outline-offset: 4px;
 }
 
