@@ -117,28 +117,6 @@ export default function LLMOpt({ date }) {
                 <Route index element={<TableOfContents />} />
                 <Route path=":section" element={<SectionView />} />
             </Routes>
-            <hr style={{ backgroundColor: "white" }} />
-            <h3 className="headings">References</h3>
-            <ol>
-                <li>
-                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
-                       href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/legacy/advanced/weight-streaming.md">
-                        TensorRT LLM - Running With Weight Streaming to Reduce GPU Memory Consumption
-                    </a>
-                </li>
-                <li>
-                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
-                       href="https://github.com/huggingface/accelerate/blob/main/docs/source/concept_guides/big_model_inference.md">
-                        HuggingFace Accelerate - Big Model Inference
-                    </a>
-                </li>
-                <li>
-                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
-                       href="https://github.com/huggingface/accelerate/blob/main/src/accelerate/hooks.py">
-                        HuggingFace Accelerate - Hooks
-                    </a>
-                </li>
-            </ol>
         </div>
     );
 }

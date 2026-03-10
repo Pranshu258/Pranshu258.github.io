@@ -219,6 +219,28 @@ model = dispatch_model(model, device_map=device_map)`}</code></pre>
                 - if more space is needed, it will store the remaining weights on the CPU
                 - if there is not enough RAM, it stores the remaining weights on the hard drive as memory-mapped tensors
             </p>
+            <hr style={{ backgroundColor: "white" }} />
+            <h3 className="headings">References</h3>
+            <ol>
+                <li>
+                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
+                       href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/legacy/advanced/weight-streaming.md">
+                        TensorRT LLM - Running With Weight Streaming to Reduce GPU Memory Consumption
+                    </a>
+                </li>
+                <li>
+                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
+                       href="https://github.com/huggingface/accelerate/blob/main/docs/source/concept_guides/big_model_inference.md">
+                        HuggingFace Accelerate - Big Model Inference
+                    </a>
+                </li>
+                <li>
+                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
+                       href="https://github.com/huggingface/accelerate/blob/main/src/accelerate/hooks.py">
+                        HuggingFace Accelerate - Hooks
+                    </a>
+                </li>
+            </ol>
         </div>
     );
 }

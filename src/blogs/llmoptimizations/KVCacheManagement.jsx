@@ -46,6 +46,22 @@ export default function WeightStreaming() {
             <p>
                 The cost is memory. Every cached token consumes <code>2 &times; num_layers &times; num_kv_heads &times; head_dim &times; sizeof(dtype)</code> bytes, and that footprint scales with both batch size and sequence length. For a large model serving long contexts, the cache alone can occupy several gigabytes of VRAM. Managing it carefully &mdash; what to keep, at what precision, and where to store it &mdash; is one of the central levers for maximising inference throughput.
             </p>
+            <hr style={{ backgroundColor: "white" }} />
+            <h3 className="headings">References</h3>
+            <ol>
+                <li>
+                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
+                       href="https://jalammar.github.io/illustrated-transformer/">
+                        The Illustrated Transformer - by Jay Alammar
+                    </a>
+                </li>
+                <li>
+                    <a style={{ textAlign: 'left', color: 'black', fontSize: 'inherit' }}
+                       href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/legacy/advanced/kv-cache-management.md">
+                        TensorRT LLM - KV Cache Management: Pools, Blocks, and Events
+                    </a>
+                </li>
+            </ol>
         </div>
     );
 }
