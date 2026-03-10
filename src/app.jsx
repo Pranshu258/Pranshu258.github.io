@@ -41,7 +41,7 @@ const IconGradientDefs = () => (
     </svg>
 );
 
-const THEME_STORAGE_KEY = 'preferred-theme';
+const THEME_STORAGE_KEY = 'preferred-theme-v2';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -64,11 +64,11 @@ export default class App extends React.Component {
         return prefersDark ? 'dark' : 'light';
     }
 
-    applyTheme(theme) {
+    applyTheme(theme, persist = false) {
         if (typeof document !== 'undefined') {
             document.documentElement.setAttribute('data-theme', theme);
         }
-        if (typeof window !== 'undefined') {
+        if (persist && typeof window !== 'undefined') {
             window.localStorage.setItem(THEME_STORAGE_KEY, theme);
         }
     }
@@ -76,7 +76,7 @@ export default class App extends React.Component {
     toggleTheme = () => {
         this.setState((prevState) => {
             const nextTheme = prevState.theme === 'dark' ? 'light' : 'dark';
-            this.applyTheme(nextTheme);
+            this.applyTheme(nextTheme, true);
             return { theme: nextTheme };
         });
     };
