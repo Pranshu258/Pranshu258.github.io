@@ -127,7 +127,6 @@ figcaption {
     color: var(--surface-text-color) !important;
 }
 .blog-content a:not(.llm-accordion-item):not(.llm-back-link):not(.llm-nav-btn):not(button > a):not(.sharerTrigger):not(.github-source-btn):hover {
-    color: var(--brand-100) !important;
     text-decoration: underline;
 }
 /* Anchors nested inside <button> inherit the button's own text colour */

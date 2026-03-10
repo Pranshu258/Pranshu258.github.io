@@ -144,12 +144,11 @@ hr {
 .blogLink {
     text-decoration: none;
     color: var(--primary-link-color);
-    transition: color 0.25s ease;
 }
 
 .blogLink:hover {
     text-decoration: none;
-    color: var(--primary-link-hover-color);
+    color: var(--primary-link-color);
 }
 
 svg.gt1 {
