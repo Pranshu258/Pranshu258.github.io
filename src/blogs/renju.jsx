@@ -227,6 +227,7 @@ export default class Renju extends React.Component {
                     href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="github-source-btn"
                     style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -249,7 +250,7 @@ export default class Renju extends React.Component {
                     </svg>
                     View Source on GitHub
                 </a>
-                                <hr style={{ backgroundColor: "white" }}></hr>
+                                <hr></hr>
 
             </div>
         );
