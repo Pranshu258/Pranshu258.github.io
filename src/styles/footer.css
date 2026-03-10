@@ -2,7 +2,7 @@ footer {
     padding: 0;
     color: var(--footer-text-color);
     background-image: var(--footer-background);
-    border-top: 1px solid rgba(32, 125, 66, 0.2);
+    border-top: 1px solid var(--footer-border-color);
 }
 
 .footer-nav {
@@ -51,7 +51,7 @@ footer {
 .footer-icon-divider {
     width: 36px;
     height: 1px;
-    background: rgba(32, 125, 66, 0.4);
+    background: var(--footer-border-color);
     margin: 0 auto;
 }
 

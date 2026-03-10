@@ -3,6 +3,7 @@
     --brand-300: #196634;
     --brand-500: #134f28;
     --brand-700: #0c351b;
+    --ui-accent: #4ab870;
     --body-background: linear-gradient(to right, #111111, #222222);
     --body-text-color: #ffffff;
     --surface-background: #141414;
@@ -16,8 +17,9 @@
     --nav-button-hover-bg: rgba(255, 255, 255, 0.12);
     --nav-button-border: rgba(32, 125, 66, 0.65);
     --nav-button-focus-ring: rgba(32, 125, 66, 0.35);
-    --footer-background: linear-gradient(45deg, #000000, #111111, #222222, #333333);
+    --footer-background: linear-gradient(to right, #111111, #222222);
     --footer-text-color: #ffffff;
+    --footer-border-color: rgba(32, 125, 66, 0.2);
     --toggle-icon-color: #ffffff;
     --toggle-focus-ring: rgba(255, 255, 255, 0.4);
     --navbar-toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
@@ -31,26 +33,28 @@ html[data-theme="dark"] {
 
 html[data-theme="light"] {
     color-scheme: light;
-    --body-background: linear-gradient(to right, #f6faf6, #e9f3ea);
-    --body-text-color: #101611;
+    --body-background: linear-gradient(to right, #f5f5f5, #ebebeb);
+    --body-text-color: #111111;
     --surface-background: #ffffff;
-    --surface-text-color: #1f2a23;
-    --divider-color: #cad9cd;
-    --primary-link-color: #134f28;
-    --primary-link-hover-color: #196634;
-    --page-background: #eef4ef;
-    --nav-background: linear-gradient(-45deg, #041f11, #082b17, #0c351b, #082b17);
-    --nav-text-color: #f3faf5;
-    --nav-button-hover-bg: rgba(255, 255, 255, 0.1);
-    --nav-button-border: rgba(25, 102, 52, 0.75);
-    --nav-button-focus-ring: rgba(25, 102, 52, 0.30);
-    --footer-background: linear-gradient(45deg, #041f11, #082b17, #0c351b, #082b17);
-    --footer-text-color: #ffffff;
-    --toggle-icon-color: #f3faf5;
-    --toggle-focus-ring: rgba(255, 255, 255, 0.45);
-    --navbar-toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(16,22,17,1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    --surface-text-color: #1a1a1a;
+    --divider-color: #d0d0d0;
+    --primary-link-color: #111111;
+    --primary-link-hover-color: #207d42;
+    --page-background: #e8e8e8;
+    --nav-background: linear-gradient(-45deg, #000000, #111111, #1c1c1c, #111111);
+    --nav-text-color: #f5f5f5;
+    --nav-button-hover-bg: rgba(255, 255, 255, 0.12);
+    --nav-button-border: rgba(255, 255, 255, 0.2);
+    --nav-button-focus-ring: rgba(255, 255, 255, 0.3);
+    --footer-background: linear-gradient(45deg, #000000, #111111, #1c1c1c, #111111);
+    --footer-text-color: #f5f5f5;
+    --footer-border-color: rgba(255, 255, 255, 0.1);
+    --toggle-icon-color: #f5f5f5;
+    --toggle-focus-ring: rgba(255, 255, 255, 0.4);
+    --navbar-toggler-icon: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(245,245,245,1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
     --blog-surface-background: #f9f6ee;
-    --pill-text-color: #134f28;
+    --pill-text-color: #1a1a1a;
+    --ui-accent: #207d42;
 }
 
 .featuredText {
@@ -73,6 +77,14 @@ html[data-theme="light"] {
 .paperpill:hover {
     box-shadow: 0 0 6px rgba(19, 79, 40, 0.25);
     color: var(--pill-text-color);
+}
+
+/* Neutral pill tones in light mode */
+[data-theme="light"] .paperpill,
+[data-theme="light"] .blogpill,
+[data-theme="light"] .projectpill {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
 }
 
 .blogpill {
@@ -132,6 +144,7 @@ hr {
 .blogLink {
     text-decoration: none;
     color: var(--primary-link-color);
+    transition: color 0.25s ease;
 }
 
 .blogLink:hover {
