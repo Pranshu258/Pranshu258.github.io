@@ -123,10 +123,10 @@ figcaption {
 /* General link colour inside blog surfaces.
    Excludes anchors that are children of <button> so button text colour is
    governed by Bootstrap rather than the surface text variable. */
-.blog-content a:not(.llm-accordion-item):not(.llm-back-link):not(.llm-nav-btn):not(button > a) {
+.blog-content a:not(.llm-accordion-item):not(.llm-back-link):not(.llm-nav-btn):not(button > a):not(.sharerTrigger) {
     color: var(--surface-text-color) !important;
 }
-.blog-content a:not(.llm-accordion-item):not(.llm-back-link):not(.llm-nav-btn):not(button > a):hover {
+.blog-content a:not(.llm-accordion-item):not(.llm-back-link):not(.llm-nav-btn):not(button > a):not(.sharerTrigger):hover {
     color: var(--brand-100) !important;
     text-decoration: underline;
 }

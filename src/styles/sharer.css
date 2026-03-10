@@ -25,7 +25,8 @@
 }
 
 .sharerTrigger:hover {
-  color: var(--brand-100);
+  color: var(--surface-text-color) !important;
+  opacity: 0.6;
   text-decoration: none;
 }
 
