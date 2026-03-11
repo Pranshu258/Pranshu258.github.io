@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { Route, Routes } from "react-router-dom";
 
 import { blogList } from './data/blogs'
@@ -8,7 +8,22 @@ import './styles/body.css';
 import './styles/blog.css';
 
 import banner from './images/banner.png';
-import blogPoster from './images/open-doodles-clumsy-man-dropping-documents-and-files.svg';
+import blogPosterLight from './images/open-doodles-clumsy-man-dropping-documents-and-files.svg';
+import blogPosterDark from './images/open-doodles-clumsy-man-dropping-documents-and-files-dark.svg';
+
+function ThemedPosterImg({ style }) {
+    const [isDark, setIsDark] = useState(
+        () => document.documentElement.getAttribute('data-theme') === 'dark'
+    );
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        return () => observer.disconnect();
+    }, []);
+    return <img alt="" src={isDark ? blogPosterDark : blogPosterLight} className="img-fluid blog-poster-img" style={style} />;
+}
 
 export default class Blog extends React.Component {
     constructor(props) {
@@ -51,7 +66,7 @@ export default class Blog extends React.Component {
                                                                 <div className="blog-article-content">
                                                                     <BlogComponent date={object.date} />
                                                                     <br></br>
-                                                                    <img alt="" src={blogPoster} className="img-fluid blog-poster-img" style={bannerStyle}></img>
+                                                                    <ThemedPosterImg style={bannerStyle} />
                                                                     <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>
                                                                     <small>Illustration by <a href="https://icons8.com/illustrations/author/206397">Pablo Marquez Ouch!</a></small>
                                                                     <div className='row-fluid'>

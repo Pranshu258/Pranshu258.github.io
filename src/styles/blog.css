@@ -181,12 +181,8 @@ figcaption {
     border-radius: 4px;
 }
 
-/* Ouch! illustration poster — partial invert so outlines stay soft,
-   desaturate + dim to blend gently with the dark surface */
-[data-theme="dark"] .blog-poster-img {
-    filter: invert(0.88) hue-rotate(180deg) saturate(0.55) brightness(0.88);
-    opacity: 0.88;
-}
+/* Ouch! illustration poster — dark variant is a purpose-built SVG;
+   no filter needed here. */
 
 /* ── Tables ─────────────────────────────────────────────────────────── */
 .blog-content table {
