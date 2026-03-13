@@ -9,7 +9,7 @@ export const sections = [
         slug: "kv-cache-management",
         name: "Key Value Cache Management",
         description: "Cache the key and value tensors from previous tokens so the model avoids redundant recomputation during autoregressive decoding.",
-        date: "March 10, 2026",
+        date: "March 12, 2026",
     },
     // {
     //     slug: "multi-block-mode",

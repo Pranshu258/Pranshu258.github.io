@@ -7,6 +7,7 @@ import 'prismjs/components/prism-bash';
 import '../../styles/prism.css';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { SiNvidia, SiHuggingface } from 'react-icons/si';
 
 function Eq({ tex, display = false }) {
     return (
@@ -48,6 +49,72 @@ export default function WeightStreaming() {
             <p>
                 The cost is memory. Every cached token consumes <code>2 &times; num_layers &times; num_kv_heads &times; head_dim &times; sizeof(dtype)</code> bytes, and that footprint scales with both batch size and sequence length. For a large model serving long contexts, the cache alone can occupy several gigabytes of VRAM. Managing it carefully &mdash; what to keep, at what precision, and where to store it &mdash; is one of the central levers for maximising inference throughput.
             </p>
+            <h2><SiNvidia style={{ verticalAlign: 'middle', marginRight: '0.4em', marginBottom: '0.1em' }} />Nvidia TensorRT-LLM</h2>
+            <p>
+                In TensorRT-LLM, KV cache memory is split into fixed-sized blocks. Each block holds KV state for a fixed number of tokens across all layers. Notable features include:
+            </p>
+            <ul>
+                <li>
+                    <strong>Cross Request Reuse</strong> &mdash; As blocks fill up, they are inserted into a <code>radix search tree</code> keyed by their token content hash. New requests search this tree, and matching prefix blocks are reused rather than recomputed.
+                </li>
+                <li>
+                    <strong>Partial Reuse</strong> &mdash; If only some tokens in a block match, a copy is made and partially reused.
+                </li>
+                <li>
+                    <strong>Cache Isolation</strong> &mdash; Requests can be assigned a salt so that only requests sharing the same salt can exchange blocks.
+                </li>
+                <li>
+                    <strong>Host Offloading</strong> &mdash; When a GPU block is about to be evicted, it can be offloaded to CPU host memory. The block remains in the radix tree and stays usable; on a cache hit, it is copied back to GPU on demand.
+                </li>
+                <li>
+                    <strong>Quantization</strong> &mdash; INT8 and FP8 formats are supported. Tensors are quantized on write and dequantized on the fly inside the multi-head-attention (MHA) kernel during the forward pass.
+                </li>
+            </ul>
+            <h2>Prefix Caching with Radix Tree</h2>
+            <p>
+                Each block is a node in the radix tree, and has two maps embedded in it.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Field</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>BlockKey</code></td>
+                        <td><code>mBlockKey</code></td>
+                        <td>This node's own key (its token fingerprint)</td>
+                    </tr>
+                    <tr>
+                        <td><code>BlockPtr</code></td>
+                        <td><code>mPrevBlock</code></td>
+                        <td>Parent in the reuse tree (<code>nullptr</code> = not in tree)</td>
+                    </tr>
+                    <tr>
+                        <td><code>BlockPtr</code></td>
+                        <td><code>mPrevBlockInSeq</code></td>
+                        <td>Parent in this request's sequence chain</td>
+                    </tr>
+                    <tr>
+                        <td><code>NextBlockMap</code></td>
+                        <td><code>mNextBlocks</code></td>
+                        <td>Children: map from <code>BlockKey</code> → child block</td>
+                    </tr>
+                    <tr>
+                        <td><code>bool</code></td>
+                        <td><code>mIsFull</code></td>
+                        <td>Whether all <code>tokensPerBlock</code> slots are written</td>
+                    </tr>
+                    <tr>
+                        <td><code>size_t</code></td>
+                        <td><code>mHash</code></td>
+                        <td>Merkle-chained hash of this block's position</td>
+                    </tr>
+                </tbody>
+            </table>
             <hr />
             <h3 className="headings">References</h3>
             <ol>

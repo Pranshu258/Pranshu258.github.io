@@ -186,24 +186,34 @@ figcaption {
 
 /* ── Tables ─────────────────────────────────────────────────────────── */
 .blog-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.9rem;
     color: var(--surface-text-color);
 }
 
 .blog-content table th,
 .blog-content table td {
-    border-color: color-mix(in srgb, var(--surface-text-color) 25%, transparent) !important;
+    padding: 8px 14px;
+    text-align: left;
+    border: 1px solid color-mix(in srgb, var(--surface-text-color) 20%, transparent);
     color: var(--surface-text-color);
 }
 
-/* Reset all tr backgrounds — beats inline styles via !important */
-.blog-content table tr {
-    background-color: transparent !important;
+.blog-content table th {
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: color-mix(in srgb, var(--surface-text-color) 8%, transparent);
 }
 
 /* Alternating row stripe */
 .blog-content table tbody tr:nth-child(even) {
-    background-color: color-mix(in srgb, var(--surface-text-color) 6%, transparent) !important;
+    background-color: color-mix(in srgb, var(--surface-text-color) 4%, transparent);
 }
 
-/* Header row */
-.blog-content table thead tr {
+.blog-content table tbody tr:hover {
+    background-color: color-mix(in srgb, var(--surface-text-color) 8%, transparent);
+}
