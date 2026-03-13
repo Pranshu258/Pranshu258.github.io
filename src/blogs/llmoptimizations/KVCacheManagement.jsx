@@ -87,8 +87,7 @@ export default function WeightStreaming() {
                     <strong>mAllBlocksById</strong> &mdash; a flat vector of all block pointers indexed by block ID, enabling O(1) lookup without touching the trie.
                 </li>
             </ul>
-            <MermaidDiagram svg={kvcDiagram2Svg} />
-            <h2>Prefix Caching with Radix Tree</h2>
+            <h3>Prefix Caching with Radix Tree</h3>
             <p>
                 The reuse tree is a radix trie where every node <em>is</em> a <code>KVCacheBlock</code>. A block is a metadata-only object &mdash; it holds no raw tensor data itself, just a row index (<code>mMemoryPoolBlockIndex</code>) into the GPU pool tensor where its KV data actually lives.
             </p>
@@ -139,8 +138,7 @@ export default function WeightStreaming() {
                     </tr>
                 </tbody>
             </table>
-            <MermaidDiagram svg={kvcDiagram3Svg} />
-            <h2>Block Lifecycle</h2>
+            <h3>Block Lifecycle</h3>
             <p>
                 A block moves through a well-defined set of states over its lifetime. It starts in the <strong>FREE</strong> state, sitting in the LRU queue with no references. <code>getFreeBlock()</code> claims it and transitions it to <strong>ALLOCATED</strong>, where a sequence writes KV data into its GPU pool row during prefill. Once prefill completes, <code>storeBlocks()</code> links it into the prefix tree &mdash; the block is now <strong>CACHED</strong> and available for reuse.
             </p>
