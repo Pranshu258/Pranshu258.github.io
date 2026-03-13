@@ -24,6 +24,14 @@ Use non-layout transitions instead:
 - `opacity`
 - `transform` (on decorative child elements only, not on text containers)
 
+## Tables
+
+- Scope table styles to the component's own CSS file (e.g. `llmoptimizations.css`) using the parent layout class as a prefix (e.g. `.llm-section-view table`).
+- Use `border-collapse: collapse` and `border: 1px solid color-mix(in srgb, var(--surface-text-color) 20%, transparent)` for cell borders.
+- Header cells (`th`) should use `font-weight: 700`, small uppercase text (`font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em`), and a subtle background via `color-mix(in srgb, var(--surface-text-color) 8%, transparent)`.
+- Alternate body rows with `color-mix(in srgb, var(--surface-text-color) 4%, transparent)` and add a hover highlight at 8%.
+- Never hardcode colours in table styles — always use `var(--surface-text-color)` so both light and dark themes work.
+
 ## Borders
 
 Use `var(--surface-text-color)` for all structural borders — accordion rows, cards, nav buttons, `<hr>` elements.
