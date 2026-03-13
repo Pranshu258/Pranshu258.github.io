@@ -1,4 +1,8 @@
 import React, { useEffect } from 'react';
+import kvcDiagram1Svg from './kvc-diagram1.svg?raw';
+import kvcDiagram2Svg from './kvc-diagram2.svg?raw';
+import kvcDiagram3Svg from './kvc-diagram3.svg?raw';
+import kvcDiagram4Svg from './kvc-diagram4.svg?raw';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-c';
@@ -22,6 +26,7 @@ function Eq({ tex, display = false }) {
 function MermaidDiagram({ svg }) {
     return (
         <div
+            className="mermaid-diagram"
             dangerouslySetInnerHTML={{ __html: svg }}
             style={{ overflowX: 'auto', margin: '1.5rem 0', display: 'flex', justifyContent: 'center', borderRadius: '0.5rem', padding: '1rem' }}
         />
@@ -51,28 +56,47 @@ export default function WeightStreaming() {
             </p>
             <h2><SiNvidia style={{ verticalAlign: 'middle', marginRight: '0.4em', marginBottom: '0.1em' }} />Nvidia TensorRT-LLM</h2>
             <p>
-                In TensorRT-LLM, KV cache memory is split into fixed-sized blocks. Each block holds KV state for a fixed number of tokens across all layers. Notable features include:
+                TensorRT-LLM&rsquo;s KV cache is built around a simple idea: rather than allocating one giant contiguous tensor per request, memory is chopped into fixed-size <strong>blocks</strong>, each holding the KV state for a fixed number of tokens across all layers. Blocks are handed out on demand and returned to a pool when no longer needed &mdash; much like pages in a virtual memory system. This makes it possible to serve many requests of wildly different lengths without wasting GPU memory on worst-case padding.
+            </p>
+            <h3>Overview</h3>
+            <p>
+                The entry point is the <code>LLM</code> Python API, which accepts a <code>KvCacheConfig</code> &mdash; a flat struct carrying knobs like <code>freeGpuMemoryFraction</code>, <code>maxTokens</code>, <code>enableBlockReuse</code>, and <code>hostCacheSize</code>. That config initialises the <strong><code>KVCacheManager</code></strong>, the central coordinator. It doesn&rsquo;t manage a single monolithic pool. Instead, it fans out into one <strong><code>WindowBlockManager</code></strong> per distinct <code>(numKvHeads, windowSize)</code> combination &mdash; so a model using sliding-window attention on some layers gets a completely separate manager from the layers using full context, each with its own independently sized pool.
+            </p>
+            <p>
+                Each <code>WindowBlockManager</code> owns one of two raw storage layouts. The <strong>paged path</strong> uses a <code>KVBlockArray</code> &mdash; an index table dimensioned by batch size, number of windows, keys-vs-values (always 2), and the maximum number of blocks a single sequence can occupy. It hands out pointers to individual blocks on demand via <code>getKBlockPtr</code> and <code>getVBlockPtr</code>. The <strong>contiguous path</strong> uses a <code>KVLinearBuffer</code> &mdash; one large flat tensor covering all batches, both keys and values, all attention heads, the full sequence length, and the per-head embedding dimension. It is suited to short fixed-length sequences where fragmentation isn&rsquo;t a concern. Both layouts back onto the same pre-allocated GPU primary pool. When memory is under pressure, blocks are copied out to pinned CPU memory, but they stay in the reuse tree &mdash; a cache hit on an offloaded block triggers an async transfer back to GPU rather than a full recompute.
+            </p>
+            <MermaidDiagram svg={kvcDiagram1Svg} />
+            <h3>Inside a WindowBlockManager</h3>
+            <p>
+                Each <code>WindowBlockManager</code> is where all the interesting scheduling happens. It wires together five components that work in concert:
             </p>
             <ul>
                 <li>
-                    <strong>Cross Request Reuse</strong> &mdash; As blocks fill up, they are inserted into a <code>radix search tree</code> keyed by their token content hash. New requests search this tree, and matching prefix blocks are reused rather than recomputed.
+                    <strong>PrefixReuseTree</strong> &mdash; a radix trie rooted at a sentinel node. Every fully-written block that finishes prefill gets inserted here, keyed by its token fingerprint. New requests walk the trie to find the longest matching prefix and skip recomputing those tokens entirely.
                 </li>
                 <li>
-                    <strong>Partial Reuse</strong> &mdash; If only some tokens in a block match, a copy is made and partially reused.
+                    <strong>KVCacheBlockPool</strong> &mdash; the actual GPU (and optionally CPU) tensors. One pool per cache tier, each backed by a large pre-allocated tensor with axes for the total block count, number of transformer layers, keys vs. values (always 2), number of attention heads, tokens per block, and the per-head embedding dimension.
                 </li>
                 <li>
-                    <strong>Cache Isolation</strong> &mdash; Requests can be assigned a salt so that only requests sharing the same salt can exchange blocks.
+                    <strong>LRUEvictionPolicy</strong> &mdash; when the pool is full and a new block is needed, the eviction policy selects the best candidate to recycle. Blocks carry a priority (0&ndash;100) and an optional expiry duration, so hot system-prompt prefixes can be pinned while ephemeral user context is evicted first.
                 </li>
                 <li>
-                    <strong>Host Offloading</strong> &mdash; When a GPU block is about to be evicted, it can be offloaded to CPU host memory. The block remains in the radix tree and stays usable; on a cache hit, it is copied back to GPU on demand.
+                    <strong>KVCacheTransferManager</strong> &mdash; handles async memory transfers between GPU and CPU. It is invoked either when memory pressure demands offloading a block to CPU, or when a cache hit lands on a block that was previously offloaded and needs to be streamed back.
                 </li>
                 <li>
-                    <strong>Quantization</strong> &mdash; INT8 and FP8 formats are supported. Tensors are quantized on write and dequantized on the fly inside the multi-head-attention (MHA) kernel during the forward pass.
+                    <strong>mAllBlocksById</strong> &mdash; a flat vector of all block pointers indexed by block ID, enabling O(1) lookup without touching the trie.
                 </li>
             </ul>
+            <MermaidDiagram svg={kvcDiagram2Svg} />
             <h2>Prefix Caching with Radix Tree</h2>
             <p>
-                Each block is a node in the radix tree, and has two maps embedded in it.
+                The reuse tree is a radix trie where every node <em>is</em> a <code>KVCacheBlock</code>. A block is a metadata-only object &mdash; it holds no raw tensor data itself, just a row index (<code>mMemoryPoolBlockIndex</code>) into the GPU pool tensor where its KV data actually lives.
+            </p>
+            <p>
+                The label on each tree edge is a <strong><code>BlockKey</code></strong>: a struct combining the token IDs the block covers, an optional LoRA adapter ID, an optional tenant salt, and optional multimodal content hashes. Two requests only share a block if their <code>BlockKey</code> matches exactly &mdash; different adapters or different tenants are silently routed into separate subtrees, providing isolation with no extra allocation overhead.
+            </p>
+            <p>
+                Each block also carries a <strong>Merkle-chained hash</strong>: its hash is seeded with its parent&rsquo;s hash, so a single comparison at the leaf verifies the entire prefix path without re-hashing every ancestor. This is what makes cache lookups fast even for very long shared prefixes.
             </p>
             <table>
                 <thead>
@@ -86,7 +110,7 @@ export default function WeightStreaming() {
                     <tr>
                         <td><code>BlockKey</code></td>
                         <td><code>mBlockKey</code></td>
-                        <td>This node's own key (its token fingerprint)</td>
+                        <td>This node&rsquo;s own key (its token fingerprint)</td>
                     </tr>
                     <tr>
                         <td><code>BlockPtr</code></td>
@@ -96,12 +120,12 @@ export default function WeightStreaming() {
                     <tr>
                         <td><code>BlockPtr</code></td>
                         <td><code>mPrevBlockInSeq</code></td>
-                        <td>Parent in this request's sequence chain</td>
+                        <td>Parent in this request&rsquo;s sequence chain</td>
                     </tr>
                     <tr>
                         <td><code>NextBlockMap</code></td>
                         <td><code>mNextBlocks</code></td>
-                        <td>Children: map from <code>BlockKey</code> → child block</td>
+                        <td>Children: map from <code>BlockKey</code> &rarr; child block</td>
                     </tr>
                     <tr>
                         <td><code>bool</code></td>
@@ -111,10 +135,22 @@ export default function WeightStreaming() {
                     <tr>
                         <td><code>size_t</code></td>
                         <td><code>mHash</code></td>
-                        <td>Merkle-chained hash of this block's position</td>
+                        <td>Merkle-chained hash of this block&rsquo;s position</td>
                     </tr>
                 </tbody>
             </table>
+            <MermaidDiagram svg={kvcDiagram3Svg} />
+            <h2>Block Lifecycle</h2>
+            <p>
+                A block moves through a well-defined set of states over its lifetime. It starts in the <strong>FREE</strong> state, sitting in the LRU queue with no references. <code>getFreeBlock()</code> claims it and transitions it to <strong>ALLOCATED</strong>, where a sequence writes KV data into its GPU pool row during prefill. Once prefill completes, <code>storeBlocks()</code> links it into the prefix tree &mdash; the block is now <strong>CACHED</strong> and available for reuse.
+            </p>
+            <p>
+                When a second request matches this block in the trie, <code>claimBlock()</code> bumps its reference count above one and the block becomes <strong>SHARED</strong> &mdash; read-only and ineligible for eviction until all holders release it. If an incoming request only partially matches a cached block (some tokens match but not the full block), the system forks: with <code>mCopyOnPartialReuse</code> enabled it allocates a new block and copies the matching portion over; otherwise it steals the leaf outright, unlinking it from the tree.
+            </p>
+            <p>
+                Under memory pressure, a cached block can be <strong>offloaded</strong> &mdash; its content is asynchronously copied from GPU memory to pinned CPU memory and the GPU slot is freed. It stays in the trie the whole time, so from the outside it still looks like a valid cache entry. If a subsequent request hits it, <code>onboard()</code> streams it back to GPU before the request proceeds. When all references drop to zero and the LRU timer expires, <code>freeLeafBlock()</code> unlinks the block from the tree and returns it to the FREE pool.
+            </p>
+            <MermaidDiagram svg={kvcDiagram4Svg} />
             <hr />
             <h3 className="headings">References</h3>
             <ol>

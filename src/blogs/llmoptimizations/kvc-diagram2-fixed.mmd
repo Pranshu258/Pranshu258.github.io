@@ -1,0 +1,32 @@
+%%{init: {'themeVariables': {'background': '#f0f4f8', 'fontSize': '14px'}}}%%
+flowchart TD
+    WBM["<b>WindowBlockManager</b><br/>manages one (numKvHeads, windowSize) pool<br/>kvCacheManager.h L536"]
+
+    PRT["<b>PrefixReuseTree</b><br/>mCachedBlocksRoot (sentinel, id=-1)<br/>radix trie via templatedTrie.h<br/>nodes = KVCacheBlock, edges labeled by BlockKey"]
+
+    POOL["<b>KVCacheBlockPool</b><br/>mPools — one pool per cache tier<br/>primaryPtr → GPU tensor<br/>secondaryPtr → CPU pinned tensor<br/>shape: max_blocks × layers × 2 × heads × T × D"]
+
+    LRU["<b>LRUEvictionPolicy</b><br/>evictionPolicy.h L71<br/>mFreeQueues[cacheLevel][priority]<br/>priority 0–100; mDurationMs → expiry<br/>getFreeBlock() / releaseBlock() / claimBlock()"]
+
+    TM["<b>KVCacheTransferManager</b><br/>offload(block) → GPU-to-CPU async DMA<br/>onboard(block) → CPU-to-GPU async DMA<br/>triggered on memory pressure / cache hit"]
+
+    REG["<b>mAllBlocksById</b><br/>vector of BlockPtr indexed by mBlockId<br/>O(1) block lookup by ID<br/>owns all KVCacheBlock instances"]
+
+    FLAGS["<b>Reuse Policy Flags</b><br/>mEnablePartialReuse — allow sub-block token matching<br/>mCopyOnPartialReuse — copy vs steal on partial hit<br/>mEnableCrossKvCacheReuse — share across requests"]
+
+    WBM -->|"root of"| PRT
+    WBM -->|"owns"| POOL
+    WBM -->|"delegates eviction to"| LRU
+    WBM -->|"delegates DMA to"| TM
+    WBM -->|"indexes blocks via"| REG
+    WBM -->|"controlled by"| FLAGS
+    LRU -->|"recycles blocks back to"| PRT
+    TM -->|"moves data between tiers in"| POOL
+
+    classDef wbm fill:#f0f4f8,color:#1e293b,stroke:#0d9488
+    classDef sub fill:#f0f4f8,color:#1e293b,stroke:#10b981
+    classDef policy fill:#f0f4f8,color:#1e293b,stroke:#ca8a04
+
+    class WBM wbm
+    class PRT,POOL,TM,REG sub
+    class LRU,FLAGS policy

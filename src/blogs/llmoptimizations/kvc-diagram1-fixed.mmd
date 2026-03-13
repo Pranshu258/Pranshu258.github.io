@@ -1,0 +1,39 @@
+%%{init: {'themeVariables': {'background': '#f0f4f8', 'fontSize': '14px'}}}%%
+flowchart TD
+    LLM["<b>LLM</b><br/>Python entry point<br/>tensorrt_llm/llmapi/llm.py"]
+
+    CFG["<b>KvCacheConfig</b><br/>freeGpuMemoryFraction · maxTokens<br/>enableBlockReuse · hostCacheSize<br/>onboardBlocks · crossKvCacheReuse"]
+
+    KVM["<b>KVCacheManager</b><br/>cpp/include/.../batch_manager/kvCacheManager.h<br/>owns all WindowBlockManagers<br/>routes requests by (numKvHeads, windowSize)"]
+
+    WBM1["<b>WindowBlockManager A</b><br/>numKvHeads=32 · windowSize=∞<br/>standard full-context window"]
+
+    WBM2["<b>WindowBlockManager B</b><br/>numKvHeads=8 · windowSize=4096<br/>sliding-window attention variant"]
+
+    KVBA["<b>KVBlockArray</b><br/>kvCacheUtils.h · paged path<br/>index table: [B, W, 2, MaxBlocksPerSeq]<br/>getKBlockPtr / getVBlockPtr per token"]
+
+    KVLB["<b>KVLinearBuffer</b><br/>kvCacheUtils.h · contiguous path<br/>flat tensor: [B, 2, H, S, D]<br/>used when paging is disabled"]
+
+    GPU1["<b>GPU Primary Pool</b><br/>KVCacheBlockPool::primaryPtr<br/>ITensor shape: max_blocks × layers × 2 × heads × T × D"]
+
+    CPU1["<b>CPU Secondary Pool</b><br/>KVCacheBlockPool::secondaryPtr<br/>pinned host memory for offloaded blocks"]
+
+    LLM -->|"reads"| CFG
+    CFG -->|"configures"| KVM
+    KVM -->|"creates"| WBM1
+    KVM -->|"creates"| WBM2
+    WBM1 -->|"indexes into"| KVBA
+    WBM2 -->|"indexes into"| KVBA
+    KVBA -->|"backed by"| GPU1
+    KVLB -->|"backed by"| GPU1
+    GPU1 -->|"offload path"| CPU1
+
+    classDef api fill:#f0f4f8,color:#1e293b,stroke:#7c3aed
+    classDef mgr fill:#f0f4f8,color:#1e293b,stroke:#16a34a
+    classDef store fill:#f0f4f8,color:#1e293b,stroke:#3b82f6
+    classDef mem fill:#f0f4f8,color:#1e293b,stroke:#d97706
+
+    class LLM,CFG api
+    class KVM,WBM1,WBM2 mgr
+    class KVBA,KVLB store
+    class GPU1,CPU1 mem

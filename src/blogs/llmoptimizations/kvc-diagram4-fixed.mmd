@@ -1,0 +1,51 @@
+%%{init: {'themeVariables': {'background': '#f0f4f8', 'fontSize': '14px'}}}%%
+flowchart TD
+    FREE["<b>FREE</b><br/>in LRU eviction queue<br/>refCount = 0, schedulingRefCount = 0<br/>may or may not be in prefix tree"]
+
+    ALLOC["<b>ALLOCATED</b><br/>claimed by one sequence<br/>refCount = 1<br/>loadOrAllocateBlocks() writes KV data"]
+
+    CACHED["<b>CACHED in prefix tree</b><br/>storeBlocks() links block under parent<br/>mPrevBlock != nullptr<br/>mNextBlocks keyed by BlockKey"]
+
+    SHARED["<b>SHARED</b><br/>cache hit by a second sequence<br/>refCount > 1<br/>read-only, cannot be evicted"]
+
+    PARTIAL["<b>PARTIAL REUSE</b><br/>incoming BlockKey partially matches cached key<br/>numMatchingTokens > 0 but less than tokensPerBlock<br/>fork: copy-on-write or steal the leaf"]
+
+    COPY["<b>Copy path</b><br/>new block allocated<br/>partial KV data copied from matched block<br/>mCopyOnPartialReuse = true"]
+
+    STEAL["<b>Steal path</b><br/>matched leaf unlinked from tree<br/>freeLeafBlock() via removeNextBlock()<br/>mCopyOnPartialReuse = false"]
+
+    GPU["<b>GPU Pool (primary)</b><br/>KVCacheBlockPool::primaryPtr<br/>shape: max_blocks × layers × 2 × heads × T × D<br/>CUDA kernel reads via KVBlockArray"]
+
+    CPU["<b>CPU Pool (secondary)</b><br/>KVCacheBlockPool::secondaryPtr<br/>pinned host memory<br/>indexed by same mMemoryPoolBlockIndex"]
+
+    OFFLOAD["<b>OFFLOADED</b><br/>KVCacheTransferManager::offload()<br/>async GPU-to-CPU DMA<br/>slot freed in GPU pool"]
+
+    ONBOARD["<b>ONBOARDING</b><br/>KVCacheTransferManager::onboard()<br/>async CPU-to-GPU DMA<br/>triggered on cache hit for offloaded block"]
+
+    EVICT["<b>EVICT from tree</b><br/>LRU removes lowest-priority free block<br/>freeLeafBlock() sets mPrevBlock = nullptr<br/>priority refreshed by mDurationMs expiry"]
+
+    FREE -->|"getFreeBlock()"| ALLOC
+    ALLOC -->|"storeBlocks() at end of prefill"| CACHED
+    CACHED -->|"claimBlock() on cache hit"| SHARED
+    SHARED -->|"releaseBlock() when seq done"| CACHED
+    CACHED -->|"partial match detected"| PARTIAL
+    PARTIAL -->|"mCopyOnPartialReuse=true"| COPY
+    PARTIAL -->|"mCopyOnPartialReuse=false"| STEAL
+    COPY -->|"new block goes to"| ALLOC
+    STEAL -->|"stolen block rejoins"| ALLOC
+    ALLOC -->|"kernel access"| GPU
+    CACHED -->|"KVBlockArray index lookup"| GPU
+    GPU -->|"memory pressure — offload()"| OFFLOAD
+    OFFLOAD -->|"moves data to"| CPU
+    CPU -->|"cache hit — onboard()"| ONBOARD
+    ONBOARD -->|"data back on"| GPU
+    CACHED -->|"all refs drop to 0 + LRU expired"| EVICT
+    EVICT -->|"block recycled to"| FREE
+
+    classDef state fill:#f0f4f8,color:#1e293b,stroke:#3b82f6
+    classDef data fill:#f0f4f8,color:#1e293b,stroke:#16a34a
+    classDef op fill:#f0f4f8,color:#1e293b,stroke:#7c3aed
+
+    class FREE,ALLOC,CACHED,SHARED,PARTIAL state
+    class GPU,CPU data
+    class COPY,STEAL,OFFLOAD,ONBOARD,EVICT op

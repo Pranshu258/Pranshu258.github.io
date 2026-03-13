@@ -1,0 +1,47 @@
+%%{init: {'themeVariables': {'background': '#f0f4f8', 'fontSize': '14px'}}}%%
+flowchart TD
+    BLOCK["<b>KVCacheBlock</b><br/>one node in the prefix tree<br/>holds metadata only — no raw KV data"]
+
+    IDENT["<b>Identity</b><br/>mBlockId — int, pool-independent linear ID<br/>mMemoryPoolBlockIndex — row in GPU pool tensor"]
+
+    LINKS["<b>Tree Pointers</b><br/>mPrevBlock — parent in reuse tree<br/>mPrevBlockInSeq — parent in sequence order<br/>mNextBlocks — map of BlockKey → child BlockPtr<br/>block is in the tree iff mPrevBlock != nullptr"]
+
+    STATE["<b>Lifecycle State</b><br/>mRefCount — active references from sequences<br/>mSchedulingRefCount — scheduler lookahead refs<br/>mIsFull — all tokensPerBlock slots written<br/>mHash — Merkle-chained hash over full prefix path"]
+
+    PRIO["<b>Retention Policy</b><br/>mPriority — 0 to 100, higher = keep longer<br/>mDurationMs — how long priority applies<br/>mExpirationTime — absolute expiry timestamp"]
+
+    KEY["<b>BlockKey</b><br/>the label on every tree edge<br/>two blocks match iff their full BlockKey matches"]
+
+    K1["<b>uniqueTokens</b><br/>VecUniqueTokens of length tokensPerBlock<br/>the token IDs this block covers"]
+
+    K2["<b>loraTaskId</b><br/>optional LoRA adapter ID<br/>blocks with different loraTaskId never share<br/>each adapter gets its own subtree"]
+
+    K3["<b>cacheSaltID</b><br/>optional tenant or user ID<br/>prevents cross-tenant cache sharing<br/>same tokens + different salt = different block"]
+
+    K4["<b>extraKeys</b><br/>multimodal content hashes — images, video<br/>disables partial matching for this block<br/>requires exact match for reuse"]
+
+    HASH["<b>BlockKeyHasher</b><br/>hash(blockKey, parentHash)<br/>seeds each block hash with parent hash<br/>creates Merkle chain over prefix history"]
+
+    BLOCK -->|"has"| IDENT
+    BLOCK -->|"has"| LINKS
+    BLOCK -->|"has"| STATE
+    BLOCK -->|"has"| PRIO
+    LINKS -->|"keyed by"| KEY
+    KEY -->|"contains"| K1
+    KEY -->|"contains"| K2
+    KEY -->|"contains"| K3
+    KEY -->|"contains"| K4
+    KEY -->|"hashed by"| HASH
+    HASH -->|"seeds mHash in"| STATE
+
+    classDef block fill:#f0f4f8,color:#1e293b,stroke:#0d9488
+    classDef field fill:#f0f4f8,color:#1e293b,stroke:#10b981
+    classDef key fill:#f0f4f8,color:#1e293b,stroke:#dc2626
+    classDef keyfield fill:#f0f4f8,color:#1e293b,stroke:#f87171
+    classDef hash fill:#f0f4f8,color:#1e293b,stroke:#7c3aed
+
+    class BLOCK block
+    class IDENT,LINKS,STATE,PRIO field
+    class KEY key
+    class K1,K2,K3,K4 keyfield
+    class HASH hash
