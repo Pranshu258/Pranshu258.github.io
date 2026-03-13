@@ -26,11 +26,12 @@ Use non-layout transitions instead:
 
 ## Tables
 
-- Scope table styles to the component's own CSS file (e.g. `llmoptimizations.css`) using the parent layout class as a prefix (e.g. `.llm-section-view table`).
+- Use the shared `.blog-content table` styles defined in `src/styles/blog.css` — no extra CSS needed for standard tables inside any blog.
 - Use `border-collapse: collapse` and `border: 1px solid color-mix(in srgb, var(--surface-text-color) 20%, transparent)` for cell borders.
-- Header cells (`th`) should use `font-weight: 700`, small uppercase text (`font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em`), and a subtle background via `color-mix(in srgb, var(--surface-text-color) 8%, transparent)`.
-- Alternate body rows with `color-mix(in srgb, var(--surface-text-color) 4%, transparent)` and add a hover highlight at 8%.
+- Header cells (`th`) use `font-weight: 700`, small uppercase text (`font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em`), and a subtle background via `color-mix(in srgb, var(--surface-text-color) 8%, transparent)`.
+- Body rows alternate at 4% and highlight on hover at 8%.
 - Never hardcode colours in table styles — always use `var(--surface-text-color)` so both light and dark themes work.
+- Only add component-scoped table overrides when the table needs styling that diverges from the shared defaults.
 
 ## Borders
 
