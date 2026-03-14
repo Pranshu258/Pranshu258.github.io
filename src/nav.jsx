@@ -127,6 +127,17 @@ export default class Nav extends Component {
                     {showMobileBrand && (
                         <a href="/" className="navbar-brand-mobile">Pranshu Gupta</a>
                     )}
+                    <div className="navbar-mobile-controls">
+                    <button
+                        type="button"
+                        className="btn btn-default nav-link-btn theme-toggle theme-toggle-mobile"
+                        onClick={onToggleTheme}
+                        aria-label={`Switch to ${nextThemeLabel} mode`}
+                        aria-pressed={theme === 'dark'}
+                        title={`Switch to ${nextThemeLabel} mode`}
+                    >
+                        <ThemeIcon />
+                    </button>
                     <button 
                         className="navbar-toggler" 
                         type="button" 
@@ -141,6 +152,7 @@ export default class Nav extends Component {
                             <span></span>
                         </span>
                     </button>
+                    </div>
                     <div className={`navbar-collapse ${isMenuOpen ? 'show' : 'collapse'}`} id="navbarNav">
                         <ul className="navbar-nav ml-auto">
                             <li>
@@ -173,7 +185,8 @@ export default class Nav extends Component {
                                     <button className="btn btn-default nav-link-btn">Resume</button>
                                 </a>
                             </li>
-                            <li>
+                            {!this.state.isMobile && (
+                            <li className="theme-toggle-menu-item">
                                 <button
                                     type="button"
                                     className="btn btn-default nav-link-btn theme-toggle"
@@ -188,6 +201,7 @@ export default class Nav extends Component {
                                     <ThemeIcon />
                                 </button>
                             </li>
+                            )}
                         </ul>
                     </div>
                 </nav>
