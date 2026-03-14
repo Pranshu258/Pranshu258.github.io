@@ -4,20 +4,20 @@ flowchart TD
 
     PRT["<b>PrefixReuseTree</b><br/>mCachedBlocksRoot (sentinel, id=-1)<br/>radix trie via templatedTrie.h<br/>nodes = KVCacheBlock, edges labeled by BlockKey"]
 
-    POOL["<b>KVCacheBlockPool</b><br/>mPools — one pool per cache tier<br/>primaryPtr → GPU tensor<br/>secondaryPtr → CPU pinned tensor<br/>shape: max_blocks × layers × 2 × heads × T × D"]
+    POOL["<b>KVCacheBlockPool</b><br/>mPools — one pool per cache tier<br/>primaryPtr → GPU tensor<br/>secondaryPtr → CPU pinned tensor<br/>shape: max blocks × layers × 2 × heads × tokens per block × head dim"]
 
     LRU["<b>LRUEvictionPolicy</b><br/>evictionPolicy.h L71<br/>mFreeQueues[cacheLevel][priority]<br/>priority 0–100; mDurationMs → expiry<br/>getFreeBlock() / releaseBlock() / claimBlock()"]
 
-    TM["<b>KVCacheTransferManager</b><br/>offload(block) → GPU-to-CPU async DMA<br/>onboard(block) → CPU-to-GPU async DMA<br/>triggered on memory pressure / cache hit"]
+    TM["<b>KVCacheTransferManager</b><br/>offload(block) → copies block from GPU to CPU<br/>onboard(block) → streams block back to GPU<br/>triggered on memory pressure / cache hit"]
 
-    REG["<b>mAllBlocksById</b><br/>vector of BlockPtr indexed by mBlockId<br/>O(1) block lookup by ID<br/>owns all KVCacheBlock instances"]
+    REG["<b>mAllBlocksById</b><br/>flat list of all blocks indexed by block ID<br/>constant-time block lookup<br/>owns all KVCacheBlock instances"]
 
     FLAGS["<b>Reuse Policy Flags</b><br/>mEnablePartialReuse — allow sub-block token matching<br/>mCopyOnPartialReuse — copy vs steal on partial hit<br/>mEnableCrossKvCacheReuse — share across requests"]
 
     WBM -->|"root of"| PRT
     WBM -->|"owns"| POOL
     WBM -->|"delegates eviction to"| LRU
-    WBM -->|"delegates DMA to"| TM
+    WBM -->|"delegates transfers to"| TM
     WBM -->|"indexes blocks via"| REG
     WBM -->|"controlled by"| FLAGS
     LRU -->|"recycles blocks back to"| PRT

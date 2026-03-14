@@ -14,13 +14,13 @@ flowchart TD
 
     STEAL["<b>Steal path</b><br/>matched leaf unlinked from tree<br/>freeLeafBlock() via removeNextBlock()<br/>mCopyOnPartialReuse = false"]
 
-    GPU["<b>GPU Pool (primary)</b><br/>KVCacheBlockPool::primaryPtr<br/>shape: max_blocks × layers × 2 × heads × T × D<br/>CUDA kernel reads via KVBlockArray"]
+    GPU["<b>GPU Pool (primary)</b><br/>KVCacheBlockPool::primaryPtr<br/>shape: max blocks × layers × 2 × heads × tokens per block × head dim<br/>CUDA kernel reads via KVBlockArray"]
 
     CPU["<b>CPU Pool (secondary)</b><br/>KVCacheBlockPool::secondaryPtr<br/>pinned host memory<br/>indexed by same mMemoryPoolBlockIndex"]
 
-    OFFLOAD["<b>OFFLOADED</b><br/>KVCacheTransferManager::offload()<br/>async GPU-to-CPU DMA<br/>slot freed in GPU pool"]
+    OFFLOAD["<b>OFFLOADED</b><br/>KVCacheTransferManager::offload()<br/>block copied from GPU to CPU memory<br/>GPU slot freed in pool"]
 
-    ONBOARD["<b>ONBOARDING</b><br/>KVCacheTransferManager::onboard()<br/>async CPU-to-GPU DMA<br/>triggered on cache hit for offloaded block"]
+    ONBOARD["<b>ONBOARDING</b><br/>KVCacheTransferManager::onboard()<br/>block streamed back to GPU<br/>triggered on cache hit for offloaded block"]
 
     EVICT["<b>EVICT from tree</b><br/>LRU removes lowest-priority free block<br/>freeLeafBlock() sets mPrevBlock = nullptr<br/>priority refreshed by mDurationMs expiry"]
 

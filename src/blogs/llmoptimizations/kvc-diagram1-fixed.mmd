@@ -10,11 +10,11 @@ flowchart TD
 
     WBM2["<b>WindowBlockManager B</b><br/>numKvHeads=8 · windowSize=4096<br/>sliding-window attention variant"]
 
-    KVBA["<b>KVBlockArray</b><br/>kvCacheUtils.h · paged path<br/>index table: [B, W, 2, MaxBlocksPerSeq]<br/>getKBlockPtr / getVBlockPtr per token"]
+    KVBA["<b>KVBlockArray</b><br/>kvCacheUtils.h · paged path<br/>index table: batch × windows × 2 × max blocks per sequence<br/>getKBlockPtr / getVBlockPtr per token"]
 
-    KVLB["<b>KVLinearBuffer</b><br/>kvCacheUtils.h · contiguous path<br/>flat tensor: [B, 2, H, S, D]<br/>used when paging is disabled"]
+    KVLB["<b>KVLinearBuffer</b><br/>kvCacheUtils.h · contiguous path<br/>flat tensor: batch × 2 × heads × sequence length × head dim<br/>used when paging is disabled"]
 
-    GPU1["<b>GPU Primary Pool</b><br/>KVCacheBlockPool::primaryPtr<br/>ITensor shape: max_blocks × layers × 2 × heads × T × D"]
+    GPU1["<b>GPU Primary Pool</b><br/>KVCacheBlockPool::primaryPtr<br/>shape: max blocks × layers × 2 × heads × tokens per block × head dim"]
 
     CPU1["<b>CPU Secondary Pool</b><br/>KVCacheBlockPool::secondaryPtr<br/>pinned host memory for offloaded blocks"]
 
