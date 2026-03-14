@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import kvcDiagram1Svg from './kvc-diagram1.svg?raw';
-import kvcDiagram2Svg from './kvc-diagram2.svg?raw';
-import kvcDiagram3Svg from './kvc-diagram3.svg?raw';
 import kvcDiagram4Svg from './kvc-diagram4.svg?raw';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
@@ -11,7 +9,7 @@ import 'prismjs/components/prism-bash';
 import '../../styles/prism.css';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
-import { SiNvidia, SiHuggingface } from 'react-icons/si';
+import { SiNvidia } from 'react-icons/si';
 
 function Eq({ tex, display = false }) {
     return (
