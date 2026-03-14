@@ -11,6 +11,32 @@
     font-family: 'Raleway', sans-serif;
 }
 
+@font-palette-values --nabla-brand {
+  font-family: "Nabla";
+  override-colors:
+    0 #207d42,
+    1 #207d42,
+    2 #207d42,
+    3 #207d42,
+    4 #207d42,
+    5 #207d42,
+    6 #207d42,
+    7 #207d42,
+    8 #207d42,
+    9 #207d42;
+}
+
+.nabla-base {
+  font-family: "Nabla", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "EDPT" 100,
+    "EHLT" 12;
+  font-palette: --nabla-brand;
+}
+
 .big {
     font-size: 400%;
 }

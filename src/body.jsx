@@ -138,7 +138,7 @@ export default class Body extends React.Component {
                     <div className="row" id="publications">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <FaScroll className="big gt4" />
+                            <FaScroll className="big gt3" />
                             <br></br><br></br>
                             <h2 className="roboto">
                                 PAPERS
@@ -171,7 +171,7 @@ export default class Body extends React.Component {
                     <div className="row" id="blog">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <LuNotebookPen className="big gt1" />
+                            <LuNotebookPen className="big gt3" />
                             <br></br><br></br>
                             <h2 className="roboto">
                                 BLOG
@@ -225,7 +225,7 @@ export default class Body extends React.Component {
                     <div className="row" id="projects">
                         <div className="col-md-3">
                             <br></br><br></br><br></br>
-                            <VscGithubProject className="big gt2" />
+                            <VscGithubProject className="big gt3" />
                             <br></br><br></br>
                             <h2 className="roboto">
                                 PROJECTS

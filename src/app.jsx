@@ -30,8 +30,8 @@ const IconGradientDefs = () => (
                 <stop offset="100%" stopColor="#134f28" />
             </linearGradient>
             <linearGradient id="icon-gradient-gt3" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#AA771C" />
-                <stop offset="100%" stopColor="#ffc107" />
+                <stop offset="0%" stopColor="#207d42" />
+                <stop offset="100%" stopColor="#0c351b" />
             </linearGradient>
             <linearGradient id="icon-gradient-gt4" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#134f28" />
