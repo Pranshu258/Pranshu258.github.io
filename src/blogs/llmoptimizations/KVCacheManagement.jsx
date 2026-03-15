@@ -91,6 +91,12 @@ export default function WeightStreaming() {
                 </li>
                 <li>
                     <a style={{ textAlign: 'left', fontSize: 'inherit' }}
+                        href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/kvcache.md">
+                        TensorRT LLM - KV Cache System
+                    </a>
+                </li>
+                <li>
+                    <a style={{ textAlign: 'left', fontSize: 'inherit' }}
                         href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/legacy/advanced/kv-cache-management.md">
                         TensorRT LLM - KV Cache Management: Pools, Blocks, and Events
                     </a>
