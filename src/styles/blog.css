@@ -1,6 +1,9 @@
 .blog-content {
     background-color: var(--blog-surface-background);
     color: var(--surface-text-color);
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .introduction {

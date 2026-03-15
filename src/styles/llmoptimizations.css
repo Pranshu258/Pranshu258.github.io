@@ -110,6 +110,8 @@
 
 .llm-section-view {
     animation: fadeInContent 0.2s ease-in;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* ── Prev / Next navigation ───────────────────────────────────────── */
@@ -182,10 +184,40 @@
     padding: 14px 18px;
     border-radius: 0 6px 6px 0;
     margin: 0 0 1.25rem 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .llm-callout p {
     margin: 0;
+}
+
+.llm-callout .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 0.5em 0;
+    padding-bottom: 4px;
+}
+
+/* Scale down display equations on smaller screens */
+@media (max-width: 768px) {
+    .llm-callout {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .llm-callout {
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .llm-callout {
+        font-size: 0.75rem;
+        padding: 12px 14px;
+    }
 }
 
 [data-theme="dark"] .llm-callout {
