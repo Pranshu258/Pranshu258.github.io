@@ -294,8 +294,7 @@ if (enablePartialReuse) {
 return {false, 0, nullptr};`}</code></pre>
             <br></br>
             </div>
-            
-            <div style={{ marginTop: '2rem' }}>
+            <div>
                 <h3>Matching Logic</h3>
                 <p>
                     When a new request arrives and the system searches the radix tree for reusable blocks, it needs to determine whether two blocks can actually share the same cached KV state. This decision goes beyond just comparing token sequences — the system must also verify that the <em>context</em> in which those tokens were computed is identical.
@@ -405,6 +404,17 @@ std::vector<SizeType32> mNumFreeBlocksPerLevel;`}</code></pre>
                     This design allows high-priority cached content (for example, system prompts or frequently-accessed documents) to remain resident even under memory pressure, while still providing an LRU fallback within each tier to evict less-recently-used items first.
                 </p>
             </div>
+            
+            <h2>Conclusion</h2>
+            <p>
+                TensorRT-LLM&rsquo;s KV cache system demonstrates how careful memory management can unlock substantial throughput gains in LLM serving. By treating the cache as a paged, shared resource rather than per-request allocations, it eliminates padding waste and enables aggressive reuse across requests with overlapping prefixes. The radix-tree structure provides efficient prefix matching while the priority-stratified LRU policy ensures that high-value content stays resident under memory pressure.
+            </p>
+            <p>
+                Three design decisions stand out: block-level granularity reduces fragmentation, context-aware matching (LoRA, tenant, multimodal) enforces correctness and security boundaries, and CPU offloading extends effective cache capacity beyond GPU memory. Together, these techniques reduce redundant computation, improve batch utilization, and lower latency for production workloads.
+            </p>
+            <p>
+                The complexity is non-trivial — radix trees, reference counting, async transfers, and expiration heaps add operational surface area. But for serving systems handling many concurrent users with similar or overlapping prompts, the payoff in reduced cost per token is significant. Understanding how blocks flow through states, when reuse is safe, and which eviction strategies preserve the right working set is essential for tuning inference infrastructure at scale.
+            </p>
             
             <hr />
             <h3 className="headings">References</h3>

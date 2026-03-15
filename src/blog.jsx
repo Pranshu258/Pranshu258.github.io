@@ -70,7 +70,7 @@ export default class Blog extends React.Component {
                                                                     <h4 className="montserrat" style={{fontWeight:"bold"}}>blog by Pranshu Gupta</h4>
                                                                     <small>Illustration by <a href="https://icons8.com/illustrations/author/206397">Pablo Marquez Ouch!</a></small>
                                                                     <div className='row-fluid'>
-                                                                        <nav style={{marginTop: '30px'}}>
+                                                                        <nav style={{marginTop: '30px', borderTop: 'none'}}>
                                                                             <h6 className="montserrat" style={{fontWeight: 'bold'}}>More Articles</h6>
                                                                             <ul style={{listStyle: 'none', padding: 0}}>
                                                                                 {blogList.map((obj, idx) => {
@@ -111,7 +111,6 @@ export default class Blog extends React.Component {
                             </div>
                             <div className="col-lg-3">
                                 <br></br>
-                                <img alt="" src={banner} className="img-fluid" style={bannerStyle}></img>
                                 <br></br>
                                 <br></br>
                             </div>
