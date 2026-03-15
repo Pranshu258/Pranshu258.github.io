@@ -294,10 +294,118 @@ if (enablePartialReuse) {
 return {false, 0, nullptr};`}</code></pre>
             <br></br>
             </div>
+            
+            <div style={{ marginTop: '2rem' }}>
+                <h3>Matching Logic</h3>
+                <p>
+                    When a new request arrives and the system searches the radix tree for reusable blocks, it needs to determine whether two blocks can actually share the same cached KV state. This decision goes beyond just comparing token sequences — the system must also verify that the <em>context</em> in which those tokens were computed is identical.
+                </p>
+                <p>
+                    The core token comparison logic lives in <code>BlockKey::numMatchingTokens</code>:
+                </p>
+                <pre><code className="language-cpp">{`int numMatchingTokens(BlockKey const& other) const noexcept {
+    SizeType32 numMatched{0};
+    // loraTaskId, extraKeys, and cacheSaltID must all match exactly before tokens are compared
+    if (loraTaskId == other.loraTaskId && extraKeys == other.extraKeys && cacheSaltID == other.cacheSaltID) {
+        auto [matchEnd, otherMatchEnd] = std::mismatch(
+            uniqueTokens.begin(), uniqueTokens.end(),
+            other.uniqueTokens.begin(), other.uniqueTokens.end());
+        numMatched = std::distance(uniqueTokens.begin(), matchEnd);
+    }
+    return numMatched;
+}`}</code></pre>
+                <p>
+                    Notice the guard condition: before even comparing token IDs, the function checks that three context properties match exactly: <code>loraTaskId</code>, <code>extraKeys</code>, and <code>cacheSaltID</code>. Only if all three match does it proceed to count matching tokens using <code>std::mismatch</code>, which finds the first position where the two token sequences diverge.
+                </p>
+                <p>This design enforces strict isolation boundaries:</p>
+                <ul>
+                    <li>
+                        <strong>LoRA isolation</strong>: Two requests using different LoRA adapters will <strong>never</strong> share blocks, even if their prompt tokens are identical. This makes sense because LoRA adapters modify the model weights, so the same tokens processed through different adapters produce different hidden states and therefore different KV projections.
+                    </li>
+                    <li>
+                        <strong>Tenant isolation</strong>: Two requests from different tenants (different <code>cacheSaltID</code>) will <strong>never</strong> share blocks. This is a critical security boundary — without it, one tenant could potentially infer information about another tenant's prompts by observing cache hit patterns or timing.
+                    </li>
+                    <li>
+                        <strong>Multimodal content isolation</strong>: When <code>extraKeys</code> is non-empty (indicating multimodal inputs like images), blocks require exact token match and partial reuse is disabled. This is because multimodal content is represented as a hash, and you cannot meaningfully "partially match" a content hash — either the full image embedding matches or it doesn't.
+                    </li>
+                </ul>
+                <p>
+                    The consequence is that cache reuse is conservative by design: the system will only share cached KV state when it can guarantee that doing so is semantically correct and secure.
+                </p>
+            </div>
+            
+            <div style={{ marginTop: '2rem' }}>
+                <h4>Hashing</h4>
+                <p>
+                    Each parent block in the radix tree stores a map called <code>mNextBlocks</code> that indexes its children. When a new request walks the tree looking for matches, this map provides O(1) lookup to check if a child with a specific <code>BlockKey</code> already exists.
+                </p>
+                <p>
+                    The <code>BlockKeyHasher</code> functor computes the hash used by this map. Critically, it doesn't just hash the token IDs — it incorporates <em>all</em> the fields from <code>BlockKey</code>: <code>loraTaskId</code>, <code>cacheSaltID</code>, <code>extraKeys</code>, and the full token sequence. This means that two blocks with the same tokens but different LoRA adapters, different tenants, or different multimodal content will hash to different buckets and be treated as completely independent branches in the tree.
+                </p>
+                <p>
+                    This design ensures that the hash-based lookup in <code>mNextBlocks</code> respects the same isolation boundaries enforced by <code>numMatchingTokens</code> — the tree structure itself encodes the fact that different execution contexts produce incompatible cached states.
+                </p>
+            </div>
+            
             <h3>Cache Salting</h3>
             <p>
                 KV cache salting provides a security mechanism to control which requests can reuse cached KV states. When a <code>cache_salt</code> parameter is provided with a request, the KV cache system will only allow reuse of cached blocks given the same cache salt value. This prevents potential security issues such as prompt theft attacks, where malicious users might try to infer information from cached states of other users' requests.             
             </p>
+            
+            <h3>Eviction Policy</h3>
+            <p>
+                GPU memory is finite. When the cache manager needs a free block for a new request but none are available, it must <em>evict</em> an existing cached block — unlinking it from the radix tree and reclaiming its GPU slot. The eviction policy determines which block gets evicted.
+            </p>
+            <p>
+                TensorRT-LLM uses a <strong>priority-stratified LRU</strong> policy by default, implemented in <code>LRUEvictionPolicy</code> (defined in <code>evictionPolicy.h</code>). This policy balances two competing goals: keeping frequently-reused blocks in cache (LRU) while respecting user-specified retention priorities (stratification).
+            </p>
+            
+            <div style={{ marginTop: '1.5rem' }}>
+                <h4>Data Structures</h4>
+                <p>
+                    Free blocks are organized into a two-dimensional queue structure:
+                </p>
+                <pre><code className="language-cpp">{`// Two-level stratified queues: [cache_level][priority_level] → list of blocks
+std::vector<std::vector<FreeBlocksQueue>> mFreeQueues;
+// Level 0 = GPU (primary), Level 1 = CPU (secondary)
+// Priority levels: 0 (lowest) to 100 (highest)
+
+std::vector<SizeType32> mNumFreeBlocksPerLevel;`}</code></pre>
+                <p>
+                    The first dimension is <strong>cache level</strong>: level 0 holds blocks in primary (GPU) memory, level 1 holds blocks that have been offloaded to secondary (CPU pinned) memory. The second dimension is <strong>priority</strong>, ranging from 0 (lowest) to 100 (highest). Each cell <code>[cache_level][priority]</code> contains a queue of blocks, ordered by least-recently-used first.
+                </p>
+            </div>
+            
+            <div style={{ marginTop: '1.5rem' }}>
+                <h4>Eviction Strategy</h4>
+                <p>
+                    When <code>getFreeBlock(cacheLevel)</code> is called, it scans the queues for that cache level starting at priority 0. It pops the first block from the lowest non-empty priority queue. This means <strong>all</strong> blocks at priority 0 will be evicted before <strong>any</strong> block at priority 1 is touched, regardless of recency.
+                </p>
+                <p>
+                    Within a priority level, eviction follows standard LRU: blocks are stored in a queue, and the one at the front (least recently used) is evicted first. When a block is released back to the free pool via <code>releaseBlock(block)</code>, it is appended to the <em>tail</em> of its priority queue, marking it as most recently used.
+                </p>
+                <p>
+                    The key operations are:
+                </p>
+                <ul>
+                    <li>
+                        <code>getFreeBlock(cacheLevel)</code> — Pops a block from the front of the lowest non-empty priority queue at the specified cache level. If the eviction policy finds a block in the tree but it's currently shared (refcount &gt; 0), it skips to the next candidate. Only unreferenced leaf blocks can be evicted.
+                    </li>
+                    <li>
+                        <code>releaseBlock(block)</code> — Returns a block to the tail of its priority queue, effectively marking it as "most recently used" within that priority tier. This happens when a request finishes and releases its blocks back to the cache.
+                    </li>
+                    <li>
+                        <code>claimBlock(block, priority, durationMs)</code> — Removes a block from the free queue when it is allocated to a new request. The block's priority is set based on the request's <code>KvCacheRetentionConfig</code>. If <code>durationMs</code> is specified, the block is added to a time-based priority expiration heap.
+                    </li>
+                    <li>
+                        <code>refresh()</code> — Periodically scans the <code>mExpiringBlocks</code> heap to check if any block's <code>durationMs</code> timer has expired. When a block's retention period elapses, it is demoted back to the default priority (35), making it eligible for eviction sooner.
+                    </li>
+                </ul>
+                <p>
+                    This design allows high-priority cached content (for example, system prompts or frequently-accessed documents) to remain resident even under memory pressure, while still providing an LRU fallback within each tier to evict less-recently-used items first.
+                </p>
+            </div>
+            
             <hr />
             <h3 className="headings">References</h3>
             <ol>
