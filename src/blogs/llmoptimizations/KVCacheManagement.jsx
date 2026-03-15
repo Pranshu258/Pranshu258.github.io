@@ -158,25 +158,26 @@ class KVCacheBlock {
                 <p>
                     When two requests share the first K blocks but diverge at block K+1, the tree forks at depth K. The parent block at depth K has two entries in its <code>mNextBlocks</code> map, one per diverging child. Both children store their KV data independently in different GPU pool slots, but the K shared parent blocks are reference-counted and hold a single copy of their GPU data.
                 </p>
-                <p>
-                    A block is either:
-                </p>
-                <ol>
-                    <li><strong>In the tree</strong>: <code>mPrevBlock != nullptr</code>. Its KV data is reusable by future requests.</li>
-                    <li><strong>In the free queue</strong>: <code>mPrevBlock == nullptr</code>. Its GPU slot is available for a new request.</li>
-                </ol>
-                <p>
-                    The transition between these states is:
-                </p>
-                <ul>
-                    <li><strong>Into tree</strong> (<code>storeBlocks</code>): <code>block-&gt;setPrevBlock(parent); parent-&gt;addNextBlock(blockKey, block);</code></li>
-                    <li><strong>Out of tree</strong> (<code>freeLeafBlock</code>): <code>parent-&gt;removeNextBlock(mBlockKey); mPrevBlock = nullptr;</code></li>
-                </ul>
-                <p>
-                    Only <strong>leaf</strong> blocks (no children) can be placed into the free queue. This is because evicting a non-leaf would orphan its subtree.
-                </p>
+                
+                <div className="llm-callout">
+                    <h4>Block States</h4>
+                    <p>A block is either:</p>
+                    <ol>
+                        <li><strong>In the tree</strong>: <code>mPrevBlock != nullptr</code>. Its KV data is reusable by future requests.</li>
+                        <li><strong>In the free queue</strong>: <code>mPrevBlock == nullptr</code>. Its GPU slot is available for a new request.</li>
+                    </ol>
+                    
+                    <p style={{ marginTop: '1rem' }}>The transition between these states is:</p>
+                    <ul>
+                        <li><strong>Into tree</strong> (<code>storeBlocks</code>): <code>block-&gt;setPrevBlock(parent); parent-&gt;addNextBlock(blockKey, block);</code></li>
+                        <li><strong>Out of tree</strong> (<code>freeLeafBlock</code>): <code>parent-&gt;removeNextBlock(mBlockKey); mPrevBlock = nullptr;</code></li>
+                    </ul>
+                    
+                    <p style={{ marginTop: '1rem' }}>
+                        Only <strong>leaf</strong> blocks (no children) can be placed into the free queue. This is because evicting a non-leaf would orphan its subtree.
+                    </p>
+                </div>
             </div>
-            <h3>Cross-Request Prefix Caching</h3>
             <div>
                 <h4>Lookup: <code>loadOrAllocateBlocks</code></h4>
                 <p>
@@ -190,47 +191,53 @@ for (int bi = 0; bi < numSharedContextBlocks; ++bi) {
             : std::make_tuple(false, 0, nullptr);
     ...
 }`}</code></pre>
-                <p>
-                    <strong>On full hit:</strong>
-                </p>
-                <ol>
-                    <li><code>mEvictionPolicy-&gt;claimBlock(matchingBlock, priority, duration)</code> — removes from eviction queue, increments refcount.</li>
-                    <li><code>onboardBlock(sequence, matchingBlock, mode, directory)</code> — if in secondary (CPU) pool, schedules async GPU copy.</li>
-                    <li><code>addBlockToAllBeams(matchingBlock, sequence)</code> — adds the <strong>same</strong> block pointer to all beam slots (shared).</li>
-                    <li><code>searchRoot = matchingBlock</code> — advance cursor for next block lookup.</li>
-                    <li><code>++mReusedBlocks</code>.</li>
-                </ol>
-                <p>
-                    <strong>On partial hit:</strong>
-                </p>
-                <ul>
-                    <li>If the matching block has active refs or is not a leaf (someone else is using it):
-                        <ul>
-                            <li><code>getFreeBlock(...)</code> allocates a new block.</li>
-                            <li><code>mTransferManager-&gt;onboard(matchingBlock, newBlock, ..., numMatched)</code> copies the <code>numMatched</code> valid token slots into the new block.</li>
-                        </ul>
-                    </li>
-                    <li>If the block is an unreferenced leaf (no one is using it):
-                        <ul>
-                            <li><code>freeLeafBlock(matchingBlock)</code> detaches it from its parent.</li>
-                            <li><code>mEvictionPolicy-&gt;claimBlock(matchingBlock, ...)</code> repurposes it directly.</li>
-                        </ul>
-                    </li>
-                    <li>After either path: <code>searchRoot = nullptr</code> — no further tree matching for subsequent blocks.</li>
-                </ul>
-                <p>
-                    <strong>On miss:</strong>
-                </p>
-                <ol>
-                    <li><code>getFreeBlock(...)</code> pops from eviction queue (may trigger eviction of a cached leaf).</li>
-                    <li><code>freeBlock-&gt;setBlockKey(*blockItr, isFull)</code> — stamps token identity.</li>
-                    <li><code>freeBlock-&gt;setHash()</code> — computes chained hash.</li>
-                    <li><code>searchRoot = nullptr</code>.</li>
-                    <li><code>++mMissedBlocks</code>.</li>
-                </ol>
-                <p>
+
+                <div style={{ marginTop: '1.5rem' }}>
+                    <h5 style={{ marginBottom: '0.75rem' }}>On full hit:</h5>
+                    <ol>
+                        <li><code>mEvictionPolicy-&gt;claimBlock(matchingBlock, priority, duration)</code> — removes from eviction queue, increments refcount.</li>
+                        <li><code>onboardBlock(sequence, matchingBlock, mode, directory)</code> — if in secondary (CPU) pool, schedules async GPU copy.</li>
+                        <li><code>addBlockToAllBeams(matchingBlock, sequence)</code> — adds the <strong>same</strong> block pointer to all beam slots (shared).</li>
+                        <li><code>searchRoot = matchingBlock</code> — advance cursor for next block lookup.</li>
+                        <li><code>++mReusedBlocks</code>.</li>
+                    </ol>
+                </div>
+
+                <div style={{ marginTop: '1.5rem' }}>
+                    <h5 style={{ marginBottom: '0.75rem' }}>On partial hit:</h5>
+                    <ul>
+                        <li>If the matching block has active refs or is not a leaf (someone else is using it):
+                            <ul>
+                                <li><code>getFreeBlock(...)</code> allocates a new block.</li>
+                                <li><code>mTransferManager-&gt;onboard(matchingBlock, newBlock, ..., numMatched)</code> copies the <code>numMatched</code> valid token slots into the new block.</li>
+                            </ul>
+                        </li>
+                        <li>If the block is an unreferenced leaf (no one is using it):
+                            <ul>
+                                <li><code>freeLeafBlock(matchingBlock)</code> detaches it from its parent.</li>
+                                <li><code>mEvictionPolicy-&gt;claimBlock(matchingBlock, ...)</code> repurposes it directly.</li>
+                            </ul>
+                        </li>
+                        <li>After either path: <code>searchRoot = nullptr</code> — no further tree matching for subsequent blocks.</li>
+                    </ul>
+                </div>
+
+                <div style={{ marginTop: '1.5rem' }}>
+                    <h5 style={{ marginBottom: '0.75rem' }}>On miss:</h5>
+                    <ol>
+                        <li><code>getFreeBlock(...)</code> pops from eviction queue (may trigger eviction of a cached leaf).</li>
+                        <li><code>freeBlock-&gt;setBlockKey(*blockItr, isFull)</code> — stamps token identity.</li>
+                        <li><code>freeBlock-&gt;setHash()</code> — computes chained hash.</li>
+                        <li><code>searchRoot = nullptr</code>.</li>
+                        <li><code>++mMissedBlocks</code>.</li>
+                    </ol>
+                </div>
+
+                <p style={{ marginTop: '1.5rem' }}>
                     At the end: <code>sequence.setCurrentPrepopulatedPromptLen(numMatchedTokens)</code> records how many tokens were actually served from cache — this flows back to the attention kernel to skip recomputation.
                 </p>
+            </div>
+            <div style={{ marginTop: '2rem' }}>
                 <h4>Insertion: <code>storeBlocks</code></h4>
                 <p>
                     Called from <code>storeBlocksForReuse()</code> (sequence completion) and <code>storeNewBlock()</code> (incremental during generation). It walks the same radix tree, this time inserting rather than just looking up:
@@ -257,9 +264,13 @@ for (size_t blockCnt = 0; blockCnt < numBlocks; ++blockCnt) {
         ++numBlocksStoredForReuse;
     }
 }`}</code></pre>
-                <p>
+                
+                <p style={{ marginTop: '1rem' }}>
                     Once in the tree, a block's GPU memory is shared across all future requests that match its prefix. The block's <code>mRefCount</code> stays at 0 while no request is actively using it — it's reusable but evictable.
                 </p>
+            </div>
+            
+            <div style={{ marginTop: '2rem' }}>
                 <h4>Partial Reuse</h4>
                 <p>
                     Partial reuse allows a cache hit when only the first <code>M &lt; tokensPerBlock</code> tokens of a block match. It is controlled by two flags on <code>WindowBlockManager</code>:
@@ -294,6 +305,7 @@ if (enablePartialReuse) {
     if (bestNumMatched > 0) return {true, bestNumMatched, bestBlock};
 }
 return {false, 0, nullptr};`}</code></pre>
+            <br></br>
             </div>
             <h3>Cache Salting</h3>
             <p>
