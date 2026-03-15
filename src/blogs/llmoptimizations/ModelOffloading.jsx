@@ -220,6 +220,18 @@ model = dispatch_model(model, device_map=device_map)`}</code></pre>
                 - if more space is needed, it will store the remaining weights on the CPU
                 - if there is not enough RAM, it stores the remaining weights on the hard drive as memory-mapped tensors
             </p>
+            
+            <h2>Conclusion</h2>
+            <p>
+                Model offloading makes it possible to run models that exceed available GPU memory by streaming weights from slower storage tiers. The fundamental tradeoff is straightforward: you exchange memory capacity for added transfer latency. Whether that exchange is worthwhile depends on your hardware constraints, throughput requirements, and whether the model fits at all without offloading.
+            </p>
+            <p>
+                TensorRT-LLM and HuggingFace Accelerate represent two different philosophies. TensorRT-LLM&rsquo;s approach is build-time annotation plus runtime budget control, delivering high throughput when PCIe bandwidth can keep up, but the streaming logic is closed-source and tightly coupled to TensorRT&rsquo;s execution engine. Accelerate, by contrast, is pure Python and works with any PyTorch module &mdash; no recompilation, no special build flags, and full transparency into the hook-attachment and lazy-loading machinery. The flexibility costs raw speed, but gains portability and introspection.
+            </p>
+            <p>
+                For production inference on NVIDIA hardware where you need maximum throughput and are already using TensorRT, weight streaming is a tunable knob that lets you trade VRAM for latency in a controlled way. For research, prototyping, or heterogeneous hardware setups where you need to experiment with layer placement or run models that don&rsquo;t fit in RAM at all, Accelerate&rsquo;s device maps and disk offloading provide a zero-recompilation path to get things running. Both approaches work best when the model is bandwidth-bound rather than compute-bound &mdash; if your bottleneck is already the matrix multiplies, offloading will only make things slower.
+            </p>
+            
             <hr />
             <h3 className="headings">References</h3>
             <ol>
