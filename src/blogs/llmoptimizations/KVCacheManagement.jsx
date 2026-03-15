@@ -332,8 +332,7 @@ return {false, 0, nullptr};`}</code></pre>
                     The consequence is that cache reuse is conservative by design: the system will only share cached KV state when it can guarantee that doing so is semantically correct and secure.
                 </p>
             </div>
-            
-            <div style={{ marginTop: '2rem' }}>
+            <div>
                 <h4>Hashing</h4>
                 <p>
                     Each parent block in the radix tree stores a map called <code>mNextBlocks</code> that indexes its children. When a new request walks the tree looking for matches, this map provides O(1) lookup to check if a child with a specific <code>BlockKey</code> already exists.
@@ -345,12 +344,10 @@ return {false, 0, nullptr};`}</code></pre>
                     This design ensures that the hash-based lookup in <code>mNextBlocks</code> respects the same isolation boundaries enforced by <code>numMatchingTokens</code> — the tree structure itself encodes the fact that different execution contexts produce incompatible cached states.
                 </p>
             </div>
-            
             <h3>Cache Salting</h3>
             <p>
                 KV cache salting provides a security mechanism to control which requests can reuse cached KV states. When a <code>cache_salt</code> parameter is provided with a request, the KV cache system will only allow reuse of cached blocks given the same cache salt value. This prevents potential security issues such as prompt theft attacks, where malicious users might try to infer information from cached states of other users' requests.             
             </p>
-            
             <h3>Eviction Policy</h3>
             <p>
                 GPU memory is finite. When the cache manager needs a free block for a new request but none are available, it must <em>evict</em> an existing cached block — unlinking it from the radix tree and reclaiming its GPU slot. The eviction policy determines which block gets evicted.
@@ -360,7 +357,7 @@ return {false, 0, nullptr};`}</code></pre>
             </p>
             
             <div style={{ marginTop: '1.5rem' }}>
-                <h4>Data Structures</h4>
+                <h5>Data Structures</h5>
                 <p>
                     Free blocks are organized into a two-dimensional queue structure:
                 </p>
