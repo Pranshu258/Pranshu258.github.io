@@ -110,31 +110,18 @@ export default function WeightStreaming() {
 // cache block. This class just holds metadata, no pointers
 // since it is reused across all layers.
 class KVCacheBlock {
-    // Linear ID of block independent of pool
-    IdType mBlockId;
-    // Index of block in memory pool backing this block
-    // Choice of pool is encoded into the type
-    kernels::KVCacheIndex mMemoryPoolBlockIndex;
-    // Number of references to the block
-    SizeType32 mRefCount;
-    // Key of this block in mNextBlocks map in block pointed to by mPrevBlock
-    BlockKey mBlockKey;
-    // Previous block in reuse tree, or nullptr if not reusing
-    BlockPtr mPrevBlock;
-    // Previous block in sequence, == nullptr for first block, == mPrevBlock if reusing and not first
-    BlockPtr mPrevBlockInSeq;
-    // Next block(s) in sequence(s)
-    NextBlockMap mNextBlocks;
-    // Iterator pointing to this block in mFreeBlocks.
-    std::optional<FreeBlocksQueue::iterator> mFreeBlockIterator;
-    // Flag indicating if block is full
-    bool mIsFull;
-    // Priority of the block
-    executor::RetentionPriority mPriority;
-    // Duration that the block's priority level applies for
-    std::optional<std::chrono::milliseconds> mDurationMs;
-    // Expiration time of the block
-    std::optional<std::chrono::steady_clock::time_point::duration> mExpirationTime;
+    IdType mBlockId;                              // Linear ID of block independent of pool
+    kernels::KVCacheIndex mMemoryPoolBlockIndex;  // Index in memory pool; encodes GPU vs CPU
+    SizeType32 mRefCount;                         // Number of references to the block
+    BlockKey mBlockKey;                           // Key in parent's mNextBlocks map
+    BlockPtr mPrevBlock;                          // Previous block in reuse tree, or nullptr
+    BlockPtr mPrevBlockInSeq;                     // Previous block in sequence
+    NextBlockMap mNextBlocks;                     // Next block(s) in sequence(s)
+    std::optional<FreeBlocksQueue::iterator> mFreeBlockIterator;  // Iterator in free queue
+    bool mIsFull;                                 // Whether block is full
+    executor::RetentionPriority mPriority;        // Priority of the block
+    std::optional<std::chrono::milliseconds> mDurationMs;         // Duration priority applies
+    std::optional<std::chrono::steady_clock::time_point::duration> mExpirationTime;  // Expiration
 };`}
                 </code></pre>
                 <br></br>
