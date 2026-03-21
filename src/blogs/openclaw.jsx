@@ -10,11 +10,12 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import '../styles/prism.css';
 import '../styles/blog.css';
+import logo from '../images/openclaw-dark.svg'
 
-export default class OpenCLawBlog extends React.Component {
+export default class OpenClawBlog extends React.Component {
     componentDidMount() {
         window.scrollTo(0, 0);
-        document.title = "OpenCLaw | blog by Pranshu Gupta";
+        document.title = "OpenClaw | blog by Pranshu Gupta";
         setTimeout(() => Prism.highlightAll(), 0);
     }
 
@@ -22,11 +23,11 @@ export default class OpenCLawBlog extends React.Component {
         return (
             <div className="blog-content">
                 <div className="row bhead">
-                    <GiCrabClaw className="bigger gt1" />
+                    <img src={logo} alt="OpenClaw Logo" className="gt1" style={{ height: '96px', width: 'auto' }} />
                 </div>
                 <h1 className="title">Diving into OpenClaw</h1>
                 <p>Pranshu Gupta, {this.props.date}</p>
-                <Sharer className="sharer" link={window.location.href} title={"Diving into OpenCClaw"}></Sharer>
+                <Sharer className="sharer" link={window.location.href} title={"Diving into OpenClaw"}></Sharer>
                 <p className="introduction">
                     Nature is often the best optimizer. Many natural systems converge to efficient equilibria,
                     and computer scientists have long tried to model those dynamics algorithmically. Ant Colony
