@@ -6,9 +6,9 @@ const toSlug = (name) => name.replace(/\s+/g, '-').toLowerCase();
 export const blogMeta = [
     {
         name: "Diving into OpenClaw",
-        description: "Large Language Models (LLMs) are a class of deep learning models that have gained significant attention in recent years due to their ability to generate human-like text. In this article, we explore runtime optimizations that are used to improve performance and reduce resource consumption in production.",
-        tags: ["Large Language Models", "Performance Optimization"],
-        date: "March 8, 2026",
+        description: "OpenClaw is a self-hosted gateway that connects your favorite chat apps — WhatsApp, Telegram, Discord, iMessage, and more — to AI coding agents like Pi. You run a single Gateway process on your own machine (or a server), and it becomes the bridge between your messaging apps and an always-available AI assistant. In this article, we will dive into the design and system architecture of OpenClaw.",
+        tags: ["Agentic AI", "AI Chat"],
+        date: "March 28, 2026",
     },
     {
         name: "Runtime optimizations for LLMs",

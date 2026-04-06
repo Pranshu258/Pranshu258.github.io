@@ -1,0 +1,95 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#f8f9fa','primaryTextColor':'#212529','primaryBorderColor':'#adb5bd','lineColor':'#6c757d','secondaryColor':'#e9ecef','tertiaryColor':'#dee2e6','background':'transparent'}}}%%
+graph TB
+    subgraph INPUT[" "]
+        direction TB
+        
+        subgraph CHANNELS["Messaging Channels"]
+            direction LR
+            WA["WhatsApp"]
+            TG["Telegram"]
+            DC["Discord"]
+            SL["Slack"]
+        end
+        
+        subgraph PLUGIN_CH["Plugin Channels"]
+            direction LR
+            MT["Matrix"]
+            MS["MS Teams"]
+        end
+        
+        subgraph CLIENTS["Control Clients"]
+            direction LR
+            CLI["CLI"]
+            WUI["Web UI"]
+            MAC["macOS"]
+        end
+    end
+
+    subgraph CORE["Gateway Core :18789"]
+        direction TB
+        WS["WebSocket Handler"]
+        AUTH["Authentication"]
+        CHAN["Channel Manager"]
+        ROUTE["Router"]
+    end
+
+    subgraph PROCESSING["Processing Layer"]
+        direction TB
+        PI["Pi Agent Runner"]
+        MODEL["Model Catalog"]
+        TOOLS["Tool Registry"]
+        PLUGIN["Plugin Runtime"]
+    end
+
+    subgraph PERSISTENCE["Storage"]
+        direction LR
+        CREDS["Credentials"]
+        SESS["Sessions"]
+    end
+
+    subgraph EXTERNAL["External Services"]
+        direction TB
+        
+        subgraph PROVIDERS["AI Providers"]
+            direction LR
+            OAI["OpenAI"]
+            ANT["Anthropic"]
+        end
+        
+        subgraph SERVICES["Services"]
+            direction LR
+            CANVAS["Canvas"]
+            SEARCH["Search"]
+        end
+    end
+
+    %% Clean vertical flow
+    INPUT --> WS
+    WS --> AUTH
+    WS --> CHAN
+    CHAN --> ROUTE
+    ROUTE --> PI
+    PI --> MODEL
+    MODEL --> PROVIDERS
+    PI --> TOOLS
+    TOOLS --> SERVICES
+    PI --> PLUGIN
+    AUTH --> CREDS
+    ROUTE --> SESS
+
+    classDef gateway fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1,rx:8,ry:8
+    classDef channel fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#e65100,rx:8,ry:8
+    classDef client fill:#e8f5e9,stroke:#43a047,stroke-width:2px,color:#2e7d32,rx:8,ry:8
+    classDef provider fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#6a1b9a,rx:8,ry:8
+    classDef storage fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#880e4f,rx:8,ry:8
+    classDef process fill:#fff8e1,stroke:#fbc02d,stroke-width:2px,color:#f57f17,rx:8,ry:8
+    classDef service fill:#e0f2f1,stroke:#00897b,stroke-width:2px,color:#004d40,rx:8,ry:8
+
+    class WS,CHAN,ROUTE,AUTH gateway
+    class WA,TG,DC,SL,MT,MS channel
+    class CLI,WUI,MAC client
+    class PI,MODEL,TOOLS,PLUGIN process
+    class OAI,ANT provider
+    class SESS,CREDS storage
+    class CANVAS,SEARCH service
+    class SESS,CREDS storage
