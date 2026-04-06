@@ -11,6 +11,12 @@ export const sections = [
         description: "Cache the key and value tensors from previous tokens so the model avoids redundant recomputation during autoregressive decoding.",
         date: "March 15, 2026",
     },
+    {
+        slug: "model-quantization",
+        name: "Model Quantization",
+        description: "Quantization reduces the numerical precision of model weights and/or activations to enable efficient deployment of large language models by trading off precision with memory usage.",
+        date: "April 5, 2026",
+    },
     // {
     //     slug: "multi-block-mode",
     //     name: "Multi Block Mode",
@@ -33,12 +39,6 @@ export const sections = [
     //     slug: "paged-kv-cache",
     //     name: "Paged KV Cache",
     //     description: "Manage the key-value cache as fixed-size pages to eliminate memory fragmentation and enable efficient sharing.",
-    //     date: "",
-    // },
-    // {
-    //     slug: "quantized-kv-cache",
-    //     name: "Quantized KV Cache",
-    //     description: "Store KV cache values at reduced precision to cut memory bandwidth and fit larger contexts in the same budget.",
     //     date: "",
     // },
     // {
