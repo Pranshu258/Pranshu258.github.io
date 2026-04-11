@@ -98,7 +98,10 @@ export default function ModelQuantization() {
                     </tr>
                 </tbody>
             </table>
-            <h2><SiGooglegemini style={{ verticalAlign: 'middle', marginRight: '0.4em', marginBottom: '0.1em' }} />Google TurboQuant</h2>
+            <p>
+                In this article we discuss in depth about one of the techniques of model quantization - Activation aware Weight Quanization.
+            </p>
+            <h2>Activation aware Weight Quantization</h2>
         </div>
     );
 }
