@@ -102,6 +102,12 @@ export default function ModelQuantization() {
                 In this article we discuss in depth about one of the techniques of model quantization - Activation aware Weight Quanization.
             </p>
             <h2>Activation aware Weight Quantization</h2>
+            <hr/>
+            <h2>References</h2>
+            <ol>
+                <li><a href='https://arxiv.org/pdf/2306.00978'>AWQ: Activation-aware Weight Quantization for On-Device LLM Compression and Acceleration</a></li>
+                <li><a href='https://github.com/vllm-project/vllm'>vLLM - A high-throughput and memory-efficient inference and serving engine for LLMs</a></li>
+            </ol>
         </div>
     );
 }
