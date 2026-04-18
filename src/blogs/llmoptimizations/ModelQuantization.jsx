@@ -102,6 +102,7 @@ export default function ModelQuantization() {
                 In this article we discuss in depth about one of the techniques of model quantization - Activation aware Weight Quanization.
             </p>
             <h2>Activation aware Weight Quantization</h2>
+            <p className="llm-callout">work in progress ...</p>
             <hr/>
             <h2>References</h2>
             <ol>
