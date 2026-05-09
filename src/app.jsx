@@ -94,7 +94,7 @@ export default class App extends React.Component {
                         <Route path="/blog/*" element={<Blog/>} />
                         <Route path="/artworks" element={<Artworks/>} />
                         <Route path="/cookies-policy" element={<CookiePolicy/>} />
-                        <Route path="/becoming-an-ai-engineer" element={<StudyTracker/>} />
+                        <Route path="/apps/becoming-an-ai-engineer" element={<StudyTracker/>} />
                     </Routes>
                     <Footer />
                 </Router>

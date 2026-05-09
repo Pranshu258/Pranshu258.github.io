@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaBrain, FaGear } from 'react-icons/fa6';
+import { SiOpenai, SiClaude, SiGooglegemini, SiGithubcopilot } from 'react-icons/si';
+import { FaGear } from 'react-icons/fa6';
 import AppLayout from '../AppLayout';
 import { PHASES, RESOURCES } from './data';
 import './StudyTracker.css';
@@ -198,7 +199,14 @@ export default function StudyTracker() {
 
     return (
         <AppLayout
-            icon={<FaBrain className="bigger gt1" />}
+            icon={
+                <div className="st-brand-icons">
+                    <SiOpenai className="st-icon-openai" />
+                    <SiClaude className="st-icon-claude" />
+                    <SiGooglegemini className="st-icon-gemini" />
+                    <SiGithubcopilot className="st-icon-copilot" />
+                </div>
+            }
             title="Becoming an AI Engineer"
             meta={`Pranshu Gupta${startDate ? ' · Started ' + new Date(startDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : ''}`}
             description="A 16-week structured plan to go from strong ML foundations to production-grade AI engineering — covering LLM internals, agentic systems, inference optimization, data infrastructure, and system design for a Senior AI Engineer role."

@@ -1,3 +1,15 @@
+/* ── Brand icons in heading ── */
+.st-brand-icons {
+  display: flex; align-items: center; gap: 20px;
+  margin-bottom: 8px;
+}
+.st-brand-icons svg { width: 3.5rem; height: 3.5rem; }
+.st-icon-openai  { color: #ffffff; }
+.st-icon-claude  { color: #D97757; width: 3.7rem !important; height: 3.7rem !important; }
+.st-icon-gemini  { color: #4285F4; width: 3.6rem !important; height: 3.6rem !important; }
+.st-icon-copilot { color: #8957E5; width: 4.1rem !important; height: 4.1rem !important; }
+html[data-theme="light"] .st-icon-openai { color: #000000; }
+
 /* ── Study Tracker — all component styles ──────────────────────────────
    Page structure handled by AppLayout / blog.css.
    Uses CSS variables from body.css.
