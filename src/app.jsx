@@ -9,6 +9,7 @@ import Blog from './blog';
 import Artworks from './artworks';
 import CookieBanner from './cookiebanner';
 import CookiePolicy from './cookiepolicy';
+import StudyTracker from './apps/study-tracker/StudyTracker';
 
 import './styles/app.css';
 
@@ -93,6 +94,7 @@ export default class App extends React.Component {
                         <Route path="/blog/*" element={<Blog/>} />
                         <Route path="/artworks" element={<Artworks/>} />
                         <Route path="/cookies-policy" element={<CookiePolicy/>} />
+                        <Route path="/apps/becoming-an-ai-engineer" element={<StudyTracker/>} />
                     </Routes>
                     <Footer />
                 </Router>

@@ -1,0 +1,36 @@
+/* Sticky right panel — sits level with the content below the big heading */
+.app-right-panel {
+    position: sticky;
+    top: 72px; /* navbar height + small gap */
+    padding-top: 80px; /* visually align with content below the bhead */
+}
+
+/* Right panel section label */
+.app-right-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--surface-text-color);
+    margin-bottom: 10px;
+    margin-top: 28px;
+}
+.app-right-label:first-child { margin-top: 0; }
+
+/* Right panel muted meta text */
+.app-right-meta {
+    font-size: 0.68rem;
+    color: var(--st-text-faint, #888);
+    margin-top: 24px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.5;
+}
+
+@media (max-width: 991px) {
+    .app-right-panel {
+        position: static;
+        padding-top: 0;
+        margin-top: 32px;
+    }
+}
