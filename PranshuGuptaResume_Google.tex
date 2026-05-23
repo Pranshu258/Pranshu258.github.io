@@ -75,12 +75,11 @@
     {Microsoft AI}{Aug 2025 -- Present}
     {Member of Technical Staff}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Led end-to-end rollout of \textbf{GPT-5.1 instant and reasoning models} on Microsoft Copilot --- including prompt templates, constrained-sampling, CoT handling, and safety integrations across model serving, response quality, core AI, and ARM teams --- and eliminated non-essential classifiers and summarizers on the instant path, reducing GPU footprint by \textbf{1,320 H100s} and achieving \textbf{30\% improvement in personality evals}.}
+      \item\small{Led end-to-end rollout of \textbf{GPT-5.1 instant and reasoning models} on Microsoft Copilot --- including prompt templates, constrained-sampling, CoT handling, and safety integrations --- and eliminated non-essential classifiers and summarizers on the instant path, reducing GPU footprint by \textbf{1,320 H100s} and achieving \textbf{30\% improvement in personality evals}.}
       \item\small{Discovered and fixed a bug in the OpenAI Chat Completions API causing function-definition parameter descriptions to be duplicated, saving \textbf{6K tokens per inference call} and reducing \textbf{TTFT by 30ms}.}
       \item\small{Designed \textbf{multi-region routing architecture} for the M365 LLM inference API: same-region-preferred routing with ordered fallback regions to balance GPU session affinity against compute availability spillover across global deployments.}
-      \item\small{Designed and shipped \textbf{Adaptive Thinking}, a dynamic system that adjusts the thinking effort per message based on intent/capability classification to control reasoning token usage.}
-      \item\small{Defined and instrumented LLM API \textbf{traffic classification} dimensions (product, client app, inference intent, license tier) across MAI and M365 Copilot; built Grafana dashboards to surface per-dimension traffic insights.}
       \item\small{Architected and shipped an autonomous \textbf{code simplification agent} that scans recent commits, scopes safe refactors via durable git baselines, and manages the full PR lifecycle through automated validation.}
+      \item\small{Defined and instrumented LLM API \textbf{traffic classification} dimensions (product, client app, inference intent, license tier) across MAI and M365 Copilot; built Grafana dashboards to surface per-dimension traffic insights.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -95,8 +94,8 @@
     {Microsoft Azure Core}{Mar 2024 -- Jan 2025}
     {Senior Software Engineer}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Designed and shipped a token-based job throttling system with multi-bucket quota enforcement and retry-storm protection, preventing partition-level noisy-neighbor throttling in background-job infrastructure of Azure Control Plane.}
       \item\small{Single-handedly designed and shipped async operation URI signing, adopted by \textbf{242 Azure service teams} and enforced for \textbf{220+ resource providers}.}
+      \item\small{Designed and shipped a token-based job throttling system with multi-bucket quota enforcement and retry-storm protection, preventing partition-level noisy-neighbor throttling in background-job infrastructure of Azure Control Plane.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -104,8 +103,8 @@
     {Software Engineer II}{Redmond, WA}
     \resumeItemListStart
       \item\small{Designed and shipped async operation callbacks replacing polling, reducing ARM-to-resource-provider traffic by up to \textbf{94\%} (130M fewer requests/day) and improving p95 latency by \textbf{12 seconds} for Azure Container Instances.}
-      \item\small{Extended and maintained \textbf{Azure DevOps CI/CD pipelines} for ARM control-plane services with staged multi-region rollouts, 24-hour regional bake times, functional test gates, and rollback-via-redeploy across global Azure regions.}
       \item\small{Led \textbf{Azure region teardown} end-to-end: built workflows to halt new resource creation, resolve subscription/resource-group hierarchies, and migrate live resources to healthy regions with zero data loss.}
+      \item\small{Extended and maintained \textbf{Azure DevOps CI/CD pipelines} for ARM control-plane services with staged multi-region rollouts, 24-hour regional bake times, functional test gates, and rollback-via-redeploy across global Azure regions.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -128,13 +127,10 @@
 %-----------PROJECTS-----------------
 \section{Selected Projects}
 \resumeCompactSectionListStart
-  \item\small{\textbf{AI Lab Assistant} (TurnTheBus nonprofit, 2025--Present): Architected and built end-to-end on \textbf{AWS} (Bedrock/Claude Haiku, S3, Textract, ECR); uses \textbf{RAG} over physics lab manuals to generate Socratic hints that guide high school students through virtual experiments based on live experiment state.}
-\resumeSubHeadingListEnd
-
-%-----------PUBLICATIONS-----------------
-\section{Technical Writing}
-\resumeCompactSectionListStart
-  \item\small{\textit{Runtime Optimizations for LLMs} (2026). Production notes on model offloading, KV cache management, and quantization for latency/cost-efficient LLM serving. \href{https://pranshug.com/blog/runtime-optimizations-for-llms}{pranshug.com/blog/runtime-optimizations-for-llms}}
+  \item\small{\textbf{AI Lab Assistant} (TurnTheBus nonprofit, 2025--Present): Architected and built end-to-end on \textbf{AWS} (Bedrock/Claude Haiku, S3, Textract, ECR); uses \textbf{RAG} over physics lab manuals to generate Socratic hints that guide high school students through virtual experiments.}
+  \item\small{\textbf{Image Completion} (46 GitHub stars): Statistical patch-based image inpainting using patch offset statistics to reconstruct missing image regions. \href{https://github.com/Pranshu258/Image_Completion}{github.com/Pranshu258/Image\_Completion}}
+  \item\small{\textbf{Crowd Behavior Analysis} (40 GitHub stars): Computer vision system for crowd flow analysis and anomaly detection using optical flow and clustering. \href{https://github.com/Pranshu258/Crowd_Behavior_Analysis}{github.com/Pranshu258/Crowd\_Behavior\_Analysis}}
+  \item\small{\textbf{Deep Image Captioning} (26 GitHub stars): RL-based image captioning using embedding reward to optimize caption quality beyond MLE training. \href{https://github.com/Pranshu258/Deep_Image_Captioning}{github.com/Pranshu258/Deep\_Image\_Captioning}}
 \resumeSubHeadingListEnd
 
 %-----------EDUCATION-----------------
