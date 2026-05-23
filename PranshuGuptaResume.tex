@@ -1,0 +1,152 @@
+%-------------------------
+% Resume in Latex (adapted from template.tex)
+%------------------------
+
+\documentclass[letterpaper,10pt]{extarticle}
+
+\usepackage{latexsym}
+\usepackage[margin=0.62in]{geometry}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[pdftex]{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\normalsize
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Custom commands
+\newcommand{\resumeItem}[2]{
+  \item\small{\textbf{#1}: #2 \vspace{-2pt}}
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textbf{#1} \textit{\small / #3 / #4} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\newcommand{\resumeSubheadingCompact}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textbf{#1} \textit{\small / #3 / #4} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-9pt}
+}
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}\vspace{-4pt}}
+
+\renewcommand{\labelitemii}{$\circ$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*]}
+\newcommand{\resumeCompactSectionListStart}{\begin{itemize}[leftmargin=*, itemsep=0pt, topsep=2pt, parsep=0pt, partopsep=0pt]}
+\newcommand{\resumeEducationListStart}{\begin{itemize}[leftmargin=*, itemsep=-1pt, topsep=1pt, parsep=0pt, partopsep=0pt]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=*, itemsep=0pt, topsep=2pt, parsep=0pt, partopsep=0pt]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-4pt}}
+
+\begin{document}
+
+%----------HEADING-----------------
+\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+  \textbf{\Large Pranshu Gupta} & Email: \href{mailto:pranshug258@outlook.com}{pranshug258@outlook.com} \\
+  \href{https://pranshug.com}{https://pranshug.com} $\vert$ \href{https://linkedin.com/in/pranshug258/}{linkedin.com/in/pranshug258} & Mobile: +1 (425) 679-2402 \\
+\end{tabular*}
+
+%-----------EXPERIENCE-----------------
+\section{Professional Experience}
+\resumeSubHeadingListStart
+
+  \resumeSubheading
+    {Microsoft AI}{Aug 2025 -- Present}
+    {Member of Technical Staff}{Redmond, WA}
+    \resumeItemListStart
+      \item\small{Reduced production GPU footprint by \textbf{1,320 H100 GPUs} by analyzing the inference pipeline and eliminating non-essential classifiers and summarizers on the GPT-5.1 instant path.}
+      \item\small{Led end-to-end rollout of \textbf{GPT-5.1 instant and reasoning models} to production by designing prompt templates, constrained-sampling, chain of thought handling, and safety integrations across six partner teams; owned launch-readiness evaluations with the Response Quality squad, including \textbf{30\% improvement in personality evals}.}
+      \item\small{Designed and shipped \textbf{Adaptive Thinking}, a dynamic system that adjusts the thinking effort per message based on intent/capability classification to control reasoning token usage.}
+      \item\small{Architected a request-scoped \textbf{feature flag system} for the inference API, adopted by MAI and M365 as the standard mechanism for A/B experiments and incremental rollouts.}
+      \item\small{Improved session-management reliability by fixing affinity-drain ordering, eliminating deploy-time connection failures, and reducing \textbf{Redis write volume by 9\%} via session-affinity deduplication.}
+      \item\small{Built \textbf{Grafana dashboards} for LLM API traffic classification across MAI and M365 Copilot, instrumenting dimensions including product, client app, agent, inference intent, license tier, and traffic type; implemented production failure-rate monitor with alerting for Bing Search API dependency.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Microsoft Azure AI}{Jan 2025 -- Aug 2025}
+    {Senior Software Engineer}{Redmond, WA}
+    \resumeItemListStart
+      \item\small{Designed a distributed \textbf{token-based rate limiter} using Tiktoken for precise token counting, replacing a length-based estimator with \textbf{219\% average error}; implemented pub-sub quota state synchronization across instances.}
+      \item\small{Contributed to an intelligent \textbf{model router} for per-request model selection based on cost/complexity signals, reducing per-inference cost by \textbf{55\%}.}
+      \item\small{Designed \textbf{multi-region routing architecture} for the M365 LLM inference API: same-region-preferred routing with ordered fallback regions to balance GPU session affinity against compute availability spillover across global deployments.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Microsoft Azure Core}{Mar 2024 -- Dec 2024}
+    {Senior Software Engineer}{Redmond, WA}
+    \resumeItemListStart
+      \item\small{Designed and shipped a token-based job throttling system with multi-bucket quota enforcement and retry-storm protection, preventing partition-level noisy-neighbor throttling in background-job infrastructure of Azure Control Plane.}
+      \item\small{Single-handedly designed and shipped async operation URI signing, adopted by \textbf{242 Azure service teams} and enforced for \textbf{220+ resource providers}.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Microsoft Azure Core}{Jun 2020 -- Mar 2024}
+    {Software Engineer II}{Redmond, WA}
+    \resumeItemListStart
+      \item\small{Designed and shipped async operation callbacks replacing polling, reducing ARM-to-resource-provider traffic by up to \textbf{94\%} (130M fewer requests/day) and improving p95 latency by \textbf{12 seconds} for Azure Container Instances.}
+      \item\small{Extended and maintained \textbf{Azure DevOps CI/CD pipelines} for ARM control-plane services with staged multi-region rollouts, 24-hour regional bake times, functional test gates, and rollback-via-redeploy across global Azure regions.}
+      \item\small{Led \textbf{Azure region teardown} end-to-end: built workflows to halt new resource creation, resolve subscription/resource-group hierarchies, and migrate live resources to healthy regions with zero data loss.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Microsoft Core Services}{Jun 2017 -- Aug 2019}
+    {Software Engineer}{Hyderabad, India}
+    \resumeItemListStart
+      \item\small{Migrated customer data enrichment service to serverless design, reducing cost by \textbf{90\%} and improving throughput by \textbf{3x}.}
+    \resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+%-----------SKILLS-----------------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=*, itemsep=0pt, topsep=2pt, parsep=0pt, partopsep=0pt]
+  \item\small{\textbf{AI/ML \& Inference}: LLM inference/serving, prompt engineering, model evaluations, safety orchestration, RAG}
+  \item\small{\textbf{Languages \& Systems}: Python, C\#, C++, KQL, OpenAI API, Kubernetes, Redis, Cosmos DB, Service Bus, .NET}
+  \item\small{\textbf{Cloud \& Infrastructure}: Azure (ARM, AKS, Service Bus, Cosmos DB), AWS (Bedrock, S3, Textract, ECR), ARM Templates, Azure DevOps, Grafana}
+\end{itemize}
+
+%-----------PROJECTS-----------------
+\section{Selected Projects}
+\resumeCompactSectionListStart
+  \item\small{\textbf{AI Lab Assistant} (TurnTheBus nonprofit, 2025--Present): Architected and built end-to-end on \textbf{AWS} (Bedrock/Claude Haiku, S3, Textract, ECR); uses \textbf{RAG} over physics lab manuals to generate Socratic hints that guide high school students through virtual experiments based on live experiment state.}
+\resumeSubHeadingListEnd
+
+%-----------PUBLICATIONS-----------------
+\section{Technical Writing}
+\resumeCompactSectionListStart
+  \item\small{\textit{Runtime Optimizations for LLMs} (2026). Production notes on model offloading, KV cache management, and quantization for latency/cost-efficient LLM serving. \href{https://pranshug.com/blog/runtime-optimizations-for-llms}{pranshug.com/blog/runtime-optimizations-for-llms}}
+\resumeSubHeadingListEnd
+
+%-----------EDUCATION-----------------
+\section{Education}
+\resumeEducationListStart
+  \resumeSubheadingCompact
+    {Georgia Institute of Technology}{May 2020}
+    {M.S. Computer Science (Machine Learning)}{Atlanta, GA}
+  \resumeSubheadingCompact
+    {Indian Institute of Technology, Kanpur}{May 2017}
+    {B.Tech, C.S. and Eng.}{Kanpur, India}
+\resumeSubHeadingListEnd
+
+\end{document}
