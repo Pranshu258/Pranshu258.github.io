@@ -76,12 +76,12 @@
     {Member of Technical Staff}{Redmond, WA}
     \resumeItemListStart
       \item\small{\textbf{Technical area owner} for inference on Copilot, driving direction across model integration and inference reliability.}
-      \item\small{Engineered the inference pipeline for \textbf{GPT-5.1 instant and reasoning models} on Copilot, with meta-prompting for personality alignment, delivering a \textbf{30\% improvement in personality evals} for the reasoning path.}
+      \item\small{Engineered the inference pipeline for \textbf{GPT-5.1 instant and reasoning models} on Copilot at launch, with meta-prompting for personality alignment, delivering a \textbf{30\% improvement in personality evals} for the reasoning path.}
       \item\small{Diagnosed a critical \textbf{constrained decoding grammar incompatibility} in GPT-5.1 reasoning models via token-level analysis; implemented correct constrained sampling to prevent a production regression in tool call reliability at launch.}
       \item\small{Scoped, designed, and built \textbf{GPU-based safety classifier} support in Chat Completions API: non-streaming endpoints returning classification logits for client-side threshold scoring across input and output streams.}
       \item\small{Designed and shipped an \textbf{incremental CoT summarization} system: buffers streaming reasoning chunks and progressively surfaces summaries in the UI, keeping it responsive while protecting raw model reasoning as IP.}
       \item\small{Reduced inference costs through systematic analysis: eliminated non-essential classifiers (\textbf{reducing GPU footprint by 20\%}) and resolved a token duplication issue in Chat Completions API (\textbf{reducing tokens by 25\%}, and \textbf{TTFT by 30ms}).}
-      \item\small{Defined and instrumented LLM API \textbf{traffic classification} dimensions (product, client app, inference intent, license tier) across MAI and M365 Copilot; built Grafana dashboards to surface per-dimension traffic insights.}
+      \item\small{Defined and instrumented LLM API \textbf{traffic classification} dimensions (product, client app, inference intent, license tier) across MAI and M365 Copilot; built Grafana dashboards informing capacity planning and cost attribution across both orgs.}
     \resumeItemListEnd
 
   \resumeSubheading
