@@ -67,12 +67,6 @@
   \href{https://pranshug.com}{https://pranshug.com} $\vert$ \href{https://linkedin.com/in/pranshug258/}{linkedin.com/in/pranshug258} & Mobile: +1 (425) 679-2402 \\
 \end{tabular*}
 
-%-----------SUMMARY-----------------
-\section{Summary}
-\resumeSubHeadingListStart
-  \item\small{AI infrastructure engineer with 9 years of experience, leading LLM inference and orchestration for Microsoft Copilot at global scale. Shipped inference optimizations with sustained GPU savings, significantly reducing operational costs.}
-\resumeSubHeadingListEnd
-
 %-----------EXPERIENCE-----------------
 \section{Professional Experience}
 \resumeSubHeadingListStart
@@ -85,8 +79,8 @@
       \item\small{Led end-to-end rollout of \textbf{GPT-5.1 instant and reasoning models} to production by designing prompt templates, constrained-sampling, chain of thought handling, and safety integrations across six partner teams; owned launch-readiness evaluations with the Response Quality squad, including \textbf{30\% improvement in personality evals}.}
       \item\small{Designed and shipped \textbf{Adaptive Thinking}, a dynamic system that adjusts the thinking effort per message based on intent/capability classification to control reasoning token usage.}
       \item\small{Architected a request-scoped \textbf{feature flag system} for the inference API, adopted by MAI and M365 as the standard mechanism for A/B experiments and incremental rollouts.}
-      \item\small{Unblocked GA of a new LLM input safety classifier, helping reduce model ship cycle from \textbf{$>$4 months to $<$1 month}.}
       \item\small{Improved session-management reliability by fixing affinity-drain ordering, eliminating deploy-time connection failures, and reducing \textbf{Redis write volume by 9\%} via session-affinity deduplication.}
+      \item\small{Built \textbf{Grafana dashboards} for LLM API traffic classification across MAI and M365 Copilot, instrumenting dimensions including product, client app, agent, inference intent, license tier, and traffic type; implemented production failure-rate monitor with alerting for Bing Search API dependency.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -95,6 +89,7 @@
     \resumeItemListStart
       \item\small{Designed a distributed \textbf{token-based rate limiter} using Tiktoken for precise token counting, replacing a length-based estimator with \textbf{219\% average error}; implemented pub-sub quota state synchronization across instances.}
       \item\small{Contributed to an intelligent \textbf{model router} for per-request model selection based on cost/complexity signals, reducing per-inference cost by \textbf{55\%}.}
+      \item\small{Designed \textbf{multi-region routing architecture} for the M365 LLM inference API: same-region-preferred routing with ordered fallback regions to balance GPU session affinity against compute availability spillover across global deployments.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -110,8 +105,8 @@
     {Software Engineer II}{Redmond, WA}
     \resumeItemListStart
       \item\small{Designed and shipped async operation callbacks replacing polling, reducing ARM-to-resource-provider traffic by up to \textbf{94\%} (130M fewer requests/day) and improving p95 latency by \textbf{12 seconds} for Azure Container Instances.}
-      \item\small{Implemented exponential backoff for resource-consistency jobs, cutting executions by \textbf{70\%} (\textbf{700M/day}).}
-      \item\small{Owned bulk resource delete API end-to-end (dependency resolution, async scheduling, staged retries), reducing \textbf{P90 latency by 50\%} and \textbf{P99 by 65\%}.}
+      \item\small{Built and maintained \textbf{Azure DevOps CI/CD pipelines} for ARM control-plane services with staged multi-region rollouts, 24-hour regional bake times, functional test gates, and rollback-via-redeploy across global Azure regions.}
+      \item\small{Led \textbf{Azure region teardown} end-to-end: built workflows to halt new resource creation, resolve subscription/resource-group hierarchies, and migrate live resources to healthy regions with zero data loss.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -128,19 +123,19 @@
 \begin{itemize}[leftmargin=*, itemsep=0pt, topsep=2pt, parsep=0pt, partopsep=0pt]
   \item\small{\textbf{AI/ML \& Inference}: LLM inference/serving, prompt engineering, model evaluations, safety orchestration, RAG}
   \item\small{\textbf{Languages \& Systems}: Python, C\#, C++, KQL, OpenAI API, Kubernetes, Redis, Cosmos DB, Service Bus, .NET}
+  \item\small{\textbf{Cloud \& Infrastructure}: Azure (ARM, AKS, Service Bus, Cosmos DB), AWS (Bedrock, S3, Textract, ECR), ARM Templates, Azure DevOps, Grafana}
 \end{itemize}
 
-%-----------TECHNICAL WRITING-----------------
-\section{Technical Writing}
+%-----------PROJECTS-----------------
+\section{Selected Projects}
 \resumeCompactSectionListStart
-  \item\small{\textit{Runtime Optimizations for LLMs} (2026). Production notes on model offloading, KV cache management, and quantization for latency/cost-efficient LLM serving. \href{https://pranshug.com/blog/runtime-optimizations-for-llms}{pranshug.com/blog/runtime-optimizations-for-llms}}
+  \item\small{\textbf{AI Lab Assistant} (TurnTheBus nonprofit, 2025--Present): Architected and built end-to-end on \textbf{AWS} (Bedrock/Claude Haiku, S3, Textract, ECR); uses \textbf{RAG} over physics lab manuals to generate Socratic hints that guide high school students through virtual experiments based on live experiment state.}
 \resumeSubHeadingListEnd
 
 %-----------PUBLICATIONS-----------------
-\section{Publications}
+\section{Technical Writing}
 \resumeCompactSectionListStart
-  \item\small{Saha, K., \textbf{Gupta, P.} et al. \textit{Observer Effect in Social Media Use}. ACM CHI, 2024. \href{https://dl.acm.org/doi/10.1145/3613904.3642078}{doi:10.1145/3613904.3642078}}
-  \item\small{El Sherief, M., Saha, K., \textbf{Gupta, P.} et al. \textit{Impacts of school shooter drills on the psychological well-being of American K-12 school communities}. Nature Humanities and Social Sciences, 2021. \href{https://www.nature.com/articles/s41599-021-00993-6}{nature.com/articles/s41599-021-00993-6}}
+  \item\small{\textit{Runtime Optimizations for LLMs} (2026). Production notes on model offloading, KV cache management, and quantization for latency/cost-efficient LLM serving. \href{https://pranshug.com/blog/runtime-optimizations-for-llms}{pranshug.com/blog/runtime-optimizations-for-llms}}
 \resumeSubHeadingListEnd
 
 %-----------EDUCATION-----------------
@@ -153,12 +148,5 @@
     {Indian Institute of Technology, Kanpur}{May 2017}
     {B.Tech, C.S. and Eng.}{Kanpur, India}
 \resumeSubHeadingListEnd
-
-%-----------PROJECTS-----------------
-% \section{Selected Projects}
-% \resumeCompactSectionListStart
-%   \item\small{\textbf{Deep Image Captioning}: RL-based image captioning with embedding reward (26 GitHub stars).}
-%   \item\small{\textbf{Image Completion with Patch Offset Statistics}: Statistical patch-based image inpainting (44 GitHub stars).}
-% \resumeSubHeadingListEnd
 
 \end{document}
