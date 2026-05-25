@@ -75,12 +75,12 @@
     {Microsoft AI}{Aug 2025 -- Present}
     {Member of Technical Staff}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Serve as \textbf{technical area owner} for LLM inference on Copilot, shaping architectural decisions across model integration, safety infrastructure, and inference reliability.}
+      \item\small{Served as \textbf{technical area owner} for LLM inference on Copilot, shaping architectural decisions across model integration, safety infrastructure, and inference reliability.}
       \item\small{Engineered the inference pipeline for \textbf{GPT-5.1 instant and reasoning models} on Copilot at launch, with meta-prompting for personality alignment, delivering a \textbf{30\% improvement in personality evals} for the reasoning path.}
-      \item\small{Implemented a new \textbf{constrained sampling approach} for tool calls in GPT-5.1 reasoning models, verified through token-level analysis, preventing a production regression in tool call reliability at Copilot launch.}
-      \item\small{Scoped, designed, and built \textbf{GPU-based safety classifier} support in Chat Completions API: non-streaming endpoints returning classification logits for client-side threshold scoring across input and output streams.}
+      \item\small{Implemented a new \textbf{constrained sampling approach} for tool calls in GPT-5.1 reasoning models, identified through token-level analysis, preventing a production regression in tool call reliability at Copilot launch.}
+      \item\small{Scoped, designed, and built \textbf{GPU-based safety classifier} endpoints for the Chat Completions API: non-streaming endpoints that return classification logits for harm scoring on prompts and responses.}
       \item\small{Designed and shipped an \textbf{incremental CoT summarization} system: buffers streaming reasoning chunks and progressively surfaces summaries in the UI, keeping it responsive while protecting raw model reasoning as IP.}
-      \item\small{Reduced inference costs by eliminating non-essential classifiers (\textbf{reducing GPU footprint by 20\%}) and resolved a token overhead inefficiency in Chat Completions API (\textbf{reducing input tokens by 25\%} and \textbf{TTFT by 30ms}).}
+      \item\small{Reduced inference costs by eliminating non-essential classifiers (\textbf{reducing GPU footprint by 20\%}) and resolving a token overhead inefficiency in Chat Completions API (\textbf{reducing input tokens by 25\%} and \textbf{TTFT by 30ms}).}
       \item\small{Defined and instrumented LLM API \textbf{traffic classification} dimensions (product, client app, inference intent, license tier) across MAI and M365 Copilot; built Grafana dashboards informing capacity planning and cost attribution across both orgs.}
     \resumeItemListEnd
 
@@ -88,7 +88,7 @@
     {Microsoft Azure AI}{Jan 2025 -- Aug 2025}
     {Senior Software Engineer}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Designed and built a distributed \textbf{token-based rate limiter} using Tiktoken for precise token counting, replacing a length-based estimator with 219\% average error; implemented pub-sub quota state synchronization across instances.}
+      \item\small{Designed and built a distributed \textbf{token-based rate limiter} using Tiktoken for precise token counting, replacing a length-based estimator that had 219\% average error; implemented pub-sub quota state synchronization across instances.}
       \item\small{Designed and built the inference pipeline for an intelligent \textbf{model router}: injecting per-request model selection based on cost/complexity signals before each LLM call, reducing per-inference cost by \textbf{55\%}.}
     \resumeItemListEnd
 
@@ -99,14 +99,14 @@
       \item\small{Served as \textbf{technical area owner} for resource lifecycle management in Azure Resource Manager.}
       \item\small{Mentored a new-grad engineer through weekly 1:1s; they now independently own a critical component in control plane.}
       \item\small{Designed and shipped a multi-bucket \textbf{token-based background job throttling} system with retry-storm protection, preventing noisy-neighbor throttling in Azure Control Plane background-job infrastructure.}
-      \item\small{Single-handedly designed and shipped \textbf{async operation URI signing}; ran office hours with resource provider teams to guide API surface changes, adopted by \textbf{242 service teams} with \textbf{220+ enforcing}.}
+      \item\small{Single-handedly designed and shipped \textbf{async operation URI signing}; ran office hours with resource provider teams to guide API surface changes, adopted by \textbf{242 service teams} with \textbf{220+ enforcing it}.}
     \resumeItemListEnd
 
   \resumeSubheading
     {Microsoft Azure Core}{Jun 2020 -- Mar 2024}
     {Software Engineer II}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Designed and shipped \textbf{async operation callbacks} replacing polling, cutting control plane polling traffic by \textbf{94\%}.}
+      \item\small{Designed and shipped \textbf{async operation callbacks} to replace polling, cutting control plane polling traffic by \textbf{94\%}.}
       \item\small{Led \textbf{Azure region teardown} design and implementation end-to-end: halted new resource creation, resolved subscription/resource group hierarchies, and migrated live resources to healthy regions with zero data loss.}
       \item\small{Designed and built a \textbf{health-driven deployment pipeline} for ARM control-plane manifests: staged multi-region rollouts with post-step RP health checks that halt or rollback on degradation.}
     \resumeItemListEnd
