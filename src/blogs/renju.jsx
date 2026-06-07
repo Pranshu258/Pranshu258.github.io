@@ -168,7 +168,10 @@ export default class Renju extends React.Component {
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
-                    Each expert was evaluated against minimax at depths 1–5 in both colors. ★ marks the specialist role each model was trained for.
+                    Each expert was evaluated against the minimax AI at depths 1–5 in both colors (100 games per configuration). ★ marks the specialist role each model was trained for.
+                </p>
+                <p>
+                    These numbers measure performance against a specific opponent — the same minimax AI used during training. The model has only seen minimax-style play, so it has blind spots against human opponents who play unconventionally, set up multi-move traps, or exploit patterns the minimax never produces. A strong human player can and will beat these models.
                 </p>
                 <p><b>Black Expert</b> — <code>renju_black.onnx</code></p>
                 <table>
