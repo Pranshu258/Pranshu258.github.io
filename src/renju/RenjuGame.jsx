@@ -1085,10 +1085,11 @@ function RenjuGame({ mode = 'pvai' }) {
           {gameMode === 'pvnn' && pvnnGamesRecorded > 0 && (
             <button
               onClick={() => {
+                const games = pvnnRecorder.current.finishedGames;
                 const data = {
                   version: 1,
                   exported: new Date().toISOString(),
-                  games: pvnnRecorder.current.finishedGames,
+                  games,
                 };
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
@@ -1097,6 +1098,9 @@ function RenjuGame({ mode = 'pvai' }) {
                 a.download = `renju_human_games_${Date.now()}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
+                // Reset so the next export only contains NEW games
+                pvnnRecorder.current.finishedGames = [];
+                setPvnnGamesRecorded(0);
               }}
               style={{
                 padding: '12px 15px',

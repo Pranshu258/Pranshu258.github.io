@@ -72,17 +72,27 @@ def build_tensor(recorded_move):
     return board_to_tensor(board, recorded_move['isBlack'])
 
 
-def load_human_games(path):
+def load_human_games(paths):
     """
+    Load and merge games from one or more exported JSON files.
     Returns two lists of (tensor, move_idx, reward) — one for Black, one for White.
     reward = +1 if the player who made this move WON, -1 if they LOST.
     """
-    data = json.load(open(path))
-    games = data.get('games', [])
+    if isinstance(paths, str):
+        paths = [paths]
+
+    all_games = []
+    for path in paths:
+        data = json.load(open(path))
+        games = data.get('games', [])
+        all_games.extend(games)
+        print(f'  {path}: {len(games)} games')
+
+    print(f'  Total: {len(all_games)} games across {len(paths)} file(s)')
 
     black_samples, white_samples = [], []
 
-    for game in games:
+    for game in all_games:
         winner = game.get('winner')          # 'human' | 'nn'
         nn_color = game.get('nnColor', 'black')  # which color NN played
         human_color = game.get('humanColor', 'white')
@@ -241,7 +251,10 @@ def export_onnx(pt_path, onnx_path, blocks, channels):
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument('--games',            required=True, help='JSON file exported from the browser')
+    p.add_argument('--games',            required=True, nargs='+',
+                   help='One or more JSON files exported from the browser. '
+                        'All files are merged — useful when you export in batches '
+                        'across multiple sessions.')
     p.add_argument('--black-checkpoint', default='checkpoints/black_best.pt')
     p.add_argument('--white-checkpoint', default='checkpoints/white_best.pt')
     p.add_argument('--out-black',        default='../public/models/renju_black.onnx')
@@ -271,7 +284,6 @@ def main():
     print(f'Loading games from: {args.games}')
 
     black_samples, white_samples = load_human_games(args.games)
-    print(f'  Raw samples — Black: {len(black_samples)}  White: {len(white_samples)}')
 
     # Log reward breakdown
     for label, samples in [('Black', black_samples), ('White', white_samples)]:
