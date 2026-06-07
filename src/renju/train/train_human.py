@@ -260,8 +260,8 @@ def parse_args():
                         'across multiple sessions.')
     p.add_argument('--black-checkpoint', default='checkpoints/black_best.pt')
     p.add_argument('--white-checkpoint', default='checkpoints/white_best.pt')
-    p.add_argument('--out-black',        default='../../public/models/renju_black.onnx')
-    p.add_argument('--out-white',        default='../../public/models/renju_white.onnx')
+    p.add_argument('--out-black',        default='../../../public/models/renju_black.onnx')
+    p.add_argument('--out-white',        default='../../../public/models/renju_white.onnx')
     p.add_argument('--original-data',    default='data/games.npz',
                    help='Original training data to mix in (prevents forgetting)')
     p.add_argument('--mix-ratio',        type=float, default=0.3,

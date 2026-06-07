@@ -1,0 +1,17 @@
+Model: checkpoints/black_expert_step00725.pt  step=725  depth=6  train_wr=100%
+Games: 100/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W=100  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  4  D=  0  L= 96  win_rate=4%
+NN(Black) vs minimax(d=2)            W=100  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 40  D=  0  L= 60  win_rate=40%
+NN(Black) vs minimax(d=3)            W=100  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=3)            W= 59  D=  0  L= 41  win_rate=59%
+NN(Black) vs minimax(d=4)            W=100  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L=100  win_rate=0%
+NN(Black) vs minimax(d=5)            W=100  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L=100  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 603/1000 = 60.3%
+
