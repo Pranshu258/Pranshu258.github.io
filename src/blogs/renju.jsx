@@ -150,7 +150,7 @@ export default class Renju extends React.Component {
 
                 <h3 className="headings">Training</h3>
                 <p>
-                    Training followed the same broad approach as AlphaGo Zero — no human game records, no hand-crafted features, learned entirely from self-play — adapted to run on a single laptop.
+                    Training proceeded in four phases — starting from minimax self-play, advancing through reinforcement learning, specialising by color, and finally fine-tuning on real human games.
                 </p>
                 <p>
                     <b>Phase 1 — Supervised pre-training.</b> 5,000 games were generated between minimax agents at varying search depths (1–5), with stochastic move selection to diversify game lines. After deduplication, this produced <b>43,513 unique board positions</b>. The network was trained for 80 epochs to predict the minimax's chosen move (policy loss) and the game outcome (value loss). At convergence it matched the minimax's move choice <b>46.6% of the time</b> — the random baseline for 225 possible moves is 0.4%.
@@ -162,9 +162,12 @@ export default class Renju extends React.Component {
                     <b>Phase 3 — Color-specialist fine-tuning.</b> The gap between Black and White performance comes from Renju's structure: Black always opens at the board's strongest point (center), while White must respond and defend. Learning both strategies simultaneously in one model caused them to interfere with each other. Training was forked into two models, each playing only its own color:
                 </p>
                 <ul>
-                    <li><b>Black expert</b> — 100% win rate against minimax depths 1–5 as Black. The model converged and held this performance stably.</li>
-                    <li><b>White expert</b> — peaked at <b>76.5% overall win rate</b>. White depths 1–3 reached 100%; depth 4 remained the hardest level to hold consistently.</li>
+                    <li><b>Black expert</b> — 100% win rate against minimax depths 1–5 as Black. The model converged quickly and held this performance stably.</li>
+                    <li><b>White expert</b> — reached 76.5% overall win rate. White depths 1–3 at 100%; depth 4 remained volatile, oscillating between 22–65%.</li>
                 </ul>
+                <p>
+                    <b>Phase 4 — Human game fine-tuning.</b> After playing 34 games against the deployed models, the winning moves were used to fine-tune each expert. Only the winner's moves are used as training targets — the loser's moves are discarded as noisy. A low learning rate (5×10⁻⁵) and 30% original-data mixing prevent catastrophic forgetting. The impact was immediate: White depth-4 win rate jumped from <b>22% → 94%</b> in a single session, and Black depth-5 jumped from <b>0% → 84%</b> as a side effect of the NN winning 5 games as Black.
+                </p>
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
@@ -184,11 +187,11 @@ export default class Renju extends React.Component {
                     </thead>
                     <tbody>
                         {[
-                            ['depth-1', '100%',  '4%'],
-                            ['depth-2', '100%', '40%'],
-                            ['depth-3', '100%', '59%'],
+                            ['depth-1', '100%',  '0%'],
+                            ['depth-2', '100%', '20%'],
+                            ['depth-3', '100%',  '0%'],
                             ['depth-4', '100%',  '0%'],
-                            ['depth-5', '100%',  '0%'],
+                            ['depth-5',  '84%',  '0%'],
                         ].map(([opp, b, w]) => (
                             <tr key={opp}>
                                 <td>{opp}</td>
@@ -209,11 +212,11 @@ export default class Renju extends React.Component {
                     </thead>
                     <tbody>
                         {[
-                            ['depth-1',  '99%', '97%'],
-                            ['depth-2', '100%', '97%'],
-                            ['depth-3',  '74%','100%'],
-                            ['depth-4',  '99%', '22%'],
-                            ['depth-5',   '0%', '67%'],
+                            ['depth-1', '100%', '100%'],
+                            ['depth-2',  '95%', '100%'],
+                            ['depth-3',  '94%', '100%'],
+                            ['depth-4',  '98%',  '94%'],
+                            ['depth-5',   '0%',   '0%'],
                         ].map(([opp, b, w]) => (
                             <tr key={opp}>
                                 <td>{opp}</td>
@@ -224,7 +227,7 @@ export default class Renju extends React.Component {
                     </tbody>
                 </table>
                 <p style={{ marginTop: '16px' }}>
-                    Using each model in its specialist role, the combined system reaches <b>75.5% win rate</b> — up from 9% for the supervised-only model and 57% before color specialisation. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
+                    Using each model in its specialist role, the combined system reaches <b>78.1% win rate</b> — up from 9% for the supervised-only model, 57% before color specialisation, and 75.5% before human fine-tuning. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
