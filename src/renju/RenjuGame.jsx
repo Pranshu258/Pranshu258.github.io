@@ -103,6 +103,10 @@ function RenjuGame({ mode = 'pvai' }) {
   const [nnModelProgress, setNnModelProgress] = useState(0);
   const [nnModelError, setNnModelError] = useState(null);
 
+  // Human-vs-NN game recorder: collects (board_state, human_move) pairs for training
+  const pvnnRecorder = useRef({ currentGame: null, finishedGames: [] });
+  const [pvnnGamesRecorded, setPvnnGamesRecorded] = useState(0);
+
   // Initialize audio context on first user interaction
   const ensureAudioContext = useCallback(() => {
     if (!audioContextRef.current) {
@@ -171,15 +175,45 @@ function RenjuGame({ mode = 'pvai' }) {
     setLlmError(null);
     clearTranspositionTable();
 
+    // Start recording a new game for NN training
+    if (startMode === 'pvnn') {
+      pvnnRecorder.current.currentGame = {
+        nnColor: color === 'black' ? 'white' : 'black', // NN plays opposite color
+        humanColor: color,
+        winner: null,
+        moves: [],
+      };
+    }
+
     const centerPos = 280;
     if (color === 'black') {
       setHumanMoves([[centerPos, centerPos]]);
       setLastMove([centerPos, centerPos]);
       setCurrentTurn('computer');
+      // Record human's mandatory center opening
+      if (startMode === 'pvnn' && pvnnRecorder.current.currentGame) {
+        pvnnRecorder.current.currentGame.moves.push({
+          isBlack: true,
+          playedBy: 'human',
+          playerMoves: [],
+          opponentMoves: [],
+          move: [centerPos, centerPos],
+        });
+      }
     } else {
       setComputerMoves([[centerPos, centerPos]]);
       setLastMove([centerPos, centerPos]);
       setCurrentTurn('human');
+      // Record NN's mandatory center opening
+      if (startMode === 'pvnn' && pvnnRecorder.current.currentGame) {
+        pvnnRecorder.current.currentGame.moves.push({
+          isBlack: true,
+          playedBy: 'nn',
+          playerMoves: [],
+          opponentMoves: [],
+          move: [centerPos, centerPos],
+        });
+      }
     }
   };
 
@@ -191,6 +225,18 @@ function RenjuGame({ mode = 'pvai' }) {
 
     if (!isValidMove(gridX, gridY, humanMoves, computerMoves)) return;
 
+    // Record this human move for NN training (pvnn mode only)
+    if (gameMode === 'pvnn' && pvnnRecorder.current.currentGame) {
+      const humanIsBlack = userColor === 'black';
+      pvnnRecorder.current.currentGame.moves.push({
+        isBlack: humanIsBlack,
+        playedBy: 'human',
+        playerMoves: humanIsBlack ? [...humanMoves] : [...computerMoves],
+        opponentMoves: humanIsBlack ? [...computerMoves] : [...humanMoves],
+        move: [gridX, gridY],
+      });
+    }
+
     const newHumanMoves = [...humanMoves, [gridX, gridY]];
     setHumanMoves(newHumanMoves);
     setLastMove([gridX, gridY]);
@@ -199,13 +245,20 @@ function RenjuGame({ mode = 'pvai' }) {
     // Check win
     if (checkWin(newHumanMoves, gridX, gridY)) {
       setWinningLine(getWinningLine(newHumanMoves, gridX, gridY));
+      // Human won — finalize recording
+      if (gameMode === 'pvnn' && pvnnRecorder.current.currentGame) {
+        pvnnRecorder.current.currentGame.winner = 'human';
+        pvnnRecorder.current.finishedGames.push(pvnnRecorder.current.currentGame);
+        pvnnRecorder.current.currentGame = null;
+        setPvnnGamesRecorded(pvnnRecorder.current.finishedGames.length);
+      }
       setGameState('won');
       return;
     }
 
     setMoveCount(moveCount + 1);
     setCurrentTurn('computer');
-  }, [gameState, currentTurn, humanMoves, computerMoves, moveCount]);
+  }, [gameState, currentTurn, humanMoves, computerMoves, moveCount, gameMode, userColor]);
 
   // AI move effect
   useEffect(() => {
@@ -316,9 +369,34 @@ function RenjuGame({ mode = 'pvai' }) {
       if (cancelled) return;
 
       const aiIsBlack = userColor === 'white';
+
+      // Record NN move for training
+      if (pvnnRecorder.current.currentGame) {
+        const nnPlayerMoves = aiIsBlack ? [...computerMoves] : [...computerMoves];
+        const nnOpponentMoves = aiIsBlack ? [...humanMoves] : [...humanMoves];
+        pvnnRecorder.current.currentGame._pendingNNState = {
+          isBlack: aiIsBlack,
+          playerMoves: aiIsBlack ? [...computerMoves] : [...computerMoves],
+          opponentMoves: aiIsBlack ? [...humanMoves] : [...humanMoves],
+        };
+      }
+
       try {
         const move = await getNNMove(computerMoves, humanMoves, aiIsBlack, 0);
         if (cancelled || !move) return;
+
+        // Commit NN move to recorder
+        if (pvnnRecorder.current.currentGame && pvnnRecorder.current.currentGame._pendingNNState) {
+          const s = pvnnRecorder.current.currentGame._pendingNNState;
+          pvnnRecorder.current.currentGame.moves.push({
+            isBlack: s.isBlack,
+            playedBy: 'nn',
+            playerMoves: s.playerMoves,
+            opponentMoves: s.opponentMoves,
+            move,
+          });
+          pvnnRecorder.current.currentGame._pendingNNState = null;
+        }
 
         const newComputerMoves = [...computerMoves, move];
         setComputerMoves(newComputerMoves);
@@ -330,6 +408,13 @@ function RenjuGame({ mode = 'pvai' }) {
           : checkWin(newComputerMoves, move[0], move[1]);
         if (aiWon) {
           setWinningLine(getWinningLine(newComputerMoves, move[0], move[1]));
+          // NN won — finalize recording
+          if (pvnnRecorder.current.currentGame) {
+            pvnnRecorder.current.currentGame.winner = 'nn';
+            pvnnRecorder.current.finishedGames.push(pvnnRecorder.current.currentGame);
+            pvnnRecorder.current.currentGame = null;
+            setPvnnGamesRecorded(pvnnRecorder.current.finishedGames.length);
+          }
           setGameState('lost');
           return;
         }
@@ -995,6 +1080,48 @@ function RenjuGame({ mode = 'pvai' }) {
           >
             <span>⚙️</span><span>New Game</span>
           </button>
+
+          {/* Export training data button — visible in pvnn mode once games are recorded */}
+          {gameMode === 'pvnn' && pvnnGamesRecorded > 0 && (
+            <button
+              onClick={() => {
+                const data = {
+                  version: 1,
+                  exported: new Date().toISOString(),
+                  games: pvnnRecorder.current.finishedGames,
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `renju_human_games_${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              style={{
+                padding: '12px 15px',
+                background: 'linear-gradient(135deg, #10b981, #059669)',
+                border: 'none',
+                borderRadius: '10px',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: '0.9em',
+                fontWeight: '600',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+                width: '100%',
+                boxSizing: 'border-box',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                minHeight: '44px'
+              }}
+            >
+              <span>📥</span>
+              <span>Export {pvnnGamesRecorded} game{pvnnGamesRecorded !== 1 ? 's' : ''} for training</span>
+            </button>
+          )}
 
           {/* Sound Toggle */}
           <label style={{ 

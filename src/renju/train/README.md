@@ -202,3 +202,49 @@ Linear(450→225)  Linear(225→64) + ReLU
 | `train_rl.py` | Phase 2: MCTS self-play RL fine-tuning |
 | `export_onnx.py` | Export `.pt` checkpoint → `.onnx` |
 | `requirements.txt` | Python dependencies |
+
+---
+
+## Training Against a Human Player
+
+Play games against the Neural AI in the browser, then fine-tune the models on your winning moves.
+
+### Step 1 — Play and record
+
+1. Open the Renju blog and select **🧠 Neural AI** as your opponent
+2. Play games normally — every completed game is recorded automatically
+3. After winning some games, click **📥 Export N games for training** in the side panel
+4. Save the downloaded `renju_human_games_TIMESTAMP.json`
+
+### Step 2 — Fine-tune
+
+```bash
+cd src/renju/train
+python train_human.py \
+    --games renju_human_games_TIMESTAMP.json \
+    --black-checkpoint checkpoints/black_best.pt \
+    --white-checkpoint checkpoints/white_best.pt \
+    --out-black ../public/models/renju_black.onnx \
+    --out-white ../public/models/renju_white.onnx
+```
+
+### Step 3 — Deploy
+
+```bash
+cd ../../..   # back to project root
+npm run deploy
+```
+
+The updated models are now live. Play again — the model has learned from your games.
+
+### How many games do you need?
+
+**20–30 focused wins** targeting the same 2–3 weaknesses is enough for visible adaptation.
+The model trains with `--lr 5e-5` (low) and `--mix-ratio 0.3` (30% original data mixed in)
+to prevent forgetting existing knowledge while absorbing your specific patterns.
+
+| Games won | Expected effect |
+|---|---|
+| 5–10 | Minimal visible change |
+| 20–30 | Model starts defending the patterns you exploit |
+| 50+ | Robust adaptation to your play style |
