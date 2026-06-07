@@ -1,0 +1,12 @@
+# Generated data — large numpy archives
+data/
+
+# PyTorch checkpoints — large model weights
+checkpoints/*.pt
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Keep: eval logs, eval history JSON, README, scripts
+# Keep: public/models/*.onnx (committed separately)

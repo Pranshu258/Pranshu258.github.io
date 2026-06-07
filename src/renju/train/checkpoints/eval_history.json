@@ -1,0 +1,484 @@
+[
+  {
+    "step": 50,
+    "train_wr": 36,
+    "overall_wins": 100,
+    "overall_games": 200,
+    "overall_pct": 50.0,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 1,
+        "pct": 5
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 15,
+        "pct": 75
+      },
+      "black_d3": {
+        "wins": 18,
+        "pct": 90
+      },
+      "white_d3": {
+        "wins": 3,
+        "pct": 15
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d5": {
+        "wins": 3,
+        "pct": 15
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 100,
+    "train_wr": 0,
+    "overall_wins": 69,
+    "overall_games": 200,
+    "overall_pct": 34.5,
+    "per_depth": {
+      "black_d1": {
+        "wins": 19,
+        "pct": 95
+      },
+      "white_d1": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 11,
+        "pct": 55
+      },
+      "black_d3": {
+        "wins": 0,
+        "pct": 0
+      },
+      "white_d3": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d4": {
+        "wins": 19,
+        "pct": 95
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d5": {
+        "wins": 0,
+        "pct": 0
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 150,
+    "train_wr": 100,
+    "overall_wins": 89,
+    "overall_games": 160,
+    "overall_pct": 55.6,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 7,
+        "pct": 35
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 7,
+        "pct": 35
+      },
+      "black_d3": {
+        "wins": 1,
+        "pct": 5
+      },
+      "white_d3": {
+        "wins": 14,
+        "pct": 70
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 175,
+    "train_wr": 74,
+    "overall_wins": 103,
+    "overall_games": 200,
+    "overall_pct": 51.5,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 1,
+        "pct": 5
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 5,
+        "pct": 25
+      },
+      "black_d3": {
+        "wins": 19,
+        "pct": 95
+      },
+      "white_d3": {
+        "wins": 14,
+        "pct": 70
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d5": {
+        "wins": 4,
+        "pct": 20
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 200,
+    "train_wr": 76,
+    "overall_wins": 104,
+    "overall_games": 200,
+    "overall_pct": 52.0,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 2,
+        "pct": 10
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 7,
+        "pct": 35
+      },
+      "black_d3": {
+        "wins": 12,
+        "pct": 60
+      },
+      "white_d3": {
+        "wins": 2,
+        "pct": 10
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 1,
+        "pct": 5
+      },
+      "black_d5": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 225,
+    "train_wr": 80,
+    "overall_wins": 105,
+    "overall_games": 200,
+    "overall_pct": 52.5,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 4,
+        "pct": 20
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 7,
+        "pct": 35
+      },
+      "black_d3": {
+        "wins": 12,
+        "pct": 60
+      },
+      "white_d3": {
+        "wins": 2,
+        "pct": 10
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d5": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 250,
+    "train_wr": 82,
+    "overall_wins": 114,
+    "overall_games": 200,
+    "overall_pct": 57.0,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 3,
+        "pct": 15
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 13,
+        "pct": 65
+      },
+      "black_d3": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d3": {
+        "wins": 10,
+        "pct": 50
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d5": {
+        "wins": 8,
+        "pct": 40
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 275,
+    "train_wr": 94,
+    "overall_wins": 103,
+    "overall_games": 200,
+    "overall_pct": 51.5,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 4,
+        "pct": 20
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 8,
+        "pct": 40
+      },
+      "black_d3": {
+        "wins": 19,
+        "pct": 95
+      },
+      "white_d3": {
+        "wins": 4,
+        "pct": 20
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d5": {
+        "wins": 8,
+        "pct": 40
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 300,
+    "train_wr": 94,
+    "overall_wins": 102,
+    "overall_games": 200,
+    "overall_pct": 51.0,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 3,
+        "pct": 15
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 12,
+        "pct": 60
+      },
+      "black_d3": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d3": {
+        "wins": 6,
+        "pct": 30
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 0,
+        "pct": 0
+      },
+      "black_d5": {
+        "wins": 1,
+        "pct": 5
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  },
+  {
+    "step": 325,
+    "train_wr": 100,
+    "overall_wins": 113,
+    "overall_games": 200,
+    "overall_pct": 56.5,
+    "per_depth": {
+      "black_d1": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d1": {
+        "wins": 3,
+        "pct": 15
+      },
+      "black_d2": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d2": {
+        "wins": 12,
+        "pct": 60
+      },
+      "black_d3": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d3": {
+        "wins": 9,
+        "pct": 45
+      },
+      "black_d4": {
+        "wins": 20,
+        "pct": 100
+      },
+      "white_d4": {
+        "wins": 1,
+        "pct": 5
+      },
+      "black_d5": {
+        "wins": 8,
+        "pct": 40
+      },
+      "white_d5": {
+        "wins": 0,
+        "pct": 0
+      }
+    }
+  }
+]

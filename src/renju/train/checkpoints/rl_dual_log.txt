@@ -1,0 +1,28 @@
+
+=== Run from update 0 ===
+[7] ↑ Black→d2(wr=100%)  White→d2(wr=60%)
+[14] ↑ Black→d3(wr=100%)
+[19] ↑ White→d3(wr=60%)
+[21] ↑ Black→d4(wr=76%)
+[26] ↑ White→d4(wr=90%)
+[28] ↑ Black→d5(wr=98%)
+[step 50] Bd=5 Wd=4 Bwr=0.04 Wwr=0.04 → eval launched
+Model: checkpoints/rl_dual_step00050.pt  step=50  depth=5  train_wr=4%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  2  D=  0  L= 18  win_rate=10%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W=  7  D=  0  L= 13  win_rate=35%
+NN(Black) vs minimax(d=3)            W=  2  D=  0  L= 18  win_rate=10%
+NN(White) vs minimax(d=3)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  1  D=  0  L= 19  win_rate=5%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 71/200 = 35.5%
+
+
+=== Run from update 50 ===

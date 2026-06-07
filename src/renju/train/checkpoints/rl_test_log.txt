@@ -1,0 +1,16 @@
+
+=== Run from update 0 ===
+
+=== Run from update 0 ===
+[exit step 7] Bd=4 Wd=1 Bwr=1.00 Wwr=0.58 → eval launched
+Model: checkpoints/rl_test_step00007.pt  step=7  depth=4  train_wr=100%
+Games: 5/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W=  5  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  3  D=  0  L=  2  win_rate=60%
+NN(Black) vs minimax(d=2)            W=  5  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W=  0  D=  0  L=  5  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 13/20 = 65.0%
+

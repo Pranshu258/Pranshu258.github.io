@@ -1,0 +1,529 @@
+
+=== Run from update 250 ===
+[254] ↑ White→d2(wr=100%)
+[258] ↑ White→d3(wr=98%)
+[262] ↑ White→d4(wr=98%)
+[266] ↑ White→d5(wr=88%)
+[270] ↑ White→d6(wr=94%)
+[step 275] Bd=6 Wd=6 Bwr=0.00 Wwr=0.78 → eval launched
+Model: checkpoints/white_expert_step00275.pt  step=275  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 15  D=  0  L=  5  win_rate=75%
+NN(White) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=2)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W=  3  D=  0  L= 17  win_rate=15%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 15  D=  0  L=  5  win_rate=75%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W= 18  D=  0  L=  2  win_rate=90%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 126/200 = 63.0%
+
+[step 300] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00300.pt  step=300  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  2  D=  0  L= 18  win_rate=10%
+NN(Black) vs minimax(d=2)            W= 18  D=  0  L=  2  win_rate=90%
+NN(White) vs minimax(d=2)            W= 10  D=  0  L= 10  win_rate=50%
+NN(Black) vs minimax(d=3)            W=  1  D=  0  L= 19  win_rate=5%
+NN(White) vs minimax(d=3)            W=  3  D=  0  L= 17  win_rate=15%
+NN(Black) vs minimax(d=4)            W= 18  D=  0  L=  2  win_rate=90%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  1  D=  0  L= 19  win_rate=5%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 73/200 = 36.5%
+
+[step 325] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00325.pt  step=325  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  6  D=  0  L= 14  win_rate=30%
+NN(Black) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=2)            W= 12  D=  0  L=  8  win_rate=60%
+NN(Black) vs minimax(d=3)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=3)            W=  1  D=  0  L= 19  win_rate=5%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 77/200 = 38.5%
+
+[step 350] Bd=6 Wd=6 Bwr=0.00 Wwr=0.62 → eval launched
+Model: checkpoints/white_expert_step00350.pt  step=350  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W= 11  D=  0  L=  9  win_rate=55%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  5  D=  0  L= 15  win_rate=25%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  5  D=  0  L= 15  win_rate=25%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 139/200 = 69.5%
+
+[step 375] Bd=6 Wd=6 Bwr=0.00 Wwr=0.52 → eval launched
+Model: checkpoints/white_expert_step00375.pt  step=375  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W= 14  D=  0  L=  6  win_rate=70%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=3)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W=  8  D=  0  L= 12  win_rate=40%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  1  D=  0  L= 19  win_rate=5%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 133/200 = 66.5%
+
+[step 400] Bd=6 Wd=6 Bwr=0.00 Wwr=0.66 → eval launched
+Model: checkpoints/white_expert_step00400.pt  step=400  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W=  9  D=  0  L= 11  win_rate=45%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  3  D=  0  L= 17  win_rate=15%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  1  D=  0  L= 19  win_rate=5%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 131/200 = 65.5%
+
+[step 425] Bd=6 Wd=6 Bwr=0.00 Wwr=0.60 → eval launched
+Model: checkpoints/white_expert_step00425.pt  step=425  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  9  D=  0  L= 11  win_rate=45%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 15  D=  0  L=  5  win_rate=75%
+NN(Black) vs minimax(d=3)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=3)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W=  7  D=  0  L= 13  win_rate=35%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 120/200 = 60.0%
+
+[step 450] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00450.pt  step=450  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=3)            W=  7  D=  0  L= 13  win_rate=35%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  6  D=  0  L= 14  win_rate=30%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 143/200 = 71.5%
+
+[step 475] Bd=6 Wd=6 Bwr=0.00 Wwr=0.96 → eval launched
+Model: checkpoints/white_expert_step00475.pt  step=475  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=3)            W= 15  D=  0  L=  5  win_rate=75%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  7  D=  0  L= 13  win_rate=35%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W= 14  D=  0  L=  6  win_rate=70%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 153/200 = 76.5%
+
+[step 500] Bd=6 Wd=6 Bwr=0.00 Wwr=0.80 → eval launched
+Model: checkpoints/white_expert_step00500.pt  step=500  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W=  8  D=  0  L= 12  win_rate=40%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  8  D=  0  L= 12  win_rate=40%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W= 18  D=  0  L=  2  win_rate=90%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 152/200 = 76.0%
+
+[step 525] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00525.pt  step=525  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=3)            W= 14  D=  0  L=  6  win_rate=70%
+NN(White) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W= 14  D=  0  L=  6  win_rate=70%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  1  D=  0  L= 19  win_rate=5%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 140/200 = 70.0%
+
+[step 550] Bd=6 Wd=6 Bwr=0.00 Wwr=0.66 → eval launched
+Model: checkpoints/white_expert_step00550.pt  step=550  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W=  8  D=  0  L= 12  win_rate=40%
+NN(Black) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=2)            W= 15  D=  0  L=  5  win_rate=75%
+NN(Black) vs minimax(d=3)            W= 15  D=  0  L=  5  win_rate=75%
+NN(White) vs minimax(d=3)            W= 10  D=  0  L= 10  win_rate=50%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  4  D=  0  L= 16  win_rate=20%
+NN(Black) vs minimax(d=5)            W= 12  D=  0  L=  8  win_rate=60%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 121/200 = 60.5%
+
+[step 575] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00575.pt  step=575  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 18  D=  0  L=  2  win_rate=90%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=3)            W= 18  D=  0  L=  2  win_rate=90%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  1  D=  0  L= 19  win_rate=5%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  1  D=  0  L= 19  win_rate=5%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 132/200 = 66.0%
+
+[step 600] Bd=6 Wd=6 Bwr=0.00 Wwr=0.82 → eval launched
+Model: checkpoints/white_expert_step00600.pt  step=600  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W=  3  D=  0  L= 17  win_rate=15%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W= 20  D=  0  L=  0  win_rate=100%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 141/200 = 70.5%
+
+[step 625] Bd=6 Wd=6 Bwr=0.00 Wwr=0.98 → eval launched
+Model: checkpoints/white_expert_step00625.pt  step=625  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W= 10  D=  0  L= 10  win_rate=50%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W= 20  D=  0  L=  0  win_rate=100%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 148/200 = 74.0%
+
+[step 650] Bd=6 Wd=6 Bwr=0.00 Wwr=0.68 → eval launched
+Model: checkpoints/white_expert_step00650.pt  step=650  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W= 15  D=  0  L=  5  win_rate=75%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 18  D=  0  L=  2  win_rate=90%
+NN(Black) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(White) vs minimax(d=3)            W= 15  D=  0  L=  5  win_rate=75%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=5)            W=  2  D=  0  L= 18  win_rate=10%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 140/200 = 70.0%
+
+[step 675] Bd=6 Wd=6 Bwr=0.00 Wwr=1.00 → eval launched
+Model: checkpoints/white_expert_step00675.pt  step=675  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=3)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=3)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W= 10  D=  0  L= 10  win_rate=50%
+NN(Black) vs minimax(d=5)            W=  5  D=  0  L= 15  win_rate=25%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 133/200 = 66.5%
+
+[step 700] Bd=6 Wd=6 Bwr=0.00 Wwr=0.80 → eval launched
+Model: checkpoints/white_expert_step00700.pt  step=700  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 17  D=  0  L=  3  win_rate=85%
+NN(White) vs minimax(d=1)            W=  8  D=  0  L= 12  win_rate=40%
+NN(Black) vs minimax(d=2)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=2)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=3)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=3)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=4)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 70/200 = 35.0%
+
+[step 725] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00725.pt  step=725  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  6  D=  0  L= 14  win_rate=30%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  4  D=  0  L= 16  win_rate=20%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 138/200 = 69.0%
+
+[step 750] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00750.pt  step=750  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=3)            W= 16  D=  0  L=  4  win_rate=80%
+NN(White) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W=  4  D=  0  L= 16  win_rate=20%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  6  D=  0  L= 14  win_rate=30%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 139/200 = 69.5%
+
+[step 775] Bd=6 Wd=6 Bwr=0.00 Wwr=0.66 → eval launched
+Model: checkpoints/white_expert_step00775.pt  step=775  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W=  2  D=  0  L= 18  win_rate=10%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  1  D=  0  L= 19  win_rate=5%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W= 20  D=  0  L=  0  win_rate=100%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 141/200 = 70.5%
+
+[step 800] Bd=6 Wd=6 Bwr=0.00 Wwr=1.00 → eval launched
+Model: checkpoints/white_expert_step00800.pt  step=800  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 17  D=  0  L=  3  win_rate=85%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W=  1  D=  0  L= 19  win_rate=5%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 11  D=  0  L=  9  win_rate=55%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W= 20  D=  0  L=  0  win_rate=100%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 128/200 = 64.0%
+
+[step 825] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00825.pt  step=825  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=3)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  2  D=  0  L= 18  win_rate=10%
+NN(Black) vs minimax(d=5)            W=  1  D=  0  L= 19  win_rate=5%
+NN(White) vs minimax(d=5)            W=  2  D=  0  L= 18  win_rate=10%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 142/200 = 71.0%
+
+[step 850] Bd=6 Wd=6 Bwr=0.00 Wwr=0.82 → eval launched
+Model: checkpoints/white_expert_step00850.pt  step=850  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=1)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(White) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W= 13  D=  0  L=  7  win_rate=65%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  8  D=  0  L= 12  win_rate=40%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 149/200 = 74.5%
+
+[step 875] Bd=6 Wd=6 Bwr=0.00 Wwr=0.68 → eval launched
+Model: checkpoints/white_expert_step00875.pt  step=875  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  2  D=  0  L= 18  win_rate=10%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W=  6  D=  0  L= 14  win_rate=30%
+NN(Black) vs minimax(d=3)            W=  1  D=  0  L= 19  win_rate=5%
+NN(White) vs minimax(d=3)            W=  1  D=  0  L= 19  win_rate=5%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 70/200 = 35.0%
+
+[step 900] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00900.pt  step=900  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=3)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=3)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W=  9  D=  0  L= 11  win_rate=45%
+NN(Black) vs minimax(d=5)            W=  1  D=  0  L= 19  win_rate=5%
+NN(White) vs minimax(d=5)            W=  4  D=  0  L= 16  win_rate=20%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 151/200 = 75.5%
+
+[step 925] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00925.pt  step=925  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=2)            W= 19  D=  0  L=  1  win_rate=95%
+NN(Black) vs minimax(d=3)            W= 18  D=  0  L=  2  win_rate=90%
+NN(White) vs minimax(d=3)            W= 17  D=  0  L=  3  win_rate=85%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  8  D=  0  L= 12  win_rate=40%
+NN(Black) vs minimax(d=5)            W=  5  D=  0  L= 15  win_rate=25%
+NN(White) vs minimax(d=5)            W=  4  D=  0  L= 16  win_rate=20%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 146/200 = 73.0%
+
+[step 950] Bd=6 Wd=6 Bwr=0.00 Wwr=0.84 → eval launched
+Model: checkpoints/white_expert_step00950.pt  step=950  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  2  D=  0  L= 18  win_rate=10%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W=  4  D=  0  L= 16  win_rate=20%
+NN(Black) vs minimax(d=3)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=3)            W=  1  D=  0  L= 19  win_rate=5%
+NN(Black) vs minimax(d=4)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 67/200 = 33.5%
+
+[step 975] Bd=6 Wd=6 Bwr=0.00 Wwr=0.80 → eval launched
+Model: checkpoints/white_expert_step00975.pt  step=975  depth=6  train_wr=0%
+Games: 20/config  Temp: 0.3
+
+NN(Black) vs minimax(d=1)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=1)            W=  4  D=  0  L= 16  win_rate=20%
+NN(Black) vs minimax(d=2)            W= 20  D=  0  L=  0  win_rate=100%
+NN(White) vs minimax(d=2)            W=  7  D=  0  L= 13  win_rate=35%
+NN(Black) vs minimax(d=3)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=3)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=4)            W= 19  D=  0  L=  1  win_rate=95%
+NN(White) vs minimax(d=4)            W=  0  D=  0  L= 20  win_rate=0%
+NN(Black) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+NN(White) vs minimax(d=5)            W=  0  D=  0  L= 20  win_rate=0%
+
+────────────────────────────────────────────────────────────
+Overall NN win rate: 70/200 = 35.0%
+
