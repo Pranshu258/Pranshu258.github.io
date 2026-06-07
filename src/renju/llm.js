@@ -258,60 +258,67 @@ function findThreats(attackerMoves, defenderMoves, allOccupied) {
 
 /**
  * Build the system + user prompt for the LLM.
- * The LLM always plays Black (X). White (O) is the opponent.
+ * `llmColor` is 'black' or 'white', telling the LLM which color it plays.
+ * `blackMoves` and `whiteMoves` are the actual Black/White board positions.
  *
  * Design: small on-device models (1-4B params) hallucinate spatial reasoning,
  * so we keep the prompt short, directive, and provide concrete move options
  * when critical threats exist. No chain-of-thought — just pick a move.
  */
 function buildPrompt(blackMoves, whiteMoves, llmColor, threatHints = true) {
+  const llmIsBlack = llmColor !== 'white';
+  const colorLabel = llmIsBlack ? 'Black (X)' : 'White (O)';
+  const opponentLabel = llmIsBlack ? 'White (O)' : 'Black (X)';
+
   const structured = boardToStructured(blackMoves, whiteMoves);
   const history = moveHistoryText(blackMoves, whiteMoves);
-  const totalMoves = blackMoves.length + whiteMoves.length;
 
   let urgentDirective = '';
   let threatSection = '';
 
   if (threatHints) {
     const allOccupied = [...blackMoves, ...whiteMoves];
-    const occupiedSet = new Set(allOccupied.map(([x, y]) => `${x / GRID_SIZE},${y / GRID_SIZE}`));
 
-    const whiteThreats = findThreats(whiteMoves, blackMoves, allOccupied);
     const blackThreats = findThreats(blackMoves, whiteMoves, allOccupied);
+    const whiteThreats = findThreats(whiteMoves, blackMoves, allOccupied);
 
-    // Check for winning move (Black has 4 in a row)
-    const blackWins = blackThreats.filter(t => t.count >= 4 && t.blockingMoves.length > 0);
-    if (blackWins.length > 0) {
-      urgentDirective = `YOU CAN WIN NOW! Play ${blackWins[0].blockingMoves[0]} to complete 5 in a row.`;
+    // LLM's own threats vs opponent's threats depend on which color LLM plays
+    const llmThreats = llmIsBlack ? blackThreats : whiteThreats;
+    const oppThreats = llmIsBlack ? whiteThreats : blackThreats;
+    const opponentName = llmIsBlack ? 'White' : 'Black';
+
+    // Check for winning move (LLM has 4 in a row)
+    const llmWins = llmThreats.filter(t => t.count >= 4 && t.blockingMoves.length > 0);
+    if (llmWins.length > 0) {
+      urgentDirective = `YOU CAN WIN NOW! Play ${llmWins[0].blockingMoves[0]} to complete 5 in a row.`;
     }
 
-    // Check for must-block (White has 4 in a row)
-    const whiteFours = whiteThreats.filter(t => t.count >= 4 && t.blockingMoves.length > 0);
-    if (!urgentDirective && whiteFours.length > 0) {
-      const blocks = whiteFours[0].blockingMoves;
-      urgentDirective = `URGENT: White has ${whiteFours[0].count} in a row at ${whiteFours[0].stones.join(',')}. You MUST block at ${blocks.join(' or ')} or you lose.`;
+    // Check for must-block (opponent has 4 in a row)
+    const oppFours = oppThreats.filter(t => t.count >= 4 && t.blockingMoves.length > 0);
+    if (!urgentDirective && oppFours.length > 0) {
+      const blocks = oppFours[0].blockingMoves;
+      urgentDirective = `URGENT: ${opponentName} has ${oppFours[0].count} in a row at ${oppFours[0].stones.join(',')}. You MUST block at ${blocks.join(' or ')} or you lose.`;
     }
 
-    // Check for White open three (should block)
-    const whiteOpenThrees = whiteThreats.filter(t => t.count === 3 && t.openEnds === 2 && t.blockingMoves.length > 0);
-    if (!urgentDirective && whiteOpenThrees.length > 0) {
-      const t = whiteOpenThrees[0];
-      urgentDirective = `White has an open three at ${t.stones.join(',')}. Block at ${t.blockingMoves.join(' or ')} — otherwise White gets an unstoppable four.`;
+    // Check for opponent open three (should block)
+    const oppOpenThrees = oppThreats.filter(t => t.count === 3 && t.openEnds === 2 && t.blockingMoves.length > 0);
+    if (!urgentDirective && oppOpenThrees.length > 0) {
+      const t = oppOpenThrees[0];
+      urgentDirective = `${opponentName} has an open three at ${t.stones.join(',')}. Block at ${t.blockingMoves.join(' or ')} — otherwise ${opponentName} gets an unstoppable four.`;
     }
 
-    // Non-urgent info — always tell the LLM WHERE to play, not just what exists
+    // Non-urgent info
     const parts = [];
-    const blackOpenThrees = blackThreats.filter(t => t.count === 3 && t.openEnds >= 2 && t.blockingMoves.length > 0);
-    if (blackOpenThrees.length > 0) {
-      const t = blackOpenThrees[0];
+    const llmOpenThrees = llmThreats.filter(t => t.count === 3 && t.openEnds >= 2 && t.blockingMoves.length > 0);
+    if (llmOpenThrees.length > 0) {
+      const t = llmOpenThrees[0];
       parts.push(`You have an open three at ${t.stones.join(',')}. Extend it by playing ${t.blockingMoves.join(' or ')}.`);
     }
-    // Only show white threats if not already in urgentDirective
     if (!urgentDirective) {
-      const whiteClosedThrees = whiteThreats.filter(t => t.count === 3 && t.openEnds === 1 && t.blockingMoves.length > 0);
-      if (whiteClosedThrees.length > 0) {
-        const t = whiteClosedThrees[0];
-        parts.push(`White has a three at ${t.stones.join(',')} (one end open). Consider blocking at ${t.blockingMoves[0]}.`);
+      const oppClosedThrees = oppThreats.filter(t => t.count === 3 && t.openEnds === 1 && t.blockingMoves.length > 0);
+      if (oppClosedThrees.length > 0) {
+        const t = oppClosedThrees[0];
+        parts.push(`${opponentName} has a three at ${t.stones.join(',')} (one end open). Consider blocking at ${t.blockingMoves[0]}.`);
       }
     }
     if (parts.length > 0) {
@@ -319,8 +326,8 @@ function buildPrompt(blackMoves, whiteMoves, llmColor, threatHints = true) {
     }
   }
 
-  const system = `You play Black (X) in Renju on a 15×15 board. Columns A-O, rows 1-15.
-White (O) is your opponent. Get exactly 5 in a row to win.
+  const system = `You play ${colorLabel} in Renju on a 15×15 board. Columns A-O, rows 1-15.
+${opponentLabel} is your opponent. Get exactly 5 in a row to win.
 
 Geometry reminders:
 - Same row = horizontal (e.g. G7,H7,I7 are horizontal neighbors)
@@ -329,8 +336,8 @@ Geometry reminders:
 
 Rules:
 - You MUST play on an EMPTY intersection — never on an occupied square
-- Block White's 4-in-a-row immediately or you lose
-- Block White's open 3-in-a-row or it becomes unstoppable
+- Block your opponent's 4-in-a-row immediately or you lose
+- Block your opponent's open 3-in-a-row or it becomes unstoppable
 - Build your own lines toward 5
 
 Respond with ONLY a coordinate like H8. Nothing else.`;

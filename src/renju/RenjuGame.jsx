@@ -7,7 +7,8 @@ import {
   saveGame, 
   loadGame
 } from './gameLogic';
-import { getAPIMove, toNotation, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
+import { getAPIMove, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
+import { loadModel as loadNNModel, getNNMove, isModelLoaded as isNNModelLoaded } from './nnai';
 import { TbMessageChatbot } from 'react-icons/tb';
 
 // Sound effects using Web Audio API
@@ -85,21 +86,22 @@ function RenjuGame({ mode = 'pvai' }) {
   const [winningLine, setWinningLine] = useState(null);
   const [currentDepth, setCurrentDepth] = useState(null);
   const [maxDepth, setMaxDepth] = useState(1); // Adaptive difficulty: 30% chance to increase on player win, decreases on loss
-  const [llmMaxDepth, setLlmMaxDepth] = useState(1); // Adaptive difficulty for AI vs LLM: increases when LLM wins, decreases when AI wins
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [gameMode, setGameMode] = useState(mode); // 'pvai' = Player vs AI, 'aivsllm' = AI vs LLM
+  const [gameMode, setGameMode] = useState(mode);
   const [apiConfig, setApiConfig] = useState({ endpoint: 'http://localhost:12434/engines/llama.cpp/v1/chat/completions', model: 'ai/mistral', apiKey: '' });
-  const [llmLog, setLlmLog] = useState([]); // move log for AI vs LLM
   const [llmError, setLlmError] = useState(null);
-  const [aiVsLlmRunning, setAiVsLlmRunning] = useState(false);
 
   const [difficulty, setDifficulty] = useState('easy');
-  const [llmProvider, setLlmProvider] = useState('webllm'); // 'webllm' or 'api'
+  const [opponentType, setOpponentType] = useState('ai'); // 'ai' | 'nn' | 'webllm' | 'api'
   const [webllmModel, setWebllmModel] = useState(WEBLLM_MODELS[0].id);
   const [webllmLoading, setWebllmLoading] = useState(false);
   const [webllmProgress, setWebllmProgress] = useState({ text: '', progress: 0 });
-  const aiVsLlmCancelRef = useRef(false);
   const audioContextRef = useRef(null);
+
+  // Neural network AI model state
+  const [nnModelStatus, setNnModelStatus] = useState('idle'); // 'idle' | 'loading' | 'ready' | 'error'
+  const [nnModelProgress, setNnModelProgress] = useState(0);
+  const [nnModelError, setNnModelError] = useState(null);
 
   // Initialize audio context on first user interaction
   const ensureAudioContext = useCallback(() => {
@@ -108,6 +110,19 @@ function RenjuGame({ mode = 'pvai' }) {
     }
     return audioContextRef.current;
   }, []);
+
+  // Load the ONNX model when the user selects Neural AI as their opponent
+  useEffect(() => {
+    if (opponentType !== 'nn') return;
+    if (nnModelStatus !== 'idle') return;
+    setNnModelStatus('loading');
+    loadNNModel(fraction => setNnModelProgress(fraction))
+      .then(() => setNnModelStatus('ready'))
+      .catch(err => {
+        setNnModelStatus('error');
+        setNnModelError(err.message || String(err));
+      });
+  }, [opponentType]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Depth for each AI move based on difficulty
   const getRandomDepth = () => {
@@ -122,27 +137,21 @@ function RenjuGame({ mode = 'pvai' }) {
   // In pvai: won = player won → harder, lost = AI won → easier
   useEffect(() => {
     if (gameState === 'won') {
-      if (gameMode === 'aivsllm') {
-        // AI won — decrease depth to give LLM a better chance
-        setLlmMaxDepth(prev => Math.max(prev - 1, 1));
-      } else if (difficulty === 'adaptive') {
+      if (difficulty === 'adaptive') {
         if (Math.random() < 0.5) {
           setMaxDepth(prev => Math.min(prev + 1, 10));
         }
       }
       if (soundEnabled) playWinSound(audioContextRef.current);
     } else if (gameState === 'lost') {
-      if (gameMode === 'aivsllm') {
-        // LLM won — increase depth to make AI harder
-        setLlmMaxDepth(prev => Math.min(prev + 1, 10));
-      } else if (difficulty === 'adaptive') {
+      if (difficulty === 'adaptive') {
         setMaxDepth(prev => Math.max(prev - 1, 1));
       }
       if (soundEnabled) playLoseSound(audioContextRef.current);
     }
-  }, [gameState, soundEnabled, gameMode, difficulty]);
+  }, [gameState, soundEnabled, difficulty]);
 
-  const handleStartGame = (color) => {
+  const handleStartGame = (color, startMode = 'pvai') => {
     ensureAudioContext();
     const preset = DIFFICULTY_PRESETS[difficulty];
     if (preset && !preset.adaptive) {
@@ -151,6 +160,7 @@ function RenjuGame({ mode = 'pvai' }) {
       setMaxDepth(1);
     }
     setUserColor(color);
+    setGameMode(startMode);
     setGameState('playing');
     setHumanMoves([]);
     setComputerMoves([]);
@@ -158,19 +168,15 @@ function RenjuGame({ mode = 'pvai' }) {
     setLastMove(null);
     setWinningLine(null);
     setCurrentDepth(null);
-    clearTranspositionTable(); // Clear cached positions for new game
+    setLlmError(null);
+    clearTranspositionTable();
 
-    // First move - Black always goes first (center of the board)
-    // Grid center is at index 7: BOARD_OFFSET + 7 * GRID_SIZE = 300
-    // Stored value accounts for drawing offset: 300 - GRID_SIZE/2 = 280
     const centerPos = 280;
     if (color === 'black') {
-      // Human plays black, so human goes first
       setHumanMoves([[centerPos, centerPos]]);
       setLastMove([centerPos, centerPos]);
       setCurrentTurn('computer');
     } else {
-      // Human plays white, so AI (black) goes first
       setComputerMoves([[centerPos, centerPos]]);
       setLastMove([centerPos, centerPos]);
       setCurrentTurn('human');
@@ -203,7 +209,7 @@ function RenjuGame({ mode = 'pvai' }) {
 
   // AI move effect
   useEffect(() => {
-    if (gameMode !== 'aivsllm' && gameState === 'playing' && currentTurn === 'computer') {
+    if (gameMode === 'pvai' && gameState === 'playing' && currentTurn === 'computer') {
       let cancelled = false;
 
       const runAI = async () => {
@@ -300,565 +306,341 @@ function RenjuGame({ mode = 'pvai' }) {
     }
   }, [currentTurn, gameState, gameMode, computerMoves, humanMoves, moveCount, thinkingMode]);
 
-  const handleRestart = () => {
-    if (gameMode === 'aivsllm') {
-      handleStartAiVsLlm();
-    } else {
-      handleStartGame(userColor);
-    }
-  };
-
-  // ============================================================
-  // AI vs LLM Mode
-  // ============================================================
-  const handleStartAiVsLlm = () => {
-    ensureAudioContext();
-    aiVsLlmCancelRef.current = false;
-    setGameMode('aivsllm');
-    setGameState('playing');
-    // Black's first move is always center (standard Renju opening)
-    const centerPos = 280; // 7 * 40 = 280
-    setHumanMoves([[centerPos, centerPos]]); // repurposed: Black moves (LLM)
-    setComputerMoves([]); // repurposed: White moves (local AI)
-    setMoveCount(2);
-    setLastMove([centerPos, centerPos]);
-    setWinningLine(null);
-    setCurrentDepth(null);
-    setLlmLog([{ turn: 1, player: 'LLM (Black)', notation: 'H8', raw: 'auto: center opening' }]);
-    setLlmError(null);
-    setAiVsLlmRunning(true);
-    clearTranspositionTable();
-
-    // LLM (Black) already played center — AI (White) goes next
-    setCurrentTurn('computer');
-  };
-
-  // Auto-play loop for AI vs LLM
+  // Neural network AI move effect
   useEffect(() => {
-    if (gameMode !== 'aivsllm' || gameState !== 'playing' || !aiVsLlmRunning) return;
+    if (gameMode !== 'pvnn' || gameState !== 'playing' || currentTurn !== 'computer') return;
 
     let cancelled = false;
-    aiVsLlmCancelRef.current = false;
+    const runNN = async () => {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      if (cancelled) return;
 
-    const runLoop = async () => {
-      let blackMoves = [...humanMoves]; // LLM plays Black
-      let whiteMoves = [...computerMoves]; // Local AI plays White
-      let turn = currentTurn; // 'human' = LLM-Black, 'computer' = AI-White
-      let moves = moveCount;
+      const aiIsBlack = userColor === 'white';
+      try {
+        const move = await getNNMove(computerMoves, humanMoves, aiIsBlack, 0);
+        if (cancelled || !move) return;
 
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        if (cancelled || aiVsLlmCancelRef.current) return;
-        await new Promise(r => setTimeout(r, 600));
-        if (cancelled || aiVsLlmCancelRef.current) return;
+        const newComputerMoves = [...computerMoves, move];
+        setComputerMoves(newComputerMoves);
+        setLastMove(move);
+        if (soundEnabled) playStoneSound(audioContextRef.current);
 
-        if (turn === 'human') {
-          // LLM (Black) turn
-          setCurrentTurn('human');
-          const allMoves = [...blackMoves, ...whiteMoves];
-          const result = llmProvider === 'webllm'
-            ? await getWebLLMMove(blackMoves, whiteMoves, 'black', allMoves, 3, true)
-            : await getAPIMove(apiConfig, blackMoves, whiteMoves, 'black', allMoves, 3, true);
-
-          if (cancelled || aiVsLlmCancelRef.current) return;
-
-          if (!result.move) {
-            setLlmError(result.error || 'LLM failed to produce a valid move');
-            setAiVsLlmRunning(false);
-            return;
-          }
-
-          blackMoves = [...blackMoves, result.move];
-          setHumanMoves([...blackMoves]);
-          setLastMove(result.move);
-          if (soundEnabled) playStoneSound(audioContextRef.current);
-          setLlmLog(prev => [...prev, { turn: moves, player: 'LLM (Black)', notation: toNotation(...result.move), raw: result.raw }]);
-
-          if (checkWinRenju(blackMoves, result.move[0], result.move[1], true)) {
-            setWinningLine(getWinningLine(blackMoves, result.move[0], result.move[1]));
-            setGameState('lost'); // LLM won
-            setAiVsLlmRunning(false);
-            return;
-          }
-
-          moves++;
-          setMoveCount(moves);
-          turn = 'computer';
-        } else {
-          // Local AI (White) turn
-          setCurrentTurn('computer');
-          const depth = Math.floor(Math.random() * llmMaxDepth) + 1; // Adaptive depth for AI vs LLM
-          setCurrentDepth(depth);
-
-          let bestMove = null;
-
-          if (thinkingMode) {
-            setCandidateMoves([]);
-            const result = await attackWithVisualization(
-              [...whiteMoves],
-              [...blackMoves],
-              depth,
-              (move, status, score) => {
-                if (cancelled || aiVsLlmCancelRef.current) return;
-                setCandidateMoves(prev => {
-                  const existing = prev.find(c => c.move[0] === move[0] && c.move[1] === move[1]);
-                  if (existing) {
-                    return prev.map(c =>
-                      c.move[0] === move[0] && c.move[1] === move[1]
-                        ? { ...c, status, score }
-                        : c
-                    );
-                  }
-                  return [...prev, { move, status, score }];
-                });
-              },
-              false // AI is White
-            );
-            bestMove = result.bestMove;
-            await new Promise(r => setTimeout(r, 300));
-            if (cancelled || aiVsLlmCancelRef.current) return;
-            setCandidateMoves([]);
-          } else {
-            const result = attack([...whiteMoves], [...blackMoves], 0, depth, -1000, 1000, false);
-            bestMove = result.bestMove;
-          }
-
-          if (cancelled || aiVsLlmCancelRef.current) return;
-
-          if (!bestMove) {
-            setLlmError('Local AI failed to find a move');
-            setAiVsLlmRunning(false);
-            return;
-          }
-
-          whiteMoves = [...whiteMoves, bestMove];
-          setComputerMoves([...whiteMoves]);
-          setLastMove(bestMove);
-          if (soundEnabled) playStoneSound(audioContextRef.current);
-          setLlmLog(prev => [...prev, { turn: moves, player: 'AI (White)', notation: toNotation(...bestMove) }]);
-
-          if (checkWin(whiteMoves, bestMove[0], bestMove[1])) {
-            setWinningLine(getWinningLine(whiteMoves, bestMove[0], bestMove[1]));
-            setGameState('won'); // Local AI won
-            setAiVsLlmRunning(false);
-            return;
-          }
-
-          moves++;
-          setMoveCount(moves);
-          turn = 'human';
+        const aiWon = aiIsBlack
+          ? checkWinRenju(newComputerMoves, move[0], move[1], true)
+          : checkWin(newComputerMoves, move[0], move[1]);
+        if (aiWon) {
+          setWinningLine(getWinningLine(newComputerMoves, move[0], move[1]));
+          setGameState('lost');
+          return;
         }
+        setMoveCount(c => c + 1);
+        setCurrentTurn('human');
+      } catch (err) {
+        console.error('NN AI error:', err);
       }
     };
 
-    runLoop();
+    runNN();
+    return () => { cancelled = true; };
+  }, [currentTurn, gameState, gameMode, computerMoves, humanMoves, soundEnabled, userColor]);
 
-    return () => {
-      cancelled = true;
-      aiVsLlmCancelRef.current = true;
+  // LLM move effect (pvllm mode: human plays interactively against an LLM)
+  useEffect(() => {
+    if (gameMode !== 'pvllm' || gameState !== 'playing' || currentTurn !== 'computer') return;
+
+    let cancelled = false;
+    const runLLM = async () => {
+      await new Promise(r => setTimeout(r, 600));
+      if (cancelled) return;
+
+      // Determine which color the LLM is playing
+      const llmIsBlack = userColor === 'white'; // human is white → LLM is black
+      const blackMoves = llmIsBlack ? computerMoves : humanMoves;
+      const whiteMoves = llmIsBlack ? humanMoves : computerMoves;
+      const llmColor = llmIsBlack ? 'black' : 'white';
+      const allMoves = [...humanMoves, ...computerMoves];
+
+      const result = opponentType === 'webllm'
+        ? await getWebLLMMove(blackMoves, whiteMoves, llmColor, allMoves, 3, true)
+        : await getAPIMove(apiConfig, blackMoves, whiteMoves, llmColor, allMoves, 3, true);
+
+      if (cancelled) return;
+
+      if (!result.move) {
+        setLlmError(result.error || 'LLM failed to produce a valid move');
+        return;
+      }
+
+      const newComputerMoves = [...computerMoves, result.move];
+      setComputerMoves(newComputerMoves);
+      setLastMove(result.move);
+      if (soundEnabled) playStoneSound(audioContextRef.current);
+
+      // Check win — use Renju rules if LLM is Black
+      const llmWon = llmIsBlack
+        ? checkWinRenju(newComputerMoves, result.move[0], result.move[1], true)
+        : checkWin(newComputerMoves, result.move[0], result.move[1]);
+
+      if (llmWon) {
+        setWinningLine(getWinningLine(newComputerMoves, result.move[0], result.move[1]));
+        setGameState('lost');
+        return;
+      }
+
+      setMoveCount(c => c + 1);
+      setCurrentTurn('human');
     };
-  }, [aiVsLlmRunning]); // Only re-run when aiVsLlmRunning changes
 
-  const handleStopAiVsLlm = () => {
-    aiVsLlmCancelRef.current = true;
-    setAiVsLlmRunning(false);
+    runLLM();
+    return () => { cancelled = true; };
+  }, [currentTurn, gameState, gameMode, computerMoves, humanMoves, soundEnabled, userColor, opponentType]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleRestart = () => {
+    handleStartGame(userColor, gameMode);
   };
 
-  const handleNewColor = () => {
-    aiVsLlmCancelRef.current = true;
-    setAiVsLlmRunning(false);
+  const handleNewGame = () => {
     setGameState('setup');
   };
 
   if (gameState === 'setup') {
-    // Player vs AI setup screen
-    if (mode === 'pvai') {
-      return (
-        <div style={{
-          padding: '20px 0',
-          margin: '20px 0',
-          position: 'relative'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '25px' }}>
-            <div style={{ position: 'relative', width: '600px', flexShrink: 0 }}>
-              <RenjuBoard
-                humanMoves={[]}
-                computerMoves={[]}
-                userColor="black"
-                onMove={() => {}}
-                disabled={true}
-                lastMove={null}
-                candidateMoves={[]}
-              />
+    // Unified setup screen (pvai, pvnn, or pvllm)
+    const llmModelReady = opponentType === 'webllm'
+      ? (isWebLLMLoaded() && getWebLLMLoadedModel() === webllmModel)
+      : opponentType === 'api'
+        ? !!apiConfig.endpoint
+        : true;
+
+    const startDisabled = (opponentType === 'webllm' && !llmModelReady) ||
+                          (opponentType === 'api' && !apiConfig.endpoint) ||
+                          (opponentType === 'nn' && nnModelStatus !== 'ready');
+
+    return (
+      <div style={{ padding: '20px 0', margin: '20px 0', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '25px' }}>
+          <div style={{ position: 'relative', width: '600px', flexShrink: 0 }}>
+            <RenjuBoard
+              humanMoves={[]} computerMoves={[]} userColor="black"
+              onMove={() => {}} disabled={true} lastMove={null} candidateMoves={[]}
+            />
+            <div style={{
+              position: 'absolute', top: '50%', left: 0, right: 0,
+              transform: 'translateY(-50%)',
+              background: 'rgba(0, 0, 0, 0.85)', padding: '36px 20px',
+              color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center',
+              backdropFilter: 'blur(12px)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
+            }}>
               <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: 0,
-                right: 0,
-                transform: 'translateY(-50%)',
-                background: 'rgba(0, 0, 0, 0.85)',
-                padding: '36px 20px',
-                color: '#fff',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                backdropFilter: 'blur(12px)',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
+                fontSize: '2.2em', fontWeight: '600', letterSpacing: '8px',
+                textTransform: 'uppercase', marginBottom: '8px',
+                background: 'linear-gradient(135deg, #fff 0%, #94a3b8 100%)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
               }}>
-                <div style={{ 
-                  fontSize: '2.2em', 
-                  fontWeight: '600', 
-                  letterSpacing: '8px',
-                  textTransform: 'uppercase',
-                  marginBottom: '8px',
-                  background: 'linear-gradient(135deg, #fff 0%, #94a3b8 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>
-                  Renju
-                </div>
-                <div style={{ 
-                  fontSize: '0.85em', 
-                  color: '#94a3b8', 
-                  marginBottom: '16px',
-                  fontWeight: '500'
-                }}>
-                  Five in a row wins
-                </div>
-                {/* Difficulty Selector */}
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '6px', 
-                  justifyContent: 'center', 
-                  marginBottom: '14px' 
-                }}>
+                Renju
+              </div>
+              <div style={{ fontSize: '0.85em', color: '#94a3b8', marginBottom: '16px', fontWeight: '500' }}>
+                Five in a row wins
+              </div>
+
+              {/* Opponent type selector */}
+              <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginBottom: '14px', flexWrap: 'wrap' }}>
+                {[
+                  { id: 'ai', label: 'Minimax AI', emoji: '🤖' },
+                  { id: 'nn', label: 'Neural AI', emoji: '🧠' },
+                  { id: 'webllm', label: 'On-Device LLM', emoji: '💻' },
+                  { id: 'api', label: 'API LLM', emoji: '🔌' },
+                ].map(({ id, label, emoji }) => (
+                  <button
+                    key={id}
+                    onClick={() => { setOpponentType(id); setLlmError(null); }}
+                    style={{
+                      padding: '5px 12px',
+                      background: opponentType === id ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
+                      border: opponentType === id ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
+                      borderRadius: '20px', color: '#fff', cursor: 'pointer',
+                      fontSize: '0.75em', fontWeight: opponentType === id ? '600' : '400',
+                      transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '4px'
+                    }}
+                  >
+                    <span>{emoji}</span><span>{label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Difficulty pills — only for Minimax AI */}
+              {opponentType === 'ai' && (
+                <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginBottom: '14px' }}>
                   {Object.entries(DIFFICULTY_PRESETS).map(([key, preset]) => (
                     <button
                       key={key}
                       onClick={() => setDifficulty(key)}
                       style={{
                         padding: '5px 12px',
-                        background: difficulty === key 
-                          ? 'rgba(99, 102, 241, 0.85)' 
-                          : 'rgba(255, 255, 255, 0.08)',
-                        border: difficulty === key 
-                          ? '1px solid rgba(99, 102, 241, 0.9)' 
-                          : '1px solid rgba(255, 255, 255, 0.12)',
-                        borderRadius: '20px',
-                        color: '#fff',
-                        cursor: 'pointer',
-                        fontSize: '0.75em',
-                        fontWeight: difficulty === key ? '600' : '400',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px'
+                        background: difficulty === key ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
+                        border: difficulty === key ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
+                        borderRadius: '20px', color: '#fff', cursor: 'pointer',
+                        fontSize: '0.75em', fontWeight: difficulty === key ? '600' : '400',
+                        transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '4px'
                       }}
                     >
-                      <span>{preset.emoji}</span>
-                      <span>{preset.label}</span>
+                      <span>{preset.emoji}</span><span>{preset.label}</span>
                     </button>
                   ))}
                 </div>
+              )}
+
+              {/* LLM / NN loading hints */}
+              {opponentType === 'webllm' && !llmModelReady && (
                 <div style={{
-                  fontSize: '0.8em',
-                  color: '#fff',
-                  marginBottom: '20px',
-                  fontWeight: '500',
-                  padding: '8px 16px',
-                  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                  borderRadius: '6px',
-                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                  letterSpacing: '0.3px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px'
+                  fontSize: '0.78em', color: '#94a3b8', marginBottom: '14px', textAlign: 'center'
                 }}>
-                  <span>👇</span>
-                  <span>Choose your side to begin</span>
+                  💻 Select and load a model in the panel →
                 </div>
-                
-                <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <button
-                    onClick={() => { setGameMode('pvai'); handleStartGame('black'); }}
-                    style={{
-                      padding: '20px 32px',
-                      background: '#1a1a1a',
-                      border: 'none',
-                      borderRadius: '16px',
-                      color: '#fff',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '16px',
-                      boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
-                      minWidth: '160px'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)';
-                    }}
-                  >
+              )}
+              {opponentType === 'api' && !apiConfig.endpoint && (
+                <div style={{
+                  fontSize: '0.78em', color: '#94a3b8', marginBottom: '14px', textAlign: 'center'
+                }}>
+                  🔌 Enter an API endpoint in the panel →
+                </div>
+              )}
+              {opponentType === 'webllm' && llmModelReady && (
+                <div style={{ fontSize: '0.78em', color: '#22c55e', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span>✓</span>
+                  <span>{WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel} ready</span>
+                </div>
+              )}
+              {opponentType === 'nn' && nnModelStatus === 'loading' && (
+                <div style={{ width: '100%', maxWidth: '260px', marginBottom: '14px' }}>
+                  <div style={{ fontSize: '0.78em', opacity: 0.75, marginBottom: '6px', textAlign: 'center' }}>
+                    Loading model… {Math.round(nnModelProgress * 100)}%
+                  </div>
+                  <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
                     <div style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '50%',
-                      background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.3)'
+                      width: `${Math.round(nnModelProgress * 100)}%`,
+                      height: '100%',
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      borderRadius: '3px', transition: 'width 0.3s'
                     }} />
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontWeight: '600', fontSize: '1em' }}>Black</div>
-                      <div style={{ opacity: 0.5, fontSize: '0.75em' }}>You play first</div>
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => { setGameMode('pvai'); handleStartGame('white'); }}
-                    style={{
-                      padding: '20px 32px',
-                      background: '#f5f5f5',
-                      border: 'none',
-                      borderRadius: '16px',
-                      color: '#1a1a1a',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '16px',
-                      boxShadow: '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
-                      minWidth: '160px'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)';
-                    }}
-                  >
-                    <div style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '50%',
-                      background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(0,0,0,0.05)'
-                    }} />
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontWeight: '600', fontSize: '1em' }}>White</div>
-                      <div style={{ opacity: 0.5, fontSize: '0.75em' }}>AI plays first</div>
-                    </div>
-                  </button>
+                  </div>
                 </div>
-              </div>
-            </div>
+              )}
+              {opponentType === 'nn' && nnModelStatus === 'ready' && (
+                <div style={{ fontSize: '0.78em', color: '#22c55e', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span>✓</span> Neural network ready
+                </div>
+              )}
+              {opponentType === 'nn' && nnModelStatus === 'error' && (
+                <div style={{ fontSize: '0.78em', color: '#f87171', marginBottom: '14px', maxWidth: '260px', textAlign: 'center' }}>
+                  ⚠ {nnModelError || 'Failed to load model'}
+                  <div style={{ marginTop: '4px', opacity: 0.7 }}>
+                    Run the training pipeline first. See <code>train/README.md</code>.
+                  </div>
+                </div>
+              )}
 
-            {/* Right Setup Panel */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              gap: '12px',
-              width: '220px',
-              flexShrink: 0,
-              alignSelf: 'stretch'
-            }}>
-              {/* Game Info Card */}
-              <div style={{ 
-                color: 'var(--surface-text-color)',
-                padding: '18px',
-                background: 'var(--blog-surface-background)',
-                borderRadius: '12px',
-                border: '1px solid var(--blog-surface-border, #333)'
-              }}>
-                <div style={{ 
-                  fontWeight: '600', 
-                  fontSize: '1em', 
-                  marginBottom: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}>
-                  <span>📖</span> How to Play
-                </div>
-                <div style={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  gap: '10px',
-                  fontSize: '0.8em',
-                  opacity: 0.8
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ opacity: 0.7 }}>⚫</span>
-                    <span>Black moves first</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ opacity: 0.7 }}>🎯</span>
-                    <span>Get 5 in a row to win</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ opacity: 0.7 }}>🤖</span>
-                    <span>AI adapts to your skill</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // AI vs LLM setup screen
-    return (
-      <div style={{
-        padding: '20px 0',
-        margin: '20px 0',
-        position: 'relative'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '25px' }}>
-          <div style={{ position: 'relative', width: '600px', flexShrink: 0 }}>
-            <RenjuBoard
-              humanMoves={[]}
-              computerMoves={[]}
-              userColor="black"
-              onMove={() => {}}
-              disabled={true}
-              lastMove={null}
-              candidateMoves={[]}
-            />
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: 0,
-              right: 0,
-              transform: 'translateY(-50%)',
-              background: 'rgba(0, 0, 0, 0.85)',
-              padding: '36px 20px',
-              color: '#fff',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              backdropFilter: 'blur(12px)',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
-            }}>
-              <div style={{ 
-                fontSize: '2.2em', 
-                fontWeight: '600', 
-                letterSpacing: '8px',
-                textTransform: 'uppercase',
-                marginBottom: '8px',
-                background: 'linear-gradient(135deg, #fff 0%, #94a3b8 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}>
-                AI vs LLM
-              </div>
-              <div style={{ 
-                fontSize: '0.85em', 
-                color: '#94a3b8', 
-                marginBottom: '20px',
-                fontWeight: '500'
-              }}>
-                Watch the minimax AI battle a language model
-              </div>
-              {/* Provider toggle pills */}
-              <div style={{ display: 'flex', gap: '6px', marginBottom: '14px' }}>
-                <button
-                  onClick={() => setLlmProvider('webllm')}
-                  style={{
-                    padding: '5px 14px',
-                    background: llmProvider === 'webllm' ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
-                    border: llmProvider === 'webllm' ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
-                    borderRadius: '20px',
-                    color: '#fff',
-                    cursor: 'pointer',
-                    fontSize: '0.78em',
-                    fontWeight: llmProvider === 'webllm' ? '600' : '400',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px'
-                  }}
-                >
-                  <span>💻</span> On-Device
-                </button>
-                <button
-                  onClick={() => setLlmProvider('api')}
-                  style={{
-                    padding: '5px 14px',
-                    background: llmProvider === 'api' ? 'rgba(99, 102, 241, 0.85)' : 'rgba(255, 255, 255, 0.08)',
-                    border: llmProvider === 'api' ? '1px solid rgba(99, 102, 241, 0.9)' : '1px solid rgba(255, 255, 255, 0.12)',
-                    borderRadius: '20px',
-                    color: '#fff',
-                    cursor: 'pointer',
-                    fontSize: '0.78em',
-                    fontWeight: llmProvider === 'api' ? '600' : '400',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px'
-                  }}
-                >
-                  <span>🔌</span> API
-                </button>
-              </div>
               <div style={{
-                fontSize: '0.8em',
-                color: '#fff',
-                marginBottom: '10px',
-                fontWeight: '500',
-                padding: '8px 16px',
+                fontSize: '0.8em', color: '#fff', marginBottom: '20px',
+                fontWeight: '500', padding: '8px 16px',
                 background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                borderRadius: '6px',
-                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
-                letterSpacing: '0.3px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
+                borderRadius: '6px', boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                letterSpacing: '0.3px', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', gap: '8px'
               }}>
-                <span>{llmProvider === 'webllm' ? '💻' : '🔌'}</span>
-                <span>{llmProvider === 'webllm' ? 'Select a model and load it' : 'Provide an endpoint to begin'}</span>
+                <span>👇</span>
+                <span>{startDisabled ? 'Configure your opponent first' : 'Choose your side to begin'}</span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {[
+                  { color: 'black', label: 'Black', sub: 'You play first', bg: '#1a1a1a', textColor: '#fff',
+                    stoneBg: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
+                    shadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+                    hoverShadow: '0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)' },
+                  { color: 'white', label: 'White', sub: 'Opponent plays first', bg: '#f5f5f5', textColor: '#1a1a1a',
+                    stoneBg: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
+                    shadow: '0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
+                    hoverShadow: '0 8px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9)' },
+                ].map(({ color, label, sub, bg, textColor, stoneBg, shadow, hoverShadow }) => (
+                  <button
+                    key={color}
+                    disabled={startDisabled}
+                    onClick={() => handleStartGame(color, opponentType === 'ai' ? 'pvai' : opponentType === 'nn' ? 'pvnn' : 'pvllm')}
+                    style={{
+                      padding: '20px 32px', background: bg, border: 'none',
+                      borderRadius: '16px', color: textColor,
+                      cursor: startDisabled ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      display: 'flex', alignItems: 'center', gap: '16px',
+                      boxShadow: shadow, minWidth: '160px',
+                      opacity: startDisabled ? 0.4 : 1
+                    }}
+                    onMouseOver={(e) => {
+                      if (!startDisabled) {
+                        e.currentTarget.style.transform = 'translateY(-3px)';
+                        e.currentTarget.style.boxShadow = hoverShadow;
+                      }
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = shadow;
+                    }}
+                  >
+                    <div style={{
+                      width: '36px', height: '36px', borderRadius: '50%', background: stoneBg,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                    }} />
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontWeight: '600', fontSize: '1em' }}>{label}</div>
+                      <div style={{ opacity: 0.5, fontSize: '0.75em' }}>{sub}</div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Right Setup Panel - Provider Config */}
+          {/* Right Setup Panel */}
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            gap: '12px',
-            width: '220px',
-            flexShrink: 0,
-            alignSelf: 'stretch'
+            display: 'flex', flexDirection: 'column', gap: '12px',
+            width: '220px', flexShrink: 0, alignSelf: 'stretch'
           }}>
-            <div style={{ 
-              color: 'var(--surface-text-color)',
-              padding: '18px',
+            <div style={{
+              color: 'var(--surface-text-color)', padding: '18px',
               background: 'var(--blog-surface-background)',
-              borderRadius: '12px',
-              border: '1px solid var(--blog-surface-border, #333)'
+              borderRadius: '12px', border: '1px solid var(--blog-surface-border, #333)'
             }}>
-              {llmProvider === 'webllm' ? (
+              {opponentType === 'ai' && (
                 <>
-                  <div style={{ 
-                    fontWeight: '600', 
-                    fontSize: '0.95em', 
-                    marginBottom: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}>
+                  <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '14px',
+                    display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>📖</span> How to Play
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px',
+                    fontSize: '0.8em', opacity: 0.8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ opacity: 0.7 }}>⚫</span>
+                      <span>Black moves first</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ opacity: 0.7 }}>🎯</span>
+                      <span>Get 5 in a row to win</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ opacity: 0.7 }}>🤖</span>
+                      <span>AI adapts to your skill</span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {opponentType === 'webllm' && (
+                <>
+                  <div style={{ fontWeight: '600', fontSize: '0.95em', marginBottom: '12px',
+                    display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span>💻</span> On-Device Model
                   </div>
                   <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
@@ -870,16 +652,11 @@ function RenjuGame({ mode = 'pvai' }) {
                       value={webllmModel}
                       onChange={(e) => setWebllmModel(e.target.value)}
                       style={{
-                        width: '100%',
-                        padding: '6px 8px',
-                        fontSize: '0.8em',
-                        borderRadius: '6px',
-                        border: '1px solid var(--blog-surface-border, #444)',
+                        width: '100%', padding: '6px 8px', fontSize: '0.8em',
+                        borderRadius: '6px', border: '1px solid var(--blog-surface-border, #444)',
                         background: 'var(--blog-surface-background, #1a1a1a)',
-                        color: 'var(--surface-text-color)',
-                        boxSizing: 'border-box',
-                        outline: 'none',
-                        cursor: 'pointer'
+                        color: 'var(--surface-text-color)', boxSizing: 'border-box',
+                        outline: 'none', cursor: 'pointer'
                       }}
                     >
                       {WEBLLM_MODELS.map(m => (
@@ -887,43 +664,26 @@ function RenjuGame({ mode = 'pvai' }) {
                       ))}
                     </select>
                   </div>
-                  {/* Load / Progress */}
                   {webllmLoading ? (
                     <div style={{ marginBottom: '8px' }}>
-                      <div style={{
-                        fontSize: '0.72em',
-                        opacity: 0.8,
-                        marginBottom: '6px',
-                        wordBreak: 'break-word',
-                        lineHeight: '1.4'
-                      }}>
+                      <div style={{ fontSize: '0.72em', opacity: 0.8, marginBottom: '6px',
+                        wordBreak: 'break-word', lineHeight: '1.4' }}>
                         {webllmProgress.text || 'Initializing...'}
                       </div>
-                      <div style={{
-                        width: '100%',
-                        height: '6px',
+                      <div style={{ width: '100%', height: '6px',
                         background: 'var(--blog-surface-border, #333)',
-                        borderRadius: '3px',
-                        overflow: 'hidden'
-                      }}>
+                        borderRadius: '3px', overflow: 'hidden' }}>
                         <div style={{
                           width: `${Math.round(webllmProgress.progress * 100)}%`,
                           height: '100%',
                           background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                          borderRadius: '3px',
-                          transition: 'width 0.3s'
+                          borderRadius: '3px', transition: 'width 0.3s'
                         }} />
                       </div>
                     </div>
-                  ) : isWebLLMLoaded() ? (
-                    <div style={{
-                      fontSize: '0.75em',
-                      color: '#22c55e',
-                      marginBottom: '8px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}>
+                  ) : isWebLLMLoaded() && getWebLLMLoadedModel() === webllmModel ? (
+                    <div style={{ fontSize: '0.75em', color: '#22c55e', marginBottom: '8px',
+                      display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <span>✓</span> Model ready
                     </div>
                   ) : null}
@@ -935,48 +695,40 @@ function RenjuGame({ mode = 'pvai' }) {
                       setLlmError(null);
                       try {
                         await loadWebLLMModel(webllmModel, (p) => setWebllmProgress(p));
-                        setWebllmLoading(false);
-                        handleStartAiVsLlm();
                       } catch (err) {
-                        setWebllmLoading(false);
                         setLlmError('Failed to load model: ' + err.message);
+                      } finally {
+                        setWebllmLoading(false);
                       }
                     }}
                     style={{
-                      marginTop: '6px',
-                      padding: '10px 14px',
+                      marginTop: '6px', padding: '10px 14px',
                       background: webllmLoading ? '#555' : 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                      border: 'none',
-                      borderRadius: '10px',
-                      color: '#fff',
+                      border: 'none', borderRadius: '10px', color: '#fff',
                       cursor: webllmLoading ? 'not-allowed' : 'pointer',
-                      fontSize: '0.85em',
-                      fontWeight: '600',
-                      transition: 'all 0.2s',
+                      fontSize: '0.85em', fontWeight: '600', transition: 'all 0.2s',
                       boxShadow: webllmLoading ? 'none' : '0 4px 14px rgba(99, 102, 241, 0.35)',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      minHeight: '40px'
+                      width: '100%', boxSizing: 'border-box',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      gap: '6px', minHeight: '40px'
                     }}
                   >
-                    <span>🤖</span>
-                    <span>{webllmLoading ? 'Loading...' : (isWebLLMLoaded() && getWebLLMLoadedModel() === webllmModel) ? 'Start AI vs LLM' : 'Load Model & Start'}</span>
+                    <span>💻</span>
+                    <span>
+                      {webllmLoading
+                        ? 'Loading...'
+                        : (isWebLLMLoaded() && getWebLLMLoadedModel() === webllmModel)
+                          ? 'Model Loaded ✓'
+                          : 'Load Model'}
+                    </span>
                   </button>
                 </>
-              ) : (
+              )}
+
+              {opponentType === 'api' && (
                 <>
-                  <div style={{ 
-                    fontWeight: '600', 
-                    fontSize: '0.95em', 
-                    marginBottom: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}>
+                  <div style={{ fontWeight: '600', fontSize: '0.95em', marginBottom: '12px',
+                    display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span>🔌</span> API Endpoint
                   </div>
                   <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
@@ -995,54 +747,47 @@ function RenjuGame({ mode = 'pvai' }) {
                         onChange={(e) => setApiConfig(prev => ({ ...prev, [key]: e.target.value }))}
                         placeholder={placeholder}
                         style={{
-                          width: '100%',
-                          padding: '6px 8px',
-                          fontSize: '0.8em',
-                          borderRadius: '6px',
-                          border: '1px solid var(--blog-surface-border, #444)',
+                          width: '100%', padding: '6px 8px', fontSize: '0.8em',
+                          borderRadius: '6px', border: '1px solid var(--blog-surface-border, #444)',
                           background: 'var(--blog-surface-background, #1a1a1a)',
-                          color: 'var(--surface-text-color)',
-                          boxSizing: 'border-box',
-                          outline: 'none'
+                          color: 'var(--surface-text-color)', boxSizing: 'border-box', outline: 'none'
                         }}
                       />
                     </div>
                   ))}
-                  <button
-                    onClick={() => {
-                      if (!apiConfig.endpoint) {
-                        setLlmError('Enter an endpoint URL above');
-                        return;
-                      }
-                      setLlmError(null);
-                      handleStartAiVsLlm();
-                    }}
-                    style={{
-                      marginTop: '6px',
-                      padding: '10px 14px',
-                      background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                      border: 'none',
-                      borderRadius: '10px',
-                      color: '#fff',
-                      cursor: 'pointer',
-                      fontSize: '0.85em',
-                      fontWeight: '600',
-                      transition: 'all 0.2s',
-                      boxShadow: '0 4px 14px rgba(99, 102, 241, 0.35)',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      minHeight: '40px'
-                    }}
-                  >
-                    <span>🤖</span><span>Start AI vs LLM</span>
-                  </button>
                 </>
               )}
-              {llmError && !aiVsLlmRunning && gameState === 'setup' && (
+
+              {opponentType === 'nn' && (
+                <>
+                  <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '14px',
+                    display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>🧠</span> About the Model
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px',
+                    fontSize: '0.8em', opacity: 0.8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>🏗</span><span>ResNet · 6 blocks · 64 ch</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>📚</span><span>Trained on minimax self-play</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>🎮</span><span>Fine-tuned with MCTS RL</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>⚡</span><span>Runs fully in-browser (ONNX)</span>
+                    </div>
+                  </div>
+                  {nnModelStatus === 'error' && (
+                    <div style={{ marginTop: '12px', color: '#f87171', fontSize: '0.75em' }}>
+                      ⚠ {nnModelError || 'Model failed to load'}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {llmError && gameState === 'setup' && (
                 <div style={{ marginTop: '8px', color: '#f87171', fontSize: '0.75em' }}>
                   {llmError}
                 </div>
@@ -1070,9 +815,9 @@ function RenjuGame({ mode = 'pvai' }) {
           <RenjuBoard
             humanMoves={humanMoves}
             computerMoves={computerMoves}
-            userColor={gameMode === 'aivsllm' ? 'black' : userColor}
+            userColor={userColor}
             onMove={handleMove}
-            disabled={gameMode === 'aivsllm' || gameState !== 'playing' || currentTurn !== 'human'}
+            disabled={gameState !== 'playing' || currentTurn !== 'human'}
             lastMove={lastMove}
             candidateMoves={candidateMoves}
             winningLine={winningLine}
@@ -1096,24 +841,17 @@ function RenjuGame({ mode = 'pvai' }) {
             borderRadius: '10px',
             border: '1px solid var(--blog-surface-border, #333)'
           }}>
-            {gameMode === 'aivsllm' ? (
+            {gameMode === 'pvllm' ? (
               <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9em', marginBottom: '8px' }}>
-                  <div style={{
-                    width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0,
-                    background: 'radial-gradient(circle at 30% 30%, #fff, #d4d4d4)',
-                    boxShadow: '0 1px 4px rgba(0,0,0,0.2)'
-                  }} />
-                  <span style={{ fontWeight: '600' }}>Minimax</span>
+                <div style={{ fontSize: '0.7em', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>You vs LLM</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '1.4em' }}>{userColor === 'black' ? '⚫' : '⚪'}</span>
+                  <span style={{ fontWeight: '600', fontSize: '0.95em' }}>You ({userColor === 'black' ? 'Black' : 'White'})</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9em' }}>
-                  <div style={{
-                    width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0,
-                    background: 'radial-gradient(circle at 30% 30%, #4a4a4a, #000)',
-                    boxShadow: '0 1px 4px rgba(0,0,0,0.4)'
-                  }} />
-                  <span style={{ fontWeight: '500', opacity: 0.9 }}>
-                    {llmProvider === 'webllm'
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: 0.75 }}>
+                  <span style={{ fontSize: '1.4em' }}>{userColor === 'black' ? '⚪' : '⚫'}</span>
+                  <span style={{ fontWeight: '500', fontSize: '0.85em' }}>
+                    {opponentType === 'webllm'
                       ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel)
                       : (apiConfig.model || 'API')}
                   </span>
@@ -1134,29 +872,25 @@ function RenjuGame({ mode = 'pvai' }) {
           {gameState === 'playing' && (
             <div style={{ 
               padding: '12px 15px',
-              background: gameMode === 'aivsllm'
-                ? (currentTurn === 'human'
-                    ? 'linear-gradient(135deg, #1a1a1a, #333)'
-                    : 'linear-gradient(135deg, #e8e8e8, #d4d4d4)')
-                : (currentTurn === 'human' 
-                    ? 'linear-gradient(135deg, #6366f1, #4f46e5)' 
-                    : 'linear-gradient(135deg, #f59e0b, #d97706)'),
+              background: currentTurn === 'human' 
+                ? 'linear-gradient(135deg, #6366f1, #4f46e5)' 
+                : 'linear-gradient(135deg, #f59e0b, #d97706)',
               borderRadius: '10px',
-              color: gameMode === 'aivsllm' && currentTurn !== 'human' ? '#333' : '#fff',
+              color: '#fff',
               fontWeight: '600',
               fontSize: '0.9em',
               textAlign: 'center',
-              boxShadow: gameMode === 'aivsllm'
-                ? (currentTurn === 'human'
-                    ? '0 4px 14px rgba(0, 0, 0, 0.3)'
-                    : '0 4px 14px rgba(0, 0, 0, 0.15)')
-                : (currentTurn === 'human' 
-                    ? '0 4px 14px rgba(99, 102, 241, 0.35)'
-                    : '0 4px 14px rgba(245, 158, 11, 0.35)')
+              boxShadow: currentTurn === 'human' 
+                ? '0 4px 14px rgba(99, 102, 241, 0.35)'
+                : '0 4px 14px rgba(245, 158, 11, 0.35)'
             }}>
-              {gameMode === 'aivsllm'
-                ? (currentTurn === 'human' ? `⚫ ${llmProvider === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || 'LLM') : (apiConfig.model || 'LLM')} thinking...` : '⚪ Minimax thinking...')
-                : (currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...')}
+              {gameMode === 'pvllm'
+                ? (currentTurn === 'human'
+                    ? '🎯 Your Turn'
+                    : `💭 ${opponentType === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || 'LLM') : (apiConfig.model || 'LLM')} thinking...`)
+                : gameMode === 'pvnn'
+                  ? (currentTurn === 'human' ? '🎯 Your Turn' : '🧠 Neural AI Thinking...')
+                  : (currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...')}
             </div>
           )}
 
@@ -1174,26 +908,30 @@ function RenjuGame({ mode = 'pvai' }) {
                 : '0 4px 14px rgba(239, 68, 68, 0.35)'
             }}>
               <div style={{ fontSize: '1.5em', marginBottom: '6px', color: '#fff' }}>
-                {gameMode === 'aivsllm'
-                  ? (gameState === 'won' ? '🤖' : <TbMessageChatbot style={{ color: '#fff' }} />)
-                  : (gameState === 'won' ? '🎉' : '🤖')}
+                {gameMode === 'pvllm'
+                   ? (gameState === 'won' ? '🎉' : <TbMessageChatbot style={{ color: '#fff' }} />)
+                   : gameMode === 'pvnn'
+                     ? (gameState === 'won' ? '🎉' : '🧠')
+                     : (gameState === 'won' ? '🎉' : '🤖')}
               </div>
               <div style={{
                 color: '#fff',
                 fontWeight: '600',
                 fontSize: '1em'
               }}>
-                {gameMode === 'aivsllm'
-                  ? (gameState === 'won'
-                    ? 'Minimax Won!'
-                    : `${llmProvider === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel) : (apiConfig.model || 'API')} Won!`)
-                  : (gameState === 'won' ? 'You Won!' : 'AI Won')}
+                {gameMode === 'pvllm'
+                   ? (gameState === 'won'
+                       ? 'You Won!'
+                       : `${opponentType === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel) : (apiConfig.model || 'API')} Won!`)
+                   : gameMode === 'pvnn'
+                     ? (gameState === 'won' ? 'You Won!' : 'Neural AI Won')
+                     : (gameState === 'won' ? 'You Won!' : 'AI Won')}
               </div>
             </div>
           )}
 
           {/* LLM Error */}
-          {llmError && gameMode === 'aivsllm' && (
+          {llmError && gameMode === 'pvllm' && (
             <div style={{
               padding: '10px 14px',
               background: 'rgba(239, 68, 68, 0.15)',
@@ -1235,7 +973,7 @@ function RenjuGame({ mode = 'pvai' }) {
           </button>
           
           <button
-            onClick={handleNewColor}
+            onClick={handleNewGame}
             style={{
               padding: '12px 15px',
               background: 'transparent',
@@ -1308,7 +1046,8 @@ function RenjuGame({ mode = 'pvai' }) {
             <span style={{ lineHeight: '1' }}>{soundEnabled ? '🔊' : '🔇'} Sound</span>
           </label>
 
-          {/* AI Thinking Toggle */}
+          {/* AI Thinking Toggle — not applicable for Neural AI mode */}
+          {gameMode !== 'pvnn' && gameMode !== 'pvllm' && (
           <label style={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -1361,6 +1100,7 @@ function RenjuGame({ mode = 'pvai' }) {
             </div>
             <span style={{ lineHeight: '1.3' }}>Visualize AI</span>
           </label>
+          )}
 
 
           </div>
@@ -1393,20 +1133,30 @@ function RenjuGame({ mode = 'pvai' }) {
               })()}
               <span>Move #{Math.ceil(moveCount / 2)}</span>
             </div>
-            {gameMode !== 'aivsllm' && (
+            {gameMode === 'pvai' && (
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8 }}>
               <span>Difficulty:</span>
               <span style={{ fontWeight: '500' }}>{DIFFICULTY_PRESETS[difficulty]?.emoji} {DIFFICULTY_PRESETS[difficulty]?.label}</span>
             </div>
             )}
+            {gameMode === 'pvai' && (
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
               <span>Max Depth:</span>
-              <span style={{ fontWeight: '500' }}>{gameMode === 'aivsllm' ? llmMaxDepth : maxDepth}</span>
+              <span style={{ fontWeight: '500' }}>{maxDepth}</span>
             </div>
+            )}
+            {gameMode === 'pvai' && (
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
               <span>Current Depth:</span>
               <span style={{ fontWeight: '500' }}>{currentDepth ?? '—'}</span>
             </div>
+            )}
+            {gameMode === 'pvnn' && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>
+              <span>Engine:</span>
+              <span style={{ fontWeight: '500' }}>Neural Net (ONNX)</span>
+            </div>
+            )}
           </div>
         </div>
       </div>
