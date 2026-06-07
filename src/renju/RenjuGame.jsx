@@ -1081,8 +1081,8 @@ function RenjuGame({ mode = 'pvai' }) {
             <span>⚙️</span><span>New Game</span>
           </button>
 
-          {/* Export training data button — visible in pvnn mode once games are recorded */}
-          {gameMode === 'pvnn' && pvnnGamesRecorded > 0 && (
+          {/* Export training data button — visible in pvnn mode once games are recorded, dev only */}
+          {gameMode === 'pvnn' && pvnnGamesRecorded > 0 && import.meta.env.DEV && (
             <button
               onClick={() => {
                 const games = pvnnRecorder.current.finishedGames;
