@@ -1098,9 +1098,8 @@ function RenjuGame({ mode = 'pvai' }) {
                 a.download = `renju_human_games_${Date.now()}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
-                // Reset so the next export only contains NEW games
-                pvnnRecorder.current.finishedGames = [];
-                setPvnnGamesRecorded(0);
+                // Keep games in memory — user can keep playing and export again
+                // to get a fuller session file, or pass multiple files to training
               }}
               style={{
                 padding: '12px 15px',
