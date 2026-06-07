@@ -111,13 +111,19 @@ def load_human_games(paths):
             if not move_px:
                 continue
 
-            try:
-                tensor    = build_tensor(move_rec)
-                move_idx  = move_to_index(move_px)
-                player_color = 'black' if is_black else 'white'
-                reward    = 1.0 if player_color == winning_color else -1.0
+            player_color = 'black' if is_black else 'white'
 
-                sample = (tensor, move_idx, reward)
+            # Only train on the winner's moves.
+            # Loser's moves are noisy — they might have been good moves beaten
+            # by a stronger opponent, and penalising them can damage existing skills.
+            if player_color != winning_color:
+                continue
+
+            try:
+                tensor   = build_tensor(move_rec)
+                move_idx = move_to_index(move_px)
+
+                sample = (tensor, move_idx, 1.0)   # reward always +1 (winner)
                 if is_black:
                     black_samples.append(sample)
                 else:
@@ -189,20 +195,17 @@ def train_one_expert(samples, checkpoint_path, out_checkpoint, device, args):
         for boards, moves_t, rewards_t in loader:
             boards    = boards.to(device)
             moves_t   = moves_t.to(device)
-            rewards_t = rewards_t.to(device)
 
             policy_logits, value_out = model(boards)
 
-            # Offline REINFORCE: -log_prob(move) * reward
-            log_probs   = torch.log_softmax(policy_logits, dim=-1)
-            move_log_p  = log_probs.gather(1, moves_t.unsqueeze(1)).squeeze(1)
-
-            # Normalise rewards per batch for stability
-            r_norm = (rewards_t - rewards_t.mean()) / (rewards_t.std() + 1e-8)
-
-            policy_loss = -(move_log_p * r_norm).mean()
-            value_loss  = nn.functional.mse_loss(value_out.squeeze(1), rewards_t)
-            loss        = policy_loss + value_loss
+            # Behavioural cloning: cross-entropy on winner's moves (all reward=+1)
+            policy_loss = nn.functional.cross_entropy(policy_logits, moves_t)
+            # Value head: winner = +1
+            value_loss  = nn.functional.mse_loss(
+                value_out.squeeze(1),
+                torch.ones(boards.size(0), device=device)
+            )
+            loss = policy_loss + value_loss
 
             optimizer.zero_grad()
             loss.backward()
