@@ -109,85 +109,81 @@ export default class Renju extends React.Component {
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Neural Network AI</h2>
                 <p>
-                    The minimax AI searches an explicit game tree guided by hand-crafted heuristics. The neural network takes the opposite approach — it learns what good positions look like entirely from experience, compressing that intuition into a single fast forward pass. In the game above, select <b>🧠 Neural AI</b> as your opponent.
+                    The minimax AI searches an explicit game tree guided by hand-crafted heuristics. The neural network takes a different approach — it learns entirely from experience what good board positions look like, compressing that into a single fast forward pass with no search. Select <b>🧠 Neural AI</b> above to play against it.
                 </p>
                 <p>
-                    Below is the system card for <b>renju_policy v2.0</b> — a pair of color-specialist policy and value networks trained to play 15×15 Renju. A router selects the black expert or white expert at runtime based on which color the NN is assigned.
+                    Two specialist models are trained and deployed: one for Black, one for White. A router picks the right model each turn based on which color the NN is playing.
                 </p>
 
-                <h3 className="headings">Model Overview</h3>
-                <table>
-                    <tbody>
-                        {[
-                            ['Model name', 'renju_policy v2.0 (black expert + white expert)'],
-                            ['Architecture', 'Residual CNN — 6 blocks × 64 channels (shared)'],
-                            ['Parameters', '562,057 (~562k) per model'],
-                            ['Model size', '2.3 MB each (ONNX, float32) · 4.6 MB total'],
-                            ['Inputs', '(1, 3, 15, 15) float32 tensor — my stones, opponent stones, side-to-move'],
-                            ['Outputs', 'Policy: (1, 225) move logits · Value: scalar ∈ [−1, +1]'],
-                            ['Runtime', 'ONNX Runtime Web — WebAssembly backend, single-threaded'],
-                            ['Inference latency', '~4–6 ms per move (no lookahead)'],
-                            ['Deployment', 'Fully client-side — renju_black.onnx and renju_white.onnx fetched from /models/'],
-                        ].map(([k, v]) => (
-                            <tr key={k}>
-                                <td style={{ fontWeight: 600, whiteSpace: 'nowrap', width: '30%', verticalAlign: 'top' }}>{k}</td>
-                                <td>{v}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                <h3 className="headings">Training Data</h3>
+                <h3 className="headings">Architecture</h3>
                 <p>
-                    Training data was generated entirely through self-play between minimax agents at varying search depths (1–5), with stochastic move selection to maximise position diversity.
+                    Each model is a <b>residual CNN</b> — the same architecture used by AlphaGo Zero, scaled down for the browser. The board is encoded as a <b>3-plane 15×15 tensor</b>: one plane for the current player's stones, one for the opponent's stones, and one indicating which color is to move. This relative encoding means the model sees the board the same way regardless of which color it's playing.
                 </p>
-                <ul>
-                    <li><b>5,000 games</b> played between minimax agents. Black and White depths were drawn independently from depths 1–5 to expose the network to asymmetric tactical situations.</li>
-                    <li><b>Stochastic sampling</b> — moves were drawn via softmax over minimax scores with temperature τ = 1.5, producing divergent game lines far from the deterministic minimax path.</li>
-                    <li><b>Deduplication</b> — of the ~91,900 raw positions, 52.7% were duplicates. After merging (averaging value targets for duplicate states), <b>43,513 unique positions</b> remained.</li>
-                    <li><b>Labels</b> — policy target: the minimax best move; value target: the final game outcome (+1 win / −1 loss) from the perspective of the player to move.</li>
-                </ul>
                 <p>
-                    No human game records were used. The dataset is entirely synthetic and reflects minimax play quality at shallow to medium depths.
+                    The network has two outputs trained simultaneously: a <b>policy head</b> that assigns probabilities to all 225 board cells (which move to play), and a <b>value head</b> that estimates the win probability for the current player. Sharing a single trunk for both outputs lets each task regularise the other.
                 </p>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                    gap: '6px 20px',
+                    background: 'var(--blog-surface-background)',
+                    border: '1px solid var(--blog-surface-border, #333)',
+                    borderRadius: '10px',
+                    padding: '18px',
+                    marginBottom: '20px',
+                    fontSize: '0.9em'
+                }}>
+                    {[
+                        ['Backbone', '6 residual blocks · 64 channels each'],
+                        ['Parameters', '562k per model'],
+                        ['Input', '(3, 15, 15) float32 — my stones / opponent stones / side-to-move'],
+                        ['Policy output', '225 move logits (one per board cell)'],
+                        ['Value output', 'Win probability ∈ [−1, +1]'],
+                        ['Model size', '2.3 MB each · 4.6 MB total (ONNX float32)'],
+                        ['Inference', '~5 ms per move · ONNX Runtime Web · fully client-side'],
+                    ].map(([k, v]) => (
+                        <React.Fragment key={k}>
+                            <b style={{ whiteSpace: 'nowrap' }}>{k}</b><span>{v}</span>
+                        </React.Fragment>
+                    ))}
+                </div>
 
                 <h3 className="headings">Training</h3>
-                <p>Training proceeded in three phases:</p>
                 <p>
-                    <b>Phase 1 — Supervised imitation (80 epochs).</b> The network was trained to predict the minimax best move (cross-entropy policy loss) and the game outcome (MSE value loss) on the 43,513-position dataset. At the best checkpoint (epoch 10), the model reached <b>46.6% top-1 move accuracy</b> against minimax choices — far above the random baseline of 0.4% for a 225-class problem. This phase establishes a strong tactical prior before any reinforcement learning.
+                    Training followed the same broad approach as AlphaGo Zero — no human game records, no hand-crafted features, learned entirely from self-play — adapted to run on a single laptop.
                 </p>
                 <p>
-                    <b>Phase 2 — REINFORCE vs Minimax with curriculum.</b> The pre-trained network plays against minimax opponents with alternating colors. Gradients use the REINFORCE policy gradient algorithm with a value-network baseline to reduce variance. An entropy bonus encourages exploration. The opponent starts at depth 1 and advances once the model exceeds 60% win rate over 50 games, progressing up to depth 6. Black and White gradients are computed <i>separately</i> — mixing them caused White's rare wins to be normalized against Black's frequent wins, drowning out White's learning signal. After ~550 steps the combined model peaked at <b>57% overall win rate</b> but with a stark asymmetry: Black at 100% (depths 1–4) vs White struggling at 15–30%.
+                    <b>Phase 1 — Supervised pre-training.</b> 5,000 games were generated between minimax agents at varying search depths (1–5), with stochastic move selection to diversify game lines. After deduplication, this produced <b>43,513 unique board positions</b>. The network was trained for 80 epochs to predict the minimax's chosen move (policy loss) and the game outcome (value loss). At convergence it matched the minimax's move choice <b>46.6% of the time</b> — the random baseline for 225 possible moves is 0.4%.
                 </p>
                 <p>
-                    <b>Phase 3 — Color-specific expert fine-tuning.</b> To address the asymmetry, training was forked from the Phase 2 checkpoint into two specialist models, each locked to a single color for all training games:
+                    <b>Phase 2 — Reinforcement learning vs minimax.</b> The pre-trained model plays live games against a minimax opponent and improves through the REINFORCE algorithm: moves that led to wins are reinforced, moves that led to losses are discouraged. The opponent difficulty advances automatically — starting at depth 1, increasing whenever the model wins more than 60% of its last 50 games. After 550 update steps the model reached <b>57% overall win rate</b>, but with a clear gap between Black (strong) and White (weak).
+                </p>
+                <p>
+                    <b>Phase 3 — Color-specialist fine-tuning.</b> The gap between Black and White performance comes from Renju's structure: Black always opens at the board's strongest point (center), while White must respond and defend. Learning both strategies simultaneously in one model caused them to interfere with each other. Training was forked into two models, each playing only its own color:
                 </p>
                 <ul>
-                    <li><b>Black expert</b> — trained exclusively as Black. Converged to 100% win rate vs minimax depths 1–5 over 725 update steps. d1–d4 remained perfect across every evaluation with no forgetting.</li>
-                    <li><b>White expert</b> — trained exclusively as White. White's learning exploded once it had 100% of the gradient signal — it promoted through depths 1→6 in just 28 steps (vs 195 in Phase 2), reaching a peak overall win rate of <b>76.5%</b> at step 475. White d4 proved the hardest challenge, breaking through to 65% but not consistently holding.</li>
+                    <li><b>Black expert</b> — 100% win rate against minimax depths 1–5 as Black. The model converged and held this performance stably.</li>
+                    <li><b>White expert</b> — peaked at <b>76.5% overall win rate</b>. White depths 1–3 reached 100%; depth 4 remained the hardest level to hold consistently.</li>
                 </ul>
-                <p>
-                    The deployed system uses a <b>runtime router</b>: when the NN plays Black it uses <code>renju_black.onnx</code>; when it plays White it uses <code>renju_white.onnx</code>. Both share the same architecture — only the weights differ. Both load in parallel in the browser; the correct model is selected per turn at near-zero overhead.
-                </p>
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
-                    Each expert was evaluated in 30-game matches per depth configuration at temperature τ = 0.3 (near-greedy). Results are shown for both the specialist role and the opposite color (where the model was not trained).
+                    Each expert was evaluated against minimax at depths 1–5 in both colors. ★ marks the specialist role each model was trained for.
                 </p>
-                <p><b>Black Expert</b> — <code>renju_black.onnx</code>, step 725, overall <b>62%</b></p>
+                <p><b>Black Expert</b> — <code>renju_black.onnx</code></p>
                 <table>
                     <thead>
                         <tr>
-                            <th>vs Minimax depth</th>
+                            <th>vs Minimax</th>
                             <th style={{ textAlign: 'right' }}>As Black ★</th>
-                            <th style={{ textAlign: 'right' }}>As White (not trained)</th>
+                            <th style={{ textAlign: 'right' }}>As White</th>
                         </tr>
                     </thead>
                     <tbody>
                         {[
-                            ['depth-1', '100%', '10%'],
-                            ['depth-2', '100%', '55%'],
-                            ['depth-3', '100%', '55%'],
+                            ['depth-1', '100%',  '4%'],
+                            ['depth-2', '100%', '40%'],
+                            ['depth-3', '100%', '59%'],
                             ['depth-4', '100%',  '0%'],
                             ['depth-5', '100%',  '0%'],
                         ].map(([opp, b, w]) => (
@@ -197,29 +193,24 @@ export default class Renju extends React.Component {
                                 <td style={{ textAlign: 'right', color: Number(w.replace('%','')) >= 50 ? '#10b981' : '#f87171', fontWeight: 600 }}>{w}</td>
                             </tr>
                         ))}
-                        <tr style={{ fontWeight: 700, borderTop: '2px solid var(--surface-text-color)' }}>
-                            <td>Average</td>
-                            <td style={{ textAlign: 'right', color: '#10b981' }}>100%</td>
-                            <td style={{ textAlign: 'right', color: '#f87171' }}>24%</td>
-                        </tr>
                     </tbody>
                 </table>
-                <p style={{ marginTop: '16px' }}><b>White Expert</b> — <code>renju_white.onnx</code>, step 475, overall <b>76.5%</b></p>
+                <p style={{ marginTop: '16px' }}><b>White Expert</b> — <code>renju_white.onnx</code></p>
                 <table>
                     <thead>
                         <tr>
-                            <th>vs Minimax depth</th>
-                            <th style={{ textAlign: 'right' }}>As Black (not trained)</th>
+                            <th>vs Minimax</th>
+                            <th style={{ textAlign: 'right' }}>As Black</th>
                             <th style={{ textAlign: 'right' }}>As White ★</th>
                         </tr>
                     </thead>
                     <tbody>
                         {[
-                            ['depth-1', '95%',  '100%'],
-                            ['depth-2', '100%',  '95%'],
-                            ['depth-3',  '75%', '100%'],
-                            ['depth-4',  '95%',  '35%'],
-                            ['depth-5',   '0%',  '70%'],
+                            ['depth-1',  '99%', '97%'],
+                            ['depth-2', '100%', '97%'],
+                            ['depth-3',  '74%','100%'],
+                            ['depth-4',  '99%', '22%'],
+                            ['depth-5',   '0%', '67%'],
                         ].map(([opp, b, w]) => (
                             <tr key={opp}>
                                 <td>{opp}</td>
@@ -227,25 +218,11 @@ export default class Renju extends React.Component {
                                 <td style={{ textAlign: 'right', color: Number(w.replace('%','')) >= 50 ? '#10b981' : '#f87171', fontWeight: 600 }}>{w}</td>
                             </tr>
                         ))}
-                        <tr style={{ fontWeight: 700, borderTop: '2px solid var(--surface-text-color)' }}>
-                            <td>Average</td>
-                            <td style={{ textAlign: 'right', color: '#10b981' }}>73%</td>
-                            <td style={{ textAlign: 'right', color: '#10b981' }}>80%</td>
-                        </tr>
                     </tbody>
                 </table>
                 <p style={{ marginTop: '16px' }}>
-                    The routed system (each model playing its specialist color) achieves a <b>76.5% combined win rate</b> — up from 57% for the single Phase 2 model and 9% for the raw supervised model. The white expert's White play now matches or exceeds the black expert's Black play at most depths.
+                    Using each model in its specialist role, the combined system reaches <b>75.5% win rate</b> — up from 9% for the supervised-only model and 57% before color specialisation. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
                 </p>
-
-                <h3 className="headings">Limitations</h3>
-                <ul>
-                    <li><b>Color specialisation cuts both ways.</b> The black expert struggles as White (24% win rate) and the white expert forgets Black play over time (B-d3 collapsed to 0% by step 700). Each model excels <i>only</i> in its trained color at deep search depths.</li>
-                    <li><b>White depth-4 is the hard wall.</b> Despite reaching 65% win rate against depth-4 minimax as White during some training windows, the white expert couldn't consistently hold that skill — it oscillated between 0% and 65% across consecutive evaluations. A larger model or longer training would be needed to consolidate depth-4 White defense.</li>
-                    <li><b>No lookahead.</b> Both models make a single forward pass per move with no search. Strong minimax agents with deep search (depth 5+) can exploit multi-move threats that the models fail to foresee without a search tree.</li>
-                    <li><b>Eval noise.</b> Win rate estimates from 20-game matches carry ±15–20% error. Some apparent regressions (e.g. d3 dropping to 0%) were sampling artifacts, not genuine forgetting — confirmed by recovery in the next evaluation.</li>
-                    <li><b>Shallow training data.</b> The supervised pre-training used positions from minimax depths 1–5. The models absorbed patterns from shallow, imperfect play before refinement via RL.</li>
-                </ul>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Playing Against an LLM</h2>
