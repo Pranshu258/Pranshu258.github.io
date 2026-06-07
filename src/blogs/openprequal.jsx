@@ -147,85 +147,87 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     After extensive testing with Locust, I found that Prequal is not better than round robin and other simpler load balacing algorithms if the number of backend servers is low. It performs marginally better when the system has 100 or more backend servers across which the proxy needs to load balance.  
                 </p>
-                <table className="development-timeline-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                <div className="blog-content">
+                <table>
                     <caption>Metrics at 1200 RPS vegeta attack for 5 seconds, with single proxy worker, and 100 single worker heterogeneous backend servers, with local redis registry, on a MacBook Pro M3 Pro (latencies in ms). Vegeta configured as default (30s client timeout). Performance and success rate degrades rapidly with higher RPS. Increasing the number of proxy workers allows higher RPS.</caption>
-                        <thead>
-                            <tr style={{ backgroundColor: '#f8f9fa' }} >
-                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Algorithm</th>
-                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Average Latency</th>
-                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>P50 Latency</th>
-                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>P95 Latency</th>
-                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>P99 Latency</th>
-                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Max Latency</th>
-                                <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Success Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least Latency</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24045</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>26165</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>29706</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30000</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30001</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>96.76 %</td>
-                            </tr>
-                            <tr style={{ backgroundColor: '#f8f9fa' }}>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least Latency (P2C)</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>21883</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>25031</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27306</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27437</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30003</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>95.33 %</td>
-                            </tr>
-                            <tr>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least RIF</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>22455</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24696</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28587</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28985</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>29169</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>100 %</td>
-                            </tr>
-                            <tr style={{ backgroundColor: '#f8f9fa' }}>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Least RIF (P2C)</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>24987</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27098</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30000</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30000</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>30003</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>93.41 %</td>
-                            </tr>
-                            <tr style={{ fontWeight: 'bold' }}>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Prequal</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>22975</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>25396</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27042</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27209</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27423</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>100 %</td>
-                            </tr>
-                            <tr style={{ backgroundColor: '#f8f9fa' }}>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Random</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>22806</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>25348</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27475</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>27612</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>29437</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>99.63 %</td>
-                            </tr>
-                            <tr>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }} className="metric">Round Robin</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>23522</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>26182</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28179</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28442</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>28746</td>
-                                <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>99.91 %</td>
-                            </tr>
-                        </tbody>
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Average Latency</th>
+                            <th>P50 Latency</th>
+                            <th>P95 Latency</th>
+                            <th>P99 Latency</th>
+                            <th>Max Latency</th>
+                            <th>Success Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Least Latency</td>
+                            <td>24045</td>
+                            <td>26165</td>
+                            <td>29706</td>
+                            <td>30000</td>
+                            <td>30001</td>
+                            <td>96.76 %</td>
+                        </tr>
+                        <tr>
+                            <td>Least Latency (P2C)</td>
+                            <td>21883</td>
+                            <td>25031</td>
+                            <td>27306</td>
+                            <td>27437</td>
+                            <td>30003</td>
+                            <td>95.33 %</td>
+                        </tr>
+                        <tr>
+                            <td>Least RIF</td>
+                            <td>22455</td>
+                            <td>24696</td>
+                            <td>28587</td>
+                            <td>28985</td>
+                            <td>29169</td>
+                            <td>100 %</td>
+                        </tr>
+                        <tr>
+                            <td>Least RIF (P2C)</td>
+                            <td>24987</td>
+                            <td>27098</td>
+                            <td>30000</td>
+                            <td>30000</td>
+                            <td>30003</td>
+                            <td>93.41 %</td>
+                        </tr>
+                        <tr style={{ fontWeight: 'bold' }}>
+                            <td>Prequal</td>
+                            <td>22975</td>
+                            <td>25396</td>
+                            <td>27042</td>
+                            <td>27209</td>
+                            <td>27423</td>
+                            <td>100 %</td>
+                        </tr>
+                        <tr>
+                            <td>Random</td>
+                            <td>22806</td>
+                            <td>25348</td>
+                            <td>27475</td>
+                            <td>27612</td>
+                            <td>29437</td>
+                            <td>99.63 %</td>
+                        </tr>
+                        <tr>
+                            <td>Round Robin</td>
+                            <td>23522</td>
+                            <td>26182</td>
+                            <td>28179</td>
+                            <td>28442</td>
+                            <td>28746</td>
+                            <td>99.91 %</td>
+                        </tr>
+                    </tbody>
                 </table>
+                </div>
                 <p>
                     As we can see in the table above, Prequal and Least RIF perform marginally better than other algorithms under heavy load (similar claim was made by Google in the original paper). However, the performance gap between Prequal and others is modest compared to results shown by Google research team. It could be because of the benchmarking test setup itself and the gaps may widen if we further scale out the backend servers. Also, all the tests I did were done on a single machine, i.e. all the backend servers and the proxy servers were running on the same hardware, which meant that if one of the servers consumed more resources, less were available for others. I tried testing with isolated deployments on Azure, but could not create 100 independent servers due to quota limits for the free tier. 
                 </p>
@@ -271,61 +273,49 @@ export default class OpenPrequalBlog extends React.Component {
                 <p>
                     Over six phases the project moved from basic reverse-proxy setup, metrics and testing to building an extensible load-balancer and the Prequal algorithm with health monitoring and a backend registry; it was then optimized (off-path probing, caching, concurrency improvements), expanded to support multiple selection strategies and benchmarking, testing and deployment automation, and finally integrated Redis, better health checks, and refined metrics and monitoring.
                 </p>
-                <table className="development-timeline-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                <div className="blog-content">
+                <table>
                     <thead>
-                        <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Phase</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Timeline</th>
-                            <th style={{ padding: '12px', textAlign: 'left', border: '1px solid #dee2e6' }}>Highlights</th>
+                        <tr>
+                            <th>Phase</th>
+                            <th>Timeline</th>
+                            <th>Highlights</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
-                                <strong>Initial Foundation</strong>
-                            </td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>4 months ago</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
-                                Project setup, reverse proxy, basic metrics, tests and docs.
-                            </td>
-                        </tr>
-                        <tr style={{ backgroundColor: '#f8f9fa' }}>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}><strong>Core Load Balancing Development</strong></td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>5 weeks ago</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
-                                Core load-balancer, probe manager, RIF/latency metrics, Prequal implementation.
-                            </td>
+                            <td><strong>Initial Foundation</strong></td>
+                            <td>4 months ago</td>
+                            <td>Project setup, reverse proxy, basic metrics, tests and docs.</td>
                         </tr>
                         <tr>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}><strong>Optimization and Refinement</strong></td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>3-4 weeks ago</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
-                                Performance: off-path probes, caching, concurrency fixes, load-testing tools.
-                            </td>
-                        </tr>
-                        <tr style={{ backgroundColor: '#f8f9fa' }}>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}><strong>Algorithm Expansion</strong></td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2-3 weeks ago</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
-                                Added selection strategies (Least Latency, Least RIF, P2C, Random, RR) and analysis.
-                            </td>
+                            <td><strong>Core Load Balancing Development</strong></td>
+                            <td>5 weeks ago</td>
+                            <td>Core load-balancer, probe manager, RIF/latency metrics, Prequal implementation.</td>
                         </tr>
                         <tr>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}><strong>Production Readiness</strong></td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>2 weeks ago</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
-                                Docker, profiling, CI/tests, formatting and docs.
-                            </td>
+                            <td><strong>Optimization and Refinement</strong></td>
+                            <td>3-4 weeks ago</td>
+                            <td>Performance: off-path probes, caching, concurrency fixes, load-testing tools.</td>
                         </tr>
-                        <tr style={{ backgroundColor: '#f8f9fa' }}>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}><strong>Further Optimizations</strong></td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>Last 2 weeks</td>
-                            <td style={{ padding: '12px', border: '1px solid #dee2e6', verticalAlign: 'top' }}>
-                                Redis registry, improved health checks, lighter TTLs, and benchmarking docs.
-                            </td>
+                        <tr>
+                            <td><strong>Algorithm Expansion</strong></td>
+                            <td>2-3 weeks ago</td>
+                            <td>Added selection strategies (Least Latency, Least RIF, P2C, Random, RR) and analysis.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Production Readiness</strong></td>
+                            <td>2 weeks ago</td>
+                            <td>Docker, profiling, CI/tests, formatting and docs.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Further Optimizations</strong></td>
+                            <td>Last 2 weeks</td>
+                            <td>Redis registry, improved health checks, lighter TTLs, and benchmarking docs.</td>
                         </tr>
                     </tbody>
                 </table>
+                </div>
                 <hr style={{ backgroundColor: "white" }} />
                 <h2>References</h2>
                 <ol>
