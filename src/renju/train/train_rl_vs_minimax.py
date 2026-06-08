@@ -37,7 +37,7 @@ signal.signal(signal.SIGTERM, lambda s, f: sys.exit(0))
 from game_engine import (
     BOARD_SIZE, BLACK, WHITE, EMPTY,
     empty_board, check_five, board_to_tensor,
-    get_best_move, get_candidate_moves,
+    get_best_move, get_candidate_moves, find_forced_move,
 )
 
 
@@ -65,6 +65,9 @@ def parse_args():
                    help='Games per depth/color passed to evaluate.py subprocess')
     p.add_argument('--eval-max-depth',    type=int,   default=4,
                    help='Max minimax depth passed to evaluate.py subprocess')
+    p.add_argument('--tactical-penalty', type=float, default=0.5,
+                   help='Per-step reward penalty applied when the NN misses a forced '
+                        'win or fails to block an opponent 4-in-a-row.  0 disables.')
     p.add_argument('--entropy-coef',      type=float, default=0.01)
     p.add_argument('--lr',                type=float, default=5e-5)
     p.add_argument('--temperature',       type=float, default=1.0)
@@ -86,7 +89,7 @@ def parse_args():
 # Minimax is sequential (no subprocess pool) — simpler, reliable, no zombies.
 
 def play_episodes_batched(model, n_games, depth_vs_black, depth_vs_white,
-                          temperature, device, color=None):
+                          temperature, device, color=None, tactical_penalty=0.5):
     """
     Play n_games simultaneously with batched NN inference.
     color: None = alternate Black/White per game (default dual training)
@@ -133,8 +136,18 @@ def play_episodes_batched(model, n_games, depth_vs_black, depth_vs_white,
                 probs = torch.softmax((logits + mask) / temperature, dim=0)
                 dist = torch.distributions.Categorical(probs)
                 idx = dist.sample(); lp = dist.log_prob(idx)
-                transitions[i].append((lp, value))
-                nn_moves[i] = (idx.item() // BOARD_SIZE, idx.item() % BOARD_SIZE)
+                chosen = (idx.item() // BOARD_SIZE, idx.item() % BOARD_SIZE)
+
+                # Tactical penalty: punish immediately when a forced move is missed.
+                # This gives a dense signal rather than waiting for the end-of-game reward.
+                step_reward = 0.0
+                if tactical_penalty > 0:
+                    forced = find_forced_move(boards[i], is_black_turn[i], cands)
+                    if forced is not None and chosen != forced:
+                        step_reward = -tactical_penalty
+
+                transitions[i].append((lp, value, step_reward))
+                nn_moves[i] = chosen
 
         # Sequential minimax — no subprocess pool, no zombies
         mm_moves = {}
@@ -313,13 +326,14 @@ def main():
             wd_play = sample_depth(white_depth)
             t, o = play_episodes_batched(model, n, bd_play, wd_play,
                                          args.temperature, device,
-                                         color=args.color)
+                                         color=args.color,
+                                         tactical_penalty=args.tactical_penalty)
             all_transitions.extend(t); all_outcomes.extend(o)
             remaining -= n
 
         # Split transitions by color and track separately
-        black_lps, black_vals, black_rewards = [], [], []
-        white_lps, white_vals, white_rewards = [], [], []
+        black_lps, black_vals, black_rewards, black_base = [], [], [], []
+        white_lps, white_vals, white_rewards, white_base = [], [], [], []
 
         for g_idx, (transitions, outcome) in enumerate(zip(all_transitions, all_outcomes)):
             # In expert mode all games are the same color; in dual mode alternate
@@ -332,30 +346,36 @@ def main():
 
             if nn_is_black_game:
                 recent_black.append(outcome)
-                target = (black_lps, black_vals, black_rewards)
+                target = (black_lps, black_vals, black_rewards, black_base)
             else:
                 recent_white.append(outcome)
-                target = (white_lps, white_vals, white_rewards)
+                target = (white_lps, white_vals, white_rewards, white_base)
             if outcome == 1: wins += 1
             elif outcome == -1: losses += 1
             else: draws += 1
-            for lp, ve in transitions:
-                target[0].append(lp); target[1].append(ve); target[2].append(float(outcome))
+            for lp, ve, sr in transitions:
+                target[0].append(lp); target[1].append(ve)
+                # Effective reward = game outcome + per-step tactical penalty.
+                # Value MSE target stays as the raw game outcome so the value
+                # head learns true win probability, not penalised reward.
+                target[2].append(float(outcome) + sr)
+                target[3].append(float(outcome))
 
         # Separate gradient updates per color — prevents Black wins from
         # swamping White's reward normalisation and drowning out White's signal.
-        def reinforce_loss(lps, vals, rewards):
+        def reinforce_loss(lps, vals, rewards, base_outcomes):
             if not lps: return None
-            r_t  = torch.tensor(rewards, dtype=torch.float32, device=device)
+            r_t  = torch.tensor(rewards,       dtype=torch.float32, device=device)
+            bo_t = torch.tensor(base_outcomes, dtype=torch.float32, device=device)
             v_t  = torch.stack(vals)
             lp_t = torch.stack(lps)
             rn   = (r_t - r_t.mean()) / (r_t.std() + 1e-8) if r_t.std() > 1e-6 else r_t
             return (-(lp_t * (rn - v_t.detach())).mean()
-                    + nn.functional.mse_loss(v_t, r_t)
+                    + nn.functional.mse_loss(v_t, bo_t)   # value learns raw game outcome
                     - args.entropy_coef * lp_t.mean())
 
-        black_loss = reinforce_loss(black_lps, black_vals, black_rewards)
-        white_loss = reinforce_loss(white_lps, white_vals, white_rewards)
+        black_loss = reinforce_loss(black_lps, black_vals, black_rewards, black_base)
+        white_loss = reinforce_loss(white_lps, white_vals, white_rewards, white_base)
 
         if black_loss is not None or white_loss is not None:
             loss = sum(l for l in [black_loss, white_loss] if l is not None)

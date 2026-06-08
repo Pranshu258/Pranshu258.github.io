@@ -6,11 +6,22 @@ Accepts either an ONNX model (--model) or a PyTorch .pt checkpoint (--pt).
 Results are printed to stdout and optionally appended to --log.
 
 Usage:
-    # ONNX (browser model)
-    python evaluate.py --model ../public/models/renju_policy.onnx --games 30
+    # ONNX (browser model) — honest eval: greedy play, fresh random seeds
+    python evaluate.py --model ../public/models/renju_policy.onnx --games 100
 
     # PyTorch checkpoint (direct, no export needed — used by training loop)
     python evaluate.py --pt checkpoints/rl_vs_minimax_step00050.pt --games 20 --log eval_log.txt
+
+    # Legacy reproducible eval (fixed seeds, temperature 0.3 — matches old behaviour)
+    python evaluate.py --pt checkpoints/... --games 100 --temperature 0.3 --seed 0
+
+Honesty notes
+─────────────
+* --temperature 0   : NN plays greedily (argmax). Removing stochasticity shows the
+                      model's true best move, not a lucky sample.
+* --seed not set    : per-game seeds are drawn from system entropy so every run
+                      exercises different board positions.  Pass --seed N to fix
+                      seeds for reproducibility (e.g. publishing a result).
 """
 
 import argparse, sys
@@ -27,12 +38,17 @@ def parse_args():
     g = p.add_mutually_exclusive_group(required=True)
     g.add_argument('--model', type=str, help='ONNX model path')
     g.add_argument('--pt',    type=str, help='PyTorch .pt checkpoint path')
-    p.add_argument('--games',             type=int,   default=30)
+    p.add_argument('--games',             type=int,   default=100)
     p.add_argument('--max-minimax-depth', type=int,   default=4)
-    p.add_argument('--temperature',       type=float, default=0.3)
+    p.add_argument('--temperature',       type=float, default=0.0,
+                   help='NN move temperature. 0 = greedy/argmax (honest); '
+                        '>0 = stochastic sampling (used during training)')
     p.add_argument('--log',               type=str,   default=None,
                    help='Append results to this file')
-    p.add_argument('--seed',              type=int,   default=0)
+    p.add_argument('--seed',              type=int,   default=None,
+                   help='Base RNG seed. Omit (default) to use system entropy '
+                        'so every run covers different positions. Pass an int '
+                        'to fix seeds for reproducibility.')
     return p.parse_args()
 
 
@@ -68,11 +84,11 @@ def make_pt_fn(ckpt_path):
 # ── Move selection ─────────────────────────────────────────────────────────────
 
 def pick_move(infer_fn, board, is_black, temperature):
-    tensor = board_to_tensor(board, is_black).reshape(1, 3, BOARD_SIZE, BOARD_SIZE)
-    logits, _ = infer_fn(tensor)
     candidates = get_candidate_moves(board, is_black)
     if not candidates:
         return None
+    tensor = board_to_tensor(board, is_black).reshape(1, 3, BOARD_SIZE, BOARD_SIZE)
+    logits, _ = infer_fn(tensor)
     masked = np.full(225, -1e9, dtype=np.float64)
     for r, c in candidates:
         masked[r * BOARD_SIZE + c] = logits[r * BOARD_SIZE + c]
@@ -115,7 +131,12 @@ def play_one(infer_fn, nn_is_black, minimax_depth, temperature, seed):
 
 def main():
     args = parse_args()
-    np.random.seed(args.seed)
+
+    # Seed strategy:
+    #   --seed N  → deterministic: game g uses seed N+g (legacy / reproducible)
+    #   no --seed → draw fresh 32-bit seeds from system entropy each run,
+    #               ensuring different board positions every invocation.
+    rng = np.random.default_rng(args.seed)  # None → system entropy
 
     label = args.pt or args.model
     extra_info = ''
@@ -128,8 +149,9 @@ def main():
     else:
         infer_fn = make_onnx_fn(args.model)
 
+    seed_label = str(args.seed) if args.seed is not None else 'random'
     lines = [f'Model: {label}{extra_info}',
-             f'Games: {args.games}/config  Temp: {args.temperature}', '']
+             f'Games: {args.games}/config  Temp: {args.temperature}  Seed: {seed_label}', '']
 
     depths = range(1, args.max_minimax_depth + 1)
     results = {}
@@ -138,9 +160,12 @@ def main():
     for depth in depths:
         for nn_color, clabel in [(True, 'Black'), (False, 'White')]:
             wins = draws = losses = 0
+            # Pre-draw all game seeds for this configuration up front so the
+            # entropy stream is the same regardless of depth/color loop order.
+            game_seeds = rng.integers(0, 2**31, size=args.games).tolist()
             for g in range(args.games):
                 outcome = play_one(infer_fn, nn_color, depth, args.temperature,
-                                   seed=args.seed + g)
+                                   seed=game_seeds[g])
                 if outcome == 1:   wins   += 1
                 elif outcome == 0: draws  += 1
                 else:              losses += 1

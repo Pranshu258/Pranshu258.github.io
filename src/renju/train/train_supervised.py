@@ -25,6 +25,9 @@ def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument('--data',    type=str, default='data/games.npz')
     p.add_argument('--out',     type=str, default='checkpoints/supervised.pt')
+    p.add_argument('--checkpoint', type=str, default=None,
+                   help='Path to an existing .pt checkpoint to fine-tune from. '
+                        'Omit to train from scratch.')
     p.add_argument('--epochs',  type=int, default=80)
     p.add_argument('--batch',   type=int, default=256)
     p.add_argument('--lr',      type=float, default=1e-3)
@@ -129,6 +132,11 @@ def main():
     model = build_model(num_blocks=args.blocks, channels=args.channels).to(device)
     total_params = sum(p.numel() for p in model.parameters())
     print(f'Model: {total_params:,} parameters')
+
+    if args.checkpoint:
+        ckpt = torch.load(args.checkpoint, map_location=device, weights_only=False)
+        model.load_state_dict(ckpt['model_state_dict'])
+        print(f'Fine-tuning from: {args.checkpoint}')
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)

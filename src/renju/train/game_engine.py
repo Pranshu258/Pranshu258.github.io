@@ -402,6 +402,35 @@ def get_best_move(board, is_black, depth=4):
     return move
 
 
+def find_forced_move(board, is_black, candidates=None):
+    """
+    Return an immediate forced (row, col) if one exists, else None.
+
+    Priority 1 — win  : placing own stone here completes 5-in-a-row.
+    Priority 2 — block: opponent would complete 5-in-a-row here next turn.
+
+    `candidates` may be pre-computed (e.g. from get_candidate_moves) to avoid
+    recomputing it.  If None it is computed on demand.
+    """
+    if candidates is None:
+        candidates = get_candidate_moves(board, is_black)
+    color = BLACK if is_black else WHITE
+    opp   = -color
+    for r, c in candidates:
+        board[r, c] = color
+        wins = check_five(board, r, c, color)
+        board[r, c] = EMPTY
+        if wins:
+            return (r, c)
+    for r, c in candidates:
+        board[r, c] = opp
+        threatens = check_five(board, r, c, opp)
+        board[r, c] = EMPTY
+        if threatens:
+            return (r, c)
+    return None
+
+
 def get_move_with_temperature(board, is_black, depth=4, temperature=1.0):
     """
     Return (label_move, played_move).
