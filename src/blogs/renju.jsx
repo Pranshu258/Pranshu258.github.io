@@ -171,6 +171,9 @@ export default class Renju extends React.Component {
                 <p>
                     <b>Phase 5 — Tactical RL fine-tuning.</b> Despite strong aggregate win rates, the models showed a critical blind spot: they would occasionally miss forced moves — failing to complete an open four into five, or neglecting to block the opponent's. To address this, 20,000 forced-move positions were generated from minimax self-play and used to supervised fine-tune both experts (91–92% forced-move accuracy after 20 epochs). The fine-tuned models were then refined via reinforcement learning with a per-step tactical penalty (−0.5) whenever a forced move was missed, preventing the models from treating tactical failures as neutral. After 100–170 RL update steps, the white expert achieved consistent <b>100% win rate as White against minimax depths 1–4</b>, and the black expert maintained <b>100% win rate as Black across all depths</b>.
                 </p>
+                <p>
+                    <b>Phase 6 — Human RL gym.</b> To address blind spots that minimax self-play cannot expose — unconventional openings, multi-step traps, and patterns the minimax never produces — the models were further trained via live play against a human opponent. Each game is treated as a REINFORCE episode with the same tactical penalty, and gradient updates are applied after every few games. This creates a direct feedback loop between observed weaknesses and training signal.
+                </p>
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
