@@ -167,8 +167,8 @@ def play_game(model, human_color, temperature, device, tactical_penalty, args):
       trajectory: list of (log_prob, value_tensor, step_reward, base_outcome)
     """
     board       = empty_board()
-    board[BOARD_SIZE // 2, BOARD_SIZE // 2] = BLACK  # Black opens at center
-    is_black_turn = True
+    board[BOARD_SIZE // 2, BOARD_SIZE // 2] = BLACK  # Black opens at center (Renju rule)
+    is_black_turn = False  # center counts as Black's move; White goes next
     trajectory  = []
     last_move   = (BOARD_SIZE // 2, BOARD_SIZE // 2)
     nn_color    = WHITE if human_color == BLACK else BLACK
