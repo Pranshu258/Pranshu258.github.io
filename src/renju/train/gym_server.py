@@ -683,7 +683,10 @@ def main():
             except Exception:
                 pass
         if 'human_gym_stats' in ckpt:
-            S.stats = ckpt['human_gym_stats']
+            loaded = ckpt['human_gym_stats']
+            # Merge with defaults so missing keys (e.g. 'games' from older checkpoints) are filled
+            defaults = {'games': 0, 'wins': 0, 'losses': 0, 'draws': 0, 'updates': 0}
+            S.stats = {**defaults, **loaded}
         print(f"  Loaded: {args.checkpoint}")
     else:
         print(f"  Checkpoint not found: {args.checkpoint}", file=sys.stderr)
