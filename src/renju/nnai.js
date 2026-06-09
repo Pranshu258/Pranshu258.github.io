@@ -155,7 +155,37 @@ function pixelToIndex(x, y) {
   return (y / GRID_SIZE) * BOARD_CELLS + (x / GRID_SIZE);
 }
 
-// ─── Inference ────────────────────────────────────────────────────────────────
+/**
+ * Return tensor indices of candidate moves (empty cells within Chebyshev
+ * distance 1 of any existing stone). Matches the candidate set used during
+ * training — restricting the policy to this region gives much stronger play.
+ */
+function getCandidateIndices(playerMoves, opponentMoves) {
+  const N = BOARD_CELLS;
+  const allMoves = [...playerMoves, ...opponentMoves];
+  if (allMoves.length === 0) return [Math.floor(N / 2) * N + Math.floor(N / 2)];
+
+  const occupied = new Set(allMoves.map(([x, y]) => pixelToIndex(x, y)));
+  const candidates = new Set();
+
+  for (const [x, y] of allMoves) {
+    const row = y / GRID_SIZE;
+    const col = x / GRID_SIZE;
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nr = row + dr, nc = col + dc;
+        if (nr >= 0 && nr < N && nc >= 0 && nc < N) {
+          const idx = nr * N + nc;
+          if (!occupied.has(idx)) candidates.add(idx);
+        }
+      }
+    }
+  }
+  return Array.from(candidates);
+}
+
+
 
 /**
  * Run neural net inference and return the best legal move.
@@ -183,10 +213,13 @@ export async function getNNMove(playerMoves, opponentMoves, isBlack, temperature
     occupied.add(pixelToIndex(x, y));
   }
 
-  // Softmax over legal (unoccupied, non-forbidden) positions
+  // Build candidate set: empty cells within 1 step of existing stones (matches training)
+  const candidateIdxs = new Set(getCandidateIndices(playerMoves, opponentMoves));
+
+  // Apply softmax to raw logits, then zero out non-candidates and forbidden cells
   const probs = softmax(policyLogits);
   const legalProbs = new Float32Array(225);
-  for (let i = 0; i < 225; i++) {
+  for (const i of candidateIdxs) {
     if (occupied.has(i)) continue;
     const [x, y] = indexToPixel(i);
     const { forbidden } = isForbiddenMove(playerMoves, opponentMoves, [x, y], isBlack);
