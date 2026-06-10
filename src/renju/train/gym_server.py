@@ -89,6 +89,7 @@ HTML = r"""<!DOCTYPE html>
   <div>Draws <span id="s-draws">0</span></div>
   <div>Updates <span id="s-updates">0</span></div>
   <div>NN plays <span id="s-nncolor">●</span></div>
+  <div>Mode <span id="s-mode">—</span></div>
 </div>
 
 <div id="board-wrap">
@@ -291,6 +292,7 @@ async function newGame() {
   lastMove   = data.last_move;
   hoverCell  = null;
   document.getElementById('s-nncolor').textContent = data.nn_color==='black' ? '●' : '○';
+  document.getElementById('s-mode').textContent = data.mode === 'imitation' ? '✏️ Imitation' : '🎮 REINFORCE';
   updateStats(data.stats);
   render();
 
@@ -323,7 +325,7 @@ function applyResponse(data) {
   if (data.game_over) {
     gameActive = false;
     updateStats(data.stats);
-    if      (data.winner === 'human') setStatus('You win! 🎉', 'win');
+    if      (data.winner === 'human') setStatus(data.training_update ? 'You win! 🎉 ↑ BC update' : 'You win! 🎉', 'win');
     else if (data.winner === 'nn')    setStatus('NN wins.', 'lose');
     else                              setStatus('Draw.', 'draw');
     return;
@@ -359,7 +361,12 @@ function flashTraining() {
 
 // Initial board
 drawBoard();
-fetch('/api/stats').then(r=>r.json()).then(updateStats).catch(()=>{});
+fetch('/api/stats').then(r=>r.json()).then(data => {
+  updateStats(data);
+  if (data.default_human_color) {
+    document.getElementById('sel-color').value = data.default_human_color;
+  }
+}).catch(()=>{});
 </script>
 </body>
 </html>
@@ -379,6 +386,24 @@ def reinforce_loss(lps, vals, rewards, base_outcomes, entropy_coef, device):
     value   = nn.functional.mse_loss(v_t, bo_t)
     entropy = -entropy_coef * lp_t.mean()
     return policy + value + entropy
+
+
+# ── Behavioral cloning loss ────────────────────────────────────────────────────
+def bc_loss(model, bc_traj, outcome, device):
+    """Cross-entropy on human moves + MSE on value head."""
+    if not bc_traj:
+        return None
+    total_policy = torch.tensor(0.0, device=device)
+    total_value  = torch.tensor(0.0, device=device)
+    target_val   = torch.tensor([[outcome]], dtype=torch.float32, device=device)
+    model.train()
+    for bc_x, move_idx in bc_traj:
+        logits, val = model(bc_x)
+        target = torch.tensor([move_idx], dtype=torch.long, device=device)
+        total_policy = total_policy + nn.functional.cross_entropy(logits, target)
+        total_value  = total_value  + nn.functional.mse_loss(val, target_val)
+    n = len(bc_traj)
+    return total_policy / n + total_value / n
 
 
 # ── NN move (with gradient graph retained) ────────────────────────────────────
@@ -434,11 +459,14 @@ class State:
         self.human_color = WHITE
         self.nn_color    = BLACK
         self.last_move   = None
-        self.trajectory  = []     # current game: list of [lp, val, step_r]
+        self.trajectory  = []     # REINFORCE: list of [lp, val, step_r]
+        self.bc_traj     = []     # Imitation: list of (board_tensor, move_idx)
+        self.imitation   = False  # True when human plays same color as NN
         self.game_over   = True
         self.buffer      = []     # completed trajectories waiting for update
         self.stats       = {'games': 0, 'wins': 0, 'losses': 0,
-                            'draws': 0, 'updates': 0}
+                            'draws': 0, 'updates': 0,
+                            'default_human_color': 'black'}
 
     def board_as_list(self):
         return self.board.tolist() if self.board is not None else None
@@ -467,6 +495,9 @@ def api_new_game():
     human_color_str = data.get('human_color', 'white')
 
     with S.lock:
+        nn_color_str  = S.args.color  # NN's configured role ('black' or 'white')
+        S.imitation   = (human_color_str == nn_color_str)
+
         S.board      = empty_board()
         S.last_move  = (BOARD_SIZE // 2, BOARD_SIZE // 2)
         S.board[S.last_move] = BLACK   # Black always opens at center (Renju rule)
@@ -475,14 +506,17 @@ def api_new_game():
         # After center placement it's White's turn
         S.is_black    = False
         S.trajectory  = []
+        S.bc_traj     = []
         S.game_over   = False
         your_turn     = (S.human_color == WHITE)  # human is White → they go next
 
+        mode = 'imitation' if S.imitation else 'reinforce'
         return jsonify({
             'board':      S.board_as_list(),
             'last_move':  list(S.last_move),
             'your_turn':  your_turn,
             'nn_color':   'black' if S.nn_color == BLACK else 'white',
+            'mode':       mode,
             'stats':      S.stats,
         })
 
@@ -527,7 +561,17 @@ def api_move():
         if S.board[hr, hc] != EMPTY:
             return jsonify({'error': 'Cell occupied.'}), 400
 
-        human_color = BLACK if S.is_black else WHITE
+        human_is_black = S.is_black
+        human_color    = BLACK if human_is_black else WHITE
+
+        # In imitation mode: record board state + human move BEFORE placing
+        if S.imitation:
+            tensor = board_to_tensor(S.board, human_is_black)
+            bc_x   = torch.tensor(tensor, dtype=torch.float32,
+                                  device=S.device).unsqueeze(0)
+            move_idx = hr * BOARD_SIZE + hc
+            S.bc_traj.append((bc_x, move_idx))
+
         S.board[hr, hc] = human_color
         S.last_move = (hr, hc)
         S.is_black  = not S.is_black
@@ -539,19 +583,28 @@ def api_move():
         if _board_full():
             return _end_game('draw')
 
-        # NN responds
+        # NN responds (no gradient needed in imitation mode — NN is just the opponent)
         nn_is_black = S.is_black
-        move, lp, val, missed = nn_pick_move(
-            S.model, S.board, nn_is_black,
-            S.args.temperature, S.device, S.args.tactical_penalty
-        )
+        if S.imitation:
+            with torch.no_grad():
+                move, lp, val, missed = nn_pick_move(
+                    S.model, S.board, nn_is_black,
+                    S.args.temperature, S.device, S.args.tactical_penalty
+                )
+        else:
+            move, lp, val, missed = nn_pick_move(
+                S.model, S.board, nn_is_black,
+                S.args.temperature, S.device, S.args.tactical_penalty
+            )
+
         nn_color = BLACK if nn_is_black else WHITE
         S.board[move[0], move[1]] = nn_color
         S.last_move = move
         S.is_black  = not nn_is_black
 
-        step_r = -S.args.tactical_penalty if missed else 0.0
-        S.trajectory.append([lp, val, step_r])
+        if not S.imitation:
+            step_r = -S.args.tactical_penalty if missed else 0.0
+            S.trajectory.append([lp, val, step_r])
 
         # Check if NN won
         if check_five(S.board, move[0], move[1], nn_color):
@@ -575,7 +628,7 @@ def _board_full():
 
 
 def _end_game(winner):
-    """Finalize game, optionally run REINFORCE update. Must be called under S.lock."""
+    """Finalize game, optionally run REINFORCE or BC update. Must be called under S.lock."""
     S.game_over = True
     args = S.args
 
@@ -590,36 +643,57 @@ def _end_game(winner):
         S.stats['draws'] += 1
     S.stats['games'] += 1
 
-    # Back-fill base outcome for all NN moves this game
-    complete_traj = [(lp, val, step_r, nn_outcome) for lp, val, step_r in S.trajectory]
-    S.trajectory = []
-
     training_update = False
-    if not args.no_train and complete_traj:
-        S.buffer.append(complete_traj)
-        if len(S.buffer) >= args.update_every:
-            lps, vals, rewards, bases = [], [], [], []
-            for traj in S.buffer:
-                for lp, val, step_r, base_o in traj:
-                    lps.append(lp)
-                    vals.append(val)
-                    rewards.append(base_o + step_r)
-                    bases.append(base_o)
 
-            loss = reinforce_loss(lps, vals, rewards, bases,
-                                  args.entropy_coef, S.device)
-            if loss is not None:
-                S.optimizer.zero_grad()
-                loss.backward()
-                nn.utils.clip_grad_norm_(S.model.parameters(), 1.0)
-                S.optimizer.step()
+    if not args.no_train:
+        if S.imitation:
+            # Behavioral cloning: train only on human wins (outcome=1 from human's POV)
+            bc_traj = S.bc_traj[:]
+            S.bc_traj = []
+            if bc_traj and winner == 'human':
+                # human_outcome = +1 (human won → human moves were good)
+                loss = bc_loss(S.model, bc_traj, 1.0, S.device)
+                if loss is not None:
+                    S.optimizer.zero_grad()
+                    loss.backward()
+                    nn.utils.clip_grad_norm_(S.model.parameters(), 1.0)
+                    S.optimizer.step()
+                    S.stats['updates'] += 1
+                    training_update = True
+                    _save_checkpoint()
+                    print(f"  ↑ BC Update {S.stats['updates']}  "
+                          f"W{S.stats['wins']}/L{S.stats['losses']}/D{S.stats['draws']}")
+            else:
+                S.bc_traj = []
+        else:
+            # REINFORCE: back-fill base outcome for all NN moves this game
+            complete_traj = [(lp, val, step_r, nn_outcome) for lp, val, step_r in S.trajectory]
+            S.trajectory = []
+            if complete_traj:
+                S.buffer.append(complete_traj)
+                if len(S.buffer) >= args.update_every:
+                    lps, vals, rewards, bases = [], [], [], []
+                    for traj in S.buffer:
+                        for lp, val, step_r, base_o in traj:
+                            lps.append(lp)
+                            vals.append(val)
+                            rewards.append(base_o + step_r)
+                            bases.append(base_o)
 
-            S.buffer.clear()
-            S.stats['updates'] += 1
-            training_update = True
-            _save_checkpoint()
-            print(f"  ↑ Update {S.stats['updates']}  "
-                  f"W{S.stats['wins']}/L{S.stats['losses']}/D{S.stats['draws']}")
+                    loss = reinforce_loss(lps, vals, rewards, bases,
+                                          args.entropy_coef, S.device)
+                    if loss is not None:
+                        S.optimizer.zero_grad()
+                        loss.backward()
+                        nn.utils.clip_grad_norm_(S.model.parameters(), 1.0)
+                        S.optimizer.step()
+
+                    S.buffer.clear()
+                    S.stats['updates'] += 1
+                    training_update = True
+                    _save_checkpoint()
+                    print(f"  ↑ Update {S.stats['updates']}  "
+                          f"W{S.stats['wins']}/L{S.stats['losses']}/D{S.stats['draws']}")
 
     return jsonify({
         'board':            S.board_as_list(),
@@ -696,6 +770,7 @@ def main():
     S.optimizer = optimizer
     S.device    = device
     S.args      = args
+    S.stats['default_human_color'] = 'black' if args.color == 'white' else 'white'
 
     mode = "no training" if args.no_train else f"train every {args.update_every} games"
     print(f"  NN plays: {args.color}  |  {mode}  |  device: {device}")
