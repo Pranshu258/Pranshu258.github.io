@@ -57,7 +57,7 @@ export default class Renju extends React.Component {
                 <RenjuGame />
                 
                 <p>
-                    The <b>🧠 Neural AI</b> is selected by default — challenge it directly. Switch to <b>🤖 Minimax</b> for a more traditional opponent, or try <b>💻 On-Device LLM</b> to watch two AI systems clash.
+                    The Neural AI is selected by default. You can also switch to the Minimax engine or the On-Device LLM opponent using the buttons above the board.
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
