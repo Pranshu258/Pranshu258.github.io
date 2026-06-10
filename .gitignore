@@ -31,11 +31,3 @@ yarn-error.log*
 src/renju/train/checkpoints/*.txt
 src/renju/train/checkpoints/*.pt
 src/renju/train/renju_human_games_*.json
-
-/assets/
-/models/
-/rss.xml
-/src/public/
-
-# Personal files
-PranshuGuptaResume.tex
