@@ -1,0 +1,32 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': 'transparent', 'primaryColor': '#f9f6ee', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#207d42', 'lineColor': '#207d42', 'fontSize': '14px'}}}%%
+flowchart TB
+    TRUNK["Shared ResNet features<br/>64 x 15 x 15"]
+
+    subgraph POLICY["Policy head: where should I move?"]
+        P1["1 x 1 Conv<br/>64 -> 2"]
+        P2["BatchNorm + ReLU"]
+        P3["Flatten<br/>2 x 15 x 15 = 450"]
+        P4["Linear<br/>450 -> 225"]
+        P5["225 move logits<br/>one score per board cell"]
+        P1 --> P2 --> P3 --> P4 --> P5
+    end
+
+    subgraph VALUE["Value head: am I winning?"]
+        V1["1 x 1 Conv<br/>64 -> 1"]
+        V2["BatchNorm + ReLU"]
+        V3["Flatten<br/>1 x 15 x 15 = 225"]
+        V4["Linear + ReLU<br/>225 -> 64"]
+        V5["Linear + Tanh<br/>64 -> 1"]
+        V6["value scalar<br/>[-1, +1]"]
+        V1 --> V2 --> V3 --> V4 --> V5 --> V6
+    end
+
+    TRUNK --> P1
+    TRUNK --> V1
+
+    classDef trunk fill:#eaf5ee,stroke:#207d42,color:#1a1a1a
+    classDef policy fill:#fff7ed,stroke:#c2410c,color:#1a1a1a
+    classDef value fill:#eef2ff,stroke:#4f46e5,color:#1a1a1a
+    class TRUNK trunk
+    class P1,P2,P3,P4,P5 policy
+    class V1,V2,V3,V4,V5,V6 value

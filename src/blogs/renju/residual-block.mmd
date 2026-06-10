@@ -1,0 +1,22 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': 'transparent', 'primaryColor': '#f9f6ee', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#207d42', 'lineColor': '#207d42', 'fontSize': '14px'}}}%%
+flowchart TB
+    X["x<br/>64 x 15 x 15"] --> SPLIT{"split"}
+
+    SPLIT -->|learned update F of x| C1["Conv 3 x 3<br/>64 -> 64<br/>padding = 1"]
+    C1 --> BN1["BatchNorm<br/>ReLU"]
+    BN1 --> C2["Conv 3 x 3<br/>64 -> 64<br/>padding = 1"]
+    C2 --> BN2["BatchNorm"]
+    BN2 --> ADD(("add<br/>x + F(x)"))
+
+    SPLIT -->|identity skip path<br/>unchanged x| ADD
+    ADD --> RELU["ReLU"]
+    RELU --> Y["block output<br/>64 x 15 x 15"]
+
+    classDef tensor fill:#eaf5ee,stroke:#207d42,color:#1a1a1a
+    classDef conv fill:#eef2ff,stroke:#4f46e5,color:#1a1a1a
+    classDef op fill:#fff7ed,stroke:#c2410c,color:#1a1a1a
+    classDef skip fill:#f8fafc,stroke:#64748b,color:#1a1a1a
+    class X,Y tensor
+    class C1,C2,BN1,BN2 conv
+    class ADD,RELU op
+    class SPLIT skip

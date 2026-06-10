@@ -1,0 +1,47 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': 'transparent', 'primaryColor': '#f9f6ee', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#207d42', 'lineColor': '#207d42', 'fontSize': '14px'}}}%%
+flowchart TB
+    subgraph INPUT["Input tensor: 3 x 15 x 15"]
+        P0["Plane 0<br/>current player's stones<br/><small>15 x 15</small>"]
+        P1["Plane 1<br/>opponent stones<br/><small>15 x 15</small>"]
+        P2["Plane 2<br/>side-to-move<br/><small>15 x 15</small>"]
+    end
+
+    subgraph FILTER["One learned filter"]
+        K0["3 x 3 slice<br/>for plane 0"]
+        K1["3 x 3 slice<br/>for plane 1"]
+        K2["3 x 3 slice<br/>for plane 2"]
+        SUM["weighted sum<br/>27 weights + bias"]
+        K0 --> SUM
+        K1 --> SUM
+        K2 --> SUM
+    end
+
+    M1["Feature map #1<br/><small>15 x 15</small>"]
+    M2["Feature map #2<br/><small>15 x 15</small>"]
+    MDOTS["..."]
+    M64["Feature map #64<br/><small>15 x 15</small>"]
+    OUT["Output tensor<br/>64 x 15 x 15"]
+
+    P0 --> K0
+    P1 --> K1
+    P2 --> K2
+    SUM --> M1
+    SUM -. repeated with different learned weights .-> M2
+    SUM -. repeated .-> MDOTS
+    SUM -. repeated .-> M64
+    M1 --> OUT
+    M2 --> OUT
+    MDOTS --> OUT
+    M64 --> OUT
+
+    NOTE["3 x 3 is the local window size.<br/>64 is the number of separate filters.<br/>padding = 1 keeps every map 15 x 15."]
+    OUT --> NOTE
+
+    classDef input fill:#eaf5ee,stroke:#207d42,color:#1a1a1a
+    classDef kernel fill:#eef2ff,stroke:#4f46e5,color:#1a1a1a
+    classDef output fill:#fff7ed,stroke:#c2410c,color:#1a1a1a
+    classDef note fill:#f8fafc,stroke:#64748b,color:#1a1a1a
+    class P0,P1,P2 input
+    class K0,K1,K2,SUM kernel
+    class M1,M2,MDOTS,M64,OUT output
+    class NOTE note

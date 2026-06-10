@@ -5,11 +5,30 @@ import RenjuGame from '../renju/RenjuGame';
 import "../styles/prism.css";
 import '../styles/fonts.css';
 import '../styles/blog.css';
+import '../styles/renju-architecture.css';
 
-import architectureSvg from './renju/architecture.svg';
+import tensorConvSvg from './renju/tensor-convolution.svg?raw';
+import residualTowerOverviewSvg from './renju/residual-tower-overview.svg?raw';
+import residualBlockSvg from './renju/residual-block.svg?raw';
+import policyValueHeadsSvg from './renju/policy-value-heads.svg?raw';
+import minimaxBackupSvg from './renju/minimax-backup.svg?raw';
+import alphaBetaPruningSvg from './renju/alpha-beta-pruning.svg?raw';
 import TrainingCurve from './renju/TrainingCurve';
 
 import { FaGamepad, FaBrain, FaReact, FaGears, FaBolt, FaNetworkWired } from 'react-icons/fa6';
+
+function MermaidFigure({ svg, label, caption }) {
+    return (
+        <figure className="renju-mermaid-figure">
+            <div
+                className="mermaid-diagram renju-mermaid-diagram"
+                aria-label={label}
+                dangerouslySetInnerHTML={{ __html: svg }}
+            />
+            {caption && <figcaption>{caption}</figcaption>}
+        </figure>
+    );
+}
 
 export default class Renju extends React.Component {
     componentDidMount() {
@@ -73,19 +92,69 @@ export default class Renju extends React.Component {
                 <p>
                     The network has two outputs trained simultaneously: a <b>policy head</b> that assigns probabilities to all 225 board cells (which move to play), and a <b>value head</b> that estimates the win probability for the current player. Sharing a single trunk for both outputs lets each task regularise the other.
                 </p>
-                <div style={{ margin: '24px 0', textAlign: 'center' }}>
-                    <img
-                        src={architectureSvg}
-                        alt="RenjuNet architecture diagram"
-                        style={{ width: '100%', maxWidth: '780px', borderRadius: '10px' }}
-                    />
+                <h5>Board-State Encoding and Convolutional Projection</h5>
+                <p>
+                    The model first turns the raw board tensor into learned pattern maps. A convolution does not divide the 3 input planes into 64 parts; it learns <b>64 separate filters</b>. Each filter looks at all 3 planes through a 3x3 window, computes one number at every board location, and produces one new 15x15 feature map.
+                </p>
+
+                <MermaidFigure
+                    svg={tensorConvSvg}
+                    label="Input planes, 3D filter, and 64 output feature maps"
+                    caption="The 3-plane board representation is projected into 64 spatial feature maps by learned 3x3 filters."
+                />
+
+                <p>
+                    A single first-layer filter has <code>3 x 3 x 3 = 27</code> weights: a 3x3 slice for the current-player plane, a 3x3 slice for the opponent plane, and a 3x3 slice for the side-to-move plane. The network has 64 such filters, so the output is <code>64 x 15 x 15</code>. The input block is <code>Conv2d(3, 64, kernel_size=3, padding=1)</code>, followed by batch normalization and ReLU. Because <code>padding=1</code>, the board stays 15x15 instead of shrinking to 13x13.
+                </p>
+
+                <h5>Shared Residual Feature Extractor</h5>
+                <p>
+                    The residual tower is the main body of the network: <b>6 identical residual blocks</b> stacked in sequence. Every block receives <code>64 x 15 x 15</code> and returns <code>64 x 15 x 15</code>, so it preserves both the board coordinates and the channel count. What changes is the meaning of the 64 maps: each block refines them into more tactical features.
+                </p>
+                <div className="renju-mermaid-pair">
+                    <div className="renju-mermaid-panel">
+                        <div className="renju-diagram-label">Residual block sequence</div>
+                        <MermaidFigure
+                            svg={residualTowerOverviewSvg}
+                            label="Six-block residual tower"
+                            caption="The tower repeats the same shape-preserving ResBlock six times."
+                        />
+                    </div>
+                    <div className="renju-mermaid-panel">
+                        <div className="renju-diagram-label">Residual block computation</div>
+                        <MermaidFigure
+                            svg={residualBlockSvg}
+                            label="Single residual block detail"
+                            caption="The skip path carries x around the learned update F(x), then both paths are added."
+                        />
+                    </div>
                 </div>
+                <p>
+                    In one block, the convolutions compute a learned update <code>F(x)</code>. The skip path carries the original tensor <code>x</code> around those convolutions. The block then adds them: <code>output = ReLU(x + F(x))</code>. If a block has nothing useful to add, it can make <code>F(x)</code> close to zero and pass the original features forward. If it finds a useful refinement, it adds that refinement without destroying the existing representation.
+                </p>
+                <p>
+                    Stacking 6 blocks gives 12 more 3x3 convolutions after the input block. That lets information spread across the board: early layers see immediate neighbors, later layers combine those local signals into open-threes, fours, blocks, forks, and competing threats.
+                </p>
+
+                <h5>Policy and Value Prediction Heads</h5>
+                <p>
+                    After the residual tower, the model branches into two heads. Both heads read the same shared <code>64 x 15 x 15</code> board understanding, but they answer different questions: the policy head scores moves, while the value head scores the whole position.
+                </p>
+                <MermaidFigure
+                    svg={policyValueHeadsSvg}
+                    label="Policy and value head tensor flow"
+                    caption="A shared residual representation branches into a policy distribution over moves and a scalar value estimate."
+                />
+                <p>
+                    The policy output is still raw logits, not final probabilities. In the browser, NN mode applies softmax, masks occupied cells, filters candidates to nearby empty cells, removes forbidden Black moves, renormalizes the remaining probabilities, and then picks the move. The value output is trained as a helper signal so the shared trunk learns whether patterns are actually winning, not just whether they look like the minimax teacher's next move.
+                </p>
+
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'auto 1fr',
                     gap: '6px 20px',
                     background: 'var(--blog-surface-background)',
-                    border: '1px solid var(--blog-surface-border, #333)',
+                    border: '1px solid color-mix(in srgb, var(--surface-text-color) 20%, transparent)',
                     borderRadius: '10px',
                     padding: '18px',
                     marginBottom: '20px',
@@ -106,59 +175,66 @@ export default class Renju extends React.Component {
                     ))}
                 </div>
 
-                <h3 className="headings">Training</h3>
+                <h3 className="headings">Training Protocol</h3>
                 <p>
-                    Training proceeded in six phases — starting from minimax self-play data, advancing through reinforcement learning, specialising by color, then fine-tuning on human games and tactical patterns.
+                    The training pipeline was designed as a staged optimization procedure rather than a single end-to-end run. The model was first initialized through supervised imitation of a minimax teacher, then refined through reinforcement learning, color-specialized training, human-game adaptation, and tactical fine-tuning. Each stage addressed a specific failure mode observed in the previous stage.
                 </p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th style={{ whiteSpace: 'nowrap' }}>Phase</th>
-                            <th>Method</th>
-                            <th>Key outcome</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            [
-                                '1 — Supervised',
-                                '5,000 minimax self-play games (depths 1–5, stochastic) → 43,513 unique positions. 80 epochs of policy + value loss.',
-                                '46.6% move-match accuracy vs minimax (random baseline: 0.4%). Starting point for all RL phases.',
-                            ],
-                            [
-                                '2 — RL vs Minimax',
-                                'REINFORCE against a minimax opponent that auto-advances difficulty when the model wins >60% of its last 50 games. 550 update steps.',
-                                '57% overall win rate. Clear Black–White gap emerged: Black strong, White weak. Sharing one model for both colors caused interference.',
-                            ],
-                            [
-                                '3 — Color Specialists',
-                                'Training forked into two models. Each plays only its own color — Black expert vs White opponent, White expert vs Black opponent.',
-                                'Black: 100% win rate vs minimax depths 1–5. White: 76.5% overall, consistent at depths 1–3, volatile at depth 4 (22–65%).',
-                            ],
-                            [
-                                '4 — Human FT',
-                                '34 human-vs-NN games. Winner\'s moves used as supervised targets (lr=5×10⁻⁵, 30% original-data mixing to prevent forgetting).',
-                                'White depth-4: 22% → 94%. Black depth-5: 0% → 84%. Single session, immediate impact.',
-                            ],
-                            [
-                                '5 — Tactical RL',
-                                '20,000 forced-move positions from minimax self-play. Supervised FT for move accuracy, then RL with −0.5 penalty per missed forced move.',
-                                '91–92% forced-move accuracy. White: 100% vs depths 1–4. Black: 100% vs all depths. Blind spot for missed fours/blocks eliminated.',
-                            ],
-                            [
-                                '6 — Human RL Gym',
-                                'Live games vs human via browser gym. REINFORCE updates every few games (same tactical penalty). Imitation mode: BC loss on human wins.',
-                                'White model: +83 Elo after 28 games / 10 updates. Addresses unconventional openings and multi-step traps unseen in minimax play.',
-                            ],
-                        ].map(([phase, method, outcome]) => (
-                            <tr key={phase}>
-                                <td style={{ whiteSpace: 'nowrap', fontWeight: 600, verticalAlign: 'top' }}>{phase}</td>
-                                <td style={{ verticalAlign: 'top', fontSize: '0.88em' }}>{method}</td>
-                                <td style={{ verticalAlign: 'top', fontSize: '0.88em' }}>{outcome}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <ol className="renju-training-protocol" aria-label="Renju neural-network training stages">
+                    {[
+                        {
+                            stage: 'Stage 1',
+                            title: 'Supervised Pre-training',
+                            objective: 'Initialize the policy and value heads from a minimax teacher before reinforcement learning.',
+                            procedure: 'Generated 5,000 stochastic minimax self-play games with depths sampled from 1–5, deduplicated them to 43,513 unique positions, and optimized for 80 epochs using joint policy cross-entropy and value regression.',
+                            result: 'Validation move-match accuracy reached 46.6% against the minimax teacher, compared with a 0.4% random baseline. This checkpoint served as the initialization for all subsequent RL stages.',
+                        },
+                        {
+                            stage: 'Stage 2',
+                            title: 'Curriculum Reinforcement Learning Against Minimax',
+                            objective: 'Improve the initialized model through direct game outcomes while controlling opponent difficulty.',
+                            procedure: 'Fine-tuned with REINFORCE and a value baseline against a minimax opponent. Opponent depth increased automatically once the model exceeded a 60% win rate over the previous 50 games.',
+                            result: 'After 550 update steps, the model reached a 57% overall win rate. The run exposed a strong color asymmetry: Black play improved rapidly, while White remained substantially weaker.',
+                        },
+                        {
+                            stage: 'Stage 3',
+                            title: 'Color-Specialized Policy Optimization',
+                            objective: 'Remove interference between Black and White play induced by training a single policy on asymmetric roles.',
+                            procedure: 'Forked the training process into two specialist models: one optimized only for Black positions and one optimized only for White positions.',
+                            result: 'The Black specialist achieved 100% win rate against minimax depths 1–5. The White specialist reached 76.5% overall, with stable performance at depths 1–3 and higher variance at depth 4.',
+                        },
+                        {
+                            stage: 'Stage 4',
+                            title: 'Human-Game Supervised Adaptation',
+                            objective: 'Expose the specialists to non-minimax strategies and human-discovered failure cases.',
+                            procedure: 'Fine-tuned on 34 human-vs-NN games, treating winner moves as supervised targets with learning rate 5×10⁻⁵ and 30% original-data mixing to reduce catastrophic forgetting.',
+                            result: 'A single fine-tuning session improved White depth-4 performance from 22% to 94% and Black depth-5 performance from 0% to 84%.',
+                        },
+                        {
+                            stage: 'Stage 5',
+                            title: 'Tactical Constraint Training',
+                            objective: 'Correct missed forced moves, especially blocks and immediate tactical responses.',
+                            procedure: 'Constructed 20,000 forced-move positions from minimax self-play, trained first for move accuracy, then continued RL with a −0.5 penalty for missing forced tactical responses.',
+                            result: 'Forced-move accuracy reached 91–92%. White achieved 100% win rate against depths 1–4, and Black achieved 100% against all tested depths, eliminating the major missed-four/block failure mode.',
+                        },
+                        {
+                            stage: 'Stage 6',
+                            title: 'Online Human-Adaptive Reinforcement Learning',
+                            objective: 'Continue adapting from interactive games against a human opponent after deployment-oriented fine-tuning.',
+                            procedure: 'Used the CLI human RL gym to apply REINFORCE updates after a small buffer of played games, retaining the tactical penalty for missed forced moves. Separately, browser-exported games support offline behavioral-cloning fine-tuning on winner moves.',
+                            result: 'The White model gained 83 Elo after 28 games and 10 updates, improving robustness to unconventional openings and multi-step traps not represented in minimax self-play.',
+                        },
+                    ].map(({ stage, title, objective, procedure, result }, index) => (
+                        <li className="renju-training-stage" key={stage}>
+                            <div className="renju-training-stage-header">
+                                <span className="renju-training-stage-index">{String(index + 1).padStart(2, '0')}</span>
+                                <h5>{title}</h5>
+                            </div>
+                            <p><b>Objective.</b> {objective}</p>
+                            <p><b>Procedure.</b> {procedure}</p>
+                            <p><b>Result.</b> {result}</p>
+                        </li>
+                    ))}
+                </ol>
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
@@ -174,8 +250,66 @@ export default class Renju extends React.Component {
                 <p>
                     Before the neural network existed, minimax was the entire game. It also provided the NN's training foundation: thousands of minimax self-play games became the supervised dataset for phase 1, and a live minimax opponent served as the RL target through phase 5. Understanding how minimax works explains why the NN behaves the way it does — and which patterns were hardest to learn.
                 </p>
+
+                <h3 className="headings">Search-Based Baseline</h3>
                 <p>
-                    Minimax builds a tree of possible futures — alternating between each side's best moves — and picks the branch that guarantees the best outcome against a perfect opponent. <b>Alpha-beta pruning</b> cuts branches that can't improve on an already-found solution, reducing millions of evaluations to thousands. Move ordering, a transposition table, and pattern-based scoring (open fours, double-threes, forced combinations) keep move times under ~200ms at depth 10.
+                    The minimax player is a deterministic search baseline over a 15x15 Renju board. It does not learn from data at inference time; instead, it enumerates plausible continuations, evaluates leaf positions with a hand-written tactical scoring function, and backs those scores up through the game tree. This makes it a useful contrast to the neural model: minimax is brittle when its heuristic misses a pattern, but highly reliable when a threat can be expressed as local tactical rules.
+                </p>
+
+                <h5>State Representation and Candidate Generation</h5>
+                <p>
+                    The engine represents the position as two move lists: one for the current player and one for the opponent. For fast membership checks, each coordinate is packed into an integer key and stored in a <code>Set</code>. Search is not run over all 225 cells. Instead, candidate moves are generated from the eight neighboring cells around existing stones, restricted to board bounds, deduplicated, and filtered against occupied locations. This preserves tactically relevant moves while avoiding a prohibitively large branching factor.
+                </p>
+                <p>
+                    Candidate generation also applies Renju legality. When the side to move is Black, moves that create an overline, double-four, or double-three are removed before search. The remaining moves are scored with a lightweight move-ordering heuristic, then truncated to the top 10 candidates. This ordering is important: alpha-beta pruning only becomes effective when strong moves are searched early.
+                </p>
+
+                <h5>Depth-Limited Negamax Search</h5>
+                <p>
+                    Conceptually, minimax alternates between a maximizing player and a minimizing opponent. The implementation uses the equivalent <b>negamax</b> formulation: every recursive call swaps the two players, searches from the next side's perspective, and negates the returned score. This works because a position that is good for one side is bad for the other. The root call returns both the best score and the move that produced it; internal calls return only scalar scores.
+                </p>
+                <p>
+                    Search stops when either the current move has ended the game or the configured depth limit has been reached. At that point, the static evaluator assigns a tactical score to the leaf. The backed-up value is therefore not a calibrated win probability; it is a bounded heuristic utility where larger values indicate stronger tactical prospects for the side to move.
+                </p>
+
+                <div className="renju-mermaid-pair renju-minimax-diagrams">
+                    <div className="renju-mermaid-panel">
+                        <div className="renju-diagram-label">Minimax value backup</div>
+                        <MermaidFigure
+                            svg={minimaxBackupSvg}
+                            label="Minimax tree showing MAX and MIN value backup"
+                            caption="The AI evaluates candidate moves by assuming the opponent will choose the reply that minimizes the AI's eventual score."
+                        />
+                    </div>
+                    <div className="renju-mermaid-panel">
+                        <div className="renju-diagram-label">Alpha-beta cutoff</div>
+                        <MermaidFigure
+                            svg={alphaBetaPruningSvg}
+                            label="Alpha-beta pruning cutoff and transposition table reuse"
+                            caption="Once a branch cannot beat the current best alternative, the engine skips the remaining replies and caches evaluated positions."
+                        />
+                    </div>
+                </div>
+
+                <h5>Alpha-Beta Pruning and Transposition Caching</h5>
+                <p>
+                    Alpha-beta pruning maintains two bounds during search: <code>alpha</code>, the best value already available to the maximizing side, and <code>beta</code>, the best value the minimizing side can force. If a branch becomes provably worse than an already explored alternative, the remaining replies under that branch are skipped. In negamax form, the recursive call passes the negated window <code>[-beta, -alpha]</code>, then negates the child score on return.
+                </p>
+                <p>
+                    The search also uses a transposition table. A board position is hashed by sorting both move lists and serializing them; if the same position is reached again at an equal or greater remaining search depth, the cached score is reused. Entries store the backed-up score, remaining depth, and root best move, and the table is capped at 100,000 positions to prevent unbounded growth during long sessions.
+                </p>
+
+                <h5>Static Evaluation Function</h5>
+                <p>
+                    The evaluator is pattern-based and local to the last move. It scans four axes — horizontal, vertical, and the two diagonals — and assigns scores to tactical motifs. Immediate wins receive the maximum score. Near-winning structures such as double-fours, four-three combinations, double-threes, open fours, broken fours, and jump-threes receive progressively smaller scores. Defensive responses are explicitly represented as well: blocking an opponent's four is scored higher than creating many weaker threats.
+                </p>
+                <p>
+                    A small center bonus encourages early moves near the middle of the board, but the dominant signal is tactical. This design made minimax strong enough to serve as a teacher, yet also explains the neural network's later failure modes: if the handcrafted evaluator underweights a multi-step trap, supervised imitation of minimax will inherit that blind spot.
+                </p>
+
+                <h5>Adaptive Search Depth</h5>
+                <p>
+                    The playable Minimax mode exposes fixed depths for easy, medium, and hard play, and an adaptive mode that changes depth according to game outcomes. Adaptive mode samples a depth between 1 and the current maximum depth on each AI move. When the player wins, the maximum depth may increase up to 10; when the AI wins, it decreases toward 1. The result is a search opponent whose tactical horizon expands or contracts with the player's performance rather than remaining fixed for the entire session.
                 </p>
 
                 <h3 className="headings">Renju Forbidden Moves</h3>

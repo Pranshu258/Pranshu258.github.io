@@ -1,0 +1,19 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': 'transparent', 'primaryColor': '#f9f6ee', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#207d42', 'lineColor': '#207d42', 'fontSize': '14px'}}}%%
+flowchart TB
+    IN["Tower input<br/>64 x 15 x 15"] --> B1["ResBlock 1"]
+    B1 --> B2["ResBlock 2"]
+    B2 --> B3["ResBlock 3"]
+    B3 --> B4["ResBlock 4"]
+    B4 --> B5["ResBlock 5"]
+    B5 --> B6["ResBlock 6"]
+    B6 --> OUT["Tower output<br/>64 x 15 x 15"]
+
+    NOTE["Shape does not change.<br/>Each block refines the meaning of the 64 maps."]
+    OUT -.-> NOTE
+
+    classDef tensor fill:#eaf5ee,stroke:#207d42,color:#1a1a1a
+    classDef block fill:#f3e8ff,stroke:#7e22ce,color:#1a1a1a
+    classDef note fill:#f8fafc,stroke:#64748b,color:#1a1a1a
+    class IN,OUT tensor
+    class B1,B2,B3,B4,B5,B6 block
+    class NOTE note

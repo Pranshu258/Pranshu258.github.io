@@ -1,0 +1,31 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': 'transparent', 'primaryColor': '#f9f6ee', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#207d42', 'lineColor': '#207d42', 'fontSize': '14px'}}}%%
+flowchart TB
+    R["MAX node<br/>best score so far: alpha = +35"]
+
+    A["Move A already searched<br/>backed-up value +35"]
+    B["Move B under test<br/>MIN node"]
+    B1["first opponent reply<br/>evaluation +20"]
+    CUT{"beta = +20<br/>beta <= alpha"}
+    B2["remaining replies<br/>not searched"]
+    OUT["Prune Move B branch<br/>MIN can already hold it to +20,<br/>so MAX will never prefer it over +35"]
+
+    R --> A
+    R --> B
+    B --> B1
+    B1 --> CUT
+    CUT --> OUT
+    CUT -. cutoff .-> B2
+
+    TT["Transposition table<br/>stores evaluated board hashes<br/>and reuses deep-enough scores"]
+    OUT --> TT
+
+    classDef root fill:#eaf5ee,stroke:#207d42,color:#1a1a1a
+    classDef searched fill:#eef2ff,stroke:#4f46e5,color:#1a1a1a
+    classDef leaf fill:#fff7ed,stroke:#c2410c,color:#1a1a1a
+    classDef cutoff fill:#fee2e2,stroke:#b91c1c,color:#1a1a1a
+    classDef cache fill:#f8fafc,stroke:#64748b,color:#1a1a1a
+    class R root
+    class A,B searched
+    class B1 leaf
+    class CUT,OUT,B2 cutoff
+    class TT cache

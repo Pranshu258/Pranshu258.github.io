@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': {'background': 'transparent', 'primaryColor': '#f9f6ee', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#207d42', 'lineColor': '#207d42', 'fontSize': '14px'}}}%%
+flowchart TB
+    R["Current position<br/>AI turn: MAX<br/><b>chooses +35</b>"]
+
+    A["Candidate move A<br/>opponent turn: MIN<br/><b>backs up -20</b>"]
+    B["Candidate move B<br/>opponent turn: MIN<br/><b>backs up +35</b>"]
+    C["Candidate move C<br/>opponent turn: MIN<br/><b>backs up +10</b>"]
+
+    A1["reply A1<br/>evaluation +40"]
+    A2["reply A2<br/>evaluation -20"]
+    B1["reply B1<br/>evaluation +35"]
+    B2["reply B2<br/>evaluation +80"]
+    C1["reply C1<br/>evaluation +10"]
+    C2["reply C2<br/>evaluation +25"]
+
+    R --> A
+    R --> B
+    R --> C
+    A --> A1
+    A --> A2
+    B --> B1
+    B --> B2
+    C --> C1
+    C --> C2
+
+    PICK["Best move: candidate B<br/>max(-20, +35, +10) = +35"]
+    R --> PICK
+
+    classDef root fill:#eaf5ee,stroke:#207d42,color:#1a1a1a
+    classDef minNode fill:#eef2ff,stroke:#4f46e5,color:#1a1a1a
+    classDef leaf fill:#fff7ed,stroke:#c2410c,color:#1a1a1a
+    classDef choice fill:#f8fafc,stroke:#64748b,color:#1a1a1a
+    class R root
+    class A,B,C minNode
+    class A1,A2,B1,B2,C1,C2 leaf
+    class PICK choice
