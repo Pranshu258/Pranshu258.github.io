@@ -758,9 +758,9 @@ def parse_args():
     p.add_argument('--white',            type=str,   default='checkpoints/white_expert_v2.pt',
                    help='White expert checkpoint')
     p.add_argument('--out-black',        type=str,   default=None,
-                   help='Output path for black checkpoint (defaults to --black)')
+                   help='Output path for black checkpoint (default: <black>_gym.pt)')
     p.add_argument('--out-white',        type=str,   default=None,
-                   help='Output path for white checkpoint (defaults to --white)')
+                   help='Output path for white checkpoint (default: <white>_gym.pt)')
     p.add_argument('--update-every',     type=int,   default=4)
     p.add_argument('--lr',               type=float, default=1e-5)
     p.add_argument('--temperature',      type=float, default=0.5)
@@ -796,10 +796,17 @@ def _load_model(path, args, device, label):
     return model, optimizer, stats
 
 
+def _gym_out_path(src):
+    """Default output path: insert _gym before .pt, e.g. black_expert_v2.pt → black_expert_v2_gym.pt"""
+    if src.endswith('.pt'):
+        return src[:-3] + '_gym.pt'
+    return src + '_gym'
+
+
 def main():
     args = parse_args()
-    args.out_black = args.out_black or args.black
-    args.out_white = args.out_white or args.white
+    args.out_black = args.out_black or _gym_out_path(args.black)
+    args.out_white = args.out_white or _gym_out_path(args.white)
 
     device = (
         torch.device('mps')  if torch.backends.mps.is_available() else
@@ -821,6 +828,7 @@ def main():
 
     mode = "no training" if args.no_train else f"train every {args.update_every} games"
     print(f"  Experts: black={args.black}  white={args.white}")
+    print(f"  Saving:  black→{args.out_black}  white→{args.out_white}")
     print(f"  Mode: {mode}  |  device: {device}")
     print(f"\n  Open http://localhost:{args.port} in your browser\n")
 
