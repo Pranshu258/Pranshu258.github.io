@@ -6,6 +6,8 @@ import "../styles/prism.css";
 import '../styles/fonts.css';
 import '../styles/blog.css';
 
+import architectureSvg from './renju/architecture.svg';
+
 import { FaGamepad, FaBrain, FaReact, FaGears, FaBolt, FaNetworkWired } from 'react-icons/fa6';
 
 export default class Renju extends React.Component {
@@ -122,6 +124,13 @@ export default class Renju extends React.Component {
                 <p>
                     The network has two outputs trained simultaneously: a <b>policy head</b> that assigns probabilities to all 225 board cells (which move to play), and a <b>value head</b> that estimates the win probability for the current player. Sharing a single trunk for both outputs lets each task regularise the other.
                 </p>
+                <div style={{ margin: '24px 0', textAlign: 'center' }}>
+                    <img
+                        src={architectureSvg}
+                        alt="RenjuNet architecture diagram"
+                        style={{ width: '100%', maxWidth: '780px', borderRadius: '10px' }}
+                    />
+                </div>
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'auto 1fr',
