@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "total": 600,
+  "by_category": {
+    "immediate_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "forced_block": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "broken_four_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "overline_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    },
+    "double_three_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    },
+    "double_four_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    }
+  },
+  "evaluator": "minimax_attack",
+  "depth": 2,
+  "input": "src/renju/eval/golden_set_v1.jsonl",
+  "overall": {
+    "total": 600,
+    "labeled": 300,
+    "top1_correct": 300,
+    "forbidden_checks": 300,
+    "forbidden_violations": 0,
+    "forbidden_avoidance_correct": 300,
+    "top1_accuracy": 1,
+    "forbidden_violation_rate": 0,
+    "forbidden_avoidance_accuracy": 1
+  },
+  "sample_mismatches": []
+}

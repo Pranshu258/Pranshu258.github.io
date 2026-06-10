@@ -28,6 +28,10 @@
     "start": "vite",
     "dev": "vite",
     "generate-rss": "node scripts/generate-rss.mjs",
+    "renju:golden:generate": "node src/renju/eval/generate_golden_set.mjs",
+    "renju:golden:validate": "node src/renju/eval/validate_golden_set.mjs",
+    "renju:golden:evaluate": "node src/renju/eval/evaluate_golden_set.mjs",
+    "renju:golden:evaluate:nn": "node src/renju/eval/evaluate_golden_set_nn.mjs",
     "build": "npm run generate-rss && vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
@@ -52,6 +56,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@vitejs/plugin-react": "^4.3.3",
     "gh-pages": "^6.1.1",
+    "onnxruntime-node": "^1.26.0",
     "vite": "^7.3.1"
   },
   "overrides": {

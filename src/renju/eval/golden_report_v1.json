@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "total": 600,
+  "by_category": {
+    "immediate_win": 100,
+    "forced_block": 100,
+    "broken_four_win": 100,
+    "overline_forbidden": 100,
+    "double_three_forbidden": 100,
+    "double_four_forbidden": 100
+  },
+  "input": "src/renju/eval/golden_set_v1.jsonl",
+  "validation_errors": 0,
+  "errors": []
+}

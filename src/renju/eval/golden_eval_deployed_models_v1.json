@@ -1,0 +1,915 @@
+{
+  "schema_version": 1,
+  "total": 600,
+  "by_category": {
+    "immediate_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 62,
+      "top3_correct": 80,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 0,
+      "null_predictions": 0,
+      "value_sum": 90.31415645964444,
+      "top1_accuracy": 0.62,
+      "top3_accuracy": 0.8,
+      "forbidden_violation_rate": null,
+      "raw_forbidden_top1_rate": null,
+      "mean_value": 0.9031415645964443
+    },
+    "forced_block": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 67,
+      "top3_correct": 75,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 0,
+      "null_predictions": 0,
+      "value_sum": 12.36109952791594,
+      "top1_accuracy": 0.67,
+      "top3_accuracy": 0.75,
+      "forbidden_violation_rate": null,
+      "raw_forbidden_top1_rate": null,
+      "mean_value": 0.12361099527915939
+    },
+    "broken_four_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 15,
+      "top3_correct": 23,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 0,
+      "null_predictions": 0,
+      "value_sum": 79.20074436860159,
+      "top1_accuracy": 0.15,
+      "top3_accuracy": 0.23,
+      "forbidden_violation_rate": null,
+      "raw_forbidden_top1_rate": null,
+      "mean_value": 0.7920074436860159
+    },
+    "overline_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "top3_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 28,
+      "null_predictions": 0,
+      "value_sum": 92.63472337089479,
+      "top1_accuracy": null,
+      "top3_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "raw_forbidden_top1_rate": 0.28,
+      "mean_value": 0.9263472337089479
+    },
+    "double_three_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "top3_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 3,
+      "null_predictions": 0,
+      "value_sum": 50.48138693906367,
+      "top1_accuracy": null,
+      "top3_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "raw_forbidden_top1_rate": 0.03,
+      "mean_value": 0.5048138693906367
+    },
+    "double_four_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "top3_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 21,
+      "null_predictions": 0,
+      "value_sum": 99.99999928474426,
+      "top1_accuracy": null,
+      "top3_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "raw_forbidden_top1_rate": 0.21,
+      "mean_value": 0.9999999928474427
+    }
+  },
+  "evaluator": "deployed_onnx_models",
+  "input": "src/renju/eval/golden_set_v1.jsonl",
+  "models": {
+    "black": "public/models/renju_black.onnx",
+    "white": "public/models/renju_white.onnx"
+  },
+  "policy_mask": "browser candidate mask plus forbidden Black move filter",
+  "overall": {
+    "total": 600,
+    "labeled": 300,
+    "top1_correct": 144,
+    "top3_correct": 178,
+    "forbidden_checks": 300,
+    "forbidden_violations": 0,
+    "raw_forbidden_top1": 52,
+    "null_predictions": 0,
+    "value_sum": 424.9921099508647,
+    "top1_accuracy": 0.48,
+    "top3_accuracy": 0.5933333333333334,
+    "forbidden_violation_rate": 0,
+    "raw_forbidden_top1_rate": 0.17333333333333334,
+    "mean_value": 0.7083201832514412
+  },
+  "sample_mismatches": [
+    {
+      "id": "immediate_win_0003",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "F14",
+      "top3": [
+        "F14",
+        "I15",
+        "H14"
+      ],
+      "expected": [
+        "D15",
+        "I15"
+      ],
+      "value": 0.7170531153678894
+    },
+    {
+      "id": "immediate_win_0004",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "M12",
+      "top3": [
+        "M12",
+        "F11",
+        "N9"
+      ],
+      "expected": [
+        "N14",
+        "N9"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0012",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "I11",
+      "top3": [
+        "I11",
+        "J3",
+        "G4"
+      ],
+      "expected": [
+        "G4",
+        "L4"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0015",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "J3",
+      "top3": [
+        "J3",
+        "L3",
+        "K3"
+      ],
+      "expected": [
+        "G4",
+        "L4"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0016",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "E3",
+      "top3": [
+        "E3",
+        "D3",
+        "D2"
+      ],
+      "expected": [
+        "B2",
+        "G7"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0017",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "J14",
+      "top3": [
+        "J14",
+        "K14",
+        "M13"
+      ],
+      "expected": [
+        "H10",
+        "M15"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0021",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "I10",
+      "top3": [
+        "I10",
+        "I11",
+        "G11"
+      ],
+      "expected": [
+        "G2",
+        "L2"
+      ],
+      "value": -1
+    },
+    {
+      "id": "immediate_win_0024",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "E13",
+      "top3": [
+        "E13",
+        "F15",
+        "G5"
+      ],
+      "expected": [
+        "E15",
+        "J10"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0027",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "G4",
+      "top3": [
+        "G4",
+        "N12",
+        "N11"
+      ],
+      "expected": [
+        "O13",
+        "O8"
+      ],
+      "value": 0.9996393918991089
+    },
+    {
+      "id": "immediate_win_0028",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "C12",
+      "top3": [
+        "C12",
+        "C10",
+        "G11"
+      ],
+      "expected": [
+        "B11",
+        "G11"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0035",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "I2",
+      "top3": [
+        "I2",
+        "H2",
+        "K1"
+      ],
+      "expected": [
+        "F1",
+        "K1"
+      ],
+      "value": -0.788408100605011
+    },
+    {
+      "id": "immediate_win_0037",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "C8",
+      "top3": [
+        "C8",
+        "D4",
+        "D9"
+      ],
+      "expected": [
+        "D4",
+        "D9"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0038",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "J13",
+      "top3": [
+        "J13",
+        "K10",
+        "K14"
+      ],
+      "expected": [
+        "I10",
+        "N15"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0039",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "I11",
+      "top3": [
+        "I11",
+        "K3",
+        "M4"
+      ],
+      "expected": [
+        "H4",
+        "M4"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0044",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "C12",
+      "top3": [
+        "C12",
+        "C13",
+        "E15"
+      ],
+      "expected": [
+        "D10",
+        "D15"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0045",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "C8",
+      "top3": [
+        "C8",
+        "F6",
+        "B8"
+      ],
+      "expected": [
+        "A11",
+        "F6"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0047",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "C11",
+      "top3": [
+        "C11",
+        "F10",
+        "B9"
+      ],
+      "expected": [
+        "A10",
+        "F10"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0048",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "G11",
+      "top3": [
+        "G11",
+        "I12",
+        "E8"
+      ],
+      "expected": [
+        "H2",
+        "M2"
+      ],
+      "value": -1
+    },
+    {
+      "id": "immediate_win_0049",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "C4",
+      "top3": [
+        "C4",
+        "H3",
+        "D4"
+      ],
+      "expected": [
+        "C3",
+        "H3"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0052",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "M4",
+      "top3": [
+        "M4",
+        "I12",
+        "E4"
+      ],
+      "expected": [
+        "J5",
+        "O5"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0055",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "N8",
+      "top3": [
+        "N8",
+        "N7",
+        "M6"
+      ],
+      "expected": [
+        "I7",
+        "N7"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0056",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "E4",
+      "top3": [
+        "E4",
+        "C6",
+        "B5"
+      ],
+      "expected": [
+        "B5",
+        "G5"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0057",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "B8",
+      "top3": [
+        "B8",
+        "E10",
+        "C8"
+      ],
+      "expected": [
+        "A9",
+        "F9"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0059",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "C12",
+      "top3": [
+        "C12",
+        "C11",
+        "B12"
+      ],
+      "expected": [
+        "B12",
+        "B7"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0060",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "I13",
+      "top3": [
+        "I13",
+        "I14",
+        "K14"
+      ],
+      "expected": [
+        "I15",
+        "N10"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0063",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "I12",
+      "top3": [
+        "I12",
+        "I14",
+        "K14"
+      ],
+      "expected": [
+        "F10",
+        "K15"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0066",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "I6",
+      "top3": [
+        "I6",
+        "J6",
+        "G6"
+      ],
+      "expected": [
+        "I8",
+        "N3"
+      ],
+      "value": 0.9999996423721313
+    },
+    {
+      "id": "immediate_win_0068",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "H6",
+      "top3": [
+        "H6",
+        "I8",
+        "L12"
+      ],
+      "expected": [
+        "A10",
+        "A15"
+      ],
+      "value": 0.020097630098462105
+    },
+    {
+      "id": "immediate_win_0071",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "L12",
+      "top3": [
+        "L12",
+        "M13",
+        "D7"
+      ],
+      "expected": [
+        "M13",
+        "M8"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0075",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "J3",
+      "top3": [
+        "J3",
+        "L3",
+        "I11"
+      ],
+      "expected": [
+        "G4",
+        "L4"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0080",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "E14",
+      "top3": [
+        "E14",
+        "D13",
+        "F14"
+      ],
+      "expected": [
+        "D13",
+        "I13"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0086",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "M7",
+      "top3": [
+        "M7",
+        "J8",
+        "N9"
+      ],
+      "expected": [
+        "J8",
+        "O8"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0088",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "I12",
+      "top3": [
+        "I12",
+        "L2",
+        "F11"
+      ],
+      "expected": [
+        "I3",
+        "N3"
+      ],
+      "value": -1
+    },
+    {
+      "id": "immediate_win_0094",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "D3",
+      "top3": [
+        "D3",
+        "E3",
+        "B5"
+      ],
+      "expected": [
+        "A4",
+        "F4"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0095",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "E3",
+      "top3": [
+        "E3",
+        "D3",
+        "D2"
+      ],
+      "expected": [
+        "B2",
+        "G7"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0096",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "C10",
+      "top3": [
+        "C10",
+        "B7",
+        "B8"
+      ],
+      "expected": [
+        "A10",
+        "F5"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0099",
+      "category": "immediate_win",
+      "side_to_move": "black",
+      "predicted": "C6",
+      "top3": [
+        "C6",
+        "B6",
+        "C5"
+      ],
+      "expected": [
+        "B1",
+        "B6"
+      ],
+      "value": 1
+    },
+    {
+      "id": "immediate_win_0100",
+      "category": "immediate_win",
+      "side_to_move": "white",
+      "predicted": "I4",
+      "top3": [
+        "I4",
+        "I5",
+        "E6"
+      ],
+      "expected": [
+        "D5",
+        "I5"
+      ],
+      "value": 1
+    },
+    {
+      "id": "forced_block_0003",
+      "category": "forced_block",
+      "side_to_move": "white",
+      "predicted": "N13",
+      "top3": [
+        "N13",
+        "N12",
+        "I15"
+      ],
+      "expected": [
+        "I15"
+      ],
+      "value": 0.028483126312494278
+    },
+    {
+      "id": "forced_block_0006",
+      "category": "forced_block",
+      "side_to_move": "black",
+      "predicted": "H14",
+      "top3": [
+        "H14",
+        "N13",
+        "C10"
+      ],
+      "expected": [
+        "N13"
+      ],
+      "value": 0.2335367202758789
+    },
+    {
+      "id": "forced_block_0010",
+      "category": "forced_block",
+      "side_to_move": "black",
+      "predicted": "E14",
+      "top3": [
+        "E14",
+        "E13",
+        "K1"
+      ],
+      "expected": [
+        "F15"
+      ],
+      "value": 0.08312343060970306
+    },
+    {
+      "id": "forced_block_0013",
+      "category": "forced_block",
+      "side_to_move": "white",
+      "predicted": "F14",
+      "top3": [
+        "F14",
+        "C13",
+        "A13"
+      ],
+      "expected": [
+        "B15"
+      ],
+      "value": 0.003719193395227194
+    },
+    {
+      "id": "forced_block_0017",
+      "category": "forced_block",
+      "side_to_move": "white",
+      "predicted": "L12",
+      "top3": [
+        "L12",
+        "M13",
+        "L9"
+      ],
+      "expected": [
+        "M13"
+      ],
+      "value": 0.006846384145319462
+    },
+    {
+      "id": "forced_block_0019",
+      "category": "forced_block",
+      "side_to_move": "white",
+      "predicted": "L13",
+      "top3": [
+        "L13",
+        "L12",
+        "G10"
+      ],
+      "expected": [
+        "M14"
+      ],
+      "value": -0.04812069609761238
+    },
+    {
+      "id": "forced_block_0020",
+      "category": "forced_block",
+      "side_to_move": "black",
+      "predicted": "F11",
+      "top3": [
+        "F11",
+        "E10",
+        "N6"
+      ],
+      "expected": [
+        "N1"
+      ],
+      "value": -0.0589400976896286
+    },
+    {
+      "id": "forced_block_0022",
+      "category": "forced_block",
+      "side_to_move": "black",
+      "predicted": "K1",
+      "top3": [
+        "K1",
+        "A10",
+        "A12"
+      ],
+      "expected": [
+        "G15"
+      ],
+      "value": 0.06563979387283325
+    },
+    {
+      "id": "forced_block_0023",
+      "category": "forced_block",
+      "side_to_move": "white",
+      "predicted": "D9",
+      "top3": [
+        "D9",
+        "N12",
+        "F10"
+      ],
+      "expected": [
+        "O13"
+      ],
+      "value": 0.006705261301249266
+    },
+    {
+      "id": "forced_block_0024",
+      "category": "forced_block",
+      "side_to_move": "black",
+      "predicted": "F6",
+      "top3": [
+        "F6",
+        "I5",
+        "G4"
+      ],
+      "expected": [
+        "O11"
+      ],
+      "value": -0.06277717649936676
+    },
+    {
+      "id": "forced_block_0027",
+      "category": "forced_block",
+      "side_to_move": "white",
+      "predicted": "J5",
+      "top3": [
+        "J5",
+        "J7",
+        "B10"
+      ],
+      "expected": [
+        "O1"
+      ],
+      "value": -0.17722059786319733
+    },
+    {
+      "id": "forced_block_0030",
+      "category": "forced_block",
+      "side_to_move": "black",
+      "predicted": "G6",
+      "top3": [
+        "G6",
+        "L15",
+        "J10"
+      ],
+      "expected": [
+        "O6"
+      ],
+      "value": 0.3386905789375305
+    }
+  ]
+}
