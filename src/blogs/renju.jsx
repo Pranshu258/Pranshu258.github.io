@@ -28,7 +28,7 @@ export default class Renju extends React.Component {
                 <Sharer link={window.location.href} title={"Renju - A Strategic Board Game with AI"}></Sharer>
 
                 <p className="introduction">
-                    Renju looks simple at first glance - place stones, get five in a row - but beneath that simplicity lies a game so strategically rich that researchers proved perfect play guarantees a win for Black. This project brings that depth into the browser with a fast, optimized minimax AI, four difficulty levels including an adaptive mode that learns from your play, and a unique mode where you can pit the AI against a large language model and watch two very different intelligences clash.
+                    Renju looks simple — place stones, get five in a row — but beneath that simplicity lies a game strategically rich enough that mathematicians proved perfect Black play always wins without special restrictions. This project trains a neural network to play it: six phases spanning supervised learning, reinforcement learning against a minimax engine, specialist training by color, human fine-tuning, and a live browser gym. The result runs fully in-browser via ONNX and reaches a 97% win rate against the minimax engine it was trained against.
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Play the Game</h2>
@@ -57,65 +57,13 @@ export default class Renju extends React.Component {
                 <RenjuGame />
                 
                 <p>
-                    The current search depth is displayed during gameplay. <b>Adaptive</b> mode is especially interesting - when you win, the AI's search depth increases by 1 (up to a maximum of 10), making it progressively harder. Lose, and it dials back down. This creates a personalized challenge that feels almost human: the AI is always just slightly ahead of or behind your skill level. For example, if you beat it twice in a row, its depth might jump from 5 to 7, making the third game noticeably tougher.
+                    The <b>🧠 Neural AI</b> is selected by default — challenge it directly. Switch to <b>🤖 Minimax</b> for a more traditional opponent, or try <b>💻 On-Device LLM</b> to watch two AI systems clash.
                 </p>
-                <p>
-                    Choose your stone color and difficulty, and see if you can beat it!
-                </p>
-
-                <hr style={{ backgroundColor: "white" }}></hr>
-                <h2 className="headings">The Minimax Algorithm</h2>
-                <p>
-                    Imagine the AI staring at the board and asking: <i>"If I place a stone here, what's the best my opponent can do? And then what's my best reply to that?"</i> That recursive question is the heart of the <b>minimax algorithm</b>. At each turn, the AI builds a tree of possible futures - alternating between its own best moves and the opponent's best responses - and chooses the path that leads to the best guaranteed outcome, even against a perfect opponent.
-                </p>
-                <p>
-                    But the tree grows fast. On a 15×15 board, even a few moves deep can mean millions of positions. That's where <b>alpha-beta pruning</b> comes in - it cuts away branches that can't possibly beat an already-discovered option. Think of it as the AI saying, <i>"I already found a move that guarantees a score of +50. This new branch can only reach +30 at best - skip it."</i> In practice, this eliminates the vast majority of the search space.
-                </p>
-                <p>
-                    Several additional optimizations keep the AI responsive even at higher search depths:
-                </p>
-                <ul>
-                    <li><b>Transposition Table:</b> A hash map caches previously evaluated board positions to avoid redundant work when different move orderings lead to the same state.</li>
-                    <li><b>Move Ordering:</b> Candidate moves are scored with a quick heuristic and sorted before the full search begins. Good move ordering triggers more alpha-beta cutoffs, making the search significantly faster.</li>
-                    <li><b>Pattern-Based Evaluation:</b> The evaluation function recognizes tactical patterns - open fours, broken fours, double threes, jump threes - and assigns calibrated scores to each. It also detects powerful combinations like four-three or double-four that force a win.</li>
-                </ul>
-
-                <h3 className="headings">Renju Forbidden Moves</h3>
-                <p>
-                    What makes Renju different from plain Gomoku? Special rules for Black that prevent the first-player advantage from dominating. These "forbidden moves" are moves that Black is not allowed to make:
-                </p>
-                <ul>
-                    <li><b>Overline:</b> Placing a stone that creates six or more in a row. Only exactly five wins.</li>
-                    <li><b>Double-Four:</b> A single stone that simultaneously creates two separate lines of four. This would be too powerful - it forces two threats the opponent can't both block.</li>
-                    <li><b>Double-Three:</b> A single stone that creates two open threes (lines of three with both ends open). Like double-four, it creates an unstoppable double threat.</li>
-                </ul>
-                <p>
-                    These rules exist because mathematicians proved that without them, Black (who moves first) can always force a win. By restricting Black's most explosive tactics, Renju restores the balance and rewards deeper strategic thinking for both sides. The AI detects and enforces all of these restrictions automatically.
-                </p>
-
-                <div style={{
-                    background: 'rgba(246, 173, 85, 0.1)',
-                    border: '1px solid #f6ad55',
-                    borderRadius: '4px',
-                    padding: '20px',
-                    marginTop: '20px'
-                }}>
-                    <h4 style={{ color: '#f6ad55', marginBottom: '10px' }}>
-                        <FaBolt style={{ marginRight: '10px' }} />
-                        Performance
-                    </h4>
-                    <p style={{ marginBottom: 0 }}>
-                        At depth 10, the search space explodes to millions of possible positions. With alpha-beta pruning, move ordering, and a transposition table, the AI evaluates only a tiny fraction of them - keeping move times under ~200ms on modern hardware. The transposition table alone can cut redundant evaluations by over 40% in complex mid-game positions.
-                    </p>
-                </div>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Neural Network AI</h2>
                 <p>
-                    The minimax AI searches an explicit game tree guided by hand-crafted heuristics. The neural network takes a different approach — it learns entirely from experience what good board positions look like, compressing that into a single fast forward pass with no search. Select <b>🧠 Neural AI</b> above to play against it.
-                </p>
-                <p>
-                    Two specialist models are trained and deployed: one for Black, one for White. A router picks the right model each turn based on which color the NN is playing.
+                    Two specialist models are trained and deployed: one for Black, one for White. A router picks the right model each turn based on which color the NN is playing. Each model learns entirely from experience — no hand-crafted evaluation function, no search tree — compressing everything it knows into a single fast forward pass.
                 </p>
 
                 <h3 className="headings">Architecture</h3>
@@ -220,6 +168,44 @@ export default class Renju extends React.Component {
                 <p style={{ marginTop: '20px' }}>
                     Using each model in its specialist role, the combined system reaches <b>~97% win rate vs minimax depth-3</b> — up from 27% for the supervised-only model. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
                 </p>
+
+                <hr style={{ backgroundColor: "white" }}></hr>
+                <h2 className="headings">The Minimax Foundation</h2>
+                <p>
+                    Before the neural network existed, minimax was the entire game. It also provided the NN's training foundation: thousands of minimax self-play games became the supervised dataset for phase 1, and a live minimax opponent served as the RL target through phase 5. Understanding how minimax works explains why the NN behaves the way it does — and which patterns were hardest to learn.
+                </p>
+                <p>
+                    Minimax builds a tree of possible futures — alternating between each side's best moves — and picks the branch that guarantees the best outcome against a perfect opponent. <b>Alpha-beta pruning</b> cuts branches that can't improve on an already-found solution, reducing millions of evaluations to thousands. Move ordering, a transposition table, and pattern-based scoring (open fours, double-threes, forced combinations) keep move times under ~200ms at depth 10.
+                </p>
+
+                <h3 className="headings">Renju Forbidden Moves</h3>
+                <p>
+                    What makes Renju different from plain Gomoku? Special rules for Black that offset the first-player advantage. Three "forbidden moves" are illegal for Black:
+                </p>
+                <ul>
+                    <li><b>Overline:</b> Six or more stones in a row. Only exactly five wins.</li>
+                    <li><b>Double-Four:</b> A single stone simultaneously creating two separate fours — two threats the opponent can't both block.</li>
+                    <li><b>Double-Three:</b> A single stone creating two open threes. Same idea: an unstoppable double threat.</li>
+                </ul>
+                <p>
+                    These restrictions exist because without them, Black can always force a win. They also explain why separate Black and White specialists were needed: the NN had to learn an asymmetric game where one color has strictly different legal moves.
+                </p>
+
+                <div style={{
+                    background: 'rgba(246, 173, 85, 0.1)',
+                    border: '1px solid #f6ad55',
+                    borderRadius: '4px',
+                    padding: '20px',
+                    marginTop: '20px'
+                }}>
+                    <h4 style={{ color: '#f6ad55', marginBottom: '10px' }}>
+                        <FaBolt style={{ marginRight: '10px' }} />
+                        Adaptive Difficulty
+                    </h4>
+                    <p style={{ marginBottom: 0 }}>
+                        In Minimax mode, <b>Adaptive</b> difficulty adjusts search depth based on your performance: win and it goes deeper (harder), lose and it backs off. This creates a personalized challenge that mirrors your skill level in real time. In LLM mode, the calibration runs in reverse — the AI gets easier when it wins, harder when the LLM wins.
+                    </p>
+                </div>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Playing Against an LLM</h2>

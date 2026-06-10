@@ -91,7 +91,7 @@ function RenjuGame({ mode = 'pvai' }) {
   const [llmError, setLlmError] = useState(null);
 
   const [difficulty, setDifficulty] = useState('easy');
-  const [opponentType, setOpponentType] = useState('ai'); // 'ai' | 'nn' | 'webllm' | 'api'
+  const [opponentType, setOpponentType] = useState('nn'); // 'ai' | 'nn' | 'webllm' | 'api'
   const [webllmModel, setWebllmModel] = useState(WEBLLM_MODELS[0].id);
   const [webllmLoading, setWebllmLoading] = useState(false);
   const [webllmProgress, setWebllmProgress] = useState({ text: '', progress: 0 });
