@@ -19,12 +19,12 @@ const WHITE_PHASES = [
 
 // ── ELO data from latest tournament ─────────────────────────────────────────
 const ELO_DATA = [
-  { model: 'black_expert_v2',           role: 'Black specialist (deployed)', elo: 1603 },
-  { model: 'white_expert_v2',           role: 'White specialist (deployed)', elo: 1553 },
-  { model: 'white_expert_v2 (pre-gym)', role: 'White specialist (pre-gym)',  elo: 1550 },
-  { model: 'black_expert_v2 (pre-gym)', role: 'Black specialist (pre-gym)',  elo: 1535 },
-  { model: 'white_human_ft',            role: 'White (human FT only)',       elo: 1422 },
-  { model: 'black_human_ft',            role: 'Black (human FT only)',       elo: 1337 },
+  { model: 'black_expert_v2',           role: 'Black specialist · deployed', elo: 1603, color: '#5ba3f5', deployed: true  },
+  { model: 'white_expert_v2',           role: 'White specialist · deployed', elo: 1553, color: '#c084f0', deployed: true  },
+  { model: 'white_expert_v2 (pre-gym)', role: 'White specialist · pre-gym',  elo: 1550, color: '#c084f0', deployed: false },
+  { model: 'black_expert_v2 (pre-gym)', role: 'Black specialist · pre-gym',  elo: 1535, color: '#5ba3f5', deployed: false },
+  { model: 'white_human_ft',            role: 'White · human FT only',       elo: 1422, color: '#94a3b8', deployed: false },
+  { model: 'black_human_ft',            role: 'Black · human FT only',       elo: 1337, color: '#94a3b8', deployed: false },
 ];
 
 // ── Chart helpers ────────────────────────────────────────────────────────────
@@ -121,6 +121,71 @@ function LineChart({ phases, lineColor, title }) {
   );
 }
 
+function EloChart() {
+  const CW = 680, rowH = 40;
+  const ML = 178, MR = 52, MT = 20, MB = 8;
+  const PW = CW - ML - MR;
+  const eloMin = 1270, eloMax = 1660;
+  const CH = MT + ELO_DATA.length * rowH + MB;
+  const xPos = elo => ML + (elo - eloMin) / (eloMax - eloMin) * PW;
+  const ticks = [1300, 1400, 1500, 1600];
+
+  return (
+    <svg viewBox={`0 0 ${CW} ${CH}`}
+         style={{ width: '100%', maxWidth: `${CW}px`, display: 'block', overflow: 'visible' }}>
+
+      {/* Gridlines + tick labels */}
+      {ticks.map(t => (
+        <g key={t}>
+          <line x1={xPos(t)} y1={MT - 8} x2={xPos(t)} y2={CH - MB}
+                stroke="var(--surface-text-color)" strokeOpacity={0.1} strokeWidth={1} />
+          <text x={xPos(t)} y={MT - 10} textAnchor="middle"
+                fill="var(--surface-text-color)" fillOpacity={0.35} fontSize={9.5}>
+            {t}
+          </text>
+        </g>
+      ))}
+
+      {/* Rows */}
+      {ELO_DATA.map(({ model, role, elo, color, deployed }, i) => {
+        const y   = MT + (i + 0.5) * rowH;
+        const x   = xPos(elo);
+        const op  = deployed ? 1 : 0.42;
+        const r   = deployed ? 6 : 4.5;
+
+        return (
+          <g key={model}>
+            {/* Track line */}
+            <line x1={ML} y1={y} x2={CW - MR} y2={y}
+                  stroke="var(--surface-text-color)" strokeOpacity={0.06} strokeWidth={1} />
+            {/* Stem */}
+            <line x1={ML} y1={y} x2={x} y2={y}
+                  stroke={color} strokeOpacity={op * 0.7} strokeWidth={deployed ? 2 : 1.5} />
+            {/* Dot */}
+            <circle cx={x} cy={y} r={r} fill={color} fillOpacity={op} />
+            {/* Model label */}
+            <text x={ML - 10} y={y - 5} textAnchor="end"
+                  fill="var(--surface-text-color)" fillOpacity={deployed ? 0.9 : 0.55}
+                  fontSize={10.5} fontFamily="monospace" fontWeight={deployed ? 700 : 400}>
+              {model}
+            </text>
+            <text x={ML - 10} y={y + 7} textAnchor="end"
+                  fill="var(--surface-text-color)" fillOpacity={0.35} fontSize={9}>
+              {role}
+            </text>
+            {/* Elo value */}
+            <text x={x + 11} y={y + 4}
+                  fill={color} fillOpacity={deployed ? 1 : 0.65}
+                  fontSize={10.5} fontWeight={deployed ? 700 : 500}>
+              {elo}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 export default function TrainingCurve() {
   return (
     <div>
@@ -148,29 +213,15 @@ export default function TrainingCurve() {
       </h3>
       <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: '12px' }}>
         Round-robin tournament (50 games per pair, temperature 0.3). Elo baseline = 1500.
-        A 200-point gap ≈ 76% win rate for the stronger model.
+        A 200-point gap ≈ 76% win rate for the stronger model. Deployed models shown at full opacity.
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Model</th>
-            <th>Role</th>
-            <th style={{ textAlign: 'right' }}>Elo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ELO_DATA.map(({ model, role, elo }) => (
-            <tr key={model}>
-              <td><code style={{ fontSize: '0.82em' }}>{model}</code></td>
-              <td style={{ opacity: 0.7, fontSize: '0.88em' }}>{role}</td>
-              <td style={{ textAlign: 'right', fontWeight: 600,
-                           color: elo >= 1600 ? '#10b981' : elo >= 1500 ? 'var(--surface-text-color)' : '#f87171' }}>
-                {elo}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div style={{
+        background: 'var(--blog-surface-background)',
+        border: '1px solid color-mix(in srgb, var(--surface-text-color) 12%, transparent)',
+        borderRadius: '10px', padding: '16px 8px 8px',
+      }}>
+        <EloChart />
+      </div>
     </div>
   );
 }
