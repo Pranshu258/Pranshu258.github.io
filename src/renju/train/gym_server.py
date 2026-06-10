@@ -3,11 +3,14 @@
 gym_server.py — Web-based Human RL Gym for Renju.
 
 Starts a local server at http://localhost:5001
-Human plays the NN in the browser; REINFORCE updates run after every N games.
+Both Black and White experts are loaded at startup.  The browser UI lets
+you choose which expert to train each session.
 
 Usage:
-    python3 gym_server.py --checkpoint checkpoints/black_expert_v2.pt \\
-                           --color black --update-every 4
+    python3 gym_server.py \
+        --black checkpoints/black_expert_v2.pt \
+        --white checkpoints/white_expert_v2.pt \
+        --update-every 4
 """
 
 import argparse, os, sys, threading
@@ -97,6 +100,11 @@ HTML = r"""<!DOCTYPE html>
 </div>
 
 <div class="controls">
+  <label>Train expert</label>
+  <select id="sel-nn-color">
+    <option value="black">Black ●</option>
+    <option value="white">White ○</option>
+  </select>
   <label>You play as</label>
   <select id="sel-color">
     <option value="white">White ○</option>
@@ -282,16 +290,17 @@ document.getElementById('btn-new').addEventListener('click', newGame);
 
 async function newGame() {
   myColor = document.getElementById('sel-color').value;
+  const nnColor = document.getElementById('sel-nn-color').value;
   const res  = await fetch('/api/new_game', {
     method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({human_color: myColor})
+    body: JSON.stringify({human_color: myColor, nn_color: nnColor})
   });
   const data = await res.json();
   gameActive = true;
   boardState = data.board;
   lastMove   = data.last_move;
   hoverCell  = null;
-  document.getElementById('s-nncolor').textContent = data.nn_color==='black' ? '●' : '○';
+  document.getElementById('s-nncolor').textContent = nnColor === 'black' ? '●' : '○';
   document.getElementById('s-mode').textContent = data.mode === 'imitation' ? '✏️ Imitation' : '🎮 REINFORCE';
   updateStats(data.stats);
   render();
@@ -359,13 +368,23 @@ function flashTraining() {
   setTimeout(() => el.classList.remove('show'), 2500);
 }
 
+// Auto-flip human color when expert selection changes
+document.getElementById('sel-nn-color').addEventListener('change', () => {
+  const nnColor = document.getElementById('sel-nn-color').value;
+  document.getElementById('sel-color').value = nnColor === 'black' ? 'white' : 'black';
+  document.getElementById('s-nncolor').textContent = nnColor === 'black' ? '●' : '○';
+  fetch('/api/stats').then(r=>r.json()).then(data => {
+    updateStats(nnColor === 'black' ? data.black : data.white);
+  }).catch(()=>{});
+});
+
 // Initial board
 drawBoard();
 fetch('/api/stats').then(r=>r.json()).then(data => {
-  updateStats(data);
-  if (data.default_human_color) {
-    document.getElementById('sel-color').value = data.default_human_color;
-  }
+  document.getElementById('sel-nn-color').value = 'black';
+  document.getElementById('sel-color').value = 'white';
+  document.getElementById('s-nncolor').textContent = '●';
+  updateStats(data.black);
 }).catch(()=>{});
 </script>
 </body>
@@ -449,24 +468,30 @@ def nn_pick_move(model, board, is_black, temperature, device, tactical_penalty):
 # ── Server state ───────────────────────────────────────────────────────────────
 class State:
     def __init__(self):
-        self.lock        = threading.Lock()
-        self.model       = None
-        self.optimizer   = None
-        self.device      = None
-        self.args        = None
-        self.board       = None
-        self.is_black    = True    # whose turn it is
-        self.human_color = WHITE
-        self.nn_color    = BLACK
-        self.last_move   = None
-        self.trajectory  = []     # REINFORCE: list of [lp, val, step_r]
-        self.bc_traj     = []     # Imitation: list of (board_tensor, move_idx)
-        self.imitation   = False  # True when human plays same color as NN
-        self.game_over   = True
-        self.buffer      = []     # completed trajectories waiting for update
-        self.stats       = {'games': 0, 'wins': 0, 'losses': 0,
-                            'draws': 0, 'updates': 0,
-                            'default_human_color': 'black'}
+        self.lock            = threading.Lock()
+        self.model           = None   # active model (set per game)
+        self.optimizer       = None   # active optimizer (set per game)
+        self.black_model     = None
+        self.black_optimizer = None
+        self.white_model     = None
+        self.white_optimizer = None
+        self.device          = None
+        self.args            = None
+        self.active_ckpt     = None   # output path for active model
+        self.active_color    = 'black'
+        self.board           = None
+        self.is_black        = True    # whose turn it is
+        self.human_color     = WHITE
+        self.nn_color        = BLACK
+        self.last_move       = None
+        self.trajectory      = []     # REINFORCE: list of [lp, val, step_r]
+        self.bc_traj         = []     # Imitation: list of (board_tensor, move_idx)
+        self.imitation       = False  # True when human plays same color as NN
+        self.game_over       = True
+        self.buffer          = []     # completed trajectories waiting for update
+        self.stats           = None   # points to active stats dict (set per game)
+        self.black_stats     = {'games': 0, 'wins': 0, 'losses': 0, 'draws': 0, 'updates': 0}
+        self.white_stats     = {'games': 0, 'wins': 0, 'losses': 0, 'draws': 0, 'updates': 0}
 
     def board_as_list(self):
         return self.board.tolist() if self.board is not None else None
@@ -486,7 +511,7 @@ def index():
 @app.route('/api/stats')
 def api_stats():
     with S.lock:
-        return jsonify(S.stats)
+        return jsonify({'black': S.black_stats, 'white': S.white_stats})
 
 
 @app.route('/api/new_game', methods=['POST'])
@@ -495,7 +520,18 @@ def api_new_game():
     human_color_str = data.get('human_color', 'white')
 
     with S.lock:
-        nn_color_str  = S.args.color  # NN's configured role ('black' or 'white')
+        nn_color_str  = data.get('nn_color', 'black')
+        S.active_color = nn_color_str
+        if nn_color_str == 'black':
+            S.model     = S.black_model
+            S.optimizer = S.black_optimizer
+            S.stats     = S.black_stats
+            S.active_ckpt = S.args.out_black
+        else:
+            S.model     = S.white_model
+            S.optimizer = S.white_optimizer
+            S.stats     = S.white_stats
+            S.active_ckpt = S.args.out_white
         S.imitation   = (human_color_str == nn_color_str)
 
         S.board      = empty_board()
@@ -711,18 +747,20 @@ def _save_checkpoint():
         'model_state_dict':     S.model.state_dict(),
         'optimizer_state_dict': S.optimizer.state_dict(),
         'human_gym_stats':      S.stats,
-    }, S.args.out)
+    }, S.active_ckpt)
 
 
 # ── CLI ────────────────────────────────────────────────────────────────────────
 def parse_args():
     p = argparse.ArgumentParser(description='Web-based Human RL Gym for Renju')
-    p.add_argument('--checkpoint',       type=str,   default='checkpoints/black_expert_v2.pt')
-    p.add_argument('--out',              type=str,   default=None,
-                   help='Output checkpoint (defaults to overwriting --checkpoint)')
-    p.add_argument('--color',            type=str,   default='black',
-                   choices=['black', 'white'],
-                   help='Color the NN plays by default (user can override in UI)')
+    p.add_argument('--black',            type=str,   default='checkpoints/black_expert_v2.pt',
+                   help='Black expert checkpoint')
+    p.add_argument('--white',            type=str,   default='checkpoints/white_expert_v2.pt',
+                   help='White expert checkpoint')
+    p.add_argument('--out-black',        type=str,   default=None,
+                   help='Output path for black checkpoint (defaults to --black)')
+    p.add_argument('--out-white',        type=str,   default=None,
+                   help='Output path for white checkpoint (defaults to --white)')
     p.add_argument('--update-every',     type=int,   default=4)
     p.add_argument('--lr',               type=float, default=1e-5)
     p.add_argument('--temperature',      type=float, default=0.5)
@@ -735,21 +773,14 @@ def parse_args():
     return p.parse_args()
 
 
-def main():
-    args = parse_args()
-    args.out = args.out or args.checkpoint
-
-    device = (
-        torch.device('mps')  if torch.backends.mps.is_available() else
-        torch.device('cuda') if torch.cuda.is_available() else
-        torch.device('cpu')
-    )
-
+def _load_model(path, args, device, label):
+    """Load a RenjuNet checkpoint. Returns (model, optimizer, stats)."""
     model = RenjuNet(num_blocks=args.blocks, channels=args.channels).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-
-    if os.path.exists(args.checkpoint):
-        ckpt = torch.load(args.checkpoint, map_location=device, weights_only=False)
+    defaults = {'games': 0, 'wins': 0, 'losses': 0, 'draws': 0, 'updates': 0}
+    stats = dict(defaults)
+    if os.path.exists(path):
+        ckpt = torch.load(path, map_location=device, weights_only=False)
         model.load_state_dict(ckpt['model_state_dict'])
         if not args.no_train and 'optimizer_state_dict' in ckpt:
             try:
@@ -757,23 +788,40 @@ def main():
             except Exception:
                 pass
         if 'human_gym_stats' in ckpt:
-            loaded = ckpt['human_gym_stats']
-            # Merge with defaults so missing keys (e.g. 'games' from older checkpoints) are filled
-            defaults = {'games': 0, 'wins': 0, 'losses': 0, 'draws': 0, 'updates': 0}
-            S.stats = {**defaults, **loaded}
-        print(f"  Loaded: {args.checkpoint}")
+            stats = {**defaults, **ckpt['human_gym_stats']}
+        print(f"  Loaded {label}: {path}")
     else:
-        print(f"  Checkpoint not found: {args.checkpoint}", file=sys.stderr)
+        print(f"  Checkpoint not found: {path}", file=sys.stderr)
         sys.exit(1)
+    return model, optimizer, stats
 
-    S.model     = model
-    S.optimizer = optimizer
-    S.device    = device
-    S.args      = args
-    S.stats['default_human_color'] = 'black' if args.color == 'white' else 'white'
+
+def main():
+    args = parse_args()
+    args.out_black = args.out_black or args.black
+    args.out_white = args.out_white or args.white
+
+    device = (
+        torch.device('mps')  if torch.backends.mps.is_available() else
+        torch.device('cuda') if torch.cuda.is_available() else
+        torch.device('cpu')
+    )
+
+    S.black_model, S.black_optimizer, S.black_stats = _load_model(args.black, args, device, 'black')
+    S.white_model, S.white_optimizer, S.white_stats = _load_model(args.white, args, device, 'white')
+
+    # Default active: black expert
+    S.model      = S.black_model
+    S.optimizer  = S.black_optimizer
+    S.stats      = S.black_stats
+    S.active_ckpt = args.out_black
+    S.active_color = 'black'
+    S.device     = device
+    S.args       = args
 
     mode = "no training" if args.no_train else f"train every {args.update_every} games"
-    print(f"  NN plays: {args.color}  |  {mode}  |  device: {device}")
+    print(f"  Experts: black={args.black}  white={args.white}")
+    print(f"  Mode: {mode}  |  device: {device}")
     print(f"\n  Open http://localhost:{args.port} in your browser\n")
 
     app.run(host='127.0.0.1', port=args.port, debug=False, threaded=False)
