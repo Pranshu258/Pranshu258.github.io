@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "total": 1000,
+  "by_category": {
+    "immediate_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "forced_block": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "broken_four_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "open_four_creation": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 0,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 0,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "four_three_fork": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 0,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 0,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "white_overline_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "false_positive_forbidden": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 2,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 0.02,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "overline_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    },
+    "double_three_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    },
+    "double_four_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    }
+  },
+  "evaluator": "minimax_attack",
+  "depth": 3,
+  "input": "src/renju/eval/golden_set_v1.jsonl",
+  "overall": {
+    "total": 1000,
+    "labeled": 700,
+    "top1_correct": 402,
+    "forbidden_checks": 300,
+    "forbidden_violations": 0,
+    "forbidden_avoidance_correct": 300,
+    "top1_accuracy": 0.5742857142857143,
+    "forbidden_violation_rate": 0,
+    "forbidden_avoidance_accuracy": 1
+  },
+  "sample_mismatches": [
+    {
+      "id": "open_four_creation_0001",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "F8",
+      "expected": [
+        "G5"
+      ]
+    },
+    {
+      "id": "open_four_creation_0002",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "G8",
+      "expected": [
+        "F10"
+      ]
+    },
+    {
+      "id": "open_four_creation_0003",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "C6",
+      "expected": [
+        "E7"
+      ]
+    },
+    {
+      "id": "open_four_creation_0004",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "H6",
+      "expected": [
+        "I9"
+      ]
+    },
+    {
+      "id": "open_four_creation_0005",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "D2",
+      "expected": [
+        "F3"
+      ]
+    },
+    {
+      "id": "open_four_creation_0006",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "D12",
+      "expected": [
+        "F13"
+      ]
+    },
+    {
+      "id": "open_four_creation_0007",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "C9",
+      "expected": [
+        "E8"
+      ]
+    },
+    {
+      "id": "open_four_creation_0008",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "C2",
+      "expected": [
+        "B4"
+      ]
+    },
+    {
+      "id": "open_four_creation_0009",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "H2",
+      "expected": [
+        "I5"
+      ]
+    },
+    {
+      "id": "open_four_creation_0010",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "J13",
+      "expected": [
+        "L14"
+      ]
+    },
+    {
+      "id": "open_four_creation_0011",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "B1",
+      "expected": [
+        "D2"
+      ]
+    },
+    {
+      "id": "open_four_creation_0012",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "J13",
+      "expected": [
+        "L14"
+      ]
+    },
+    {
+      "id": "open_four_creation_0013",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "G8",
+      "expected": [
+        "I9"
+      ]
+    },
+    {
+      "id": "open_four_creation_0014",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "J6",
+      "expected": [
+        "L5"
+      ]
+    },
+    {
+      "id": "open_four_creation_0015",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "C7",
+      "expected": [
+        "E8"
+      ]
+    },
+    {
+      "id": "open_four_creation_0016",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "C6",
+      "expected": [
+        "E7"
+      ]
+    },
+    {
+      "id": "open_four_creation_0017",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "I2",
+      "expected": [
+        "K3"
+      ]
+    },
+    {
+      "id": "open_four_creation_0018",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "I14",
+      "expected": [
+        "K15"
+      ]
+    },
+    {
+      "id": "open_four_creation_0019",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "F10",
+      "expected": [
+        "E12"
+      ]
+    },
+    {
+      "id": "open_four_creation_0020",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "H10",
+      "expected": [
+        "K9"
+      ]
+    },
+    {
+      "id": "open_four_creation_0021",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "I7",
+      "expected": [
+        "J7"
+      ]
+    },
+    {
+      "id": "open_four_creation_0022",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "G11",
+      "expected": [
+        "L5"
+      ]
+    },
+    {
+      "id": "open_four_creation_0023",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "I9",
+      "expected": [
+        "J12"
+      ]
+    },
+    {
+      "id": "open_four_creation_0024",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "I9",
+      "expected": [
+        "H11"
+      ]
+    },
+    {
+      "id": "open_four_creation_0025",
+      "category": "open_four_creation",
+      "side_to_move": "black",
+      "predicted": "K2",
+      "expected": [
+        "M3"
+      ]
+    }
+  ]
+}

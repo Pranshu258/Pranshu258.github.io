@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "total": 600,
+  "total": 1000,
   "by_category": {
     "immediate_win": {
       "total": 100,
@@ -50,6 +50,70 @@
       "raw_forbidden_top1_rate": null,
       "mean_value": 0.7920074436860159
     },
+    "open_four_creation": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 15,
+      "top3_correct": 34,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 0,
+      "null_predictions": 0,
+      "value_sum": 56.94544486817904,
+      "top1_accuracy": 0.15,
+      "top3_accuracy": 0.34,
+      "forbidden_violation_rate": null,
+      "raw_forbidden_top1_rate": null,
+      "mean_value": 0.5694544486817904
+    },
+    "four_three_fork": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 13,
+      "top3_correct": 43,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 0,
+      "null_predictions": 0,
+      "value_sum": 92.38734303414822,
+      "top1_accuracy": 0.13,
+      "top3_accuracy": 0.43,
+      "forbidden_violation_rate": null,
+      "raw_forbidden_top1_rate": null,
+      "mean_value": 0.9238734303414822
+    },
+    "white_overline_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 22,
+      "top3_correct": 42,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 0,
+      "null_predictions": 0,
+      "value_sum": 91.05466022808105,
+      "top1_accuracy": 0.22,
+      "top3_accuracy": 0.42,
+      "forbidden_violation_rate": null,
+      "raw_forbidden_top1_rate": null,
+      "mean_value": 0.9105466022808105
+    },
+    "false_positive_forbidden": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 6,
+      "top3_correct": 16,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "raw_forbidden_top1": 0,
+      "null_predictions": 0,
+      "value_sum": 3.7365666649420746,
+      "top1_accuracy": 0.06,
+      "top3_accuracy": 0.16,
+      "forbidden_violation_rate": null,
+      "raw_forbidden_top1_rate": null,
+      "mean_value": 0.037365666649420745
+    },
     "overline_forbidden": {
       "total": 100,
       "labeled": 0,
@@ -57,14 +121,14 @@
       "top3_correct": 0,
       "forbidden_checks": 100,
       "forbidden_violations": 0,
-      "raw_forbidden_top1": 28,
+      "raw_forbidden_top1": 23,
       "null_predictions": 0,
-      "value_sum": 92.63472337089479,
+      "value_sum": 91.59461206197739,
       "top1_accuracy": null,
       "top3_accuracy": null,
       "forbidden_violation_rate": 0,
-      "raw_forbidden_top1_rate": 0.28,
-      "mean_value": 0.9263472337089479
+      "raw_forbidden_top1_rate": 0.23,
+      "mean_value": 0.9159461206197739
     },
     "double_three_forbidden": {
       "total": 100,
@@ -73,14 +137,14 @@
       "top3_correct": 0,
       "forbidden_checks": 100,
       "forbidden_violations": 0,
-      "raw_forbidden_top1": 3,
+      "raw_forbidden_top1": 2,
       "null_predictions": 0,
-      "value_sum": 50.48138693906367,
+      "value_sum": 53.90080535062589,
       "top1_accuracy": null,
       "top3_accuracy": null,
       "forbidden_violation_rate": 0,
-      "raw_forbidden_top1_rate": 0.03,
-      "mean_value": 0.5048138693906367
+      "raw_forbidden_top1_rate": 0.02,
+      "mean_value": 0.5390080535062589
     },
     "double_four_forbidden": {
       "total": 100,
@@ -89,14 +153,14 @@
       "top3_correct": 0,
       "forbidden_checks": 100,
       "forbidden_violations": 0,
-      "raw_forbidden_top1": 21,
+      "raw_forbidden_top1": 37,
       "null_predictions": 0,
-      "value_sum": 99.99999928474426,
+      "value_sum": 98.7849704772234,
       "top1_accuracy": null,
       "top3_accuracy": null,
       "forbidden_violation_rate": 0,
-      "raw_forbidden_top1_rate": 0.21,
-      "mean_value": 0.9999999928474427
+      "raw_forbidden_top1_rate": 0.37,
+      "mean_value": 0.987849704772234
     }
   },
   "evaluator": "deployed_onnx_models",
@@ -107,20 +171,20 @@
   },
   "policy_mask": "browser candidate mask plus forbidden Black move filter",
   "overall": {
-    "total": 600,
-    "labeled": 300,
-    "top1_correct": 144,
-    "top3_correct": 178,
+    "total": 1000,
+    "labeled": 700,
+    "top1_correct": 200,
+    "top3_correct": 313,
     "forbidden_checks": 300,
     "forbidden_violations": 0,
-    "raw_forbidden_top1": 52,
+    "raw_forbidden_top1": 62,
     "null_predictions": 0,
-    "value_sum": 424.9921099508647,
-    "top1_accuracy": 0.48,
-    "top3_accuracy": 0.5933333333333334,
+    "value_sum": 670.280403041339,
+    "top1_accuracy": 0.2857142857142857,
+    "top3_accuracy": 0.4471428571428571,
     "forbidden_violation_rate": 0,
-    "raw_forbidden_top1_rate": 0.17333333333333334,
-    "mean_value": 0.7083201832514412
+    "raw_forbidden_top1_rate": 0.20666666666666667,
+    "mean_value": 0.6702804030413391
   },
   "sample_mismatches": [
     {

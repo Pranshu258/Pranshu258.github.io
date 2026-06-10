@@ -136,6 +136,81 @@ function buildBrokenFourWin(rng, id, index) {
   });
 }
 
+function buildOpenFourCreation(rng, id, index) {
+  const sideToMove = index % 2 === 0 ? 'black' : 'white';
+  const [openA, a, b, gap, c, openB] = sampleLinePlacement(rng, [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0]]);
+  const own = [a, b, c];
+  const black = sideToMove === 'black' ? [...own] : [];
+  const white = sideToMove === 'white' ? [...own] : [];
+  addDistractors({ rng, black, white, protectedCells: protectedSet([openA, openB, gap], own), sideToMove });
+  return createBaseSample({
+    id,
+    category: 'open_four_creation',
+    sideToMove,
+    black,
+    white,
+    bestMoves: [gap],
+    difficulty: 2,
+    notes: 'The side to move fills an internal gap to create an open four with both endpoints available.',
+  });
+}
+
+function buildFourThreeFork(rng, id, index) {
+  const sideToMove = index % 2 === 0 ? 'black' : 'white';
+  const [candidate, a, b, c, d, e, openA, openB, openC] = sampleCrossPlacement(
+    rng,
+    [[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [0, -1], [-1, 0], [0, 2], [0, -2]],
+  );
+  const own = [a, b, c, d, e];
+  const black = sideToMove === 'black' ? [...own] : [];
+  const white = sideToMove === 'white' ? [...own] : [];
+  addDistractors({ rng, black, white, protectedCells: protectedSet([candidate, openA, openB, openC], own), sideToMove });
+  return createBaseSample({
+    id,
+    category: 'four_three_fork',
+    sideToMove,
+    black,
+    white,
+    bestMoves: [candidate],
+    difficulty: 3,
+    notes: 'The candidate move creates a four-threat on one axis and an open three on another axis.',
+  });
+}
+
+function buildWhiteOverlineWin(rng, id) {
+  const [a, b, c, gap, d, e] = sampleLinePlacement(rng, [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0]]);
+  const black = [];
+  const white = [a, b, c, d, e];
+  addDistractors({ rng, black, white, protectedCells: protectedSet(white, [gap]), sideToMove: 'white' });
+  return createBaseSample({
+    id,
+    category: 'white_overline_win',
+    sideToMove: 'white',
+    black,
+    white,
+    bestMoves: [gap],
+    difficulty: 2,
+    notes: 'White may legally win with six or more in a row; filling the gap creates an overline win.',
+  });
+}
+
+function buildFalsePositiveForbidden(rng, id) {
+  const [candidate, a, b, openA, openB] = sampleLinePlacement(rng, [[0, 0], [-1, 0], [1, 0], [-2, 0], [2, 0]]);
+  const black = [a, b];
+  const white = [];
+  addDistractors({ rng, black, white, protectedCells: protectedSet([candidate, openA, openB], black), sideToMove: 'black' });
+  return createBaseSample({
+    id,
+    category: 'false_positive_forbidden',
+    sideToMove: 'black',
+    black,
+    white,
+    bestMoves: [candidate],
+    difficulty: 3,
+    notes: 'The candidate Black move creates one open three and looks dangerous, but it is legal because it does not create a double-three, double-four, or overline.',
+  });
+}
+
 function buildOverlineForbidden(rng, id) {
   const [a, b, c, d, forbidden, e] = sampleLinePlacement(rng, [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0]]);
   const black = [a, b, c, d, e];
@@ -194,6 +269,10 @@ const BUILDERS = {
   immediate_win: buildImmediateWin,
   forced_block: buildForcedBlock,
   broken_four_win: buildBrokenFourWin,
+  open_four_creation: buildOpenFourCreation,
+  four_three_fork: buildFourThreeFork,
+  white_overline_win: buildWhiteOverlineWin,
+  false_positive_forbidden: buildFalsePositiveForbidden,
   overline_forbidden: buildOverlineForbidden,
   double_three_forbidden: buildDoubleThreeForbidden,
   double_four_forbidden: buildDoubleFourForbidden,

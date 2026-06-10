@@ -16,6 +16,10 @@ export const CATEGORIES = [
   'immediate_win',
   'forced_block',
   'broken_four_win',
+  'open_four_creation',
+  'four_three_fork',
+  'white_overline_win',
+  'false_positive_forbidden',
   'overline_forbidden',
   'double_three_forbidden',
   'double_four_forbidden',
@@ -147,6 +151,7 @@ export function immediateWinningMoves(sample, side) {
       if (side === 'black' && isForbiddenMove(ownPixels, oppPixels, move, true).forbidden) {
         continue;
       }
+
       if (checkWinRenju([...ownPixels, move], move[0], move[1], side === 'black')) {
         moves.push(notation);
       }
@@ -154,6 +159,54 @@ export function immediateWinningMoves(sample, side) {
   }
 
   return moves.sort();
+}
+
+function lineStatsAfterMove(sample, side, moveNotation) {
+  const own = side === 'black' ? sample.black : sample.white;
+  const opp = side === 'black' ? sample.white : sample.black;
+  const ownSet = new Set([...own, moveNotation]);
+  const oppSet = new Set(opp);
+  const move = fromNotation(moveNotation);
+  const stats = [];
+
+  for (const [dc, dr] of DIRECTIONS) {
+    let count = 1;
+    let openEnds = 0;
+
+    for (const sign of [1, -1]) {
+      for (let step = 1; step <= 5; step += 1) {
+        const cell = [move[0] + sign * step * dc, move[1] + sign * step * dr];
+        if (!isCell(cell)) break;
+        const notation = toNotation(cell);
+        if (ownSet.has(notation)) {
+          count += 1;
+          continue;
+        }
+        if (!oppSet.has(notation)) openEnds += 1;
+        break;
+      }
+    }
+
+    stats.push({ count, openEnds });
+  }
+
+  return stats;
+}
+
+export function createsOpenFour(sample, side, moveNotation) {
+  return lineStatsAfterMove(sample, side, moveNotation)
+    .some(({ count, openEnds }) => count === 4 && openEnds === 2);
+}
+
+export function createsOpenThree(sample, side, moveNotation) {
+  return lineStatsAfterMove(sample, side, moveNotation)
+    .some(({ count, openEnds }) => count === 3 && openEnds === 2);
+}
+
+export function createsFourThreeFork(sample, side, moveNotation) {
+  const stats = lineStatsAfterMove(sample, side, moveNotation);
+  return stats.some(({ count, openEnds }) => count === 4 && openEnds >= 1) &&
+    stats.some(({ count, openEnds }) => count === 3 && openEnds === 2);
 }
 
 export function forbiddenMoves(sample) {
@@ -286,6 +339,43 @@ export function validateSample(sample) {
     const wins = immediateWinningMoves(sample, sample.side_to_move);
     if (!sameSet([...sample.best_moves].sort(), wins)) {
       errors.push(`best_moves must match immediate wins; expected [${wins.join(', ')}]`);
+    }
+  }
+
+  if (sample.category === 'white_overline_win') {
+    if (sample.side_to_move !== 'white') errors.push('white_overline_win must be white to move');
+    const wins = immediateWinningMoves(sample, 'white');
+    if (!sameSet([...sample.best_moves].sort(), wins)) {
+      errors.push(`white_overline_win best_moves must match white winning overlines; expected [${wins.join(', ')}]`);
+    }
+  }
+
+  if (sample.category === 'open_four_creation') {
+    for (const move of sample.best_moves) {
+      if (!createsOpenFour(sample, sample.side_to_move, move)) {
+        errors.push(`${move} does not create an open four`);
+      }
+    }
+  }
+
+  if (sample.category === 'four_three_fork') {
+    for (const move of sample.best_moves) {
+      if (!createsFourThreeFork(sample, sample.side_to_move, move)) {
+        errors.push(`${move} does not create a four-three fork`);
+      }
+    }
+  }
+
+  if (sample.category === 'false_positive_forbidden') {
+    if (sample.side_to_move !== 'black') errors.push('false_positive_forbidden must be black to move');
+    const blackPixels = notationListToPixels(sample.black);
+    const whitePixels = notationListToPixels(sample.white);
+    for (const move of sample.best_moves) {
+      const result = isForbiddenMove(blackPixels, whitePixels, toPixel(fromNotation(move)), true);
+      if (result.forbidden) errors.push(`${move} should be legal but is forbidden as ${result.reason}`);
+      if (!createsOpenThree(sample, 'black', move) && !createsOpenFour(sample, 'black', move)) {
+        errors.push(`${move} should create a visible threat while remaining legal`);
+      }
     }
   }
 

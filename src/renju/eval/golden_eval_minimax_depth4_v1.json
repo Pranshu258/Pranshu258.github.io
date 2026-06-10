@@ -114,7 +114,7 @@
     }
   },
   "evaluator": "minimax_attack",
-  "depth": 2,
+  "depth": 4,
   "input": "src/renju/eval/golden_set_v1.jsonl",
   "overall": {
     "total": 1000,

@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "total": 1000,
+  "by_category": {
+    "immediate_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "forced_block": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "broken_four_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "open_four_creation": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "four_three_fork": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 94,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 0.94,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "white_overline_win": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 100,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 1,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "false_positive_forbidden": {
+      "total": 100,
+      "labeled": 100,
+      "top1_correct": 11,
+      "forbidden_checks": 0,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 0,
+      "top1_accuracy": 0.11,
+      "forbidden_violation_rate": null,
+      "forbidden_avoidance_accuracy": null
+    },
+    "overline_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    },
+    "double_three_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    },
+    "double_four_forbidden": {
+      "total": 100,
+      "labeled": 0,
+      "top1_correct": 0,
+      "forbidden_checks": 100,
+      "forbidden_violations": 0,
+      "forbidden_avoidance_correct": 100,
+      "top1_accuracy": null,
+      "forbidden_violation_rate": 0,
+      "forbidden_avoidance_accuracy": 1
+    }
+  },
+  "evaluator": "minimax_attack",
+  "depth": 5,
+  "input": "src/renju/eval/golden_set_v1.jsonl",
+  "overall": {
+    "total": 1000,
+    "labeled": 700,
+    "top1_correct": 605,
+    "forbidden_checks": 300,
+    "forbidden_violations": 0,
+    "forbidden_avoidance_correct": 300,
+    "top1_accuracy": 0.8642857142857143,
+    "forbidden_violation_rate": 0,
+    "forbidden_avoidance_accuracy": 1
+  },
+  "sample_mismatches": [
+    {
+      "id": "four_three_fork_0007",
+      "category": "four_three_fork",
+      "side_to_move": "black",
+      "predicted": "K11",
+      "expected": [
+        "L11"
+      ]
+    },
+    {
+      "id": "four_three_fork_0019",
+      "category": "four_three_fork",
+      "side_to_move": "black",
+      "predicted": "E11",
+      "expected": [
+        "E12"
+      ]
+    },
+    {
+      "id": "four_three_fork_0040",
+      "category": "four_three_fork",
+      "side_to_move": "white",
+      "predicted": "K10",
+      "expected": [
+        "L10"
+      ]
+    },
+    {
+      "id": "four_three_fork_0059",
+      "category": "four_three_fork",
+      "side_to_move": "black",
+      "predicted": "K11",
+      "expected": [
+        "K12"
+      ]
+    },
+    {
+      "id": "four_three_fork_0065",
+      "category": "four_three_fork",
+      "side_to_move": "black",
+      "predicted": "G15",
+      "expected": [
+        "F12"
+      ]
+    },
+    {
+      "id": "four_three_fork_0083",
+      "category": "four_three_fork",
+      "side_to_move": "black",
+      "predicted": "O8",
+      "expected": [
+        "L7"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0001",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "F12",
+      "expected": [
+        "F13"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0002",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "N11",
+      "expected": [
+        "O11"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0003",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "L11",
+      "expected": [
+        "M11"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0004",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "J12",
+      "expected": [
+        "K12"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0005",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "J4",
+      "expected": [
+        "K4"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0006",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "M11",
+      "expected": [
+        "M10"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0007",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "C5",
+      "expected": [
+        "D5"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0008",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "E7",
+      "expected": [
+        "D7"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0009",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "C2",
+      "expected": [
+        "C3"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0010",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "F6",
+      "expected": [
+        "E6"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0011",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "L11",
+      "expected": [
+        "L12"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0013",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "I13",
+      "expected": [
+        "I12"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0014",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "F4",
+      "expected": [
+        "F5"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0015",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "K7",
+      "expected": [
+        "L9"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0016",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "F11",
+      "expected": [
+        "G13"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0018",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "D14",
+      "expected": [
+        "D15"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0020",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "B8",
+      "expected": [
+        "C8"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0021",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "L8",
+      "expected": [
+        "M8"
+      ]
+    },
+    {
+      "id": "false_positive_forbidden_0022",
+      "category": "false_positive_forbidden",
+      "side_to_move": "black",
+      "predicted": "L6",
+      "expected": [
+        "K6"
+      ]
+    }
+  ]
+}

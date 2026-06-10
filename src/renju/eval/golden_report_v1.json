@@ -1,10 +1,14 @@
 {
   "schema_version": 1,
-  "total": 600,
+  "total": 1000,
   "by_category": {
     "immediate_win": 100,
     "forced_block": 100,
     "broken_four_win": 100,
+    "open_four_creation": 100,
+    "four_three_fork": 100,
+    "white_overline_win": 100,
+    "false_positive_forbidden": 100,
     "overline_forbidden": 100,
     "double_three_forbidden": 100,
     "double_four_forbidden": 100

@@ -38,11 +38,11 @@
     "open_four_creation": {
       "total": 100,
       "labeled": 100,
-      "top1_correct": 100,
+      "top1_correct": 98,
       "forbidden_checks": 0,
       "forbidden_violations": 0,
       "forbidden_avoidance_correct": 0,
-      "top1_accuracy": 1,
+      "top1_accuracy": 0.98,
       "forbidden_violation_rate": null,
       "forbidden_avoidance_accuracy": null
     },
@@ -114,18 +114,37 @@
     }
   },
   "evaluator": "minimax_attack",
-  "depth": 2,
+  "depth": 1,
   "input": "src/renju/eval/golden_set_v1.jsonl",
   "overall": {
     "total": 1000,
     "labeled": 700,
-    "top1_correct": 700,
+    "top1_correct": 698,
     "forbidden_checks": 300,
     "forbidden_violations": 0,
     "forbidden_avoidance_correct": 300,
-    "top1_accuracy": 1,
+    "top1_accuracy": 0.9971428571428571,
     "forbidden_violation_rate": 0,
     "forbidden_avoidance_accuracy": 1
   },
-  "sample_mismatches": []
+  "sample_mismatches": [
+    {
+      "id": "open_four_creation_0022",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "G11",
+      "expected": [
+        "L5"
+      ]
+    },
+    {
+      "id": "open_four_creation_0066",
+      "category": "open_four_creation",
+      "side_to_move": "white",
+      "predicted": "K12",
+      "expected": [
+        "K6"
+      ]
+    }
+  ]
 }
