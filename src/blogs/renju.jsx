@@ -160,30 +160,57 @@ export default class Renju extends React.Component {
 
                 <h3 className="headings">Training</h3>
                 <p>
-                    Training proceeded in four phases — starting from minimax self-play, advancing through reinforcement learning, specialising by color, and finally fine-tuning on real human games.
+                    Training proceeded in six phases — starting from minimax self-play data, advancing through reinforcement learning, specialising by color, then fine-tuning on human games and tactical patterns.
                 </p>
-                <p>
-                    <b>Phase 1 — Supervised pre-training.</b> 5,000 games were generated between minimax agents at varying search depths (1–5), with stochastic move selection to diversify game lines. After deduplication, this produced <b>43,513 unique board positions</b>. The network was trained for 80 epochs to predict the minimax's chosen move (policy loss) and the game outcome (value loss). At convergence it matched the minimax's move choice <b>46.6% of the time</b> — the random baseline for 225 possible moves is 0.4%.
-                </p>
-                <p>
-                    <b>Phase 2 — Reinforcement learning vs minimax.</b> The pre-trained model plays live games against a minimax opponent and improves through the REINFORCE algorithm: moves that led to wins are reinforced, moves that led to losses are discouraged. The opponent difficulty advances automatically — starting at depth 1, increasing whenever the model wins more than 60% of its last 50 games. After 550 update steps the model reached <b>57% overall win rate</b>, but with a clear gap between Black (strong) and White (weak).
-                </p>
-                <p>
-                    <b>Phase 3 — Color-specialist fine-tuning.</b> The gap between Black and White performance comes from Renju's structure: Black always opens at the board's strongest point (center), while White must respond and defend. Learning both strategies simultaneously in one model caused them to interfere with each other. Training was forked into two models, each playing only its own color:
-                </p>
-                <ul>
-                    <li><b>Black expert</b> — 100% win rate against minimax depths 1–5 as Black. The model converged quickly and held this performance stably.</li>
-                    <li><b>White expert</b> — reached 76.5% overall win rate. White depths 1–3 at 100%; depth 4 remained volatile, oscillating between 22–65%.</li>
-                </ul>
-                <p>
-                    <b>Phase 4 — Human game fine-tuning.</b> After playing 34 games against the deployed models, the winning moves were used to fine-tune each expert. Only the winner's moves are used as training targets — the loser's moves are discarded as noisy. A low learning rate (5×10⁻⁵) and 30% original-data mixing prevent catastrophic forgetting. The impact was immediate: White depth-4 win rate jumped from <b>22% → 94%</b> in a single session, and Black depth-5 jumped from <b>0% → 84%</b> as a side effect of the NN winning 5 games as Black.
-                </p>
-                <p>
-                    <b>Phase 5 — Tactical RL fine-tuning.</b> Despite strong aggregate win rates, the models showed a critical blind spot: they would occasionally miss forced moves — failing to complete an open four into five, or neglecting to block the opponent's. To address this, 20,000 forced-move positions were generated from minimax self-play and used to supervised fine-tune both experts (91–92% forced-move accuracy after 20 epochs). The fine-tuned models were then refined via reinforcement learning with a per-step tactical penalty (−0.5) whenever a forced move was missed, preventing the models from treating tactical failures as neutral. After 100–170 RL update steps, the white expert achieved consistent <b>100% win rate as White against minimax depths 1–4</b>, and the black expert maintained <b>100% win rate as Black across all depths</b>.
-                </p>
-                <p>
-                    <b>Phase 6 — Human RL gym.</b> To address blind spots that minimax self-play cannot expose — unconventional openings, multi-step traps, and patterns the minimax never produces — the models were further trained via live play against a human opponent. Each game is treated as a REINFORCE episode with the same tactical penalty, and gradient updates are applied after every few games. This creates a direct feedback loop between observed weaknesses and training signal.
-                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style={{ whiteSpace: 'nowrap' }}>Phase</th>
+                            <th>Method</th>
+                            <th>Key outcome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            [
+                                '1 — Supervised',
+                                '5,000 minimax self-play games (depths 1–5, stochastic) → 43,513 unique positions. 80 epochs of policy + value loss.',
+                                '46.6% move-match accuracy vs minimax (random baseline: 0.4%). Starting point for all RL phases.',
+                            ],
+                            [
+                                '2 — RL vs Minimax',
+                                'REINFORCE against a minimax opponent that auto-advances difficulty when the model wins >60% of its last 50 games. 550 update steps.',
+                                '57% overall win rate. Clear Black–White gap emerged: Black strong, White weak. Sharing one model for both colors caused interference.',
+                            ],
+                            [
+                                '3 — Color Specialists',
+                                'Training forked into two models. Each plays only its own color — Black expert vs White opponent, White expert vs Black opponent.',
+                                'Black: 100% win rate vs minimax depths 1–5. White: 76.5% overall, consistent at depths 1–3, volatile at depth 4 (22–65%).',
+                            ],
+                            [
+                                '4 — Human FT',
+                                '34 human-vs-NN games. Winner\'s moves used as supervised targets (lr=5×10⁻⁵, 30% original-data mixing to prevent forgetting).',
+                                'White depth-4: 22% → 94%. Black depth-5: 0% → 84%. Single session, immediate impact.',
+                            ],
+                            [
+                                '5 — Tactical RL',
+                                '20,000 forced-move positions from minimax self-play. Supervised FT for move accuracy, then RL with −0.5 penalty per missed forced move.',
+                                '91–92% forced-move accuracy. White: 100% vs depths 1–4. Black: 100% vs all depths. Blind spot for missed fours/blocks eliminated.',
+                            ],
+                            [
+                                '6 — Human RL Gym',
+                                'Live games vs human via browser gym. REINFORCE updates every few games (same tactical penalty). Imitation mode: BC loss on human wins.',
+                                'White model: +83 Elo after 28 games / 10 updates. Addresses unconventional openings and multi-step traps unseen in minimax play.',
+                            ],
+                        ].map(([phase, method, outcome]) => (
+                            <tr key={phase}>
+                                <td style={{ whiteSpace: 'nowrap', fontWeight: 600, verticalAlign: 'top' }}>{phase}</td>
+                                <td style={{ verticalAlign: 'top', fontSize: '0.88em' }}>{method}</td>
+                                <td style={{ verticalAlign: 'top', fontSize: '0.88em' }}>{outcome}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
