@@ -1,0 +1,456 @@
+[
+  {
+    "phase": "Supervised",
+    "color": "black",
+    "name": "Supervised (Black)",
+    "points": [
+      {
+        "ckpt": "supervised",
+        "win_rate": 26.7
+      }
+    ]
+  },
+  {
+    "phase": "Supervised",
+    "color": "white",
+    "name": "Supervised (White)",
+    "points": [
+      {
+        "ckpt": "supervised",
+        "win_rate": 0.0
+      }
+    ]
+  },
+  {
+    "phase": "RL vs Minimax",
+    "color": "black",
+    "name": "RL vs Minimax (Black)",
+    "points": [
+      {
+        "ckpt": "rl_vs_minimax_step00050",
+        "win_rate": 70.0
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00100",
+        "win_rate": 43.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00150",
+        "win_rate": 40.0
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00200",
+        "win_rate": 13.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00250",
+        "win_rate": 13.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00300",
+        "win_rate": 20.0
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00350",
+        "win_rate": 23.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00400",
+        "win_rate": 83.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00450",
+        "win_rate": 53.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00500",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00550",
+        "win_rate": 60.0
+      }
+    ]
+  },
+  {
+    "phase": "RL vs Minimax",
+    "color": "white",
+    "name": "RL vs Minimax (White)",
+    "points": [
+      {
+        "ckpt": "rl_vs_minimax_step00050",
+        "win_rate": 0.0
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00100",
+        "win_rate": 6.7
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00150",
+        "win_rate": 13.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00200",
+        "win_rate": 86.7
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00250",
+        "win_rate": 90.0
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00300",
+        "win_rate": 93.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00350",
+        "win_rate": 86.7
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00400",
+        "win_rate": 23.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00450",
+        "win_rate": 63.3
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00500",
+        "win_rate": 20.0
+      },
+      {
+        "ckpt": "rl_vs_minimax_step00550",
+        "win_rate": 0.0
+      }
+    ]
+  },
+  {
+    "phase": "Black Specialist",
+    "color": "black",
+    "name": "Black Specialist (Black)",
+    "points": [
+      {
+        "ckpt": "black_expert_step00275",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00300",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00325",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00350",
+        "win_rate": 86.7
+      },
+      {
+        "ckpt": "black_expert_step00375",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00400",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00425",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00450",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00475",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00500",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00525",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00550",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00575",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00600",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00625",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00650",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00675",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00700",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00725",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00750",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00775",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00800",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00825",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00850",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00875",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00900",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00925",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00950",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step00975",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step01000",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step01025",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step01050",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_step01075",
+        "win_rate": 100.0
+      }
+    ]
+  },
+  {
+    "phase": "White Specialist",
+    "color": "white",
+    "name": "White Specialist (White)",
+    "points": [
+      {
+        "ckpt": "white_expert_step00275",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00300",
+        "win_rate": 13.3
+      },
+      {
+        "ckpt": "white_expert_step00325",
+        "win_rate": 3.3
+      },
+      {
+        "ckpt": "white_expert_step00350",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00375",
+        "win_rate": 90.0
+      },
+      {
+        "ckpt": "white_expert_step00400",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00425",
+        "win_rate": 66.7
+      },
+      {
+        "ckpt": "white_expert_step00450",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00475",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00500",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00525",
+        "win_rate": 90.0
+      },
+      {
+        "ckpt": "white_expert_step00550",
+        "win_rate": 50.0
+      },
+      {
+        "ckpt": "white_expert_step00575",
+        "win_rate": 93.3
+      },
+      {
+        "ckpt": "white_expert_step00600",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00625",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00650",
+        "win_rate": 83.3
+      },
+      {
+        "ckpt": "white_expert_step00675",
+        "win_rate": 70.0
+      },
+      {
+        "ckpt": "white_expert_step00700",
+        "win_rate": 0.0
+      },
+      {
+        "ckpt": "white_expert_step00725",
+        "win_rate": 90.0
+      },
+      {
+        "ckpt": "white_expert_step00750",
+        "win_rate": 90.0
+      },
+      {
+        "ckpt": "white_expert_step00775",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00800",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00825",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "white_expert_step00850",
+        "win_rate": 90.0
+      },
+      {
+        "ckpt": "white_expert_step00875",
+        "win_rate": 3.3
+      },
+      {
+        "ckpt": "white_expert_step00900",
+        "win_rate": 96.7
+      },
+      {
+        "ckpt": "white_expert_step00925",
+        "win_rate": 90.0
+      },
+      {
+        "ckpt": "white_expert_step00950",
+        "win_rate": 3.3
+      },
+      {
+        "ckpt": "white_expert_step00975",
+        "win_rate": 0.0
+      }
+    ]
+  },
+  {
+    "phase": "Human FT",
+    "color": "black",
+    "name": "Human FT (Black)",
+    "points": [
+      {
+        "ckpt": "black_human_ft",
+        "win_rate": 100.0
+      }
+    ]
+  },
+  {
+    "phase": "Human FT",
+    "color": "white",
+    "name": "Human FT (White)",
+    "points": [
+      {
+        "ckpt": "white_human_ft",
+        "win_rate": 100.0
+      }
+    ]
+  },
+  {
+    "phase": "Tactical RL (Black)",
+    "color": "black",
+    "name": "Tactical RL (Black) (Black)",
+    "points": [
+      {
+        "ckpt": "black_expert_v2_step00050",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_v2_step00100",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_v2_step00150",
+        "win_rate": 100.0
+      },
+      {
+        "ckpt": "black_expert_v2",
+        "win_rate": 96.7
+      }
+    ]
+  },
+  {
+    "phase": "Tactical RL (White)",
+    "color": "white",
+    "name": "Tactical RL (White) (White)",
+    "points": [
+      {
+        "ckpt": "white_expert_v2_step00050",
+        "win_rate": 86.7
+      },
+      {
+        "ckpt": "white_expert_v2_step00100",
+        "win_rate": 83.3
+      },
+      {
+        "ckpt": "white_expert_v2_step00150",
+        "win_rate": 93.3
+      },
+      {
+        "ckpt": "white_expert_v2",
+        "win_rate": 96.7
+      }
+    ]
+  }
+]

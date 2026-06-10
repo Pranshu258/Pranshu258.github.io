@@ -7,6 +7,7 @@ import '../styles/fonts.css';
 import '../styles/blog.css';
 
 import architectureSvg from './renju/architecture.svg';
+import TrainingCurve from './renju/TrainingCurve';
 
 import { FaGamepad, FaBrain, FaReact, FaGears, FaBolt, FaNetworkWired } from 'react-icons/fa6';
 
@@ -186,63 +187,11 @@ export default class Renju extends React.Component {
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
-                    Each expert was evaluated against the minimax AI at depths 1–5 in both colors (100 games per configuration, temperature=0, random seeds). ★ marks the specialist role each model was trained for.
+                    Each model is evaluated in its specialist role against minimax depth-3 (30 games, temperature 0.3). Results are substantially more reliable than per-depth win rates — those collapse to binary 0%/100% because temperature=0 with a deterministic opponent produces the same game every time.
                 </p>
-                <p>
-                    These numbers measure performance against a specific opponent — the same minimax AI used during training. The model has only seen minimax-style play, so it has blind spots against human opponents who play unconventionally, set up multi-move traps, or exploit patterns the minimax never produces. A strong human player can and will beat these models.
-                </p>
-                <p><b>Black Expert</b> — <code>renju_black.onnx</code></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>vs Minimax</th>
-                            <th style={{ textAlign: 'right' }}>As Black ★</th>
-                            <th style={{ textAlign: 'right' }}>As White</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            ['depth-1', '100%',  '0%'],
-                            ['depth-2', '100%',  '0%'],
-                            ['depth-3', '100%',  '0%'],
-                            ['depth-4', '100%', '100%'],
-                            ['depth-5', '100%',  '0%'],
-                        ].map(([opp, b, w]) => (
-                            <tr key={opp}>
-                                <td>{opp}</td>
-                                <td style={{ textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{b}</td>
-                                <td style={{ textAlign: 'right', color: Number(w.replace('%','')) >= 50 ? '#10b981' : '#f87171', fontWeight: 600 }}>{w}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <p style={{ marginTop: '16px' }}><b>White Expert</b> — <code>renju_white.onnx</code></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>vs Minimax</th>
-                            <th style={{ textAlign: 'right' }}>As Black</th>
-                            <th style={{ textAlign: 'right' }}>As White ★</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            ['depth-1',  '0%', '100%'],
-                            ['depth-2', '100%', '100%'],
-                            ['depth-3',  '0%', '100%'],
-                            ['depth-4',  '0%', '100%'],
-                            ['depth-5',  '0%',   '0%'],
-                        ].map(([opp, b, w]) => (
-                            <tr key={opp}>
-                                <td>{opp}</td>
-                                <td style={{ textAlign: 'right', color: Number(b.replace('%','')) >= 50 ? '#10b981' : '#f87171', fontWeight: 600 }}>{b}</td>
-                                <td style={{ textAlign: 'right', color: Number(w.replace('%','')) >= 50 ? '#10b981' : '#f87171', fontWeight: 600 }}>{w}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <p style={{ marginTop: '16px' }}>
-                    Using each model in its specialist role, the combined system reaches <b>90% win rate</b> — up from 9% for the supervised-only model, 57% before color specialisation, and 78% before tactical RL fine-tuning. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
+                <TrainingCurve />
+                <p style={{ marginTop: '20px' }}>
+                    Using each model in its specialist role, the combined system reaches <b>~97% win rate vs minimax depth-3</b> — up from 27% for the supervised-only model. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
