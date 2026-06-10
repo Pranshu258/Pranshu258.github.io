@@ -7,7 +7,7 @@ import {
   saveGame, 
   loadGame
 } from './gameLogic';
-import { getAPIMove, WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
+import { WEBLLM_MODELS, loadWebLLMModel, getWebLLMMove, isWebLLMLoaded, getWebLLMLoadedModel } from './llm';
 import { loadModel as loadNNModel, getNNMove, isModelLoaded as isNNModelLoaded } from './nnai';
 import { TbMessageChatbot } from 'react-icons/tb';
 
@@ -88,7 +88,6 @@ function RenjuGame({ mode = 'pvai' }) {
   const [maxDepth, setMaxDepth] = useState(1); // Adaptive difficulty: 30% chance to increase on player win, decreases on loss
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [gameMode, setGameMode] = useState(mode);
-  const [apiConfig, setApiConfig] = useState({ endpoint: 'http://localhost:12434/engines/llama.cpp/v1/chat/completions', model: 'ai/mistral', apiKey: '' });
   const [llmError, setLlmError] = useState(null);
 
   const [difficulty, setDifficulty] = useState('easy');
@@ -445,9 +444,7 @@ function RenjuGame({ mode = 'pvai' }) {
       const llmColor = llmIsBlack ? 'black' : 'white';
       const allMoves = [...humanMoves, ...computerMoves];
 
-      const result = opponentType === 'webllm'
-        ? await getWebLLMMove(blackMoves, whiteMoves, llmColor, allMoves, 3, true)
-        : await getAPIMove(apiConfig, blackMoves, whiteMoves, llmColor, allMoves, 3, true);
+      const result = await getWebLLMMove(blackMoves, whiteMoves, llmColor, allMoves, 3, true);
 
       if (cancelled) return;
 
@@ -492,12 +489,9 @@ function RenjuGame({ mode = 'pvai' }) {
     // Unified setup screen (pvai, pvnn, or pvllm)
     const llmModelReady = opponentType === 'webllm'
       ? (isWebLLMLoaded() && getWebLLMLoadedModel() === webllmModel)
-      : opponentType === 'api'
-        ? !!apiConfig.endpoint
-        : true;
+      : true;
 
     const startDisabled = (opponentType === 'webllm' && !llmModelReady) ||
-                          (opponentType === 'api' && !apiConfig.endpoint) ||
                           (opponentType === 'nn' && nnModelStatus !== 'ready');
 
     return (
@@ -536,7 +530,6 @@ function RenjuGame({ mode = 'pvai' }) {
                   { id: 'ai', label: 'Minimax AI', emoji: '🤖' },
                   { id: 'nn', label: 'Neural AI', emoji: '🧠' },
                   { id: 'webllm', label: 'On-Device LLM', emoji: '💻' },
-                  { id: 'api', label: 'API LLM', emoji: '🔌' },
                 ].map(({ id, label, emoji }) => (
                   <button
                     key={id}
@@ -583,13 +576,6 @@ function RenjuGame({ mode = 'pvai' }) {
                   fontSize: '0.78em', color: '#94a3b8', marginBottom: '14px', textAlign: 'center'
                 }}>
                   💻 Select and load a model in the panel →
-                </div>
-              )}
-              {opponentType === 'api' && !apiConfig.endpoint && (
-                <div style={{
-                  fontSize: '0.78em', color: '#94a3b8', marginBottom: '14px', textAlign: 'center'
-                }}>
-                  🔌 Enter an API endpoint in the panel →
                 </div>
               )}
               {opponentType === 'webllm' && llmModelReady && (
@@ -810,39 +796,6 @@ function RenjuGame({ mode = 'pvai' }) {
                 </>
               )}
 
-              {opponentType === 'api' && (
-                <>
-                  <div style={{ fontWeight: '600', fontSize: '0.95em', marginBottom: '12px',
-                    display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>🔌</span> API Endpoint
-                  </div>
-                  <div style={{ fontSize: '0.75em', opacity: 0.6, marginBottom: '10px' }}>
-                    Any OpenAI-compatible endpoint (Docker Model Runner, Ollama, Azure, etc.)
-                  </div>
-                  {[
-                    { key: 'endpoint', label: 'Endpoint', placeholder: 'http://localhost:12434/engines/llama.cpp/v1/chat/completions' },
-                    { key: 'model', label: 'Model (optional)', placeholder: 'ai/mistral' },
-                    { key: 'apiKey', label: 'API Key (optional)', placeholder: 'your-api-key', type: 'password' },
-                  ].map(({ key, label, placeholder, type }) => (
-                    <div key={key} style={{ marginBottom: '8px' }}>
-                      <div style={{ fontSize: '0.75em', opacity: 0.7, marginBottom: '3px' }}>{label}</div>
-                      <input
-                        type={type || 'text'}
-                        value={apiConfig[key]}
-                        onChange={(e) => setApiConfig(prev => ({ ...prev, [key]: e.target.value }))}
-                        placeholder={placeholder}
-                        style={{
-                          width: '100%', padding: '6px 8px', fontSize: '0.8em',
-                          borderRadius: '6px', border: '1px solid var(--blog-surface-border, #444)',
-                          background: 'var(--blog-surface-background, #1a1a1a)',
-                          color: 'var(--surface-text-color)', boxSizing: 'border-box', outline: 'none'
-                        }}
-                      />
-                    </div>
-                  ))}
-                </>
-              )}
-
               {opponentType === 'nn' && (
                 <>
                   <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '14px',
@@ -936,9 +889,7 @@ function RenjuGame({ mode = 'pvai' }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: 0.75 }}>
                   <span style={{ fontSize: '1.4em' }}>{userColor === 'black' ? '⚪' : '⚫'}</span>
                   <span style={{ fontWeight: '500', fontSize: '0.85em' }}>
-                    {opponentType === 'webllm'
-                      ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel)
-                      : (apiConfig.model || 'API')}
+                    {WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel}
                   </span>
                 </div>
               </>
@@ -972,7 +923,7 @@ function RenjuGame({ mode = 'pvai' }) {
               {gameMode === 'pvllm'
                 ? (currentTurn === 'human'
                     ? '🎯 Your Turn'
-                    : `💭 ${opponentType === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || 'LLM') : (apiConfig.model || 'LLM')} thinking...`)
+                    : `💭 ${WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || 'LLM'} thinking...`)
                 : gameMode === 'pvnn'
                   ? (currentTurn === 'human' ? '🎯 Your Turn' : '🧠 Neural AI Thinking...')
                   : (currentTurn === 'human' ? '🎯 Your Turn' : '🤖 AI Thinking...')}
@@ -1007,7 +958,7 @@ function RenjuGame({ mode = 'pvai' }) {
                 {gameMode === 'pvllm'
                    ? (gameState === 'won'
                        ? 'You Won!'
-                       : `${opponentType === 'webllm' ? (WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel) : (apiConfig.model || 'API')} Won!`)
+                       : `${WEBLLM_MODELS.find(m => m.id === webllmModel)?.label || webllmModel} Won!`)
                    : gameMode === 'pvnn'
                      ? (gameState === 'won' ? 'You Won!' : 'Neural AI Won')
                      : (gameState === 'won' ? 'You Won!' : 'AI Won')}

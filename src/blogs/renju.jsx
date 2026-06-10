@@ -242,57 +242,11 @@ export default class Renju extends React.Component {
                     What happens when you put a purpose-built game engine against a general-purpose language model? The minimax AI sees the board as numbers — scores, depths, pruned branches. The LLM sees it as text — a grid of symbols it must reason about spatially. They think in fundamentally different ways, and playing against one reveals surprising things about both.
                 </p>
                 <p>
-                    In the game above, select <b>On-Device LLM</b> or <b>API LLM</b> as your opponent. The on-device option runs a small language model entirely in your browser via WebGPU (no server needed). The API option connects to any OpenAI-compatible endpoint — Docker Model Runner, Ollama, Azure OpenAI, and so on.
+                    In the game above, select <b>On-Device LLM</b> as your opponent. It runs a small language model entirely in your browser via <a href="https://webllm.mlc.ai/" target="_blank" rel="noopener noreferrer">WebLLM</a> + WebGPU — no server or API key needed. Pick a model, click load, and play. Weights are cached after the first download. Requires Chrome or Edge with WebGPU support.
                 </p>
                 <p>
                     The LLM receives a structured description of the board state, move history, and tactical hints (win threats, open threes) so it has a fighting chance. Despite this, most small models struggle with spatial reasoning — watching them make unexpected moves is part of the fun.
                 </p>
-
-                <h3 className="headings">Connecting an LLM</h3>
-                <p>
-                    There are two ways to bring an LLM into the game:
-                </p>
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '16px',
-                    marginTop: '16px',
-                    marginBottom: '20px'
-                }}>
-                    <div style={{
-                        background: 'var(--blog-surface-background)',
-                        border: '1px solid var(--blog-surface-border, #333)',
-                        borderRadius: '10px',
-                        padding: '18px'
-                    }}>
-                        <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '8px' }}>💻 On-Device</div>
-                        <p style={{ fontSize: '0.9em', opacity: 0.8, marginBottom: '10px' }}>
-                            Runs entirely in your browser via <a href="https://webllm.mlc.ai/" target="_blank" rel="noopener noreferrer">WebLLM</a> + WebGPU. No server needed. Pick a model, click load, and play. Weights are cached after first download. Requires Chrome/Edge with WebGPU support.
-                        </p>
-                    </div>
-                    <div style={{
-                        background: 'var(--blog-surface-background)',
-                        border: '1px solid var(--blog-surface-border, #333)',
-                        borderRadius: '10px',
-                        padding: '18px'
-                    }}>
-                        <div style={{ fontWeight: '600', fontSize: '1em', marginBottom: '8px' }}>🔌 API</div>
-                        <p style={{ fontSize: '0.9em', opacity: 0.8, marginBottom: '10px' }}>
-                            Connects to any OpenAI-compatible chat completions endpoint - local or cloud. Works with Docker Model Runner, Ollama, LM Studio, Azure OpenAI, OpenAI, and more. Just paste the full URL, add a model name and API key if needed.
-                        </p>
-                    </div>
-                </div>
-
-                <details style={{ marginBottom: '20px' }}>
-                    <summary style={{ cursor: 'pointer', fontWeight: '600', fontSize: '0.95em', opacity: 0.9 }}>Example API endpoints</summary>
-                    <ul style={{ marginTop: '10px' }}>
-                        <li><b>Docker Model Runner:</b> <code>http://localhost:12434/engines/llama.cpp/v1/chat/completions</code> · model: <code>ai/mistral</code></li>
-                        <li><b>Ollama:</b> <code>http://localhost:11434/v1/chat/completions</code> · model: <code>llama3</code></li>
-                        <li><b>LM Studio:</b> <code>http://localhost:1234/v1/chat/completions</code></li>
-                        <li><b>Azure OpenAI:</b> <code>https://&lt;resource&gt;.openai.azure.com/openai/deployments/&lt;model&gt;/chat/completions?api-version=2024-02-01</code> + API key</li>
-                        <li><b>OpenAI:</b> <code>https://api.openai.com/v1/chat/completions</code> + API key</li>
-                    </ul>
-                </details>
 
                 <p>
                     The LLM receives a text representation of the board along with strategic guidance and responds with its next move in algebraic notation (e.g. H8). A few things make this mode interesting:
@@ -352,8 +306,7 @@ export default class Renju extends React.Component {
                     <b>UI</b><span>React class components with inline styles for game elements</span>
                     <b>AI Engine</b><span>Minimax with alpha-beta pruning, transposition table, and pattern-based evaluation</span>
                     <b>Board State</b><span>2D array (15x15) with numeric cell values; serialized to algebraic notation for LLM prompts</span>
-                    <b>On-Device LLM</b><span><a href="https://webllm.mlc.ai/" target="_blank" rel="noopener noreferrer">WebLLM</a> + WebGPU - runs entirely in-browser, no server required</span>
-                    <b>API LLM</b><span>Any OpenAI-compatible chat completions endpoint (Ollama, LM Studio, Azure, etc.)</span>
+                    <b>On-Device LLM</b><span><a href="https://webllm.mlc.ai/" target="_blank" rel="noopener noreferrer">WebLLM</a> + WebGPU — runs entirely in-browser, no server required</span>
                     <b>Build</b><span>Vite for fast development and optimized production builds</span>
                 </div>
                 <a
