@@ -32,7 +32,6 @@ src/renju/train/checkpoints/*.txt
 src/renju/train/checkpoints/*.pt
 src/renju/train/renju_human_games_*.json
 
-# Misplaced build/export artifacts
 /assets/
 /models/
 /rss.xml
