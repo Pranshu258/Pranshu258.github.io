@@ -17,13 +17,14 @@ const WHITE_PHASES = [
   { name: 'Tactical RL',     color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [86.7,83.3,93.3,96.7] },
 ];
 
-// ── ELO data from Tournament 6 ──────────────────────────────────────────────
+// ── ELO data from latest tournament ─────────────────────────────────────────
 const ELO_DATA = [
-  { model: 'white_expert_v2',           role: 'White specialist (deployed)', elo: 1638 },
-  { model: 'white_expert_v2 (pre-gym)', role: 'White specialist (pre-gym)',  elo: 1555 },
-  { model: 'black_expert_v2',           role: 'Black specialist (deployed)', elo: 1517 },
-  { model: 'black_human_ft',            role: 'Black (human FT only)',       elo: 1497 },
-  { model: 'white_human_ft',            role: 'White (human FT only)',       elo: 1294 },
+  { model: 'black_expert_v2',           role: 'Black specialist (deployed)', elo: 1603 },
+  { model: 'white_expert_v2',           role: 'White specialist (deployed)', elo: 1553 },
+  { model: 'white_expert_v2 (pre-gym)', role: 'White specialist (pre-gym)',  elo: 1550 },
+  { model: 'black_expert_v2 (pre-gym)', role: 'Black specialist (pre-gym)',  elo: 1535 },
+  { model: 'white_human_ft',            role: 'White (human FT only)',       elo: 1422 },
+  { model: 'black_human_ft',            role: 'Black (human FT only)',       elo: 1337 },
 ];
 
 // ── Chart helpers ────────────────────────────────────────────────────────────
