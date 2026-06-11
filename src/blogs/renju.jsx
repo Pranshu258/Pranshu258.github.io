@@ -47,7 +47,7 @@ export default class Renju extends React.Component {
                 <Sharer link={window.location.href} title={"Renju - A Strategic Board Game with AI"}></Sharer>
 
                 <p className="introduction">
-                    Renju looks simple — place stones, get five in a row — but beneath that simplicity lies a game strategically rich enough that mathematicians proved perfect Black play always wins without special restrictions. This project trains a neural network to play it: six phases spanning supervised learning, reinforcement learning against a minimax engine, specialist training by color, human fine-tuning, and a live browser gym. The result runs fully in-browser via ONNX and reaches a 97% win rate against the minimax engine it was trained against.
+                    Renju looks simple — place stones, get five in a row — but beneath that simplicity lies a game strategically rich enough that mathematicians proved perfect Black play always wins without special restrictions. This project trains a neural network to play it: six phases spanning supervised learning, reinforcement learning against a minimax engine, specialist training by color, human fine-tuning, and a live browser gym. The result runs fully in-browser via ONNX. On a 1,000-position tactical benchmark the deployed model reaches ~25% top-1 accuracy — up from ~12% for the supervised baseline — while minimax search achieves 86–98% on the same set. The gap is intentional context: the NN compresses everything into a single fast forward pass with no search, making it a fundamentally different kind of player.
                 </p>
                 <hr style={{ backgroundColor: "white" }}></hr>
                 <h2 className="headings">Play the Game</h2>
@@ -207,7 +207,7 @@ export default class Renju extends React.Component {
                             title: 'Human-Game Supervised Adaptation',
                             objective: 'Expose the specialists to non-minimax strategies and human-discovered failure cases.',
                             procedure: 'Fine-tuned on 34 human-vs-NN games, treating winner moves as supervised targets with learning rate 5×10⁻⁵ and 30% original-data mixing to reduce catastrophic forgetting.',
-                            result: 'A single fine-tuning session improved White depth-4 performance from 22% to 94% and Black depth-5 performance from 0% to 84%.',
+                            result: 'Fine-tuning on human games improved in-game robustness to unconventional openings not present in minimax self-play. However, golden-set tactical accuracy was unchanged or slightly reduced (~16–18%), suggesting the human games added strategic variety rather than tactical sharpness.',
                         },
                         {
                             stage: 'Stage 5',
@@ -221,7 +221,7 @@ export default class Renju extends React.Component {
                             title: 'Online Human-Adaptive Reinforcement Learning',
                             objective: 'Continue adapting from interactive games against a human opponent after deployment-oriented fine-tuning.',
                             procedure: 'Used the CLI human RL gym to apply REINFORCE updates after a small buffer of played games, retaining the tactical penalty for missed forced moves. Separately, browser-exported games support offline behavioral-cloning fine-tuning on winner moves.',
-                            result: 'The White model gained 83 Elo after 28 games and 10 updates, improving robustness to unconventional openings and multi-step traps not represented in minimax self-play.',
+                            result: 'In one gym session (28 games, 10 gradient updates) the White model gained ~83 Elo in the NN self-play pool. Golden-set tactical accuracy did not measurably improve, consistent with the gym providing game-strategy signal rather than forcing-move signal.',
                         },
                     ].map(({ stage, title, objective, procedure, result }, index) => (
                         <li className="renju-training-stage" key={stage}>

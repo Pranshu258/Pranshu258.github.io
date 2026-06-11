@@ -19,14 +19,19 @@ const WHITE_PHASES = [
   { name: 'Tactical RL v2',  color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [26.3,25.4,24.9,26.6] },
 ];
 
-// ── ELO data from latest round-robin tournament ──────────────────────────────
+// ── ELO data from mixed tournament (NN + minimax, 25 games/side) ─────────────
+// Minimax models competed directly against NN models; all Elo values are from
+// this joint pool. NN starting points anchored to prior NN-only tournament.
 const ELO_DATA = [
-  { model: 'black_expert_v2',           role: 'Black specialist · deployed', elo: 1603, color: '#5ba3f5', deployed: true  },
-  { model: 'white_expert_v2',           role: 'White specialist · deployed', elo: 1553, color: '#c084f0', deployed: true  },
-  { model: 'white_expert_v2 (pre-gym)', role: 'White specialist · pre-gym',  elo: 1550, color: '#c084f0', deployed: false },
-  { model: 'black_expert_v2 (pre-gym)', role: 'Black specialist · pre-gym',  elo: 1535, color: '#5ba3f5', deployed: false },
-  { model: 'white_human_ft',            role: 'White · human FT only',       elo: 1422, color: '#94a3b8', deployed: false },
-  { model: 'black_human_ft',            role: 'Black · human FT only',       elo: 1337, color: '#94a3b8', deployed: false },
+  { model: 'minimax_d5',     role: 'Minimax · depth 5',            elo: 1945, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'white_human_ft', role: 'White · human FT',             elo: 1622, color: '#c084f0', deployed: false, isMinimax: false },
+  { model: 'black_expert_v2',role: 'Black specialist · deployed',  elo: 1520, color: '#5ba3f5', deployed: true,  isMinimax: false },
+  { model: 'minimax_d4',     role: 'Minimax · depth 4',            elo: 1468, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'black_human_ft', role: 'Black · human FT',             elo: 1415, color: '#5ba3f5', deployed: false, isMinimax: false },
+  { model: 'minimax_d3',     role: 'Minimax · depth 3',            elo: 1411, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'minimax_d1',     role: 'Minimax · depth 1',            elo: 1389, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'white_expert_v2',role: 'White specialist · deployed',  elo: 1333, color: '#c084f0', deployed: true,  isMinimax: false },
+  { model: 'minimax_d2',     role: 'Minimax · depth 2',            elo: 1312, color: '#f97316', deployed: false, isMinimax: true  },
 ];
 
 // ── Golden set benchmark (1000 positions, top-1 tactical accuracy) ───────────
@@ -148,12 +153,12 @@ function LineChart({ phases, lineColor, title, yMax = 30 }) {
 
 function EloChart() {
   const CW = 680, rowH = 40;
-  const ML = 178, MR = 52, MT = 20, MB = 8;
+  const ML = 178, MR = 68, MT = 20, MB = 8;
   const PW = CW - ML - MR;
-  const eloMin = 1270, eloMax = 1660;
+  const eloMin = 1250, eloMax = 2000;
   const CH = MT + ELO_DATA.length * rowH + MB;
   const xPos = elo => ML + (elo - eloMin) / (eloMax - eloMin) * PW;
-  const ticks = [1300, 1400, 1500, 1600];
+  const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
 
   return (
     <svg viewBox={`0 0 ${CW} ${CH}`}
@@ -172,11 +177,13 @@ function EloChart() {
       ))}
 
       {/* Rows */}
-      {ELO_DATA.map(({ model, role, elo, color, deployed }, i) => {
-        const y   = MT + (i + 0.5) * rowH;
-        const x   = xPos(elo);
-        const op  = deployed ? 1 : 0.42;
-        const r   = deployed ? 6 : 4.5;
+      {ELO_DATA.map(({ model, role, elo, color, deployed, isMinimax }, i) => {
+        const y  = MT + (i + 0.5) * rowH;
+        const x  = xPos(elo);
+        const op = (deployed || isMinimax) ? 1 : 0.42;
+        const r  = (deployed || isMinimax) ? 6 : 4.5;
+        const fw = (deployed || isMinimax) ? 700 : 400;
+        const labelOp = (deployed || isMinimax) ? 0.9 : 0.55;
 
         return (
           <g key={model}>
@@ -185,13 +192,13 @@ function EloChart() {
                   stroke="var(--surface-text-color)" strokeOpacity={0.06} strokeWidth={1} />
             {/* Stem */}
             <line x1={ML} y1={y} x2={x} y2={y}
-                  stroke={color} strokeOpacity={op * 0.7} strokeWidth={deployed ? 2 : 1.5} />
+                  stroke={color} strokeOpacity={op * 0.7} strokeWidth={(deployed || isMinimax) ? 2 : 1.5} />
             {/* Dot */}
             <circle cx={x} cy={y} r={r} fill={color} fillOpacity={op} />
             {/* Model label */}
             <text x={ML - 10} y={y - 5} textAnchor="end"
-                  fill="var(--surface-text-color)" fillOpacity={deployed ? 0.9 : 0.55}
-                  fontSize={10.5} fontFamily="monospace" fontWeight={deployed ? 700 : 400}>
+                  fill="var(--surface-text-color)" fillOpacity={labelOp}
+                  fontSize={10.5} fontFamily="monospace" fontWeight={fw}>
               {model}
             </text>
             <text x={ML - 10} y={y + 7} textAnchor="end"
@@ -200,8 +207,8 @@ function EloChart() {
             </text>
             {/* Elo value */}
             <text x={x + 11} y={y + 4}
-                  fill={color} fillOpacity={deployed ? 1 : 0.65}
-                  fontSize={10.5} fontWeight={deployed ? 700 : 500}>
+                  fill={color} fillOpacity={op}
+                  fontSize={10.5} fontWeight={(deployed || isMinimax) ? 700 : 500}>
               {elo}
             </text>
           </g>
@@ -316,8 +323,10 @@ export default function TrainingCurve() {
         Elo Ratings
       </h3>
       <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: '12px' }}>
-        Round-robin tournament (50 games per pair, temperature 0.3). Elo baseline = 1500.
-        A 200-point gap ≈ 76% win rate for the stronger model. Deployed models shown at full opacity.
+        Mixed round-robin tournament (25 games/side, temperature 0.3) including both NN models and
+        minimax at depths 1–5. All Elo values are from this joint pool; NN starting points were
+        anchored to a prior NN-only tournament. Minimax shown in orange; deployed NN models in full
+        opacity. Note: depth=2 ranks below depth=1 — a known horizon-effect anomaly at even search depths.
       </p>
       <div style={{
         background: 'var(--blog-surface-background)',
