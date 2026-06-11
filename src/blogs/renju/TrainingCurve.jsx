@@ -17,7 +17,7 @@ const WHITE_PHASES = [
   { name: 'Tactical RL',     color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [86.7,83.3,93.3,96.7] },
 ];
 
-// ── ELO data from latest tournament ─────────────────────────────────────────
+// ── ELO data from latest round-robin tournament ──────────────────────────────
 const ELO_DATA = [
   { model: 'black_expert_v2',           role: 'Black specialist · deployed', elo: 1603, color: '#5ba3f5', deployed: true  },
   { model: 'white_expert_v2',           role: 'White specialist · deployed', elo: 1553, color: '#c084f0', deployed: true  },
@@ -25,6 +25,30 @@ const ELO_DATA = [
   { model: 'black_expert_v2 (pre-gym)', role: 'Black specialist · pre-gym',  elo: 1535, color: '#5ba3f5', deployed: false },
   { model: 'white_human_ft',            role: 'White · human FT only',       elo: 1422, color: '#94a3b8', deployed: false },
   { model: 'black_human_ft',            role: 'Black · human FT only',       elo: 1337, color: '#94a3b8', deployed: false },
+];
+
+// ── Golden set benchmark (1000 positions, top-1 tactical accuracy) ───────────
+// NN models evaluated on individual positions; minimax uses full game-tree search.
+// Source: golden_tournament.py — golden_set_v1.jsonl (Jun 2025)
+const GOLDEN_DATA = [
+  // minimax baselines
+  { label: 'minimax depth=3', acc: 98, color: '#f97316', group: 'minimax' },
+  { label: 'minimax depth=1', acc: 94, color: '#f97316', group: 'minimax' },
+  { label: 'minimax depth=4', acc: 86, color: '#f97316', group: 'minimax' },
+  { label: 'minimax depth=5', acc: 86, color: '#f97316', group: 'minimax' },
+  { label: 'minimax depth=2', acc: 57, color: '#f97316', group: 'minimax' },
+  // NN models
+  { label: 'black_expert_v2_gym', acc: 30, color: '#5ba3f5', group: 'nn', deployed: false },
+  { label: 'deployed pair',       acc: 25, color: '#22c55e', group: 'nn', deployed: true  },
+  { label: 'black_expert_v2',    acc: 25, color: '#5ba3f5', group: 'nn', deployed: true  },
+  { label: 'white_expert_v2',    acc: 24, color: '#c084f0', group: 'nn', deployed: true  },
+  { label: 'black_expert',       acc: 17, color: '#5ba3f5', group: 'nn', deployed: false },
+  { label: 'white_human_ft',     acc: 16, color: '#94a3b8', group: 'nn', deployed: false },
+  { label: 'black_human_ft',     acc: 16, color: '#94a3b8', group: 'nn', deployed: false },
+  { label: 'rl_vs_minimax',      acc: 14, color: '#94a3b8', group: 'nn', deployed: false },
+  { label: 'rl_v2',              acc: 15, color: '#94a3b8', group: 'nn', deployed: false },
+  { label: 'supervised',         acc: 13, color: '#94a3b8', group: 'nn', deployed: false },
+  { label: 'rl_dual',            acc: 11, color: '#94a3b8', group: 'nn', deployed: false },
 ];
 
 // ── Chart helpers ────────────────────────────────────────────────────────────
@@ -186,6 +210,84 @@ function EloChart() {
   );
 }
 
+function GoldenBenchmark() {
+  const CW = 680, rowH = 36;
+  const ML = 178, MR = 68, MT = 22, MB = 8;
+  const PW = CW - ML - MR;
+  const CH = MT + GOLDEN_DATA.length * rowH + MB;
+  const xPos = acc => ML + (acc / 100) * PW;
+  const ticks = [0, 25, 50, 75, 100];
+
+  // Divider row index: between last minimax and first NN
+  const dividerIdx = GOLDEN_DATA.findIndex(d => d.group === 'nn');
+
+  return (
+    <svg viewBox={`0 0 ${CW} ${CH}`}
+         style={{ width: '100%', maxWidth: `${CW}px`, display: 'block', overflow: 'visible' }}>
+
+      {/* Gridlines + tick labels */}
+      {ticks.map(t => (
+        <g key={t}>
+          <line x1={xPos(t)} y1={MT - 10} x2={xPos(t)} y2={CH - MB}
+                stroke="var(--surface-text-color)" strokeOpacity={0.1} strokeWidth={1} />
+          <text x={xPos(t)} y={MT - 12} textAnchor="middle"
+                fill="var(--surface-text-color)" fillOpacity={0.35} fontSize={9.5}>
+            {t}%
+          </text>
+        </g>
+      ))}
+
+      {/* Group separator */}
+      <line x1={ML - 10} y1={MT + dividerIdx * rowH - 6}
+            x2={CW - MR + 10} y2={MT + dividerIdx * rowH - 6}
+            stroke="var(--surface-text-color)" strokeOpacity={0.15} strokeWidth={1}
+            strokeDasharray="4,3" />
+      <text x={ML - 10} y={MT + dividerIdx * rowH - 8} textAnchor="end"
+            fill="var(--surface-text-color)" fillOpacity={0.28} fontSize={8.5}>
+        ── Neural Network ──
+      </text>
+
+      {/* Rows */}
+      {GOLDEN_DATA.map(({ label, acc, color, group, deployed }, i) => {
+        const y  = MT + (i + 0.5) * rowH;
+        const x  = xPos(acc);
+        const isDeployed = deployed === true;
+        const isMinimax  = group === 'minimax';
+        const op = (isMinimax || isDeployed) ? 1 : 0.45;
+        const r  = (isMinimax || isDeployed) ? 6 : 4.5;
+
+        return (
+          <g key={label}>
+            {/* Track */}
+            <line x1={ML} y1={y} x2={CW - MR} y2={y}
+                  stroke="var(--surface-text-color)" strokeOpacity={0.06} strokeWidth={1} />
+            {/* Stem */}
+            <line x1={ML} y1={y} x2={x} y2={y}
+                  stroke={color} strokeOpacity={op * 0.65}
+                  strokeWidth={(isMinimax || isDeployed) ? 2 : 1.5} />
+            {/* Dot */}
+            <circle cx={x} cy={y} r={r} fill={color} fillOpacity={op} />
+            {/* Label */}
+            <text x={ML - 10} y={y + 4} textAnchor="end"
+                  fill="var(--surface-text-color)"
+                  fillOpacity={(isMinimax || isDeployed) ? 0.9 : 0.5}
+                  fontSize={10.5} fontFamily="monospace"
+                  fontWeight={(isMinimax || isDeployed) ? 700 : 400}>
+              {label}
+            </text>
+            {/* Value */}
+            <text x={x + 10} y={y + 4}
+                  fill={color} fillOpacity={op}
+                  fontSize={10.5} fontWeight={(isMinimax || isDeployed) ? 700 : 500}>
+              {acc}%
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 export default function TrainingCurve() {
   return (
     <div>
@@ -221,6 +323,24 @@ export default function TrainingCurve() {
         borderRadius: '10px', padding: '16px 8px 8px',
       }}>
         <EloChart />
+      </div>
+
+      <h3 style={{ margin: '28px 0 8px', fontSize: '1rem', fontWeight: 700,
+                   color: 'var(--surface-text-color)' }}>
+        Tactical Benchmark
+      </h3>
+      <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: '12px' }}>
+        Top-1 accuracy on 1,000 curated positions (golden set v1) covering immediate wins,
+        forced blocks, forks, and forbidden-move handling. Minimax and all key training
+        checkpoints evaluated under identical conditions. Deployed models and minimax shown
+        at full opacity.
+      </p>
+      <div style={{
+        background: 'var(--blog-surface-background)',
+        border: '1px solid color-mix(in srgb, var(--surface-text-color) 12%, transparent)',
+        borderRadius: '10px', padding: '16px 8px 8px',
+      }}>
+        <GoldenBenchmark />
       </div>
     </div>
   );
