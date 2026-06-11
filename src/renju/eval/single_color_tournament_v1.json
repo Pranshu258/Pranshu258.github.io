@@ -1,0 +1,335 @@
+{
+  "black_elo": {
+    "minimax_d5": 1847.1449107528172,
+    "black_expert_v2": 1842.8377583878305,
+    "black_human_ft": 1795.6861827321825,
+    "white_human_ft": 1545.4974691581738,
+    "minimax_d4": 1537.5748773832647,
+    "minimax_d1": 1522.2752344117605,
+    "minimax_d3": 1491.1179411644093,
+    "minimax_d2": 1371.576210926802,
+    "white_expert_v2": 1263.4520569396807
+  },
+  "white_elo": {
+    "minimax_d5": 1710.868205499434,
+    "white_human_ft": 1673.5790247858304,
+    "white_expert_v2": 1423.9353623959753,
+    "minimax_d4": 1403.4268716001636,
+    "black_expert_v2": 1403.3501948180956,
+    "minimax_d3": 1372.8338566258024,
+    "minimax_d2": 1313.3804353111534,
+    "minimax_d1": 1313.0740525563247,
+    "black_human_ft": 1168.3893545503
+  },
+  "games_per_side": 20,
+  "win_as_black": {
+    "black_expert_v2": {
+      "white_expert_v2": 12,
+      "black_human_ft": 17,
+      "white_human_ft": 14,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 18
+    },
+    "white_expert_v2": {
+      "black_expert_v2": 9,
+      "black_human_ft": 14,
+      "white_human_ft": 10,
+      "minimax_d1": 2,
+      "minimax_d2": 18,
+      "minimax_d3": 3,
+      "minimax_d4": 2,
+      "minimax_d5": 0
+    },
+    "black_human_ft": {
+      "black_expert_v2": 10,
+      "white_expert_v2": 7,
+      "white_human_ft": 15,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 16
+    },
+    "white_human_ft": {
+      "black_expert_v2": 5,
+      "white_expert_v2": 3,
+      "black_human_ft": 13,
+      "minimax_d1": 20,
+      "minimax_d2": 16,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 0
+    },
+    "minimax_d1": {
+      "black_expert_v2": 19,
+      "white_expert_v2": 16,
+      "black_human_ft": 20,
+      "white_human_ft": 0,
+      "minimax_d2": 0,
+      "minimax_d3": 0,
+      "minimax_d4": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d2": {
+      "black_expert_v2": 5,
+      "white_expert_v2": 2,
+      "black_human_ft": 17,
+      "white_human_ft": 0,
+      "minimax_d1": 0,
+      "minimax_d3": 0,
+      "minimax_d4": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d3": {
+      "black_expert_v2": 17,
+      "white_expert_v2": 4,
+      "black_human_ft": 20,
+      "white_human_ft": 0,
+      "minimax_d1": 0,
+      "minimax_d2": 0,
+      "minimax_d4": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d4": {
+      "black_expert_v2": 4,
+      "white_expert_v2": 17,
+      "black_human_ft": 20,
+      "white_human_ft": 1,
+      "minimax_d1": 0,
+      "minimax_d2": 0,
+      "minimax_d3": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d5": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 0,
+      "minimax_d2": 0,
+      "minimax_d3": 0,
+      "minimax_d4": 0
+    }
+  },
+  "win_as_white": {
+    "white_expert_v2": {
+      "black_expert_v2": 8,
+      "black_human_ft": 13,
+      "white_human_ft": 17,
+      "minimax_d1": 4,
+      "minimax_d2": 18,
+      "minimax_d3": 16,
+      "minimax_d4": 3
+    },
+    "black_expert_v2": {
+      "white_expert_v2": 11,
+      "black_human_ft": 10,
+      "white_human_ft": 15,
+      "minimax_d1": 1,
+      "minimax_d2": 15,
+      "minimax_d3": 3,
+      "minimax_d4": 16
+    },
+    "black_human_ft": {
+      "black_expert_v2": 3,
+      "white_expert_v2": 6,
+      "white_human_ft": 7,
+      "minimax_d2": 3
+    },
+    "white_human_ft": {
+      "black_expert_v2": 6,
+      "white_expert_v2": 10,
+      "black_human_ft": 5,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 19
+    },
+    "minimax_d5": {
+      "black_expert_v2": 2,
+      "white_expert_v2": 20,
+      "black_human_ft": 4,
+      "white_human_ft": 20
+    },
+    "minimax_d1": {
+      "white_expert_v2": 18
+    },
+    "minimax_d2": {
+      "white_expert_v2": 2,
+      "white_human_ft": 4
+    },
+    "minimax_d3": {
+      "white_expert_v2": 17
+    },
+    "minimax_d4": {
+      "white_expert_v2": 18
+    }
+  },
+  "games_as_black": {
+    "black_expert_v2": {
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "white_expert_v2": {
+      "black_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "black_human_ft": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "white_human_ft": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "minimax_d1": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d2": 0,
+      "minimax_d3": 0,
+      "minimax_d4": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d2": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 0,
+      "minimax_d3": 0,
+      "minimax_d4": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d3": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 0,
+      "minimax_d2": 0,
+      "minimax_d4": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d4": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 0,
+      "minimax_d2": 0,
+      "minimax_d3": 0,
+      "minimax_d5": 0
+    },
+    "minimax_d5": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 0,
+      "minimax_d2": 0,
+      "minimax_d3": 0,
+      "minimax_d4": 0
+    }
+  },
+  "games_as_white": {
+    "white_expert_v2": {
+      "black_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "black_expert_v2": {
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "black_human_ft": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "white_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "white_human_ft": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "minimax_d1": 20,
+      "minimax_d2": 20,
+      "minimax_d3": 20,
+      "minimax_d4": 20,
+      "minimax_d5": 20
+    },
+    "minimax_d1": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20
+    },
+    "minimax_d2": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20
+    },
+    "minimax_d3": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20
+    },
+    "minimax_d4": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20
+    },
+    "minimax_d5": {
+      "black_expert_v2": 20,
+      "white_expert_v2": 20,
+      "black_human_ft": 20,
+      "white_human_ft": 20
+    }
+  }
+}

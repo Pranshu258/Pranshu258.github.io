@@ -200,7 +200,7 @@ export default class Renju extends React.Component {
                             title: 'Color-Specialized Policy Optimization',
                             objective: 'Remove interference between Black and White play induced by training a single policy on asymmetric roles.',
                             procedure: 'Forked the training process into two specialist models: one optimized only for Black positions and one optimized only for White positions.',
-                            result: 'Evaluated as Black against minimax (always playing first), the Black specialist won every game across depths 1–5 — but this partly reflects Black\'s structural first-move advantage in Renju. Golden-set top-1 accuracy reached ~16% on black positions, a modest gain over the RL baseline (~13%). The White specialist peaked at ~22% accuracy on white positions mid-training but finished at ~17%. Both models were outperformed on tactical positions by minimax search.',
+                            result: 'In a fixed-role tournament (always playing as Black), the Black specialist won 88% of games overall — 100% vs minimax depths 1–4 and 90% vs depth 5. Golden-set top-1 accuracy reached ~16% on black positions, a modest gain over the RL baseline (~13%). The White specialist peaked at ~22% accuracy mid-training but finished at ~17%; it also underperformed in fixed-role White games (49% as White). Both models were still far below minimax search on the tactical benchmark.',
                         },
                         {
                             stage: 'Stage 4',
@@ -214,7 +214,7 @@ export default class Renju extends React.Component {
                             title: 'Tactical Constraint Training',
                             objective: 'Correct missed forced moves, especially blocks and immediate tactical responses.',
                             procedure: 'Constructed 20,000 forced-move positions from minimax self-play, trained first for move accuracy, then continued RL with a −0.5 penalty for missing forced tactical responses.',
-                            result: 'Tactical constraint training produced the largest single improvement in golden-set accuracy: the Black model jumped from ~16% (human FT) to ~23%, and the White model from ~18% (human FT) to ~27%, eliminating the major missed-four/block failure mode. The mixed-color Elo tournament results (below) give the most complete picture of relative strength across all models.',
+                            result: 'Tactical constraint training produced the largest single improvement in golden-set accuracy: the Black model jumped from ~16% (human FT) to ~23%, and the White model from ~18% (human FT) to ~27%, eliminating the major missed-four/block failure mode. In single-color tournament play, black_expert_v2 ranks highest as Black (88% win rate); white_human_ft outperforms white_expert_v2 as White (62% vs 49%), suggesting Tactical RL v2 improved position accuracy but may have reduced game-level White coherence.',
                         },
                         {
                             stage: 'Stage 6',

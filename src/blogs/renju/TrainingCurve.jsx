@@ -19,19 +19,32 @@ const WHITE_PHASES = [
   { name: 'Tactical RL v2',  color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [26.3,25.4,24.9,26.6] },
 ];
 
-// ── ELO data from mixed tournament (NN + minimax, 25 games/side) ─────────────
-// Minimax models competed directly against NN models; all Elo values are from
-// this joint pool. NN starting points anchored to prior NN-only tournament.
-const ELO_DATA = [
-  { model: 'minimax_d5',     role: 'Minimax · depth 5',            elo: 1945, color: '#f97316', deployed: false, isMinimax: true  },
-  { model: 'white_human_ft', role: 'White · human FT',             elo: 1622, color: '#c084f0', deployed: false, isMinimax: false },
-  { model: 'black_expert_v2',role: 'Black specialist · deployed',  elo: 1520, color: '#5ba3f5', deployed: true,  isMinimax: false },
-  { model: 'minimax_d4',     role: 'Minimax · depth 4',            elo: 1468, color: '#f97316', deployed: false, isMinimax: true  },
-  { model: 'black_human_ft', role: 'Black · human FT',             elo: 1415, color: '#5ba3f5', deployed: false, isMinimax: false },
-  { model: 'minimax_d3',     role: 'Minimax · depth 3',            elo: 1411, color: '#f97316', deployed: false, isMinimax: true  },
-  { model: 'minimax_d1',     role: 'Minimax · depth 1',            elo: 1389, color: '#f97316', deployed: false, isMinimax: true  },
-  { model: 'white_expert_v2',role: 'White specialist · deployed',  elo: 1333, color: '#c084f0', deployed: true,  isMinimax: false },
-  { model: 'minimax_d2',     role: 'Minimax · depth 2',            elo: 1312, color: '#f97316', deployed: false, isMinimax: true  },
+// ── ELO data from single-color fixed-role tournament (NN + minimax, 20 games/side) ──
+// Black Elo: every game played with this model as Black (first player).
+// White Elo: every game played with this model as White (second player).
+// Minimax vs minimax pairs skipped; horizon effect visible on depth=2.
+const BLACK_ELO_DATA = [
+  { model: 'minimax_d5',     role: 'Minimax · depth 5',            elo: 1847, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'black_expert_v2',role: 'Black specialist · deployed',  elo: 1843, color: '#5ba3f5', deployed: true,  isMinimax: false },
+  { model: 'black_human_ft', role: 'Black · human FT',             elo: 1796, color: '#5ba3f5', deployed: false, isMinimax: false },
+  { model: 'white_human_ft', role: 'White · human FT',             elo: 1546, color: '#c084f0', deployed: false, isMinimax: false },
+  { model: 'minimax_d4',     role: 'Minimax · depth 4',            elo: 1538, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'minimax_d1',     role: 'Minimax · depth 1',            elo: 1522, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'minimax_d3',     role: 'Minimax · depth 3',            elo: 1491, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'minimax_d2',     role: 'Minimax · depth 2',            elo: 1372, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'white_expert_v2',role: 'White specialist · deployed',  elo: 1264, color: '#c084f0', deployed: true,  isMinimax: false },
+];
+
+const WHITE_ELO_DATA = [
+  { model: 'minimax_d5',     role: 'Minimax · depth 5',            elo: 1711, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'white_human_ft', role: 'White · human FT',             elo: 1674, color: '#c084f0', deployed: false, isMinimax: false },
+  { model: 'white_expert_v2',role: 'White specialist · deployed',  elo: 1424, color: '#c084f0', deployed: true,  isMinimax: false },
+  { model: 'minimax_d4',     role: 'Minimax · depth 4',            elo: 1403, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'black_expert_v2',role: 'Black specialist · deployed',  elo: 1403, color: '#5ba3f5', deployed: true,  isMinimax: false },
+  { model: 'minimax_d3',     role: 'Minimax · depth 3',            elo: 1373, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'minimax_d2',     role: 'Minimax · depth 2',            elo: 1313, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'minimax_d1',     role: 'Minimax · depth 1',            elo: 1313, color: '#f97316', deployed: false, isMinimax: true  },
+  { model: 'black_human_ft', role: 'Black · human FT',             elo: 1168, color: '#5ba3f5', deployed: false, isMinimax: false },
 ];
 
 // ── Golden set benchmark (1000 positions, top-1 tactical accuracy) ───────────
@@ -151,23 +164,29 @@ function LineChart({ phases, lineColor, title, yMax = 30 }) {
   );
 }
 
-function EloChart() {
+function EloChart({ data, title }) {
   const CW = 680, rowH = 40;
-  const ML = 178, MR = 68, MT = 20, MB = 8;
+  const ML = 178, MR = 68, MT = 26, MB = 8;
   const PW = CW - ML - MR;
-  const eloMin = 1250, eloMax = 2000;
-  const CH = MT + ELO_DATA.length * rowH + MB;
+  const eloMin = 1100, eloMax = 1900;
+  const CH = MT + data.length * rowH + MB;
   const xPos = elo => ML + (elo - eloMin) / (eloMax - eloMin) * PW;
-  const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
+  const ticks = [1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900];
 
   return (
     <svg viewBox={`0 0 ${CW} ${CH}`}
          style={{ width: '100%', maxWidth: `${CW}px`, display: 'block', overflow: 'visible' }}>
 
+      {/* Chart title */}
+      <text x={ML + PW / 2} y={MT - 8} textAnchor="middle"
+            fill="var(--surface-text-color)" fillOpacity={0.7} fontSize={11} fontWeight={600}>
+        {title}
+      </text>
+
       {/* Gridlines + tick labels */}
       {ticks.map(t => (
         <g key={t}>
-          <line x1={xPos(t)} y1={MT - 8} x2={xPos(t)} y2={CH - MB}
+          <line x1={xPos(t)} y1={MT} x2={xPos(t)} y2={CH - MB}
                 stroke="var(--surface-text-color)" strokeOpacity={0.1} strokeWidth={1} />
           <text x={xPos(t)} y={MT - 10} textAnchor="middle"
                 fill="var(--surface-text-color)" fillOpacity={0.35} fontSize={9.5}>
@@ -177,7 +196,7 @@ function EloChart() {
       ))}
 
       {/* Rows */}
-      {ELO_DATA.map(({ model, role, elo, color, deployed, isMinimax }, i) => {
+      {data.map(({ model, role, elo, color, deployed, isMinimax }, i) => {
         const y  = MT + (i + 0.5) * rowH;
         const x  = xPos(elo);
         const op = (deployed || isMinimax) ? 1 : 0.42;
@@ -320,20 +339,29 @@ export default function TrainingCurve() {
 
       <h3 style={{ margin: '28px 0 8px', fontSize: '1rem', fontWeight: 700,
                    color: 'var(--surface-text-color)' }}>
-        Elo Ratings
+        Elo Ratings — by Color
       </h3>
       <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: '12px' }}>
-        Mixed round-robin tournament (25 games/side, temperature 0.3) including both NN models and
-        minimax at depths 1–5. All Elo values are from this joint pool; NN starting points were
-        anchored to a prior NN-only tournament. Minimax shown in orange; deployed NN models in full
-        opacity. Note: depth=2 ranks below depth=1 — a known horizon-effect anomaly at even search depths.
+        Fixed-role round-robin (20 games/side, temperature 0.3): every game is played with each
+        model locked to one color, giving separate Black Elo and White Elo pools. This isolates
+        color-specific strength — a mixed-color pool would mask models that dominate as Black but
+        are weak as White. Minimax vs minimax pairs skipped. Minimax shown in orange; deployed NN
+        models in full opacity. Depth=2 ranks below depth=1 due to the horizon effect at even search depths.
       </p>
       <div style={{
         background: 'var(--blog-surface-background)',
         border: '1px solid color-mix(in srgb, var(--surface-text-color) 12%, transparent)',
         borderRadius: '10px', padding: '16px 8px 8px',
+        marginBottom: '16px',
       }}>
-        <EloChart />
+        <EloChart data={BLACK_ELO_DATA} title="Black Elo — quality as first player" />
+      </div>
+      <div style={{
+        background: 'var(--blog-surface-background)',
+        border: '1px solid color-mix(in srgb, var(--surface-text-color) 12%, transparent)',
+        borderRadius: '10px', padding: '16px 8px 8px',
+      }}>
+        <EloChart data={WHITE_ELO_DATA} title="White Elo — quality as second player" />
       </div>
 
       <h3 style={{ margin: '28px 0 8px', fontSize: '1rem', fontWeight: 700,
