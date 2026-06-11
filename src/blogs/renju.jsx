@@ -200,7 +200,7 @@ export default class Renju extends React.Component {
                             title: 'Color-Specialized Policy Optimization',
                             objective: 'Remove interference between Black and White play induced by training a single policy on asymmetric roles.',
                             procedure: 'Forked the training process into two specialist models: one optimized only for Black positions and one optimized only for White positions.',
-                            result: 'In a fixed-role tournament (always playing as Black), the Black specialist won 88% of games overall — 100% vs minimax depths 1–4 and 90% vs depth 5. Golden-set top-1 accuracy reached ~16% on black positions, a modest gain over the RL baseline (~13%). The White specialist peaked at ~22% accuracy mid-training but finished at ~17%; it also underperformed in fixed-role White games (49% as White). Both models were still far below minimax search on the tactical benchmark.',
+                            result: 'Forking into color specialists reduced cross-role interference and allowed each model to specialise on its own tactics and forbidden-move rules. Golden-set top-1 accuracy reached ~16% on black positions — a modest gain over the RL baseline (~13%). The White specialist peaked at ~22% accuracy on white positions mid-training but finished at ~17%, indicating noisier convergence for White. Both models were still far below minimax on the tactical benchmark.',
                         },
                         {
                             stage: 'Stage 4',
@@ -214,7 +214,7 @@ export default class Renju extends React.Component {
                             title: 'Tactical Constraint Training',
                             objective: 'Correct missed forced moves, especially blocks and immediate tactical responses.',
                             procedure: 'Constructed 20,000 forced-move positions from minimax self-play, trained first for move accuracy, then continued RL with a −0.5 penalty for missing forced tactical responses.',
-                            result: 'Tactical constraint training produced the largest single improvement in golden-set accuracy: the Black model jumped from ~16% (human FT) to ~23%, and the White model from ~18% (human FT) to ~27%, eliminating the major missed-four/block failure mode. In single-color tournament play, black_expert_v2 ranks highest as Black (88% win rate); white_human_ft outperforms white_expert_v2 as White (62% vs 49%), suggesting Tactical RL v2 improved position accuracy but may have reduced game-level White coherence.',
+                            result: 'Tactical constraint training produced the largest single jump in golden-set accuracy: the Black model from ~16% to ~23% and the White model from ~18% to ~27%, eliminating the major missed-four/block failure mode. In the fixed-role tournament, the deployed Black model (black_expert_v2) wins 88% of games as Black — 100% vs minimax depths 1–4, 90% vs depth 5. The deployed White model (white_expert_v2) wins 49% as White, notably weaker than the pre-Stage-5 white_human_ft checkpoint (62%), suggesting Tactical RL v2 sharpened tactical accuracy at some cost to game-level White coherence.',
                         },
                         {
                             stage: 'Stage 6',
@@ -242,7 +242,7 @@ export default class Renju extends React.Component {
                 </p>
                 <TrainingCurve />
                 <p style={{ marginTop: '20px' }}>
-                    The deployed pair (black_expert_v2 + white_expert_v2) reaches <b>~25% top-1 accuracy on the golden set</b> — up from ~12–15% for the supervised and RL baselines. The Tactical RL v2 phase produced the clearest jump: +8–10 percentage points over the Black Specialist plateau. For comparison, minimax reaches 86–98% on the same set, which makes the gap to tree-search explicit. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
+                    The deployed pair (black_expert_v2 + white_expert_v2) reaches <b>~25% top-1 accuracy on the golden set</b> — up from ~12–15% for the supervised and RL baselines. The Tactical RL v2 phase produced the clearest jump: +8–10 percentage points over the Black Specialist plateau. For comparison, minimax reaches 86–98% on the same set, which makes the gap to tree-search explicit. In fixed-role game-play, the Black model wins 88% as Black (100% vs minimax depths 1–4); the White model wins 49% as White, trailing the earlier white_human_ft checkpoint (62%) — a trade-off between tactical precision and game coherence. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
