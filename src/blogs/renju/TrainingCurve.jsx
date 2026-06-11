@@ -1,20 +1,22 @@
 import React from 'react';
 
-// ── Data from eval_all_checkpoints.py (temp=0.3, 30 games vs minimax depth-3) ──
+// ── Data from golden_training_curve.py (top-1 accuracy on golden_set_v1.jsonl) ──
+// Black checkpoints evaluated on 350 black-to-move positions.
 const BLACK_PHASES = [
-  { name: 'Supervised',      color: 'rgba(90,110,150,0.15)',  labelColor: '#8090b0', pts: [26.7] },
-  { name: 'RL vs Minimax',   color: 'rgba(190,130,50,0.15)',  labelColor: '#b07830', pts: [70.0,43.3,40.0,13.3,13.3,20.0,23.3,83.3,53.3,100.0,60.0] },
-  { name: 'Black Specialist',color: 'rgba(40,150,80,0.15)',   labelColor: '#28a050', pts: [100.0,100.0,100.0,86.7,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0,100.0] },
-  { name: 'Human FT',        color: 'rgba(190,70,110,0.15)',  labelColor: '#c04070', pts: [100.0] },
-  { name: 'Tactical RL',     color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [100.0,100.0,100.0,96.7] },
+  { name: 'Supervised',      color: 'rgba(90,110,150,0.15)',  labelColor: '#8090b0', pts: [12.0] },
+  { name: 'RL vs Minimax',   color: 'rgba(190,130,50,0.15)',  labelColor: '#b07830', pts: [12.0,13.1,12.3,15.1,14.0,14.3,14.6,14.0,14.6,11.4,12.9] },
+  { name: 'Black Specialist',color: 'rgba(40,150,80,0.15)',   labelColor: '#28a050', pts: [14.6,13.4,13.4,15.4,14.6,12.9,14.6,14.6,15.7,13.7,15.4,14.6,14.6,14.9,16.6,16.3,15.7,15.4,15.7,14.9,14.6,16.0,15.1,15.1,16.6,14.6,16.3,16.0,15.7,15.7,16.0,15.7,16.0] },
+  { name: 'Human FT',        color: 'rgba(190,70,110,0.15)',  labelColor: '#c04070', pts: [16.3] },
+  { name: 'Tactical RL v2',  color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [22.3,22.0,23.4,22.9] },
 ];
 
+// White checkpoints evaluated on 350 white-to-move positions.
 const WHITE_PHASES = [
-  { name: 'Supervised',      color: 'rgba(90,110,150,0.15)',  labelColor: '#8090b0', pts: [0.0] },
-  { name: 'RL vs Minimax',   color: 'rgba(190,130,50,0.15)',  labelColor: '#b07830', pts: [0.0,6.7,13.3,86.7,90.0,93.3,86.7,23.3,63.3,20.0,0.0] },
-  { name: 'White Specialist',color: 'rgba(130,70,190,0.15)',  labelColor: '#8040c0', pts: [100.0,13.3,3.3,100.0,90.0,100.0,66.7,100.0,100.0,100.0,90.0,50.0,93.3,100.0,100.0,83.3,70.0,0.0,90.0,90.0,100.0,100.0,100.0,90.0,3.3,96.7,90.0,3.3,0.0] },
-  { name: 'Human FT',        color: 'rgba(190,70,110,0.15)',  labelColor: '#c04070', pts: [100.0] },
-  { name: 'Tactical RL',     color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [86.7,83.3,93.3,96.7] },
+  { name: 'Supervised',      color: 'rgba(90,110,150,0.15)',  labelColor: '#8090b0', pts: [14.6] },
+  { name: 'RL vs Minimax',   color: 'rgba(190,130,50,0.15)',  labelColor: '#b07830', pts: [13.1,14.0,14.6,18.6,18.6,18.6,19.1,18.3,19.7,14.3,14.9] },
+  { name: 'White Specialist',color: 'rgba(130,70,190,0.15)',  labelColor: '#8040c0', pts: [19.7,14.9,15.4,21.4,20.6,20.6,20.3,20.9,19.4,19.7,20.9,20.6,21.4,20.3,20.3,20.9,20.9,15.4,21.1,21.4,19.7,19.4,21.4,20.9,16.6,19.7,22.3,16.9,16.9] },
+  { name: 'Human FT',        color: 'rgba(190,70,110,0.15)',  labelColor: '#c04070', pts: [18.0] },
+  { name: 'Tactical RL v2',  color: 'rgba(50,150,190,0.15)',  labelColor: '#3090b8', pts: [26.3,25.4,24.9,26.6] },
 ];
 
 // ── ELO data from latest round-robin tournament ──────────────────────────────
@@ -69,7 +71,7 @@ function buildPhaseRegions(phases, totalPts, PW) {
   return regions;
 }
 
-function LineChart({ phases, lineColor, title }) {
+function LineChart({ phases, lineColor, title, yMax = 30 }) {
   const ML = 42, MR = 12, MT = 28, MB = 36;
   const CW = 680, CH = 200;
   const PW = CW - ML - MR;
@@ -80,14 +82,13 @@ function LineChart({ phases, lineColor, title }) {
   const regions = buildPhaseRegions(phases, total, PW);
 
   const xPos = i => ML + (i / (total - 1)) * PW;
-  const yPos = v => MT + PH - (v / 100) * PH;
+  const yPos = v => MT + PH - (v / yMax) * PH;
 
   const pathD = pts.map((v, i) =>
     `${i === 0 ? 'M' : 'L'}${xPos(i).toFixed(1)},${yPos(v).toFixed(1)}`
   ).join(' ');
 
-  // Y gridlines
-  const yTicks = [0, 25, 50, 75, 100];
+  const yTicks = [0, 10, 20, 30].filter(t => t <= yMax);
 
   return (
     <svg viewBox={`0 0 ${CW} ${CH}`} style={{ width: '100%', display: 'block' }}>
@@ -296,7 +297,8 @@ export default function TrainingCurve() {
         Training Progress
       </h3>
       <p style={{ fontSize: '0.85rem', opacity: 0.6, marginBottom: '12px' }}>
-        Win rate vs minimax depth-3 (30 games, temperature 0.3) across all training checkpoints.
+        Top-1 accuracy on the golden set (1,000 curated positions) evaluated at every training
+        checkpoint. Black and White models scored on their respective color positions (350 each).
         Each phase has a distinct background. Vertical dashes mark phase boundaries.
       </p>
       <div style={{
@@ -304,9 +306,9 @@ export default function TrainingCurve() {
         border: '1px solid color-mix(in srgb, var(--surface-text-color) 12%, transparent)',
         borderRadius: '10px', padding: '12px 8px 4px',
       }}>
-        <LineChart phases={BLACK_PHASES} lineColor="#5ba3f5" title="Black model — win rate as Black" />
+        <LineChart phases={BLACK_PHASES} lineColor="#5ba3f5" title="Black model — golden set top-1 accuracy (black positions)" yMax={30} />
         <div style={{ height: '8px' }} />
-        <LineChart phases={WHITE_PHASES} lineColor="#c084f0" title="White model — win rate as White" />
+        <LineChart phases={WHITE_PHASES} lineColor="#c084f0" title="White model — golden set top-1 accuracy (white positions)" yMax={30} />
       </div>
 
       <h3 style={{ margin: '28px 0 8px', fontSize: '1rem', fontWeight: 700,
