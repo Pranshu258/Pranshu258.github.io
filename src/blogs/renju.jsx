@@ -200,7 +200,7 @@ export default class Renju extends React.Component {
                             title: 'Color-Specialized Policy Optimization',
                             objective: 'Remove interference between Black and White play induced by training a single policy on asymmetric roles.',
                             procedure: 'Forked the training process into two specialist models: one optimized only for Black positions and one optimized only for White positions.',
-                            result: 'The Black specialist achieved 100% win rate against minimax depths 1–5. The White specialist reached 76.5% overall, with stable performance at depths 1–3 and higher variance at depth 4.',
+                            result: 'The Black specialist achieved 100% win rate against minimax depths 1–5 in head-to-head games. Golden-set top-1 tactical accuracy reached ~16%, a modest improvement over the RL baseline, reflecting the difficulty of the curated position set.',
                         },
                         {
                             stage: 'Stage 4',
@@ -214,7 +214,7 @@ export default class Renju extends React.Component {
                             title: 'Tactical Constraint Training',
                             objective: 'Correct missed forced moves, especially blocks and immediate tactical responses.',
                             procedure: 'Constructed 20,000 forced-move positions from minimax self-play, trained first for move accuracy, then continued RL with a −0.5 penalty for missing forced tactical responses.',
-                            result: 'Forced-move accuracy reached 91–92%. White achieved 100% win rate against depths 1–4, and Black achieved 100% against all tested depths, eliminating the major missed-four/block failure mode.',
+                            result: 'Tactical constraint training produced the largest single improvement in golden-set accuracy: the Black model jumped from ~16% to ~23% and the White model from ~21% to ~27%, eliminating the major missed-four/block failure mode. Both models also achieved 100% win rate against minimax in head-to-head games.',
                         },
                         {
                             stage: 'Stage 6',
@@ -238,11 +238,11 @@ export default class Renju extends React.Component {
 
                 <h3 className="headings">Evaluation</h3>
                 <p>
-                    Each model is evaluated in its specialist role against minimax depth-3 (30 games, temperature 0.3). Results are substantially more reliable than per-depth win rates — those collapse to binary 0%/100% because temperature=0 with a deterministic opponent produces the same game every time.
+                    Each model is evaluated on a golden set of 1,000 curated positions covering immediate wins, forced blocks, fork tactics, and forbidden-move handling. Black checkpoints are scored on the 350 black-to-move positions; White checkpoints on the 350 white-to-move positions. This gives a stable, position-based measure of tactical skill that is not confounded by opponent search depth or game-to-game stochasticity.
                 </p>
                 <TrainingCurve />
                 <p style={{ marginTop: '20px' }}>
-                    Using each model in its specialist role, the combined system reaches <b>~97% win rate vs minimax depth-3</b> — up from 27% for the supervised-only model. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
+                    The deployed pair (black_expert_v2 + white_expert_v2) reaches <b>~25% top-1 accuracy on the golden set</b> — up from ~12–15% for the supervised and RL baselines. The Tactical RL v2 phase produced the clearest jump: +8–10 percentage points over the Black Specialist plateau. For comparison, minimax reaches 86–98% on the same set, which makes the gap to tree-search explicit. The full training pipeline and model weights are available in the <a href="https://github.com/Pranshu258/Pranshu258.github.io/tree/react/src/renju/train" target="_blank" rel="noopener noreferrer">source repository</a>.
                 </p>
 
                 <hr style={{ backgroundColor: "white" }}></hr>
