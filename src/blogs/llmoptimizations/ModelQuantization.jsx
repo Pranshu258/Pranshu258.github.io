@@ -7,6 +7,18 @@ import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-bash';
 import '../../styles/prism.css';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+
+function Eq({ tex, display = false }) {
+    return (
+        <span
+            dangerouslySetInnerHTML={{
+                __html: katex.renderToString(tex, { displayMode: display, throwOnError: false })
+            }}
+        />
+    );
+}
 
 function MermaidDiagram({ svg }) {
     return (
@@ -102,7 +114,18 @@ export default function ModelQuantization() {
                 In this article we discuss in depth about one of the techniques of model quantization - Activation aware Weight Quanization.
             </p>
             <h2>Activation aware Weight Quantization</h2>
-            <p className="llm-callout">work in progress ...</p>
+            <p>
+                While low bit quantization for LLMs can significantly reduce the memory footprint of on-device LLM inference but is hard. Quantization aware training is not efficient due to high training cost, while post training quantization suffers from large accuracy degradation under low bit setting.
+            </p>
+            <p>
+                The main observation is that weights are not equally important for LLM's performance. There is a small fraction (0.1% - 1%) of salient weights; skipping the quantization of these salient weights will significantly reduce the quantization loss. To find the salient weight channels, the insight is that we should refer to activation distribution instead of the weight distribution. That is, weight channels corresponding to larger activation magnitudes are more slaient since they process more important features. 
+            </p>
+            <p>
+                AWQ does not rely on any backpropagation or reconstruction, so it can well preserve LLM's generalization capabilities on various domains and modalities without overfitting the calibration set. 
+            </p>
+            <p>
+                We start by analyzing the error from weight-only quantization. Consider a block of weight <Eq tex="w" />, the linear operation can be written as <Eq tex="y = wx" />, and the quantized counterpart is <Eq tex="y = Q(w)x" />.
+            </p>
             <hr/>
             <h2>References</h2>
             <ol>
