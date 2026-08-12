@@ -6,7 +6,7 @@ const toSlug = (name) => name.replace(/\s+/g, '-').toLowerCase();
 export const blogMeta = [
     {
         name: "Kimi Delta Attention",
-        description: "Kimi Delta Attention (KDA) is the linear-attention module at the core of Kimi Linear, a hybrid architecture that outperforms full attention across short-context, long-context, and RL-scaling regimes. We build up to KDA from first principles and look at the chunkwise algorithm that makes it hardware-efficient.",
+        description: "Kimi K3 is a 2.8 trillion parameter mixture-of-experts (MoE) model with 104 billion active parameters, native vision capabilities, and a 1 million token context window. At its core lie two ideas that improve how information flows across sequence length and model depth: Kimi Delta Attention (KDA) and attention residuals. This article explores how KDA works.",
         tags: ["Large Language Models", "Attention Mechanisms"],
         date: "August 8, 2026",
     },
