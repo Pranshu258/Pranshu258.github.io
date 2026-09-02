@@ -72,13 +72,20 @@
 \resumeSubHeadingListStart
 
   \resumeSubheading
-    {Microsoft AI}{Aug 2025 -- Present}
+    {Microsoft SuperIntelligence}{Jul 2026 -- Present}
     {Member of Technical Staff}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Built Multi-LoRA inference for MAI 5B/35B models, enabling Foundry to dynamically load multiple adapters on one server.}
+      \item\small{Productionized Multi-LoRA serving for \textbf{MAI-Code-1-Flash} by delivering an inference engine image for Azure Foundry.}
+      \item\small{Benchmarked Multi-LoRA scaling, profiled GPU bottlenecks with PyTorch/Nsight, and tuned SGLang's CSGMV kernel.}
+      \item\small{De-risked \textbf{MAI-Thinking-1} LoRA serving by uncovering incompatibilities with data parallelism and speculative decoding. Partnered with OSS maintainers to land upstream compatibility fixes for both serving modes.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Microsoft AI}{Aug 2025 -- Jul 2026}
+    {Member of Technical Staff}{Redmond, WA}
+    \resumeItemListStart
       \item\small{Served as \textbf{technical owner} for inference on Copilot, shaping architectural decisions across model integration, and safety.}
       \item\small{Engineered the inference pipeline for \textbf{GPT-5.1 instant and reasoning models} on Copilot at launch, with meta-prompting for personality alignment, delivering a \textbf{30\% improvement in personality evals} for the reasoning path.}
-      \item\small{Implemented a new \textbf{constrained sampling approach} for tool calls in GPT-5.1 reasoning models, identified through token-level analysis, preventing a production regression in tool call reliability at Copilot launch.}
       \item\small{Scoped, designed, and built \textbf{GPU-based safety classifier} endpoints for the Chat Completions API: non-streaming endpoints that return classification logits for harm scoring on prompts and responses.}
       \item\small{Designed and shipped an \textbf{incremental chain of thought summarization} system: buffers streaming reasoning chunks and progressively surfaces summaries in the UI, keeping it responsive while protecting raw model reasoning as IP.}
       \item\small{Reduced inference costs by eliminating non-essential classifiers (\textbf{reducing GPU footprint by 20\%}) and resolving a token overhead inefficiency in Chat Completions API (\textbf{reducing input tokens by 25\%} and \textbf{TTFT by 30ms}).}
@@ -135,12 +142,6 @@
   \item\small{\href{https://pranshug.com/blog/runtime-optimizations-for-llms}{\textit{Runtime Optimizations for LLMs}} (2026). Production notes on inference optimizations for latency/cost-efficient LLM serving.}
   \item\small{\href{https://dl.acm.org/doi/10.1145/3613904.3642078}{\textit{The Observer Effect on Social Media}} — ACM CHI (2024). Causal inference and time series study on longitudinal Facebook data from 300+ participants to quantify how monitoring awareness alters online behavior.}
   \item\small{\href{https://www.nature.com/articles/s41599-021-00993-6}{\textit{Mental Health Impact of Active-Shooter Drills}} — Nature (2021). Applied ML classifiers and interrupted time series analysis to 54M social media posts across 114 schools to measure psychological and civic impact.}
-\resumeSubHeadingListEnd
-
-%-----------VOLUNTEER-----------------
-\section{Volunteer Work}
-\resumeCompactSectionListStart
-  \item\small{\textbf{AI Lab Assistant} (TurnTheBus nonprofit, 2025--Present): Architected and built end-to-end on \textbf{AWS} using \textbf{RAG} over physics lab manuals to guide high school students through virtual physics experiments.}
 \resumeSubHeadingListEnd
 
 %-----------EDUCATION-----------------
