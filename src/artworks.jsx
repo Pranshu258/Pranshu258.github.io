@@ -1,12 +1,17 @@
 import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
+import { LuArrowUpRight } from 'react-icons/lu';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import './styles/fonts.css';
 import './styles/body.css';
 import './styles/blog.css';
+import './styles/artworks.css';
 
 import { artList } from './data/artworks'
+
+const INSTAGRAM_POST_URL = 'https://www.instagram.com/p/CySjN5TOvxF/';
+const INSTAGRAM_SCRIPT_URL = 'https://www.instagram.com/embed.js';
 
 export default class Artworks extends React.Component {
     constructor(props) {
@@ -16,8 +21,31 @@ export default class Artworks extends React.Component {
 
     componentDidMount() {
         window.scrollTo(0, 0);
-        this.setState({ mounted: true });
+        this.setState({ mounted: true }, this.loadInstagramEmbed);
     }
+
+    loadInstagramEmbed = () => {
+        if (window.instgrm?.Embeds?.process) {
+            window.instgrm.Embeds.process();
+            return;
+        }
+
+        const existingScript = document.querySelector(`script[src="${INSTAGRAM_SCRIPT_URL}"]`);
+        if (existingScript) {
+            existingScript.addEventListener('load', this.processInstagramEmbed, { once: true });
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = INSTAGRAM_SCRIPT_URL;
+        script.addEventListener('load', this.processInstagramEmbed, { once: true });
+        document.body.appendChild(script);
+    };
+
+    processInstagramEmbed = () => {
+        window.instgrm?.Embeds?.process();
+    };
 
     render() {
         var globalStyle = {
@@ -72,16 +100,17 @@ export default class Artworks extends React.Component {
                             </div>
                             <div className="col-md-4">
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <iframe
-                                        src="https://www.instagram.com/p/CySjN5TOvxF/embed"
-                                        title="Instagram artwork by Pranshu Gupta"
-                                        width="328"
-                                        height="580"
-                                        frameBorder="0"
-                                        scrolling="no"
-                                        allowTransparency={true}
-                                        style={{ maxWidth: '100%' }}
-                                    />
+                                    <div className="instagram-embed-wrapper">
+                                        <blockquote
+                                            className="instagram-media"
+                                            data-instgrm-permalink={`${INSTAGRAM_POST_URL}?utm_source=ig_embed&utm_campaign=loading`}
+                                            data-instgrm-version="14"
+                                        >
+                                            <a href={INSTAGRAM_POST_URL} target="_blank" rel="noopener noreferrer">
+                                                View post on Instagram <LuArrowUpRight aria-hidden="true" />
+                                            </a>
+                                        </blockquote>
+                                    </div>
                                 </div>
                                 <br></br>
                             </div>
