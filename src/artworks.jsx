@@ -1,5 +1,4 @@
 import React from 'react';
-import { InstagramEmbed } from 'react-social-media-embed';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -73,7 +72,16 @@ export default class Artworks extends React.Component {
                             </div>
                             <div className="col-md-4">
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <InstagramEmbed url="https://www.instagram.com/p/CySjN5TOvxF/" />
+                                    <iframe
+                                        src="https://www.instagram.com/p/CySjN5TOvxF/embed"
+                                        title="Instagram artwork by Pranshu Gupta"
+                                        width="328"
+                                        height="580"
+                                        frameBorder="0"
+                                        scrolling="no"
+                                        allowTransparency={true}
+                                        style={{ maxWidth: '100%' }}
+                                    />
                                 </div>
                                 <br></br>
                             </div>
