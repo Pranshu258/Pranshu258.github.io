@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SiOpenai, SiClaude, SiGooglegemini, SiGithubcopilot } from 'react-icons/si';
+import { SiClaude, SiGooglegemini, SiGithubcopilot } from 'react-icons/si';
+import { VscOpenai } from 'react-icons/vsc';
 import { FaGear } from 'react-icons/fa6';
 import AppLayout from '../AppLayout';
 import { PHASES, RESOURCES } from './data';
@@ -201,7 +202,7 @@ export default function StudyTracker() {
         <AppLayout
             icon={
                 <div className="st-brand-icons">
-                    <SiOpenai className="st-icon-openai" />
+                    <VscOpenai className="st-icon-openai" />
                     <SiClaude className="st-icon-claude" />
                     <SiGooglegemini className="st-icon-gemini" />
                     <SiGithubcopilot className="st-icon-copilot" />
