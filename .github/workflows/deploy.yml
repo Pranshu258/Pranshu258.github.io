@@ -32,12 +32,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build website
-        run: npm run build
+      - name: Configure deployment identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Publish to GitHub Pages
-        run: >-
-          npx --no-install gh-pages
-          --branch master
-          --dist build
-          --user "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+      - name: Build and publish to GitHub Pages
+        run: npm run deploy
