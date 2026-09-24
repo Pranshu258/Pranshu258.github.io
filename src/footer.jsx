@@ -16,6 +16,7 @@ export default class Footer extends React.Component {
                         <nav className="footer-nav">
                             <a href="/#publications" className="footer-nav-link">Papers</a>
                             <a href="/#blog" className="footer-nav-link">Blog</a>
+                            <a href="/#learning" className="footer-nav-link">Learning</a>
                             <a href="/#projects" className="footer-nav-link">Projects</a>
                             <a href="/#artworks" className="footer-nav-link">Artworks</a>
                         </nav>

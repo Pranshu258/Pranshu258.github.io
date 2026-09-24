@@ -171,6 +171,11 @@ export default class Nav extends Component {
                                 </Link>
                             </li>
                             <li>
+                                <Link activeClass="active" to="learning" spy={true} smooth={true} offset={-70} duration={500}>
+                                    <button onClick={() => this.handleCrossPageNav("learning")} className="btn btn-default nav-link-btn">Learning</button>
+                                </Link>
+                            </li>
+                            <li>
                                 <Link activeClass="active" to="projects" spy={true} smooth={true} offset={-70} duration={500}>
                                     <button onClick={() => this.handleCrossPageNav("projects")} className="btn btn-default nav-link-btn">Projects</button>
                                 </Link>
