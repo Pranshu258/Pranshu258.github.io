@@ -200,7 +200,7 @@ export default class Body extends React.Component {
                                                     <span className="pub-role">{object.date}</span>
                                                 </div>
                                                 <Link className="blogLink" to={"blog/" + object.slug}>
-                                                    <h3 className="roboto">{object.cardTitle || object.name} <FaArrowRight style={{ fontSize: '70%', marginLeft: '8px' }} /></h3>
+                                                    <h3 className="roboto">{object.name} <FaArrowRight style={{ fontSize: '70%', marginLeft: '8px' }} /></h3>
                                                 </Link>
                                                 <p>{object.description}</p>
                                             </div>

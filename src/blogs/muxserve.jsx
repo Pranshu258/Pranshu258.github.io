@@ -5,7 +5,7 @@ import Sharer from '../sharer';
 import '../styles/fonts.css';
 import '../styles/blog.css';
 
-const TITLE = 'MuxServe for Multiple LLM Serving';
+const TITLE = 'MuxServe: Multiplexing LLM Inference';
 
 export default class MuxServe extends React.Component {
     componentDidMount() {

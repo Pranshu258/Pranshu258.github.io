@@ -5,8 +5,7 @@ const toSlug = (name) => name.replace(/\s+/g, '-').toLowerCase();
 
 export const blogMeta = [
     {
-        name: "MuxServe for Multiple LLM Serving",
-        cardTitle: "How MuxServe Efficiently Serves Multiple LLMs",
+        name: "MuxServe: Multiplexing LLM Inference",
         slug: "muxserve",
         description: "A technical walkthrough of MuxServe, a system for serving multiple large language models through flexible spatial-temporal multiplexing.",
         tags: ["Large Language Models", "Model Serving", "Systems"],
