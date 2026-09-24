@@ -1,0 +1,31 @@
+.instagram-embed-wrapper {
+    position: relative;
+    width: 100%;
+    min-width: 326px;
+    max-width: 540px;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.instagram-embed-wrapper blockquote {
+    width: calc(100% - 2px);
+    min-width: 326px;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.instagram-embed-wrapper .instagram-media {
+    display: flex;
+    min-height: 372px;
+    align-items: center;
+    justify-content: center;
+    background: var(--blog-surface-background);
+    border: 1px solid color-mix(in srgb, var(--surface-text-color) 20%, transparent);
+}
+
+.instagram-embed-wrapper .instagram-media a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--surface-text-color);
+}
