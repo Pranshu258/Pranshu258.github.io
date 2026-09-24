@@ -61,8 +61,7 @@ export default class App extends React.Component {
         if (storedTheme === 'light' || storedTheme === 'dark') {
             return storedTheme;
         }
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return prefersDark ? 'dark' : 'light';
+        return 'dark';
     }
 
     applyTheme(theme, persist = false) {
