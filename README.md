@@ -36,7 +36,11 @@ npm run dev
 
 ## Deployment
 
-Deployments to GitHub Pages run through Vite’s build output:
+Pushes to the `react` branch automatically build the website and publish the
+`build/` directory to the `master` branch through
+`.github/workflows/deploy.yml`.
+
+To deploy the current branch manually:
 
 ```bash
 npm run deploy

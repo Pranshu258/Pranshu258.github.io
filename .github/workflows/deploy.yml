@@ -1,0 +1,43 @@
+name: Deploy website
+
+on:
+  push:
+    branches:
+      - react
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build website
+        run: npm run build
+
+      - name: Publish to GitHub Pages
+        run: >-
+          npx --no-install gh-pages
+          --branch master
+          --dist build
+          --user "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
