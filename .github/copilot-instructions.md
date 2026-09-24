@@ -1,5 +1,13 @@
 # Copilot Instructions
 
+## Branch and pull request workflow
+
+- Never commit feature work directly to the `react` branch.
+- Before starting a feature, create a dedicated branch from the latest `react` branch.
+- Commit and push the feature only to its dedicated branch, then open a pull request targeting `react`.
+- Open the pull request as a draft when the feature is incomplete or still under review.
+- Changes should reach `react` by merging a pull request, not by pushing feature commits directly.
+
 ## CSS Variables
 
 Always use the design-system CSS variables defined in `src/styles/body.css`. Never hardcode raw colour values.
