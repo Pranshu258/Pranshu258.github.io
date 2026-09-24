@@ -5,7 +5,9 @@ const toSlug = (name) => name.replace(/\s+/g, '-').toLowerCase();
 
 export const blogMeta = [
     {
-        name: "MuxServe",
+        name: "MuxServe for Multiple LLM Serving",
+        cardTitle: "How MuxServe Efficiently Serves Multiple LLMs",
+        slug: "muxserve",
         description: "A technical walkthrough of MuxServe, a system for serving multiple large language models through flexible spatial-temporal multiplexing.",
         tags: ["Large Language Models", "Model Serving", "Systems"],
         date: "September 24, 2026",
@@ -100,4 +102,4 @@ export const blogMeta = [
         tags: ["Human Psychology", "Psycholinguistics"],
         date: "May 5, 2017",
     },
-].map((entry) => ({ ...entry, slug: toSlug(entry.name) }));
+].map((entry) => ({ ...entry, slug: entry.slug || toSlug(entry.name) }));
