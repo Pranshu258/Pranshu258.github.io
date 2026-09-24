@@ -11,6 +11,12 @@ export const sections = [
         description: "Cache the key and value tensors from previous tokens so the model avoids redundant recomputation during autoregressive decoding.",
         date: "March 15, 2026",
     },
+    {
+        slug: "model-multiplexing",
+        name: "Model Multiplexing",
+        description: "Serve multiple large language models through flexible spatial-temporal multiplexing of shared GPU resources.",
+        date: "September 24, 2026",
+    },
     // {
     //     slug: "multi-block-mode",
     //     name: "Multi Block Mode",
