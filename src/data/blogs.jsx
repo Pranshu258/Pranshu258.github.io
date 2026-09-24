@@ -2,7 +2,6 @@ import { blogMeta } from './blog-meta.js';
 
 // Map from slug → dynamic import loader (kept here so Vite can bundle them)
 const loaders = {
-    "muxserve":                                                () => import('../blogs/muxserve'),
     "runtime-optimizations-for-llms":                          () => import('../blogs/llmoptimizations/index'),
     "ant-colony-optimization":                                 () => import('../blogs/antcolonyopt'),
     "renju:-a-strategic-board-game-with-ai":                   () => import('../blogs/renju'),
