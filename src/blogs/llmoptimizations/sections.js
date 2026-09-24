@@ -11,6 +11,12 @@ export const sections = [
         description: "Cache the key and value tensors from previous tokens so the model avoids redundant recomputation during autoregressive decoding.",
         date: "March 15, 2026",
     },
+    {
+        slug: "model-quantization",
+        name: "Model Quantization",
+        description: "Quantization reduces the numerical precision of model weights and/or activations to enable efficient deployment of large language models by trading off precision with memory usage.",
+        date: "April 5, 2026",
+    },
     // {
     //     slug: "multi-block-mode",
     //     name: "Multi Block Mode",
