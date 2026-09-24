@@ -1,6 +1,6 @@
 export const learningResources = [
     {
-        name: "AI Engineering Study Tracker",
+        name: "Becoming an AI Engineer",
         type: "Interactive curriculum",
         description: "A structured 16-week learning roadmap with daily tasks, progress tracking, notes, and curated references.",
         tags: ["AI Engineering", "Study Plan", "Progress Tracking"],
