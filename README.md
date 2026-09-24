@@ -34,9 +34,6 @@ npm run dev
 - `npm run build` – creates an optimized production build in the `build/` directory.
 - `npm run preview` – serves the build locally to verify the production output.
 
-The production build also creates static `index.html` entry points for every published
-BrowserRouter route so direct links return successfully when hosted on GitHub Pages.
-
 ## Deployment
 
 Deployments to GitHub Pages run through Vite’s build output:
