@@ -4,15 +4,22 @@ This project runs on [Vite](https://vitejs.dev/) with React and ships static ass
 
 ## Requirements
 
-- Node.js 18+ (recommended)
-- npm 9+
+- Node.js 24 LTS
+- npm 12+
+
+The repository includes an `.nvmrc`; if you use `nvm`, run:
+
+```bash
+nvm install
+nvm use
+```
 
 ## Getting Started
 
-Install dependencies once:
+Install the locked dependency versions:
 
 ```bash
-npm install
+npm ci
 ```
 
 Start the development server on [http://localhost:5173](http://localhost:5173):
