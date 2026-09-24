@@ -12,8 +12,8 @@ export const sections = [
         date: "March 15, 2026",
     },
     {
-        slug: "muxserve",
-        name: "MuxServe: Multiplexing LLM Inference",
+        slug: "model-multiplexing",
+        name: "Model Multiplexing",
         description: "Serve multiple large language models through flexible spatial-temporal multiplexing of shared GPU resources.",
         date: "September 24, 2026",
     },

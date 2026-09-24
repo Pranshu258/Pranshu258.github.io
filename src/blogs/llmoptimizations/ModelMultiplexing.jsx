@@ -1,7 +1,7 @@
 import React from 'react';
 import { LuArrowUpRight } from 'react-icons/lu';
 
-export default function MuxServe() {
+export default function ModelMultiplexing() {
     return (
         <div>
             <h3>Source material</h3>
