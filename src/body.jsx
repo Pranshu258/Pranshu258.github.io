@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { blogList } from './data/blogs'
+import { learningResources } from './data/learning'
 import { projectList } from './data/projects'
 import { publicationList } from './data/publications'
 import { createNextPageUpdater, createPreviousPageUpdater, getPageNumbers, getPageSlice, getTotalPages } from './utils/pagination';
@@ -14,7 +15,7 @@ import {
 } from 'react-icons/fa6';
 
 import { VscGithubProject } from "react-icons/vsc";
-import { LuNotebookPen, LuArrowUpRight } from "react-icons/lu";
+import { LuNotebookPen, LuArrowUpRight, LuGraduationCap } from "react-icons/lu";
 
 import './styles/fonts.css';
 import './styles/body.css';
@@ -219,6 +220,52 @@ export default class Body extends React.Component {
                                 </button>
                             </div>
                             <br></br>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    <div className="row" id="learning">
+                        <div className="col-md-3">
+                            <br></br><br></br><br></br>
+                            <LuGraduationCap className="big gt3" />
+                            <br></br><br></br>
+                            <h2 className="roboto">
+                                LEARNING
+                            </h2>
+                        </div>
+                        <div className="col-md-9">
+                            <br></br><br></br>
+                            <div style={{ paddingLeft: '5px' }}>
+                                {learningResources.map((resource, i) => (
+                                    <div
+                                        key={resource.name}
+                                        className="featuredText pub-card"
+                                        style={{ marginBottom: i < learningResources.length - 1 ? '20px' : 0 }}
+                                    >
+                                        <div className="pub-venue-row">
+                                            <span className="pub-venue">{resource.type}</span>
+                                            {resource.tags.map((tag) => (
+                                                <span key={tag} className="blog-tag">#{tag}</span>
+                                            ))}
+                                        </div>
+                                        {resource.external ? (
+                                            <a
+                                                className="blogLink"
+                                                href={resource.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <h3 className="roboto">{resource.name} <LuArrowUpRight style={{ fontSize: '75%', marginLeft: '8px' }} strokeWidth={3} /></h3>
+                                            </a>
+                                        ) : (
+                                            <Link className="blogLink" to={resource.link}>
+                                                <h3 className="roboto">{resource.name} <FaArrowRight style={{ fontSize: '70%', marginLeft: '8px' }} /></h3>
+                                            </Link>
+                                        )}
+                                        <p>{resource.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <br></br><br></br>
                         </div>
                     </div>
                     <hr></hr>
