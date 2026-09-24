@@ -256,6 +256,12 @@ figcaption {
     border-left-color: #f472b6;
 }
 
+/* Kimi brand icon: full-colour square app icon, no theme inversion needed. */
+.kimi-logo {
+    height: 96px;
+    width: auto;
+}
+
 /* Mermaid / SVG diagrams: invert colours in dark mode */
 [data-theme="dark"] .mermaid-diagram {
     filter: invert(1) hue-rotate(180deg);
