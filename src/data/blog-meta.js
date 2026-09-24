@@ -5,6 +5,12 @@ const toSlug = (name) => name.replace(/\s+/g, '-').toLowerCase();
 
 export const blogMeta = [
     {
+        name: "MuxServe for Multiple LLM Serving",
+        description: "A technical walkthrough of MuxServe, a system for serving multiple large language models through flexible spatial-temporal multiplexing.",
+        tags: ["Large Language Models", "Model Serving", "Systems"],
+        date: "September 24, 2026",
+    },
+    {
         name: "Runtime optimizations for LLMs",
         description: "Large Language Models (LLMs) are a class of deep learning models that have gained significant attention in recent years due to their ability to generate human-like text. In this article, we explore runtime optimizations that are used to improve performance and reduce resource consumption in production.",
         tags: ["Large Language Models", "Performance Optimization"],

@@ -6,9 +6,19 @@
     <description>Articles on software engineering, distributed systems, machine learning, data visualization, and more.</description>
     <language>en-us</language>
     <atom:link href="https://pranshug.com/rss.xml" rel="self" type="application/rss+xml" />
-    <lastBuildDate>Thu, 11 Jun 2026 06:31:14 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 24 Sep 2026 16:39:40 GMT</lastBuildDate>
     <managingEditor>Pranshu Gupta</managingEditor>
     <webMaster>Pranshu Gupta</webMaster>
+    <item>
+        <title>MuxServe for Multiple LLM Serving</title>
+        <link>https://pranshug.com/blog/muxserve-for-multiple-llm-serving</link>
+        <guid isPermaLink="true">https://pranshug.com/blog/muxserve-for-multiple-llm-serving</guid>
+        <pubDate>Thu, 24 Sep 2026 07:00:00 GMT</pubDate>
+        <description>A technical walkthrough of MuxServe, a system for serving multiple large language models through flexible spatial-temporal multiplexing.</description>
+        <category>Large Language Models</category>
+        <category>Model Serving</category>
+        <category>Systems</category>
+    </item>
     <item>
         <title>Runtime optimizations for LLMs</title>
         <link>https://pranshug.com/blog/runtime-optimizations-for-llms</link>
