@@ -1,0 +1,44 @@
+sequenceDiagram
+    autonumber
+    participant User as 👤 User
+    participant Channel as 💬 Channel<br/>(WhatsApp/Telegram/etc)
+    participant Gateway as 🌉 Gateway<br/>WebSocket Server
+    participant Router as 🎯 Router &<br/>Session Manager
+    participant Agent as 🤖 Pi Agent<br/>Runner
+    participant Model as 🧠 AI Model<br/>(OpenAI/Anthropic)
+    participant Tools as 🛠️ Tool<br/>Registry
+    participant ChannelOut as 📤 Outbound<br/>Channel
+
+    User->>+Channel: 📝 Send message
+    Channel->>+Gateway: 📨 Inbound message event
+    Gateway->>+Router: 🎯 Route message
+    
+    Note over Router: 🔍 Resolve session key<br/>(channel + account + peer)
+    Router->>+Agent: 📂 Load/create session
+    
+    Note over Agent: 📚 Load history<br/>⚙️ Apply system prompt
+    Agent->>+Model: 🚀 API request<br/>(messages + tools)
+    
+    rect rgb(240, 248, 255)
+        Note over Model,Agent: 🔄 Streaming Response
+        loop Stream chunks
+            Model-->>Agent: 📊 Stream chunk
+            Agent->>Gateway: 📡 Agent event
+            Gateway->>ChannelOut: ⌨️ Typing indicator
+        end
+    end
+    
+    alt 🛠️ Tool Call Required
+        Model-->>Agent: 🔧 Tool call request
+        Agent->>+Tools: ⚙️ Execute tool
+        Tools-->>-Agent: ✅ Tool result
+        Agent->>Model: 🔄 Continue with result
+    else 💬 Text Response
+        Model-->>-Agent: ✨ Final text
+    end
+    
+    Note over Agent: 💾 Save session state
+    Agent-->>-Router: 📋 Response ready
+    Router-->>-Gateway: 📮 Final response
+    Gateway->>ChannelOut: 📤 Send message
+    ChannelOut->>User: 📬 Deliver response
