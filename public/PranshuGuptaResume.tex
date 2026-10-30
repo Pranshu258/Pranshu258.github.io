@@ -75,29 +75,31 @@
     {Microsoft SuperIntelligence}{Jul 2026 -- Present}
     {Member of Technical Staff}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Productionized Multi-LoRA serving for \textbf{MAI-Code-1-Flash} by delivering an inference engine image for Azure Foundry.}
-      \item\small{Benchmarked Multi-LoRA scaling, profiled GPU bottlenecks with PyTorch/Nsight, and tuned CSGMV LoRA kernel.}
-      \item\small{De-risked \textbf{MAI-Thinking-1} LoRA serving by uncovering incompatibilities with data parallelism and speculative decoding. Partnered with OSS maintainers to land upstream compatibility fixes for both serving modes.}
+      \item\small{Optimized \textbf{base model inference} in Multi-LoRA serving by bypassing adapters for base-only batches: \textbf{6.7\% higher throughput} and \textbf{3.6\% lower inter-token latency}, with no added synchronization overhead.}
+      \item\small{Benchmarked Multi-LoRA inference, profiled GPUs with PyTorch/Nsight, and tuned the CSGMV LoRA kernel.}
+      \item\small{Fixed LoRA adapter memory partitioning for attention data parallelism, enabling inference with heterogeneous layer shapes.}
+      \item\small{Extended checkpoint conversion for shared experts, mixed precision, heterogeneous attention layouts and vocabularies.}
+      \item\small{Built a LoRA fine-tuning pipeline combining supervised learning and reinforcement learning for shopping tasks, improving exact product-match accuracy from \textbf{28.3\% to 37.2\%}.}
+      \item\small{Standardized inference incident triage with a shared playbook and scoped telemetry queries for diagnosing inference issues.}
     \resumeItemListEnd
 
   \resumeSubheading
     {Microsoft AI}{Aug 2025 -- Jul 2026}
     {Member of Technical Staff}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Served as \textbf{technical owner} for inference on Copilot, shaping architectural decisions across model integration, and safety.}
-      \item\small{Engineered the inference pipeline for \textbf{GPT-5.1 instant and reasoning models} on Copilot at launch, with meta-prompting for personality alignment, delivering a \textbf{30\% improvement in personality evals} for the reasoning path.}
-      \item\small{Scoped, designed, and built \textbf{GPU-based safety classifier} endpoints for the Chat Completions API: non-streaming endpoints that return classification logits for harm scoring on prompts and responses.}
-      \item\small{Designed and shipped an \textbf{incremental chain of thought summarization} system: buffers streaming reasoning chunks and progressively surfaces summaries in the UI, keeping it responsive while protecting raw model reasoning as IP.}
-      \item\small{Reduced inference costs by eliminating non-essential classifiers (\textbf{reducing GPU footprint by 20\%}) and resolving a token overhead inefficiency in Chat Completions API (\textbf{reducing input tokens by 25\%} and \textbf{TTFT by 30ms}).}
-      \item\small{Defined and instrumented LLM API \textbf{traffic classification} dimensions (product, client app, inference intent, license tier) across MAI and M365 Copilot; built Grafana dashboards informing capacity planning and cost attribution across both orgs.}
+      \item\small{Reduced inference costs by eliminating non-essential classifiers (\textbf{20\% lower GPU footprint}) and resolving token overhead in the Chat Completions API (\textbf{25\% fewer input tokens} and \textbf{30ms lower time to first token}).}
+      \item\small{Implemented constrained decoding for tool invocation in the Completions API for GPT-5.1 instant and reasoning models.}
+      \item\small{Defined safety classification API contracts for biosafety risks and reasoning leakage, adopted by downstream teams.}
+      \item\small{Designed and shipped \textbf{incremental reasoning summarization}, progressively surfacing summaries in the UI.}
+      \item\small{Established M365 Copilot's shared LLM \textbf{traffic-classification taxonomy} (product, client app, inference intent, license tier), aligning teams and driving adoption through Grafana dashboards for capacity planning and cost attribution.}
     \resumeItemListEnd
 
   \resumeSubheading
     {Microsoft Azure AI}{Jan 2025 -- Aug 2025}
     {Senior Software Engineer}{Redmond, WA}
     \resumeItemListStart
-      \item\small{Designed and built a distributed \textbf{token-based rate limiter} using Tiktoken for precise token counting, replacing a length-based estimator that had 219\% average error; implemented pub-sub quota state synchronization across instances.}
       \item\small{Designed and built the inference pipeline for an intelligent \textbf{model router}: injecting per-request model selection based on cost/complexity signals before each LLM call, reducing per-inference cost by \textbf{55\%}.}
+      \item\small{Built a distributed rate limiter with OpenAI Tiktoken and output-token reconciliation, replacing a length-based estimator; actual inference-engine token usage averaged \textbf{219\% above its estimates}.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -105,9 +107,9 @@
     {Senior Software Engineer}{Redmond, WA}
     \resumeItemListStart
       \item\small{Served as \textbf{technical area owner} for resource lifecycle management in Azure Resource Manager.}
-      \item\small{Mentored a new-grad engineer through weekly 1:1s; they now independently own a critical component in control plane.}
-      \item\small{Designed and shipped a multi-bucket \textbf{token-based background job throttling} system with retry-storm protection, preventing noisy-neighbor throttling in Azure Control Plane background-job infrastructure.}
-      \item\small{Single-handedly designed and shipped \textbf{async operation URI signing}; ran office hours with resource provider teams to guide API surface changes, adopted by \textbf{242 service teams} with \textbf{220+ enforcing it}.}
+      \item\small{Independently designed and shipped \textbf{async operation URI signing}; ran office hours with resource provider teams to guide API surface changes, adopted by \textbf{242 service teams} with \textbf{220+ enforcing it}.}
+      \item\small{Designed and shipped a token-bucket-based distributed rate limiter for background jobs with retry-storm protection, preventing noisy-neighbor throttling in Azure Control Plane background-job infrastructure.}
+      \item\small{Mentored a new-grad engineer through weekly 1:1s; they now independently own a critical component in the control plane.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -116,7 +118,8 @@
     \resumeItemListStart
       \item\small{Designed and shipped \textbf{async operation callbacks} to replace polling, cutting control plane polling traffic by \textbf{94\%}.}
       \item\small{Led \textbf{Azure region teardown} design and implementation end-to-end: halted new resource creation, resolved subscription/resource group hierarchies, and migrated live resources to healthy regions with zero data loss.}
-      \item\small{Designed and built a \textbf{health-driven deployment pipeline} for ARM control-plane manifests: staged multi-region rollouts with post-step RP health checks that halt or rollback on degradation.}
+      \item\small{Built dependency-aware deletion for Azure resource groups and bulk-deletion APIs, using staged retries and opt-in force deletion to reduce dependency-related deletion errors by \textbf{92\%}.}
+      \item\small{Improved termination and retry policies for Azure resource consistency jobs with exponential backoff, random jitter, and resource-existence checks, reducing timeouts by \textbf{56\%}, job duration by \textbf{72\%}, and execution count by \textbf{70\%}.}
     \resumeItemListEnd
 
   \resumeSubheading
@@ -131,9 +134,9 @@
 %-----------SKILLS-----------------
 \section{Technical Skills}
 \begin{itemize}[leftmargin=*, itemsep=0pt, topsep=2pt, parsep=0pt, partopsep=0pt]
-  \item\small{\textbf{AI/ML \& Inference}: LLM inference/serving, prompt engineering, model evaluations, safety orchestration, RAG}
-  \item\small{\textbf{Languages \& Systems}: Python, .NET, C++, KQL, JavaScript, HTML, CSS, Kubernetes, Redis, Grafana}
-  \item\small{\textbf{Cloud \& Infrastructure}: Azure (Cosmos DB, ARM Templates, Service Bus, DevOps), AWS (Bedrock, S3, ECR)}
+  \item\small{\textbf{AI/ML \& Inference}: Distributed LLM inference/serving, PyTorch, LoRA, GPU profiling (Nsight), checkpoint conversion}
+  \item\small{\textbf{Languages \& Frameworks}: Python, C\#, C++, KQL, JavaScript, .NET}
+  \item\small{\textbf{Systems \& Cloud}: Kubernetes, Redis, Grafana; Azure (Cosmos DB, ARM Templates, Service Bus, DevOps)}
 \end{itemize}
 
 %-----------PUBLICATIONS-----------------
@@ -141,7 +144,7 @@
 \resumeCompactSectionListStart
   \item\small{\href{https://pranshug.com/blog/runtime-optimizations-for-llms}{\textit{Runtime Optimizations for LLMs}} (2026). Production notes on inference optimizations for latency/cost-efficient LLM serving.}
   \item\small{\href{https://dl.acm.org/doi/10.1145/3613904.3642078}{\textit{The Observer Effect on Social Media}} — ACM CHI (2024). Causal inference and time series study on longitudinal Facebook data from 300+ participants to quantify how monitoring awareness alters online behavior.}
-  \item\small{\href{https://www.nature.com/articles/s41599-021-00993-6}{\textit{Mental Health Impact of Active-Shooter Drills}} — Nature (2021). Applied ML classifiers and interrupted time series analysis to 54M social media posts across 114 schools to measure psychological and civic impact.}
+  \item\small{\href{https://www.nature.com/articles/s41599-021-00993-6}{\textit{Mental Health Impact of Active-Shooter Drills}} — Humanities and Social Sciences Communications (2021). Applied ML classifiers and interrupted time series analysis to 54M social media posts across 114 schools to measure psychological impact.}
 \resumeSubHeadingListEnd
 
 %-----------EDUCATION-----------------
